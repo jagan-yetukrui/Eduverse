@@ -1,0 +1,117 @@
+/* Global Styles for Login */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Login Box */
+.login-box {
+  background: white;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 350px;
+  text-align: center;
+}
+
+h2 {
+  margin-bottom: 20px;
+  color: #1976d2;
+}
+
+/* Input Group */
+.input-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.input-group label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: #1976d2;
+}
+
+/* Error Text */
+.error-text {
+  color: red;
+  font-size: 0.85rem;
+  margin-top: 5px;
+}
+
+/* Submit Button */
+.submit-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.submit-button:hover {
+  background-color: #115293;
+}
+
+/* Switch Button */
+.switch-button {
+  margin-top: 10px;
+  background: none;
+  border: none;
+  color: #1976d2;
+  cursor: pointer;
+}
+
+.switch-button:hover {
+  text-decoration: underline;
+}
+
+/* Success Text */
+.success-text {
+  color: green;
+  margin-top: 20px;
+  font-weight: bold;
+}
+
+/* Snackbar Styles */
+.snackbar {
+  background-color: #4caf50;
+  color: white;
+  padding: 15px;
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.snackbar-close {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 16px;
+  margin-left: 20px;
+  cursor: pointer;
+}

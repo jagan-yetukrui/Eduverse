@@ -1,0 +1,95 @@
+.home-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+  background-color: #fafafa;
+}
+
+.top-logo {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+}
+
+.logo {
+  width: 60px;
+}
+
+.main-feed {
+  flex: 1;
+  padding: 20px;
+  margin-top: 80px; /* Adjusted for logo at the top */
+  overflow-y: auto;
+}
+
+.home-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.home-button {
+  padding: 10px 20px;
+  font-size: 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.home-button:hover {
+  background-color: #0056b3;
+}
+
+/* Bottom Navbar for mobile */
+.bottom-navbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: black;
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0;
+  z-index: 1000;
+}
+
+.bottom-navbar ul {
+  display: flex;
+  justify-content: space-around;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.nav-item {
+  cursor: pointer;
+  padding: 0 15px;
+}
+
+.nav-item img {
+  width: 30px; /* Adjust icon size */
+  filter: invert(100%); /* Makes icons white */
+  transition: transform 0.3s ease;
+}
+
+.nav-item.active img {
+  transform: scale(1.1); /* Slight scale effect for active page */
+}
+
+.nav-item:hover img {
+  transform: scale(1.2); /* Hover effect */
+}
+
+.new-post-page {
+  text-align: center;
+  padding: 50px;
+}
+
+.profile-page {
+  text-align: center;
+  padding: 50px;
+}
