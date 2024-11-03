@@ -1,4 +1,31 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
+
+// Async thunk for user registration
+export const signupUser = createAsyncThunk(
+  'user/signupUser',
+  async (userData, thunkAPI) => {
+    try {
+      const response = await axios.post('/api/register', userData);
+      return response.data; // Return the user data if successful
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data); // Return error if failed
+    }
+  }
+);
+
+// Async thunk for user login
+export const loginUser = createAsyncThunk(
+  'user/loginUser',
+  async (loginData, thunkAPI) => {
+    try {
+      const response = await axios.post('/api/login', loginData);
+      return response.data; // Return user info on successful login
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data); // Handle errors
+    }
+  }
+);
 
 const initialState = {
   userList: [
@@ -16,6 +43,8 @@ const initialState = {
       profile_visible: true,
     },
   ],
+  loading: false,   // Added loading state
+  error: null,      // Added error state
 };
 
 const userSlice = createSlice({
@@ -24,97 +53,85 @@ const userSlice = createSlice({
   reducers: {
     // Set profile data
     profileRedux: (state, action) => {
-      state.userList = [action.payload]; 
+      state.userList = [action.payload];
     },
-
-    // Add a new skill to the profile
+    
+    // Additional reducers for profile updates (as in your original code)
     AddskillRedux: (state, action) => {
       state.userList[0].skills.push(action.payload);
     },
-
-    // Add a new education entry to the profile
     AddeduRedux: (state, action) => {
       state.userList[0].education.push(action.payload);
     },
-
-    // Add a new experience entry to the profile
     AddexpRedux: (state, action) => {
       state.userList[0].experience.push(action.payload);
     },
-
-    // Add a new project entry to the profile
     AddprojectRedux: (state, action) => {
       state.userList[0].projects.push(action.payload);
     },
-
-    // Add a new group involvement to the profile
     AddgroupRedux: (state, action) => {
       state.userList[0].group_involvements.push(action.payload);
     },
-
-    // Add a new language to the profile
     AddlanguageRedux: (state, action) => {
       state.userList[0].languages.push(action.payload);
     },
-
-    // Add a new college work entry to the profile
     AddcollegeRedux: (state, action) => {
       state.userList[0].college_works.push(action.payload);
     },
-
-    // Update profile image
     imageRedux: (state, action) => {
       state.userList[0].image = action.payload;
     },
-
-    // Delete a skill from the profile
     deleteSkillRedux: (state, action) => {
-      state.userList[0].skills = state.userList[0].skills.filter(
-        (skill) => skill !== action.payload
-      );
+      state.userList[0].skills = state.userList[0].skills.filter(skill => skill !== action.payload);
     },
-
-    // Delete an education entry from the profile
     deleteEduRedux: (state, action) => {
-      state.userList[0].education = state.userList[0].education.filter(
-        (edu) => edu.degree !== action.payload.degree
-      );
+      state.userList[0].education = state.userList[0].education.filter(edu => edu.degree !== action.payload.degree);
     },
-
-    // Delete an experience entry from the profile
     deleteExpRedux: (state, action) => {
-      state.userList[0].experience = state.userList[0].experience.filter(
-        (exp) => exp.title !== action.payload.title
-      );
+      state.userList[0].experience = state.userList[0].experience.filter(exp => exp.title !== action.payload.title);
     },
-
-    // Delete a project entry from the profile
     deleteProjectRedux: (state, action) => {
-      state.userList[0].projects = state.userList[0].projects.filter(
-        (project) => project.title !== action.payload.title
-      );
+      state.userList[0].projects = state.userList[0].projects.filter(project => project.title !== action.payload.title);
     },
-
-    // Delete a group involvement entry from the profile
     deleteGroupRedux: (state, action) => {
-      state.userList[0].group_involvements = state.userList[0].group_involvements.filter(
-        (group) => group.name !== action.payload.name
-      );
+      state.userList[0].group_involvements = state.userList[0].group_involvements.filter(group => group.name !== action.payload.name);
     },
-
-    // Delete a language entry from the profile
     deleteLanguageRedux: (state, action) => {
-      state.userList[0].languages = state.userList[0].languages.filter(
-        (lang) => lang !== action.payload
-      );
+      state.userList[0].languages = state.userList[0].languages.filter(lang => lang !== action.payload);
     },
-
-    // Delete a college work entry from the profile
     deleteCollegeRedux: (state, action) => {
-      state.userList[0].college_works = state.userList[0].college_works.filter(
-        (work) => work !== action.payload
-      );
+      state.userList[0].college_works = state.userList[0].college_works.filter(work => work !== action.payload);
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      // Handle user registration
+      .addCase(signupUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(signupUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.userList = [action.payload]; // Replace user data on successful registration
+      })
+      .addCase(signupUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // Handle user login
+      .addCase(loginUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.userList = [action.payload]; // Update user data on successful login
+      })
+      .addCase(loginUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
   },
 });
 

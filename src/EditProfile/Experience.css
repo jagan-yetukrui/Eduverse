@@ -1,0 +1,125 @@
+/* Container styling */
+.experience-container {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Section title */
+  .experience-container h2 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  /* Experience item styling */
+  .experience-item {
+    background-color: #fff;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+  
+  /* Input group styling */
+  .input-group {
+    margin-bottom: 15px;
+  }
+  
+  .input-group label {
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 5px;
+    display: block;
+  }
+  
+  .input-group input,
+  .input-group select,
+  .input-group textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  .input-group input[type="date"] {
+    padding: 8px;
+  }
+  
+  .input-group input:focus,
+  .input-group select:focus,
+  .input-group textarea:focus {
+    outline: none;
+    border-color: #007bff;
+  }
+  
+  /* Duration display */
+  .duration {
+    font-style: italic;
+    color: #777;
+    margin-top: 10px;
+    font-size: 14px;
+  }
+  
+  /* Buttons */
+  .submit-button,
+  .delete-button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 14px;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px;
+    margin-top: 15px;
+  }
+  
+  .submit-button {
+    background-color: #007bff;
+  }
+  
+  .submit-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .delete-button {
+    background-color: #dc3545;
+  }
+  
+  .delete-button:hover {
+    background-color: #c82333;
+  }
+  
+  .add-button {
+    display: block;
+    width: 100%;
+    background-color: #28a745;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 20px;
+    font-size: 14px;
+  }
+  
+  .add-button:hover {
+    background-color: #218838;
+  }
+  
+  /* Error text */
+  .error-text {
+    color: #dc3545;
+    font-size: 12px;
+    margin-top: 5px;
+  }
+  

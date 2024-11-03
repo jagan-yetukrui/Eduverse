@@ -30,32 +30,56 @@ const Register = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  // Handle input changes
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
       setIsLoading(true);
       try {
-        const response = await fetch('http://127.0.0.1:5000/register', {
+        // Registration request
+        const registerResponse = await fetch('http://127.0.0.1:5002/register', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(formData),
         });
-        const data = await response.json();
+        const registerData = await registerResponse.json();
 
-        if (response.status === 201) {
-          setIsSuccess(true);
-          setErrorMessage('');
-          setFormData({ name: '', email: '', password: '' });
-          setTimeout(() => {
-            navigate('/login');
-          }, 3000);
-        } else if (response.status === 400 && data.error === 'Email is already registered!') {
-          setErrorMessage('Email is already registered! Please log in.');
+        if (registerResponse.ok) {
+          // Automatically log in the user after registration
+          const loginResponse = await fetch('http://127.0.0.1:5002/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email: formData.email, password: formData.password }),
+          });
+          const loginData = await loginResponse.json();
+
+          if (loginResponse.ok) {
+            // Store the JWT token in localStorage
+            localStorage.setItem('access_token', loginData.access_token);
+            setIsSuccess(true);
+            setErrorMessage('');
+
+            // Redirect to profile or home page
+            setTimeout(() => {
+              navigate('/profile');
+            }, 2000);
+          } else {
+            setErrorMessage(loginData.error || 'Login failed.');
+          }
         } else {
-          setErrorMessage(data.error || 'An error occurred. Please try again.');
+          setErrorMessage(registerData.error || 'Registration failed.');
         }
       } catch (error) {
         setErrorMessage('Network error. Please try again later.');
@@ -69,50 +93,53 @@ const Register = () => {
     <div className="container">
       <div className="register-box">
         <h2>Register for EduVerse</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="input-group">
-            <label>Name</label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              required
-            />
-            {errors.name && <p className="error-text">{errors.name}</p>}
-          </div>
+        {isSuccess ? (
+          <p className="success-text">Registration and login successful! Redirecting to your profile...</p>
+        ) : (
+          <form onSubmit={handleSubmit}>
+            <div className="input-group">
+              <label>Name</label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+              />
+              {errors.name && <p className="error-text">{errors.name}</p>}
+            </div>
 
-          <div className="input-group">
-            <label>Email</label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              required
-            />
-            {errors.email && <p className="error-text">{errors.email}</p>}
-          </div>
+            <div className="input-group">
+              <label>Email</label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+              {errors.email && <p className="error-text">{errors.email}</p>}
+            </div>
 
-          <div className="input-group">
-            <label>Password</label>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              required
-            />
-            {errors.password && <p className="error-text">{errors.password}</p>}
-          </div>
+            <div className="input-group">
+              <label>Password</label>
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+              />
+              {errors.password && <p className="error-text">{errors.password}</p>}
+            </div>
 
-          <button type="submit" className="submit-button" disabled={isLoading}>
-            {isLoading ? 'Registering...' : 'Register'}
-          </button>
+            <button type="submit" className="submit-button" disabled={isLoading}>
+              {isLoading ? 'Registering...' : 'Register'}
+            </button>
+          </form>
+        )}
 
-          {isSuccess && <p className="success-text">Registration successful! Redirecting to login...</p>}
-          {errorMessage && <p className="error-text">{errorMessage}</p>}
-        </form>
+        {errorMessage && <p className="error-text">{errorMessage}</p>}
 
         <button onClick={() => navigate('/login')} className="switch-button">
           Already have an account? Login here

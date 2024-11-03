@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';  // Assuming you're using react-
 const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
-  const [loading, setLoading] = useState(true);  // To show a loading state
+  const [loading, setLoading] = useState(true);  // To show a load`ing state
   const navigate = useNavigate();  // To redirect the user if necessary
 
   // This function fetches the protected dashboard data
