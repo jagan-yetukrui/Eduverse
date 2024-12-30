@@ -1,6 +1,9 @@
 from django.urls import path
 from .views import UserProfileView
+from django.contrib import admin
+from django.urls import path, include
 
 urlpatterns = [
-    path('', UserProfileView.as_view(), name='user_profile'),
+    path('admin/', admin.site.urls),
+    path('profiles/', include('profiles.urls')),
 ]
