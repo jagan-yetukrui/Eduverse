@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'projects',
     'ai',
     'scraper',
+    'search'
 ]
 
 MIDDLEWARE = [
