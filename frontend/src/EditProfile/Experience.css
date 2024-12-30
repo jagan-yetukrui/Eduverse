@@ -1,0 +1,243 @@
+/* Education Component Styles */
+.education-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.education-container h2 {
+  text-align: center;
+  font-size: 2em;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Education Form */
+.education-form {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+}
+
+.education-form input,
+.education-form textarea {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1em;
+  transition: border-color 0.3s ease;
+}
+
+.education-form input:focus,
+.education-form textarea:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+.education-form textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.education-form button {
+  width: 100%;
+  padding: 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+}
+
+.education-form button:hover {
+  background-color: #0056b3;
+}
+
+/* Education List */
+.education-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.education-item {
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.education-item:hover {
+  transform: scale(1.02);
+}
+
+.education-item h3 {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.education-item p {
+  font-size: 1em;
+  margin: 5px 0;
+  color: #555;
+}
+
+.education-item p strong {
+  color: #333;
+}
+
+.education-item button {
+  padding: 8px 16px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9em;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.education-item button:hover {
+  background-color: #c82333;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .education-container {
+    padding: 15px;
+  }
+
+  .education-form input,
+  .education-form textarea {
+    font-size: 0.9em;
+  }
+
+  .education-form button {
+    font-size: 0.9em;
+  }
+
+  .education-item h3 {
+    font-size: 1.3em;
+  }
+
+  .education-item p {
+    font-size: 0.9em;
+  }
+
+  .education-item button {
+    font-size: 0.85em;
+  }
+}
+
+/* Additional Styles for Interactive Effects */
+.education-form input::placeholder,
+.education-form textarea::placeholder {
+  color: #aaa;
+}
+
+.education-form input:hover,
+.education-form textarea:hover {
+  border-color: #007bff;
+}
+
+.education-item a {
+  color: #007bff;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.education-item a:hover {
+  color: #0056b3;
+}
+
+/* Divider for Sections */
+.education-form .divider {
+  height: 1px;
+  background-color: #ddd;
+  margin: 20px 0;
+}
+
+/* Transition Effects */
+.education-item {
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.education-item:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  transform: translateY(-5px);
+}
+
+.education-form button:active,
+.education-item button:active {
+  transform: scale(0.98);
+}
+
+/* Placeholder Colors */
+.education-form input::placeholder,
+.education-form textarea::placeholder {
+  color: #999;
+  opacity: 0.7;
+}
+
+/* Label Styles */
+.education-form label {
+  font-size: 1em;
+  color: #333;
+  margin-bottom: 5px;
+  display: block;
+  font-weight: bold;
+}
+
+/* Focus Outline for Accessibility */
+.education-form input:focus,
+.education-form textarea:focus {
+  outline: 2px solid #0056b3;
+  outline-offset: 2px;
+}
+
+/* Error Text Style (Optional) */
+.error-text {
+  color: #dc3545;
+  font-size: 0.9em;
+  margin-top: 5px;
+}
+
+/* Subtle Animation for Add/Delete */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.education-item {
+  animation: fadeIn 0.3s ease;
+}
+
+.education-item.deleting {
+  animation: fadeOut 0.3s ease;
+}

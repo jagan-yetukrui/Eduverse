@@ -18,10 +18,10 @@ app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
 # Configure the app
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'postgresql://jaganyetukuri:your_password@localhost/jaganyetukuri')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'postgresql://postgres:Jagan%579@localhost:5432/postgres')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'super_secret_key')
-app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', 'jwt_secret_key')
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', '69c8d9875c5af04bbe11a5fbe334cd7bea1eb36c968af9b631c000c939d48ee')
+app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', '69c8d9875c5af04bbe11a5fbe334cd7bea1eb36c968af9b631c000c939d48ee7')
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=1)
 
 # Initialize extensions
