@@ -11,6 +11,8 @@ class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile')
     display_name = models.CharField(max_length=100)
     username = models.CharField(max_length=30, unique=True)
+    email = models.EmailField(max_length=255, unique=True) 
+    password = models.CharField(max_length=128,  help_text="Mandatory password for the user.")  
     bio = models.TextField(max_length=500, blank=True, null=True)
     avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
     followers = models.ManyToManyField('self', symmetrical=False, related_name='following')
