@@ -12,7 +12,7 @@ class Post(models.Model):
     )
 
     title = models.CharField(max_length=255)
-    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="authored_posts" )
     content = models.TextField()
     post_type = models.CharField(max_length=1, choices=POST_TYPES, default="T")
     created_at = models.DateTimeField(default=timezone.now)

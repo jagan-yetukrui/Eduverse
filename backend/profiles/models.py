@@ -16,7 +16,7 @@ class Profile(models.Model):
     followers = models.ManyToManyField('self', symmetrical=False, related_name='following')
     blocked_users = models.ManyToManyField('self', symmetrical=False, related_name='blocked_by')
     close_friends = models.ManyToManyField('self', symmetrical=False, related_name='close_friend_of')
-    posts = models.ForeignKey('posts.Post', on_delete=models.CASCADE, related_name='author', null=True)
+    posts = models.ForeignKey('posts.Post', on_delete=models.CASCADE, related_name='authorProfile', null=True)
     liked_posts = models.ManyToManyField('posts.Post', related_name='liked_by')
     highlights = models.JSONField(default=dict, blank=True)
     notification_settings = models.JSONField(default=dict, blank=True, help_text={
