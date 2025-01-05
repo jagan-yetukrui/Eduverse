@@ -1,18 +1,48 @@
 from rest_framework import serializers
-from .models import Post
+from .models import *
 
 
 class PostSerializer(serializers.ModelSerializer):
     author = serializers.StringRelatedField()
+    comments_count = serializers.IntegerField(source='comments.count', read_only=True)
+    likes_count = serializers.IntegerField(source='likes.count', read_only=True)
 
     class Meta:
         model = Post
-        fields = [
-            "id",
-            "title",
-            "author",
-            "content",
-            "post_type",
-            "created_at",
-            "updated_at",
-        ]
+        fields = "__all__"
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = "__all__"
+
+
+class LikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Like
+        fields = "__all__"
+
+
+class SaveSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Save
+        fields = "__all__"
+
+
+class ShareSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Share
+        fields = "__all__"
+
+
+class FavoriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Favorite
+        fields = "__all__"
+
+
+class ReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Report
+        fields = "__all__"
