@@ -24,6 +24,7 @@ urlpatterns = [
     path('api/accounts/', include('accounts.urls')),  # Include the accounts app's URLs
     path('api/profiles/', include('profiles.urls')),
     path('search/', include('search.urls')),
+    path('api/posts/', include('posts.urls')),  # Include the posts app's URLs
 ]
 
 # Serve media files during development
