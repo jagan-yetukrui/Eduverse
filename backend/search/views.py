@@ -11,6 +11,7 @@ def search(request):
     query = request.GET.get("query", "")
     name_filter = request.GET.get("name", "")
     skills_filter = request.GET.get("skills", "")
+    post_author_filter = request.GET.get("post_author", "")
     post_type_filter = request.GET.get("post_type", "")
 
     # Searching CustomUser (accounts app)
@@ -30,30 +31,42 @@ def search(request):
 
     # Searching Posts (posts app)
     posts = Post.objects.filter(Q(title__icontains=query) | Q(content__icontains=query))
+    if post_author_filter:
+        posts = posts.filter(author__username__icontains=post_author_filter)
     if post_type_filter:
         posts = posts.filter(post_type=post_type_filter)
 
-    # Combine results
-    user_results = [
-        {
-            "username": user.username,
-            "email": user.email,
-            "skills": user.skills,
-            "profile_picture": (
-                user.profile_picture.url if user.profile_picture else None
-            ),
-        }
-        for user in users
-    ]
+    # If searching by username, return only user results and hide posts
+    if name_filter:
+        user_results = [
+            {
+                "username": user.username,
+                "email": user.email,
+                "skills": user.skills,
+                "profile_picture": (
+                    user.profile_picture.url if user.profile_picture else None
+                ),
+            }
+            for user in users
+        ]
+        return JsonResponse({"users": user_results})  # Hide posts
 
-    post_results = [
-        {"title": post.title, "content": post.content, "post_type": post.post_type}
-        for post in posts
-    ]
+    # If searching for posts, return only post results and hide users
+    if post_author_filter or post_type_filter:
+        post_results = [
+            {
+                "title": post.title,
+                "author": post.author.username,
+                "content": post.content,
+                "post_type": post.post_type,
+                "created_at": post.created_at,
+                "updated_at": post.updated_at,
+            }
+            for post in posts
+        ]
 
-    return JsonResponse(
-        {
-            "users": user_results,
-            "posts": post_results,
-        }
-    )
+        return JsonResponse(
+            {
+                "posts": post_results,
+            }
+        )

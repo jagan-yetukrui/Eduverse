@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
-import './SearchPage.css';
+import React, { useState, useEffect, useRef } from "react";
+import "./SearchPage.css";
 
 const Search = () => {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
@@ -14,25 +14,25 @@ const Search = () => {
   // Initialize page load animations
   useEffect(() => {
     const container = searchContainerRef.current;
-    container.classList.add('fade-in');
-    
+    container.classList.add("fade-in");
+
     // Initialize particle effects
     const particles = Array.from({ length: 50 }, () => {
-      const particle = document.createElement('div');
-      particle.className = 'particle';
+      const particle = document.createElement("div");
+      particle.className = "particle";
       container.appendChild(particle);
       return particle;
     });
 
-    particles.forEach(particle => {
+    particles.forEach((particle) => {
       animateParticle(particle);
     });
 
     // Slide in search bar
-    searchBarRef.current.classList.add('slide-in');
+    searchBarRef.current.classList.add("slide-in");
 
     return () => {
-      particles.forEach(particle => particle.remove());
+      particles.forEach((particle) => particle.remove());
     };
   }, []);
 
@@ -40,11 +40,11 @@ const Search = () => {
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
-        const response = await fetch('/api/user/current');
+        const response = await fetch("/api/user/current");
         const data = await response.json();
         setCurrentUser(data);
       } catch (error) {
-        console.error('Error fetching current user:', error);
+        console.error("Error fetching current user:", error);
       }
     };
     fetchCurrentUser();
@@ -56,24 +56,28 @@ const Search = () => {
       if (query.length > 0) {
         setLoading(true);
         try {
-          const response = await fetch(`/api/users/search?query=${encodeURIComponent(query)}`);
+          const response = await fetch(
+            `/api/users/search?query=${encodeURIComponent(query)}`
+          );
           const users = await response.json();
-          
+
           const usersWithMutuals = await Promise.all(
             users.map(async (user) => {
-              const mutualsResponse = await fetch(`/api/users/${user.id}/mutuals`);
+              const mutualsResponse = await fetch(
+                `/api/users/${user.id}/mutuals`
+              );
               const mutualsData = await mutualsResponse.json();
               return {
                 ...user,
                 mutualConnections: mutualsData.mutuals,
-                mutualCount: mutualsData.count
+                mutualCount: mutualsData.count,
               };
             })
           );
-          
+
           setSuggestions(usersWithMutuals);
         } catch (error) {
-          console.error('Error fetching suggestions:', error);
+          console.error("Error fetching suggestions:", error);
         } finally {
           setLoading(false);
         }
@@ -87,26 +91,33 @@ const Search = () => {
   }, [query]);
 
   const animateParticle = (particle) => {
-    const animation = particle.animate([
-      { 
-        transform: `translate(${Math.random() * 100}vw, ${Math.random() * 100}vh)`,
-        opacity: 0
-      },
+    const animation = particle.animate(
+      [
+        {
+          transform: `translate(${Math.random() * 100}vw, ${
+            Math.random() * 100
+          }vh)`,
+          opacity: 0,
+        },
+        {
+          transform: `translate(${Math.random() * 100}vw, ${
+            Math.random() * 100
+          }vh)`,
+          opacity: 0.5,
+        },
+      ],
       {
-        transform: `translate(${Math.random() * 100}vw, ${Math.random() * 100}vh)`,
-        opacity: 0.5
+        duration: 3000 + Math.random() * 2000,
+        iterations: Infinity,
       }
-    ], {
-      duration: 3000 + Math.random() * 2000,
-      iterations: Infinity
-    });
+    );
     return animation;
   };
 
   const triggerSearchAnimation = () => {
     const container = searchContainerRef.current;
-    const rocket = document.createElement('div');
-    rocket.className = 'rocket';
+    const rocket = document.createElement("div");
+    rocket.className = "rocket";
     container.appendChild(rocket);
 
     setTimeout(() => {
@@ -123,16 +134,20 @@ const Search = () => {
       triggerSearchAnimation();
 
       try {
-        const response = await fetch(`/api/users/search?query=${encodeURIComponent(query)}&detailed=true`);
+        // const response = await fetch(`/api/users/search?query=${encodeURIComponent(query)}&detailed=true`);
+        const response = await fetch(
+          `http://localhost:8000/api/search/?name=${encodeURIComponent(query)}`
+        );
+
         const results = await response.json();
-        
+
         // Delay results to sync with animation
         setTimeout(() => {
           setSearchResults(results);
           setLoading(false);
         }, 2000);
       } catch (error) {
-        console.error('Error performing search:', error);
+        console.error("Error performing search:", error);
         setLoading(false);
       }
     }
@@ -146,7 +161,7 @@ const Search = () => {
       setSearchResults([userData]);
       setSuggestions([]);
     } catch (error) {
-      console.error('Error fetching user details:', error);
+      console.error("Error fetching user details:", error);
     }
   };
 
@@ -158,12 +173,12 @@ const Search = () => {
           placeholder="Search for people..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          onFocus={(e) => e.target.classList.add('focused')}
-          onBlur={(e) => e.target.classList.remove('focused')}
+          onFocus={(e) => e.target.classList.add("focused")}
+          onBlur={(e) => e.target.classList.remove("focused")}
           autoComplete="off"
         />
         <button type="submit" disabled={loading}>
-          {loading ? 'Searching...' : 'Search'}
+          {loading ? "Searching..." : "Search"}
         </button>
       </form>
 
@@ -172,18 +187,30 @@ const Search = () => {
       {suggestions.length > 0 && (
         <ul className="suggestions-list">
           {suggestions.map((user) => (
-            <li key={user.id} onClick={() => handleSuggestionClick(user.id)} className="suggestion-item">
-              <img src={user.profileImage} alt={user.name} className="user-avatar" />
+            <li
+              key={user.id}
+              onClick={() => handleSuggestionClick(user.id)}
+              className="suggestion-item"
+            >
+              <img
+                src={user.profileImage}
+                alt={user.name}
+                className="user-avatar"
+              />
               <div className="user-info">
                 <h4>{user.name}</h4>
                 <p className="user-title">{user.title}</p>
                 <div className="mutual-connections">
                   {user.mutualCount > 0 && (
                     <>
-                      <span className="mutual-count">{user.mutualCount} mutual connections</span>
+                      <span className="mutual-count">
+                        {user.mutualCount} mutual connections
+                      </span>
                       <div className="mutual-preview">
-                        {user.mutualConnections.slice(0, 3).map(mutual => (
-                          <span key={mutual.id} className="mutual-name">{mutual.name}</span>
+                        {user.mutualConnections.slice(0, 3).map((mutual) => (
+                          <span key={mutual.id} className="mutual-name">
+                            {mutual.name}
+                          </span>
                         ))}
                       </div>
                     </>
@@ -200,17 +227,23 @@ const Search = () => {
           <h3>Search Results</h3>
           <ul>
             {searchResults.map((user, index) => (
-              <li 
-                key={user.id} 
+              <li
+                key={user.id}
                 className="result-item"
-                style={{animationDelay: `${index * 0.1}s`}}
+                style={{ animationDelay: `${index * 0.1}s` }}
                 onClick={() => {
-                  const card = document.querySelector(`[data-user-id="${user.id}"]`);
-                  card.classList.add('expanded');
+                  const card = document.querySelector(
+                    `[data-user-id="${user.id}"]`
+                  );
+                  card.classList.add("expanded");
                 }}
                 data-user-id={user.id}
               >
-                <img src={user.profileImage} alt={user.name} className="user-avatar" />
+                <img
+                  src={user.profileImage}
+                  alt={user.name}
+                  className="user-avatar"
+                />
                 <div className="user-info">
                   <h4>{user.name}</h4>
                   <p className="user-title">{user.title}</p>
@@ -219,7 +252,7 @@ const Search = () => {
                     <div className="mutual-connections">
                       <h5>Mutual Connections ({user.mutualCount})</h5>
                       <ul className="mutual-list">
-                        {user.mutualConnections.map(mutual => (
+                        {user.mutualConnections.map((mutual) => (
                           <li key={mutual.id}>{mutual.name}</li>
                         ))}
                       </ul>
@@ -229,6 +262,52 @@ const Search = () => {
               </li>
             ))}
           </ul>
+        </div>
+      )}
+
+      {/* added new part to match the results of search api for now */}
+      {showResults && (
+        <div className="search-results">
+          <h3>Search Results</h3>
+
+          {searchResults?.users?.length > 0 && (
+            <div className="users-results">
+              <h4>Users</h4>
+              <ul>
+                {searchResults.users.map((user) => (
+                  <li key={user.username}>
+                    <img
+                      src={user.profile_picture || "/default-avatar.jpg"}
+                      alt={user.username}
+                      className="user-avatar"
+                    />
+                    <div className="user-info">
+                      <h4>{user.username}</h4>
+                      <p>{user.email}</p>
+                      <p>{user.skills || "No skills listed"}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {/* {searchResults?.posts?.length > 0 && (
+            <div className="posts-results">
+              <h4>Posts</h4>
+              <ul>
+                {searchResults.posts.map((post) => (
+                  <li key={post.title}>
+                    <h5>{post.title}</h5>
+                    <p>{post.content}</p>
+                    <p>
+                      <strong>Post Type:</strong> {post.post_type}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )} */}
         </div>
       )}
     </div>

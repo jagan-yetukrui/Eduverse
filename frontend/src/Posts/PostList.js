@@ -7,10 +7,11 @@ function PostList() {
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                const response = await axios.get('/posts');
+                const response = await axios.get('api/posts');
                 setPosts(response.data);
             } catch (error) {
                 console.error("Error fetching posts:", error);
+                return <p>No posts available yet. Be the first to create one!</p>;
             }
         };
         fetchPosts();
