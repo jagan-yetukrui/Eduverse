@@ -54,7 +54,7 @@ const NewPost = ({ isOpen, onClose }) => {
             const token = localStorage.getItem('token');
             if (!token) throw new Error('Authentication required');
 
-            const response = await fetch('http://localhost:5002/posts', {
+            const response = await fetch('http://localhost:8000/posts', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`
