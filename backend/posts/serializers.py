@@ -2,10 +2,16 @@ from rest_framework import serializers
 from .models import *
 
 
+class CustomUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ["id", "username", "email", "skills", "profile_picture"]
+
+
 class PostSerializer(serializers.ModelSerializer):
-    author = serializers.StringRelatedField()
-    comments_count = serializers.IntegerField(source='comments.count', read_only=True)
-    likes_count = serializers.IntegerField(source='likes.count', read_only=True)
+    author = CustomUserSerializer()
+    comments_count = serializers.IntegerField(source="comments.count", read_only=True)
+    likes_count = serializers.IntegerField(source="likes.count", read_only=True)
 
     class Meta:
         model = Post
