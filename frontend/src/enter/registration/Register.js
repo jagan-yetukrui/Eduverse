@@ -13,7 +13,6 @@ const Register = () => {
     email: '',
     password: '',
     password2: '', // Renamed from confirmPassword to match API
-    bio: '',
     agreeToTerms: false
   });
   const [errors, setErrors] = useState({});
@@ -106,7 +105,7 @@ const Register = () => {
         email: formData.email,
         password: formData.password,
         password2: formData.password2,
-        bio: formData.bio || '' // Ensure bio is never undefined
+        agreeToTerms: formData.agreeToTerms
       });
 
       setIsSuccess(true);
@@ -174,8 +173,7 @@ const Register = () => {
         username: { type: "text", placeholder: "Username" },
         email: { type: "email", placeholder: "Email" },
         password: { type: "password", placeholder: "Password" },
-        password2: { type: "password", placeholder: "Confirm Password" },
-        bio: { type: "textarea", placeholder: "Tell us about yourself (Optional)" }
+        password2: { type: "password", placeholder: "Confirm Password" }
       }).map(([field, config]) => (
         <div key={field} className="input-group">
           <motion.input

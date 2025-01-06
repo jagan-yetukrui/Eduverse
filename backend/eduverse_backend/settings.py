@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -139,8 +140,13 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]
 
+# Media files configuration
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_ROOT = BASE_DIR / 'media'
+
+# Avatar upload settings
+AVATAR_MAX_SIZE = 5 * 1024 * 1024  # 5MB
+AVATAR_ALLOWED_FILE_TYPES = ['image/jpeg', 'image/jpg', 'image/png']
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -153,6 +159,25 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Custom User Model
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
+# Default notification settings
+DEFAULT_NOTIFICATION_SETTINGS = {
+    'email': True,
+    'push': True,
+    'sms': False,
+    'post_likes': True,
+    'comments': True,
+    'follows': True,
+    'messages': True
+}
+
+# Default privacy settings
+DEFAULT_PRIVACY_SETTINGS = {
+    'profile_visibility': 'public',
+    'posts_visibility': 'public',
+    'followers_visibility': 'public',
+    'following_visibility': 'public'
+}
+
 # REST Framework Settings
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -161,4 +186,23 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+        'rest_framework.parsers.MultiPartParser',
+        'rest_framework.parsers.FormParser',
+    ],
 }
+
+# Simple JWT settings
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5 if DEBUG else 60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'UPDATE_LAST_LOGIN': False,
+}
+
+# Support and Help Settings
+SUPPORT_EMAIL = 'support@eduverse.com'
+FAQ_URL = 'https://eduverse.com/faq'
+HELP_CENTER_URL = 'https://eduverse.com/help'

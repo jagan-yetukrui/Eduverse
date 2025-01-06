@@ -16,14 +16,17 @@ class RegisterSerializer(serializers.ModelSerializer):
         validators=[validate_password]
     )
     password2 = serializers.CharField(write_only=True, required=True)
+    agreeToTerms = serializers.BooleanField(required=True)
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'password', 'password2')
+        fields = ('username', 'email', 'password', 'password2', 'agreeToTerms')
     
     def validate(self, attrs):
         if attrs['password'] != attrs['password2']:
             raise serializers.ValidationError({"password": "Passwords don't match."})
+        if not attrs['agreeToTerms']:
+            raise serializers.ValidationError({"agreeToTerms": "You must agree to the Terms and Conditions"})
         return attrs
 
     def create(self, validated_data):
@@ -36,5 +39,16 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
 
 class LoginSerializer(serializers.Serializer):
-    username = serializers.CharField(required=True)
+    username = serializers.CharField(required=True, help_text='Username or Email')
     password = serializers.CharField(required=True, write_only=True)
+
+    def validate_username(self, value):
+        # Check if the input is an email
+        if '@' in value:
+            try:
+                user = User.objects.get(email=value)
+                # Return the actual username for authentication
+                return user.username
+            except User.DoesNotExist:
+                raise serializers.ValidationError("No user found with this email address.")
+        return value

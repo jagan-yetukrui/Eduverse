@@ -2,13 +2,46 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
-import { FaRocket, FaEye, FaEyeSlash, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
+import { FaRocket, FaEye, FaEyeSlash, FaTimesCircle } from 'react-icons/fa';
 import ParticlesBg from 'particles-bg';
 import FirstLogo from '../../First_logo.png';
+import axios from 'axios';
+
+// Create axios instance with base URL
+const apiClient = axios.create({
+  baseURL: 'http://127.0.0.1:8000/'
+});
+
+// Add response interceptor
+apiClient.interceptors.response.use(
+  response => response,
+  async error => {
+    if (error.response?.status === 401) {
+      const refreshToken = localStorage.getItem('refresh_token');
+      if (refreshToken) {
+        try {
+          const response = await axios.post('http://127.0.0.1:8000/api/accounts/token/refresh/', {
+            refresh: refreshToken
+          });
+          const newAccessToken = response.data.access;
+          localStorage.setItem('access_token', newAccessToken);
+
+          // Retry original request with new token
+          error.config.headers['Authorization'] = `Bearer ${newAccessToken}`;
+          return apiClient.request(error.config);
+        } catch (refreshError) {
+          console.error('Failed to refresh token:', refreshError);
+          window.location.href = '/login';
+        }
+      }
+    }
+    return Promise.reject(error);
+  }
+);
 
 const Login = () => {
   const [formData, setFormData] = useState({
-    username: '',
+    username: '', // This will store either username or email
     password: '',
   });
   const [errors, setErrors] = useState({});
@@ -50,7 +83,7 @@ const Login = () => {
 
   const validateForm = () => {
     let newErrors = {};
-    if (!formData.username) newErrors.username = 'Username is required';
+    if (!formData.username) newErrors.username = 'Username or Email is required';
     if (!formData.password) newErrors.password = 'Password is required';
     else if (formData.password.length < 8) newErrors.password = 'Password must be at least 8 characters';
 
@@ -65,36 +98,32 @@ const Login = () => {
       setErrorMessage('');
 
       try {
-        const response = await fetch('http://127.0.0.1:8000/api/accounts/login/', {
-          method: 'POST',
+        const response = await apiClient.post('api/accounts/login/', formData, {
           headers: {
             'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData),
+            'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+          }
         });
 
-        const data = await response.json();
-
-        if (response.ok) {
-          // Store both tokens
-          localStorage.setItem('access_token', data.access);
-          localStorage.setItem('refresh_token', data.refresh);
-          setIsSuccess(true);
-          
-          setTimeout(() => {
-            navigate('/profile');
-          }, 2000);
-        } else {
-          // Handle different error formats
-          if (typeof data === 'object') {
-            const errorMessage = Object.values(data)[0];
+        localStorage.setItem('access_token', response.data.access);
+        localStorage.setItem('refresh_token', response.data.refresh);
+        setIsSuccess(true);
+        
+        setTimeout(() => {
+          navigate('/profile');
+        }, 2000);
+      } catch (error) {
+        if (error.response && error.response.data) {
+          const errorData = error.response.data;
+          if (typeof errorData === 'object') {
+            const errorMessage = Object.values(errorData)[0];
             setErrorMessage(Array.isArray(errorMessage) ? errorMessage[0] : errorMessage);
           } else {
             setErrorMessage('Invalid credentials');
           }
+        } else {
+          setErrorMessage('Network error. Please try again.');
         }
-      } catch (error) {
-        setErrorMessage('Network error. Please try again.');
       } finally {
         setIsLoading(false);
       }
@@ -143,7 +172,7 @@ const Login = () => {
                 <motion.input
                   type="text"
                   name="username"
-                  placeholder="Username"
+                  placeholder="Username or Email"
                   value={formData.username}
                   onChange={handleChange}
                   whileFocus={{ scale: 1.02 }}
