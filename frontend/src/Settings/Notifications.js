@@ -3,11 +3,11 @@ import axios from 'axios';
 
 const Notifications = () => {
   const [notifications, setNotifications] = useState({
-    email: true,
-    sms: false,
-    likes: true,
-    comments: true,
-    follows: true,
+    email_notifications: true,
+    sms_notifications: false,
+    like_notifications: true,
+    comment_notifications: true,
+    follow_notifications: true,
   });
   const [feedback, setFeedback] = useState('');
 
@@ -15,11 +15,11 @@ const Notifications = () => {
   useEffect(() => {
     const fetchNotificationSettings = async () => {
       try {
-        const token = localStorage.getItem('token');  // Assuming JWT authentication
-        const response = await axios.get('http://localhost:5002/api/user/notifications', {
+        const token = localStorage.getItem('token');
+        const response = await axios.get('/api/profiles/me/notification-settings/', {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setNotifications(response.data.notifications);
+        setNotifications(response.data);
       } catch (error) {
         console.error('Error fetching notification settings:', error);
         setFeedback('Failed to load notification settings.');
@@ -32,7 +32,7 @@ const Notifications = () => {
   const handleSaveNotifications = async () => {
     try {
       const token = localStorage.getItem('token');
-      await axios.put('http://localhost:5000/api/user/notifications', { notifications }, {
+      await axios.put('/api/profiles/me/update-notification-settings/', notifications, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setFeedback('Notification preferences updated successfully!');
@@ -59,8 +59,8 @@ const Notifications = () => {
         <label>Email Notifications:</label>
         <input
           type="checkbox"
-          name="email"
-          checked={notifications.email}
+          name="email_notifications"
+          checked={notifications.email_notifications}
           onChange={handleCheckboxChange}
         />
       </div>
@@ -69,8 +69,8 @@ const Notifications = () => {
         <label>SMS Notifications:</label>
         <input
           type="checkbox"
-          name="sms"
-          checked={notifications.sms}
+          name="sms_notifications"
+          checked={notifications.sms_notifications}
           onChange={handleCheckboxChange}
         />
       </div>
@@ -79,8 +79,8 @@ const Notifications = () => {
         <label>Likes Notifications:</label>
         <input
           type="checkbox"
-          name="likes"
-          checked={notifications.likes}
+          name="like_notifications"
+          checked={notifications.like_notifications}
           onChange={handleCheckboxChange}
         />
       </div>
@@ -89,8 +89,8 @@ const Notifications = () => {
         <label>Comments Notifications:</label>
         <input
           type="checkbox"
-          name="comments"
-          checked={notifications.comments}
+          name="comment_notifications"
+          checked={notifications.comment_notifications}
           onChange={handleCheckboxChange}
         />
       </div>
@@ -99,8 +99,8 @@ const Notifications = () => {
         <label>Follows Notifications:</label>
         <input
           type="checkbox"
-          name="follows"
-          checked={notifications.follows}
+          name="follow_notifications"
+          checked={notifications.follow_notifications}
           onChange={handleCheckboxChange}
         />
       </div>
