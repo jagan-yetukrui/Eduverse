@@ -4,19 +4,34 @@ import axios from 'axios';
 const Blocked = () => {
   const [blockedUsers, setBlockedUsers] = useState([]);
   const [feedback, setFeedback] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
   // Fetch blocked users from the backend
   useEffect(() => {
     const fetchBlockedUsers = async () => {
       try {
-        const token = localStorage.getItem('token'); // Assuming JWT authentication
-        const response = await axios.get('http://localhost:5002/api/user/blocked-users', {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          setFeedback('Please log in to view blocked users.');
+          setIsLoading(false);
+          return;
+        }
+
+        const response = await axios.get('/api/profiles/me/blocked-users/', {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setBlockedUsers(response.data.blockedUsers);
+
+        if (response.data && Array.isArray(response.data.blocked_users)) {
+          setBlockedUsers(response.data.blocked_users);
+        } else {
+          setBlockedUsers([]);
+          console.warn('Unexpected response format:', response.data);
+        }
       } catch (error) {
         console.error('Error fetching blocked users:', error);
-        setFeedback('Failed to load blocked users.');
+        setFeedback(error.response?.data?.message || 'Failed to load blocked users.');
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchBlockedUsers();
@@ -26,18 +41,41 @@ const Blocked = () => {
   const handleUnblockUser = async (userId) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.put(`http://localhost:5002/api/user/unblock/${userId}`, {}, {
+      if (!token) {
+        setFeedback('Please log in to unblock users.');
+        return;
+      }
+
+      // Show loading state for feedback
+      setFeedback('Unblocking user...');
+
+      const response = await axios.post('/api/profiles/unblock-user/', {
+        user_id: userId
+      }, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      // Remove the user from the blocked users list after successful unblock
-      setBlockedUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
-      setFeedback('User unblocked successfully!');
+      if (response.data && response.data.success) {
+        // Remove the user from the blocked users list after successful unblock
+        setBlockedUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
+        setFeedback('User unblocked successfully!');
+      } else {
+        setFeedback('Unable to unblock user. Please try again.');
+      }
     } catch (error) {
       console.error('Error unblocking user:', error);
-      setFeedback('Failed to unblock user.');
+      setFeedback(error.response?.data?.message || 'Failed to unblock user. Please try again.');
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="settings-section">
+        <h3>Blocked Users</h3>
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="settings-section">
@@ -48,9 +86,18 @@ const Blocked = () => {
       ) : (
         <ul className="blocked-users-list">
           {blockedUsers.map((user) => (
-            <li key={user.id}>
-              <span>{user.username}</span>
-              <button onClick={() => handleUnblockUser(user.id)}>Unblock</button>
+            <li key={user.id} className="blocked-user-item">
+              <span className="user-info">
+                <span className="username">{user.username}</span>
+                {user.display_name && <span className="display-name">({user.display_name})</span>}
+              </span>
+              <button 
+                className="unblock-button"
+                onClick={() => handleUnblockUser(user.id)}
+                disabled={isLoading}
+              >
+                Unblock
+              </button>
             </li>
           ))}
         </ul>

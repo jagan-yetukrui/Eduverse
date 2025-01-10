@@ -1,83 +1,193 @@
 import React, { useState, useEffect } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { FaUserShield, FaBell, FaLock, FaBan, FaQuestionCircle } from 'react-icons/fa';
+import { 
+  FaUserShield, 
+  FaBell, 
+  FaLock, 
+  FaBan, 
+  FaQuestionCircle,
+  FaMoon 
+} from 'react-icons/fa';
 import './Settings.css';
 
 const Settings = () => {
-  const [originalSettings, setOriginalSettings] = useState(null); // Store the initial settings fetched from the backend
-  const [currentSettings, setCurrentSettings] = useState({}); // Track current settings being edited
-  const [feedback, setFeedback] = useState(''); // Display feedback messages for user actions
-  const navigate = useNavigate(); // Navigate to different routes
+  // State management for settings and UI
+  const [originalSettings, setOriginalSettings] = useState(null);
+  const [currentSettings, setCurrentSettings] = useState({});
+  const [feedback, setFeedback] = useState({ message: '', type: '' });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [darkMode, setDarkMode] = useState(() => 
+    localStorage.getItem('darkMode') === 'true'
+  );
+  const navigate = useNavigate();
 
-  // Fetch user settings when the component is mounted
+  // Apply dark mode effect
+  useEffect(() => {
+    document.body.classList.toggle('dark-mode', darkMode);
+    localStorage.setItem('darkMode', darkMode);
+  }, [darkMode]);
+
+  // Fetch initial settings from backend
   useEffect(() => {
     const fetchSettings = async () => {
+      setLoading(true);
       try {
-        const token = localStorage.getItem('token'); // Retrieve JWT token from localStorage
-        const response = await axios.get('http://localhost:5000/api/settings', {
+        const access_token = localStorage.getItem('access_token');
+        if (!access_token) {
+          throw new Error('No access token found');
+        }
+
+        // API call to fetch user settings
+        const response = await axios.get('http://127.0.0.1:8000/api/profiles/me/settings/', {
           headers: {
-            Authorization: `Bearer ${token}`, // Include token in request headers
+            Authorization: `Bearer ${access_token}`,
           },
         });
-        setOriginalSettings(response.data); // Set original settings for resetting
-        setCurrentSettings(response.data); // Populate current settings with fetched data
+
+        // Update state with fetched settings
+        setOriginalSettings({
+          ...response.data,
+          darkMode: darkMode // Include dark mode in settings
+        });
+        setCurrentSettings({
+          ...response.data,
+          darkMode: darkMode
+        });
+        setFeedback({ message: 'Settings loaded successfully', type: 'success' });
       } catch (error) {
-        if (error.response?.status === 404) {
-          setFeedback('Settings not found. Please check the URL or try again.');
-        } else {
-          console.error('Error fetching settings:', error.response?.data || error.message);
-          setFeedback('Failed to load settings. Please try again later.');
+        const errorMessage = error.response?.data?.detail || error.message;
+        console.error('Error fetching settings:', {
+          message: errorMessage,
+          status: error.response?.status,
+          data: error.response?.data
+        });
+        setError(errorMessage);
+        setFeedback({
+          message: 'Failed to load settings. Please try again later.',
+          type: 'error'
+        });
+        
+        // Redirect to login if unauthorized
+        if (error.response?.status === 401) {
+          navigate('/login');
         }
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchSettings();
-  }, []);
+  }, [navigate, darkMode]);
 
-  // Save updated settings to the backend
+  // Handle saving updated settings
   const handleSaveChanges = async () => {
+    setLoading(true);
     try {
-      const token = localStorage.getItem('token');
+      const access_token = localStorage.getItem('access_token');
+      if (!access_token) {
+        throw new Error('No access token found');
+      }
+
+      // API call to update settings
       const response = await axios.put(
-        'http://localhost:5000/api/settings/update',
+        'http://127.0.0.1:8000/api/profiles/me/settings/',
         currentSettings,
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Include token in request headers
+            Authorization: `Bearer ${access_token}`,
+            'Content-Type': 'application/json',
           },
         }
       );
 
-      if (response.status === 200) {
-        setFeedback('Settings updated successfully!');
-        setOriginalSettings(currentSettings); // Update original settings after save
-        navigate('/dashboard'); // Redirect to the dashboard after saving
-      }
+      setOriginalSettings(response.data);
+      setFeedback({
+        message: 'Settings updated successfully!',
+        type: 'success'
+      });
+      
+      // Delayed navigation to dashboard
+      setTimeout(() => {
+        navigate('/dashboard');
+      }, 1500);
+
     } catch (error) {
-      setFeedback('Failed to update settings. Please try again.');
-      console.error('Error updating settings:', error.response?.data || error.message);
+      const errorMessage = error.response?.data?.detail || error.message;
+      console.error('Error updating settings:', {
+        message: errorMessage,
+        status: error.response?.status,
+        data: error.response?.data
+      });
+      
+      setFeedback({
+        message: `Failed to update settings: ${errorMessage}`,
+        type: 'error'
+      });
+
+      if (error.response?.status === 401) {
+        navigate('/login');
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Reset settings to their original state
+  // Reset settings to original values
   const handleResetToOriginal = () => {
     setCurrentSettings(originalSettings);
-    setFeedback('Changes have been reset.');
+    setFeedback({
+      message: 'Settings have been reset to original values',
+      type: 'info'
+    });
   };
 
   // Handle user logout
   const handleLogout = () => {
-    localStorage.removeItem('token'); // Clear token from localStorage
-    setFeedback('You have been logged out.');
-    navigate('/login'); // Redirect to login page
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    setFeedback({
+      message: 'You have been successfully logged out',
+      type: 'success'
+    });
+    setTimeout(() => {
+      navigate('/login');
+    }, 1000);
   };
 
+  // Toggle dark mode
+  const handleDarkModeToggle = () => {
+    setDarkMode(prev => !prev);
+    setCurrentSettings(prev => ({
+      ...prev,
+      darkMode: !darkMode
+    }));
+  };
+
+  // Loading state UI
+  if (loading) {
+    return (
+      <div className="settings-loading">
+        <p>Loading your settings...</p>
+      </div>
+    );
+  }
+
+  // Error state UI
+  if (error) {
+    return (
+      <div className="settings-error">
+        <p>Error: {error}</p>
+        <button onClick={() => window.location.reload()}>Retry</button>
+      </div>
+    );
+  }
+
   return (
-    <div className="settings-container">
+    <div className={`settings-container ${darkMode ? 'dark-mode' : ''}`}>
       <h2>Settings</h2>
 
-      {/* Icon-based grid for different setting options */}
       <div className="settings-grid">
         <Link to="/settings/profile-privacy" className="settings-link">
           <FaUserShield size={50} />
@@ -103,27 +213,47 @@ const Settings = () => {
           <FaQuestionCircle size={50} />
           <span>Help & Support</span>
         </Link>
+
+        {/* Dark Mode Toggle */}
+        <div className="settings-link" onClick={handleDarkModeToggle}>
+          <FaMoon size={50} />
+          <span>Dark Mode: {darkMode ? 'On' : 'Off'}</span>
+        </div>
       </div>
 
-      {/* Content section to render nested routes */}
       <div className="settings-content">
-        <Outlet />
+        <Outlet context={{ currentSettings, setCurrentSettings }} />
 
-        {/* Buttons to Save Changes, Reset, and Logout */}
         <div className="settings-actions">
-          <button className="save-button" onClick={handleSaveChanges}>
-            Save Changes
+          <button 
+            className="save-button" 
+            onClick={handleSaveChanges}
+            disabled={loading}
+          >
+            {loading ? 'Saving...' : 'Save Changes'}
           </button>
-          <button className="reset-button" onClick={handleResetToOriginal}>
-            Back to Original Settings
+          <button 
+            className="reset-button" 
+            onClick={handleResetToOriginal}
+            disabled={loading}
+          >
+            Reset Changes
           </button>
-          <button className="logout-button" onClick={handleLogout}>
+          <button 
+            className="logout-button" 
+            onClick={handleLogout}
+            disabled={loading}
+          >
             Logout
           </button>
         </div>
 
-        {/* Feedback Section */}
-        {feedback && <p className="feedback">{feedback}</p>}
+        {/* Dynamic feedback message */}
+        {feedback.message && (
+          <p className={`feedback ${feedback.type}`}>
+            {feedback.message}
+          </p>
+        )}
       </div>
     </div>
   );

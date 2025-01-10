@@ -1,19 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Tooltip } from '@mui/material';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
 const ProfilePrivacy = () => {
-  const [profilePrivacy, setProfilePrivacy] = useState('public'); // public or private
+  const [settings, setSettings] = useState({
+    profile_visibility: 'public',
+    posts_visibility: 'public', 
+    followers_visibility: 'public',
+    following_visibility: 'public'
+  });
+  const [originalSettings, setOriginalSettings] = useState({});
   const [feedback, setFeedback] = useState('');
 
-  // Fetch current profile privacy setting from the backend
+  // Fetch current privacy settings from the backend
   useEffect(() => {
     const fetchPrivacySettings = async () => {
       try {
-        const token = localStorage.getItem('token');  // Assuming you use JWT authentication
-        const response = await axios.get('http://localhost:5002/api/user/profile-privacy', {
+        const token = localStorage.getItem('token');
+        const response = await axios.get('/api/profiles/me/privacy-settings/', {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setProfilePrivacy(response.data.profilePrivacy);
+        setSettings(response.data);
+        setOriginalSettings(response.data);
       } catch (error) {
         console.error('Error fetching privacy settings:', error);
         setFeedback('Failed to load privacy settings.');
@@ -23,36 +33,115 @@ const ProfilePrivacy = () => {
   }, []);
 
   // Handle saving the updated privacy settings
-  const handleSavePrivacy = async () => {
+  const handleSaveChanges = async () => {
     try {
       const token = localStorage.getItem('token');
-      await axios.put('http://localhost:5000/api/user/profile-privacy', { profilePrivacy }, {
+      await axios.put('/api/profiles/me/update-privacy-settings/', settings, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setFeedback('Privacy settings updated successfully!');
+      setOriginalSettings(settings);
     } catch (error) {
       console.error('Error updating privacy settings:', error);
       setFeedback('Failed to update privacy settings.');
     }
   };
 
+  // Handle resetting settings to original state
+  const handleResetChanges = () => {
+    setSettings(originalSettings);
+    setFeedback('Settings reset to last saved state.');
+  };
+
+  // Handle setting changes
+  const handleSettingChange = (setting, value) => {
+    setSettings(prev => ({
+      ...prev,
+      [setting]: value
+    }));
+  };
+
   return (
     <div className="settings-section">
-      <h3>Profile Privacy</h3>
-      <div className="input-group">
-        <label>Profile visibility:</label>
-        <select
-          value={profilePrivacy}
-          onChange={(e) => setProfilePrivacy(e.target.value)}
-        >
-          <option value="public">Public</option>
-          <option value="private">Private</option>
-        </select>
+      <h2>Profile Privacy Settings</h2>
+      
+      <div className="privacy-option">
+        <Tooltip title="Control who can view your profile information" placement="right">
+          <div className="setting-group">
+            <label>Profile Visibility:</label>
+            <ToggleButtonGroup
+              value={settings.profile_visibility}
+              exclusive
+              onChange={(e, value) => handleSettingChange('profile_visibility', value)}
+            >
+              <ToggleButton value="public">Public</ToggleButton>
+              <ToggleButton value="private">Private</ToggleButton>
+            </ToggleButtonGroup>
+          </div>
+        </Tooltip>
       </div>
-      <button className="save-button" onClick={handleSavePrivacy}>
-        Save Privacy Settings
-      </button>
-      {feedback && <p className="feedback">{feedback}</p>}
+
+      <div className="privacy-option">
+        <Tooltip title="Control who can see your posts" placement="right">
+          <div className="setting-group">
+            <label>Posts Visibility:</label>
+            <ToggleButtonGroup
+              value={settings.posts_visibility}
+              exclusive
+              onChange={(e, value) => handleSettingChange('posts_visibility', value)}
+            >
+              <ToggleButton value="public">Public</ToggleButton>
+              <ToggleButton value="friends">Friends Only</ToggleButton>
+              <ToggleButton value="private">Private</ToggleButton>
+            </ToggleButtonGroup>
+          </div>
+        </Tooltip>
+      </div>
+
+      <div className="privacy-option">
+        <Tooltip title="Control who can see your followers list" placement="right">
+          <div className="setting-group">
+            <label>Followers List Visibility:</label>
+            <ToggleButtonGroup
+              value={settings.followers_visibility}
+              exclusive
+              onChange={(e, value) => handleSettingChange('followers_visibility', value)}
+            >
+              <ToggleButton value="public">Public</ToggleButton>
+              <ToggleButton value="private">Only Me</ToggleButton>
+            </ToggleButtonGroup>
+          </div>
+        </Tooltip>
+      </div>
+
+      <div className="privacy-option">
+        <Tooltip title="Control who can see accounts you follow" placement="right">
+          <div className="setting-group">
+            <label>Following List Visibility:</label>
+            <ToggleButtonGroup
+              value={settings.following_visibility}
+              exclusive
+              onChange={(e, value) => handleSettingChange('following_visibility', value)}
+            >
+              <ToggleButton value="public">Public</ToggleButton>
+              <ToggleButton value="private">Only Me</ToggleButton>
+            </ToggleButtonGroup>
+          </div>
+        </Tooltip>
+      </div>
+
+      <div className="buttons-container">
+        <button className="save-button" onClick={handleSaveChanges}>
+          Save Changes
+        </button>
+        <button className="reset-button" onClick={handleResetChanges}>
+          Reset Changes
+        </button>
+      </div>
+
+      {feedback && <p className={`feedback ${feedback.includes('Failed') ? 'error' : 'success'}`}>
+        {feedback}
+      </p>}
     </div>
   );
 };
