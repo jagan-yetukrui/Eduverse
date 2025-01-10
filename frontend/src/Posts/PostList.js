@@ -35,7 +35,7 @@ function PostList() {
 
   return (
     <div className="post-list">
-      {posts.length === 0 ? (
+      {/* {posts.length === 0 ? (
         <p>No posts available yet. Be the first to create one!</p>
       ) : (
         posts.map((post) => (
@@ -47,7 +47,16 @@ function PostList() {
             </small>
           </div>
         ))
-      )}
+      )} */}
+      {posts.map((post) => (
+          <div key={post.id}>
+            <h3>{post.title}</h3>
+            <p>{post.content}</p>
+            <small>
+              Posted on {new Date(post.created_at).toLocaleDateString()}
+            </small>
+          </div>
+        ))}
     </div>
   );
 }
