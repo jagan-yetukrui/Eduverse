@@ -19,7 +19,7 @@ class Post(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.title}, {self.author}"
+        return f"[title] {self.title} [author] {self.author}"
 
 
 class Comment(models.Model):
