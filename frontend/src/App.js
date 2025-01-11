@@ -12,6 +12,7 @@ const Profile = lazy(() => import('./EditProfile/EditProfile'));
 const Messages = lazy(() => import('./Messages/Messages'));
 const Notes = lazy(() => import('./Notes/Notes'));
 const NewPost = lazy(() => import('./Posts/NewPost'));
+const Post = lazy(() => import('./Posts/PostList'));
 const Search = lazy(() => import('./Search/Searchpage'));
 const Settings = lazy(() => import('./Settings/Settings'));
 const TinyMCEDemo = lazy(() => import('./TinyMCEDemo'));
@@ -61,6 +62,7 @@ function App() {
                   <Route path="/messages" element={<Messages />} />
                   <Route path="/notes" element={<Notes />} />
                   <Route path="/newpost" element={<NewPost />} />
+                  <Route path="/posts" element={<Post />} />
                   <Route path="/search" element={<Search />} />
                   <Route path="/settings" element={<Settings />}>
                     <Route path="profile-privacy" element={<ProfilePrivacy />} />
