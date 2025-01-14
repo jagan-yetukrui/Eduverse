@@ -79,7 +79,7 @@ const Navbar = () => {
       className={`navbar ${isExpanded ? "expanded" : ""} ${
         isMobile ? "mobile" : ""
       }`}
-      // initial={{ x: -100, opacity: 0 }}
+      initial={{ x: -100, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
       onMouseEnter={() => !isMobile && setIsExpanded(true)}
@@ -90,8 +90,8 @@ const Navbar = () => {
         <div className="particle-container"></div>
       </div>
 
-      {/* <motion.div
-        className="logo-container"
+      <motion.div
+        className="logo-container-nav"
         onClick={refreshHomePage}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
@@ -117,92 +117,41 @@ const Navbar = () => {
             </motion.span>
           )}
         </AnimatePresence>
-      </motion.div> */}
-      <div className="logo-container-nav" onClick={refreshHomePage}>
-        <img src={FirstLogo} alt="EduVerse" className="nav-logo" />
-        {/* <AnimatePresence> */}
-          {isExpanded && (
-            <motion.span
-              className="app-title"
-              // initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              // transition={{ duration: 0.3 }}
-            >
-              EduVerse
-            </motion.span>
-          )}
-        {/* </AnimatePresence> */}
-      </div>
+      </motion.div>
+      
 
       <div className="nav-items">
-        {navItems.map((item) => (
-          <motion.div
-            key={item.path}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <Link
-              to={item.path}
-              className={`nav-item ${
-                location.pathname === item.path ? "active" : ""
-              }`}
-              data-tooltip={item.tooltip}
-              onMouseEnter={playHoverSound}
-            >
-              <div className="nav-icon-container">
-                {/* <motion.div
-                  className="nav-icon"
-                  whileHover={{
-                    textShadow: "0 0 8px rgb(255,215,0)",
-                    color: "#ffffff",
-                  }}
-                >
-                  {item.icon}
-                  {location.pathname === item.path && (
-                    <motion.div
-                      className="active-indicator"
-                      animate={{
-                        rotate: 360,
-                        boxShadow: ["0 0 0px #ffd700", "0 0 20px #ffd700"],
-                      }}
-                      transition={{
-                        rotate: {
-                          duration: 4,
-                          repeat: Infinity,
-                          ease: "linear",
-                        },
-                        boxShadow: {
-                          duration: 1,
-                          repeat: Infinity,
-                          yoyo: true,
-                        },
-                      }}
-                    />
-                  )}
-                </motion.div> */}
-                <div className="nav-icon">{item.icon}</div>
-              </div>
-              <div className="nav-label-container">
-                <AnimatePresence>
-                  {isExpanded && (
-                    // <motion.span
-                    //   className="nav-label"
-                    //   initial={{ opacity: 0, x: -20 }}
-                    //   animate={{ opacity: 1, x: 0 }}
-                    //   exit={{ opacity: 0, x: -20 }}
-                    //   transition={{ duration: 0.2 }}
-                    // >
-                    //   {item.label}
-                    // </motion.span>
-                    <div className="nav-label">{item.label}</div>
-                  )}
-                </AnimatePresence>
-              </div>
-            </Link>
-          </motion.div>
-        ))}
-      </div>
+  {navItems.map((item) => (
+    <div
+      key={item.path}
+      className="nav-item-container"
+    >
+      <Link
+        to={item.path}
+        className={`nav-item ${location.pathname === item.path ? "active" : ""}`}
+        data-tooltip={item.tooltip}
+        onMouseEnter={playHoverSound}
+      >
+        <div className="nav-icon-container">
+          <div className="nav-icon">
+            {item.icon}
+            {location.pathname === item.path && (
+              <div className="active-indicator" />
+            )}
+          </div>
+        </div>
+        <div className="nav-label-container">
+          {isExpanded && (
+            <span className="nav-label">
+              {item.label}
+            </span>
+          )}
+        </div>
+      </Link>
+    </div>
+  ))}
+</div>
+
 
       {isMobile && (
         <motion.button
