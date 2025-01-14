@@ -11,14 +11,16 @@ function PostList() {
       try {
         // Get the token from localStorage
         const token = localStorage.getItem('access_token');
+        console.log(token);
         
         if (!token) {
           console.error("No token found. Please log in.");
+          // window.location.href = "/login";
           return;
         }
 
         // Make the API request with the Authorization header
-        const response = await axios.get("http://localhost:8000/api/posts/", {
+        const response = await axios.get("http://127.0.0.1:8000/api/posts/", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -49,7 +51,7 @@ function PostList() {
         ))
       )} */}
       {posts.map((post) => (
-          <div key={post.id}>
+          <div className="container" key={post.id}>
             <h3>{post.title}</h3>
             <p>{post.content}</p>
             <small>
