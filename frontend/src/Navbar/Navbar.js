@@ -81,7 +81,7 @@ const Navbar = () => {
       }`}
       initial={{ x: -100, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
       onMouseEnter={() => !isMobile && setIsExpanded(true)}
       onMouseLeave={() => !isMobile && setIsExpanded(false)}
     >
@@ -102,9 +102,10 @@ const Navbar = () => {
           className="nav-logo"
           initial={{ rotate: -180, opacity: 0 }}
           animate={{ rotate: 0, opacity: 1 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.5 }}
         />
-        <AnimatePresence>
+        <p>Eduverse</p>
+        {/* <AnimatePresence>
           {isExpanded && (
             <motion.span
               className="app-title"
@@ -116,42 +117,121 @@ const Navbar = () => {
               EduVerse
             </motion.span>
           )}
-        </AnimatePresence>
+        </AnimatePresence> */}
       </motion.div>
-      
+
+      <div className="nav-sep"></div>
 
       <div className="nav-items">
-  {navItems.map((item) => (
-    <div
-      key={item.path}
-      className="nav-item-container"
-    >
-      <Link
-        to={item.path}
-        className={`nav-item ${location.pathname === item.path ? "active" : ""}`}
-        data-tooltip={item.tooltip}
-        onMouseEnter={playHoverSound}
-      >
-        <div className="nav-icon-container">
-          <div className="nav-icon">
-            {item.icon}
-            {location.pathname === item.path && (
-              <div className="active-indicator" />
-            )}
-          </div>
+        <div className="nav-item-container">
+          <Link
+            to="/"
+            className={`nav-item ${location.pathname === "/" ? "active" : ""}`}
+            data-tooltip="Home"
+            onMouseEnter={playHoverSound}
+          >
+            <div className="nav-icon-container">
+              <div className="nav-icon">
+                <AiFillHome />
+                {location.pathname === "/" && <div className="active-indicator" />}
+              </div>
+            </div>
+            <div className="nav-label-container">
+              {isExpanded && <span className="nav-label">Home</span>}
+            </div>
+          </Link>
         </div>
-        <div className="nav-label-container">
-          {isExpanded && (
-            <span className="nav-label">
-              {item.label}
-            </span>
-          )}
+        <div className="nav-item-container">
+          <Link
+            to="/search"
+            className={`nav-item ${location.pathname === "/search" ? "active" : ""}`}
+            data-tooltip="Search"
+            onMouseEnter={playHoverSound}
+          >
+            <div className="nav-icon-container">
+              <div className="nav-icon">
+                <AiOutlineSearch />
+                {location.pathname === "/search" && <div className="active-indicator" />}
+              </div>
+            </div>
+            <div className="nav-label-container">
+              {isExpanded && <span className="nav-label">Search</span>}
+            </div>
+          </Link>
         </div>
-      </Link>
-    </div>
-  ))}
-</div>
-
+        <div className="nav-item-container">
+          <Link
+            to="/messages"
+            className={`nav-item ${location.pathname === "/messages" ? "active" : ""}`}
+            data-tooltip="Messages"
+            onMouseEnter={playHoverSound}
+          >
+            <div className="nav-icon-container">
+              <div className="nav-icon">
+                <AiFillMessage />
+                {location.pathname === "/messages" && <div className="active-indicator" />}
+              </div>
+            </div>
+            <div className="nav-label-container">
+              {isExpanded && <span className="nav-label">Messages</span>}
+            </div>
+          </Link>
+        </div>
+        <div className="nav-item-container">
+          <Link
+            to="/notes"
+            className={`nav-item ${location.pathname === "/notes" ? "active" : ""}`}
+            data-tooltip="AI Assistant"
+            onMouseEnter={playHoverSound}
+          >
+            <div className="nav-icon-container">
+              <div className="nav-icon">
+                <AiOutlineGlobal />
+                {location.pathname === "/notes" && <div className="active-indicator" />}
+              </div>
+            </div>
+            <div className="nav-label-container">
+              {isExpanded && <span className="nav-label">Edura</span>}
+            </div>
+          </Link>
+        </div>
+        <div className="nav-item-container">
+          <Link
+            to="/newpost"
+            className={`nav-item ${location.pathname === "/newpost" ? "active" : ""}`}
+            data-tooltip="Create Post"
+            onMouseEnter={playHoverSound}
+          >
+            <div className="nav-icon-container">
+              <div className="nav-icon">
+                <AiFillPlusSquare />
+                {location.pathname === "/newpost" && <div className="active-indicator" />}
+              </div>
+            </div>
+            <div className="nav-label-container">
+              {isExpanded && <span className="nav-label">New Post</span>}
+            </div>
+          </Link>
+        </div>
+        <div className="nav-item-container">
+          <Link
+            to="/profile"
+            className={`nav-item ${location.pathname === "/profile" ? "active" : ""}`}
+            data-tooltip="Profile"
+            onMouseEnter={playHoverSound}
+          >
+            <div className="nav-icon-container">
+              <div className="nav-icon">
+                <AiOutlineUser />
+                {location.pathname === "/profile" && <div className="active-indicator" />}
+              </div>
+            </div>
+            <div className="nav-label-container">
+              {isExpanded && <span className="nav-label">Profile</span>}
+            </div>
+          </Link>
+        </div>
+      </div>
 
       {isMobile && (
         <motion.button

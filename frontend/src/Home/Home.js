@@ -59,11 +59,11 @@ const Home = () => {
   return (
     <div className="home-container">
       {/* Header */}
-      <header className="premium-header">
+      {/* <header className="premium-header">
         <div className="logo-container" style={{ marginLeft: '70px' }}>
           <h1 className="app-name">EduVerse</h1>
         </div>
-      </header>
+      </header> */}
 
       <div className="main-layout">
         {/* Main Content */}

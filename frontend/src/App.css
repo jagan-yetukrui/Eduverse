@@ -1,3 +1,8 @@
+.App {
+  display: grid;
+  grid-template-columns: 100px auto;
+  height: 100vh !important;
+}
 
 .toggle-button {
   margin-top: 20px;

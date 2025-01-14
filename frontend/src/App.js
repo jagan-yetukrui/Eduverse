@@ -2,6 +2,7 @@ import React, { useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './Navbar/Navbar';
 import ErrorBoundary from './ErrorBoundary/ErrorBoundary';
+import './App.css';
 
 // Lazy load components to improve performance
 const Home = lazy(() => import('./Home/Home'));
