@@ -193,36 +193,51 @@
 }
 
 .welcome-title {
-  font-size: 3rem;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 1rem;
+  font-size: 2rem;
+  margin: 1.5rem;
+  animation: titlePulse 7s ease-in-out infinite;
+}
+
+.welcome-title h3 {
+  margin: 0 0;
+  color: rgb(197, 197, 197);
+}
+
+.welcome-title h1 {
+  margin: 0 0;
   background: linear-gradient(90deg, #4a90e2, #ffd700);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  margin: 1.5rem;
-  animation: titlePulse 7s ease-in-out infinite;
 }
 
 @keyframes titlePulse {
   0%,
   100% {
-    text-shadow: 0 0 20px rgba(74, 144, 226, 0.5);
+    text-shadow: 0 0 20px rgba(74, 144, 226, 0.3);
   }
   50% {
-    text-shadow: 0 0 40px rgba(74, 144, 226, 0.8);
+    text-shadow: 0 0 40px rgba(74, 144, 226, 0.5);
   }
 }
 
 .welcome-subtitle {
   font-size: 1.3rem;
-  color: #a0a0c0;
+  color: rgb(197, 197, 197);
   margin: 2.5rem;
   line-height: 1.6;
 }
 
 .auth-buttons {
   display: flex;
-  gap: 2rem;
+  gap: 1rem;
   justify-content: center;
+  padding: 1rem;
+  border-bottom: 1px solid rgba(74, 144, 226, 0.2);
 }
 
 .premium-button {

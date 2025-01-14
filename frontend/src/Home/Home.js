@@ -70,28 +70,16 @@ const Home = () => {
         <main className="main-content">
           {!isAuthenticated ? (
             <div className="welcome-section">
-              <h1 className="welcome-title">
-                Welcome to EduVerse<div className="welcome-div"></div>
-              </h1>
+              <div className="welcome-title">
+                <h3>Welcome to</h3>
+                <h1>EduVerse</h1>
+              </div>
+              <div className="welcome-div"></div>
 
               <p className="welcome-subtitle">
                 Your premium platform for collaborative learning and
                 professional growth
               </p>
-              <div className="auth-buttons">
-                <button
-                  onClick={() => navigate("/login")}
-                  className="premium-button login"
-                >
-                  Login
-                </button>
-                <button
-                  onClick={() => navigate("/register")}
-                  className="premium-button register"
-                >
-                  Register
-                </button>
-              </div>
             </div>
           ) : (
             <div className="feed-container">
@@ -113,6 +101,20 @@ const Home = () => {
 
         {/* Right Sidebar */}
         <aside className="right-sidebar">
+          <div className="auth-buttons">
+            <button
+              onClick={() => navigate("/login")}
+              className="premium-button login"
+            >
+              Login
+            </button>
+            <button
+              onClick={() => navigate("/register")}
+              className="premium-button register"
+            >
+              Register
+            </button>
+          </div>
           <section className="sidebar-section trending-projects">
             <p>Trending Projects</p>
             <div className="project-cards">
