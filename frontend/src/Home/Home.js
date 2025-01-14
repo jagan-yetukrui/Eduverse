@@ -138,6 +138,30 @@ const Home = () => {
               ))}
             </div>
           </section>
+
+          <section className="sidebar-section trending-projects">
+            <p>Example 1</p>
+            <div className="project-cards">
+              {trendingProjects.map((project) => (
+                <div key={project.id} className="project-card">
+                  <h4>{project.title}</h4>
+                  <p>{project.description}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section className="sidebar-section trending-projects">
+            <p>Exampel 2</p>
+            <div className="project-cards">
+              {trendingProjects.map((project) => (
+                <div key={project.id} className="project-card">
+                  <h4>{project.title}</h4>
+                  <p>{project.description}</p>
+                </div>
+              ))}
+            </div>
+          </section>
         </aside>
       </div>
 
