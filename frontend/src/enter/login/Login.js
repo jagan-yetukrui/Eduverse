@@ -1,37 +1,40 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
-import './Login.css';
-import { FaRocket, FaEye, FaEyeSlash, FaTimesCircle } from 'react-icons/fa';
-import ParticlesBg from 'particles-bg';
-import FirstLogo from '../../First_logo.png';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import "./Login.css";
+import { FaRocket, FaEye, FaEyeSlash, FaTimesCircle } from "react-icons/fa";
+import ParticlesBg from "particles-bg";
+import FirstLogo from "../../First_logo.png";
+import axios from "axios";
 
 // Create axios instance with base URL
 const apiClient = axios.create({
-  baseURL: 'http://127.0.0.1:8000/'
+  baseURL: "http://127.0.0.1:8000/",
 });
 
 // Add response interceptor
 apiClient.interceptors.response.use(
-  response => response,
-  async error => {
+  (response) => response,
+  async (error) => {
     if (error.response?.status === 401) {
-      const refreshToken = localStorage.getItem('refresh_token');
+      const refreshToken = localStorage.getItem("refresh_token");
       if (refreshToken) {
         try {
-          const response = await axios.post('http://127.0.0.1:8000/api/token/refresh/', {
-            refresh: refreshToken
-          });
+          const response = await axios.post(
+            "http://127.0.0.1:8000/api/token/refresh/",
+            {
+              refresh: refreshToken,
+            }
+          );
           const newAccessToken = response.data.access;
-          localStorage.setItem('access_token', newAccessToken);
+          localStorage.setItem("access_token", newAccessToken);
 
           // Retry original request with new token
-          error.config.headers['Authorization'] = `Bearer ${newAccessToken}`;
+          error.config.headers["Authorization"] = `Bearer ${newAccessToken}`;
           return apiClient.request(error.config);
         } catch (refreshError) {
-          console.error('Failed to refresh token:', refreshError);
-          window.location.href = '/login';
+          console.error("Failed to refresh token:", refreshError);
+          window.location.href = "/login";
         }
       }
     }
@@ -41,33 +44,33 @@ apiClient.interceptors.response.use(
 
 const Login = () => {
   const [formData, setFormData] = useState({
-    username: '', // This will store either username or email
-    password: '',
+    username: "", // This will store either username or email
+    password: "",
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
     // Check if user is already logged in
-    const token = localStorage.getItem('access_token');
+    const token = localStorage.getItem("access_token");
     if (token) {
-      navigate('/profile');
+      navigate("/profile");
     }
   }, [navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
 
-    if (name === 'password') {
+    if (name === "password") {
       calculatePasswordStrength(value);
     }
   };
@@ -83,9 +86,11 @@ const Login = () => {
 
   const validateForm = () => {
     let newErrors = {};
-    if (!formData.username) newErrors.username = 'Username or Email is required';
-    if (!formData.password) newErrors.password = 'Password is required';
-    else if (formData.password.length < 8) newErrors.password = 'Password must be at least 8 characters';
+    if (!formData.username)
+      newErrors.username = "Username or Email is required";
+    if (!formData.password) newErrors.password = "Password is required";
+    else if (formData.password.length < 8)
+      newErrors.password = "Password must be at least 8 characters";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -95,34 +100,36 @@ const Login = () => {
     e.preventDefault();
     if (validateForm()) {
       setIsLoading(true);
-      setErrorMessage('');
+      setErrorMessage("");
 
       try {
-        const response = await apiClient.post('api/accounts/login/', formData, {
+        const response = await apiClient.post("api/accounts/login/", formData, {
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-          }
+            "Content-Type": "application/json",
+            // Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
         });
 
-        localStorage.setItem('access_token', response.data.access);
-        localStorage.setItem('refresh_token', response.data.refresh);
+        localStorage.setItem("access_token", response.data.access);
+        localStorage.setItem("refresh_token", response.data.refresh);
         setIsSuccess(true);
-        
+
         setTimeout(() => {
-          navigate('/profile');
+          navigate("/profile");
         }, 2000);
       } catch (error) {
         if (error.response && error.response.data) {
           const errorData = error.response.data;
-          if (typeof errorData === 'object') {
+          if (typeof errorData === "object") {
             const errorMessage = Object.values(errorData)[0];
-            setErrorMessage(Array.isArray(errorMessage) ? errorMessage[0] : errorMessage);
+            setErrorMessage(
+              Array.isArray(errorMessage) ? errorMessage[0] : errorMessage
+            );
           } else {
-            setErrorMessage('Invalid credentials');
+            setErrorMessage("Invalid credentials");
           }
         } else {
-          setErrorMessage('Network error. Please try again.');
+          setErrorMessage("Network error. Please try again.");
         }
       } finally {
         setIsLoading(false);
@@ -133,25 +140,25 @@ const Login = () => {
   return (
     <div className="login-container">
       <ParticlesBg type="cobweb" bg={true} color="#4a90e2" />
-      
-      <motion.div 
+
+      <motion.div
         className="holographic-panel"
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, ease: "easeOut" }}
       >
-        <motion.img 
+        <motion.img
           src={FirstLogo}
           alt="EduVerse"
           className="login-logo"
-          style={{ width: '60px', height: 'auto' }}
+          style={{ width: "60px", height: "auto" }}
           whileHover={{ rotate: 360, scale: 1.1 }}
           transition={{ duration: 0.8 }}
         />
 
         <AnimatePresence>
           {isSuccess ? (
-            <motion.div 
+            <motion.div
               className="success-container"
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
@@ -161,7 +168,7 @@ const Login = () => {
               <p className="success-text">Launching into EduVerse...</p>
             </motion.div>
           ) : (
-            <motion.form 
+            <motion.form
               onSubmit={handleSubmit}
               className="login-form"
               initial={{ opacity: 0 }}
@@ -176,10 +183,10 @@ const Login = () => {
                   value={formData.username}
                   onChange={handleChange}
                   whileFocus={{ scale: 1.02 }}
-                  className={`neon-input ${errors.username ? 'invalid' : ''}`}
+                  className={`neon-input ${errors.username ? "invalid" : ""}`}
                 />
                 {errors.username && (
-                  <motion.div 
+                  <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     className="validation-icon"
@@ -197,9 +204,9 @@ const Login = () => {
                   value={formData.password}
                   onChange={handleChange}
                   whileFocus={{ scale: 1.02 }}
-                  className={`neon-input ${errors.password ? 'invalid' : ''}`}
+                  className={`neon-input ${errors.password ? "invalid" : ""}`}
                 />
-                <motion.div 
+                <motion.div
                   className="password-toggle"
                   whileHover={{ scale: 1.1 }}
                   onClick={() => setShowPassword(!showPassword)}
@@ -210,9 +217,11 @@ const Login = () => {
                   {[...Array(4)].map((_, i) => (
                     <motion.div
                       key={i}
-                      className={`strength-segment ${i < passwordStrength ? 'active' : ''}`}
+                      className={`strength-segment ${
+                        i < passwordStrength ? "active" : ""
+                      }`}
                       initial={{ width: 0 }}
-                      animate={{ width: '100%' }}
+                      animate={{ width: "100%" }}
                     />
                   ))}
                 </div>
@@ -226,19 +235,25 @@ const Login = () => {
                 whileTap={{ scale: 0.95 }}
               >
                 {isLoading ? (
-                  <motion.div 
+                  <motion.div
                     className="loading-spinner"
                     animate={{ rotate: 360 }}
-                    transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                    transition={{
+                      duration: 1,
+                      repeat: Infinity,
+                      ease: "linear",
+                    }}
                   />
-                ) : 'Enter EduVerse'}
+                ) : (
+                  "Enter EduVerse"
+                )}
               </motion.button>
             </motion.form>
           )}
         </AnimatePresence>
 
         {errorMessage && (
-          <motion.div 
+          <motion.div
             className="error-message"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -249,7 +264,7 @@ const Login = () => {
         )}
 
         <motion.button
-          onClick={() => navigate('/register')}
+          onClick={() => navigate("/register")}
           className="register-link"
           whileHover={{ scale: 1.05, textShadow: "0 0 8px rgb(255,255,255)" }}
         >

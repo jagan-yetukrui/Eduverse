@@ -32,6 +32,7 @@
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
+  margin-left: 80px;
   padding: var(--spacing-md);
   color: var(--text-primary);
   background: var(--bg-dark);
@@ -47,6 +48,7 @@
   background: var(--bg-card);
   border-radius: 20px;
   margin-bottom: var(--spacing-lg);
+  margin-left: 80px;
   box-shadow: var(--card-shadow);
   backdrop-filter: blur(10px);
   position: relative;
