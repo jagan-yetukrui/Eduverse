@@ -79,14 +79,14 @@ const Navbar = () => {
       className={`navbar ${isExpanded ? "expanded" : ""} ${
         isMobile ? "mobile" : ""
       }`}
-      initial={{ x: -100, opacity: 0 }}
+      // initial={{ x: -100, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
       onMouseEnter={() => !isMobile && setIsExpanded(true)}
       onMouseLeave={() => !isMobile && setIsExpanded(false)}
     >
       <div className="navbar-background">
-        <div className="gradient-overlay"></div>
+        {/* <div className="gradient-overlay"></div> */}
         <div className="particle-container"></div>
       </div>
 

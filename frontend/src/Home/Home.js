@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import './Home.css';
-import ProfileCardHome from './ProfileCardHome';
+import React, { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import "./Home.css";
+import ProfileCardHome from "./ProfileCardHome";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -12,7 +12,7 @@ const Home = () => {
   const [upcomingEvents, setUpcomingEvents] = useState([]);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     setIsAuthenticated(!!token);
   }, []);
 
@@ -24,31 +24,31 @@ const Home = () => {
 
   const fetchProfileSuggestions = async () => {
     try {
-      const response = await fetch('/api/profiles/suggestions');
+      const response = await fetch("/api/profiles/suggestions");
       const data = await response.json();
       setProfileSuggestions(data);
     } catch (error) {
-      console.error('Error fetching profile suggestions:', error);
+      console.error("Error fetching profile suggestions:", error);
     }
   };
 
   const fetchTrendingProjects = async () => {
     try {
-      const response = await fetch('/api/projects/trending');
+      const response = await fetch("/api/projects/trending");
       const data = await response.json();
       setTrendingProjects(data);
     } catch (error) {
-      console.error('Error fetching trending projects:', error);
+      console.error("Error fetching trending projects:", error);
     }
   };
 
   const fetchUpcomingEvents = async () => {
     try {
-      const response = await fetch('/api/events/upcoming');
+      const response = await fetch("/api/events/upcoming");
       const data = await response.json();
       setUpcomingEvents(data);
     } catch (error) {
-      console.error('Error fetching upcoming events:', error);
+      console.error("Error fetching upcoming events:", error);
     }
   };
 
@@ -70,11 +70,27 @@ const Home = () => {
         <main className="main-content">
           {!isAuthenticated ? (
             <div className="welcome-section">
-              <h1 className="welcome-title">Welcome to EduVerse</h1>
-              <p className="welcome-subtitle">Your premium platform for collaborative learning and professional growth</p>
+              <h1 className="welcome-title">
+                Welcome to EduVerse<div className="welcome-div"></div>
+              </h1>
+
+              <p className="welcome-subtitle">
+                Your premium platform for collaborative learning and
+                professional growth
+              </p>
               <div className="auth-buttons">
-                <button onClick={() => navigate('/login')} className="premium-button login">Login</button>
-                <button onClick={() => navigate('/register')} className="premium-button register">Register</button>
+                <button
+                  onClick={() => navigate("/login")}
+                  className="premium-button login"
+                >
+                  Login
+                </button>
+                <button
+                  onClick={() => navigate("/register")}
+                  className="premium-button register"
+                >
+                  Register
+                </button>
               </div>
             </div>
           ) : (
@@ -98,9 +114,9 @@ const Home = () => {
         {/* Right Sidebar */}
         <aside className="right-sidebar">
           <section className="sidebar-section trending-projects">
-            <h3>Trending Projects</h3>
+            <p>Trending Projects</p>
             <div className="project-cards">
-              {trendingProjects.map(project => (
+              {trendingProjects.map((project) => (
                 <div key={project.id} className="project-card">
                   <h4>{project.title}</h4>
                   <p>{project.description}</p>
@@ -110,9 +126,9 @@ const Home = () => {
           </section>
 
           <section className="sidebar-section upcoming-events">
-            <h3>Upcoming Events</h3>
+            <p>Upcoming Events</p>
             <div className="event-cards">
-              {upcomingEvents.map(event => (
+              {upcomingEvents.map((event) => (
                 <div key={event.id} className="event-card">
                   <h4>{event.title}</h4>
                   <p>{event.date}</p>
