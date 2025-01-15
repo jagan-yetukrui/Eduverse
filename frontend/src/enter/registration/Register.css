@@ -28,17 +28,18 @@
 }
 
 .register-container {
-  width: 100vw;
-  height: 100vh;
+  /* width: 100vw; */
+  /* height: 100vh; */
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(45deg, #0a0a2e, #1a1a3a, #2a2a4a);
-  background-size: 400% 400%;
-  animation: backgroundFlow 15s ease infinite;
+  /* background: linear-gradient(45deg, #0a0a2e, #1a1a3a, #2a2a4a); */
+  background: var(--secondary-color);
+  /* background-size: 400% 400%; */
+  /* animation: backgroundFlow 15s ease infinite; */
   position: relative;
   overflow: hidden;
-  padding: 20px;
+  /* padding: 20px; */
 }
 
 .register-container::before {
@@ -51,39 +52,40 @@
     rgba(79, 195, 247, 0.05) 1px,
     transparent 2px
   );
-  animation: floatingParticles 10s infinite ease-in-out;
+  /* animation: floatingParticles 10s infinite ease-in-out; */
 }
 
 .holographic-panel {
-  background: rgba(20, 20, 60, 0.85);
-  backdrop-filter: blur(10px);
-  padding: 40px;
-  border-radius: 15px;
+  background: var(--primary-color);
+  /* backdrop-filter: blur(10px); */
+  /* padding: 40px; */
+  border-radius: 10px;
   width: 400px;
   position: relative;
   border: 1px solid rgba(79, 195, 247, 0.3);
-  animation: glowPulse 3s infinite;
+  /* animation: glowPulse 3s infinite; */
   color: white;
-  font-size: 18px;
+  /* font-size: 18px; */
 }
 
 /* Logo styling */
-.logo-image {
+/* .logo-image {
   width: 90px;
   height: auto;
   display: block;
   margin: 0 auto 20px;
   transition: transform 0.3s ease;
-}
+} */
 
-.logo-image:hover {
+/* .logo-image:hover {
   transform: scale(1.05);
-}
+} */
 
 .register-form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  /* gap: 20px; */
+  gap: 1rem;
 }
 
 .input-group {

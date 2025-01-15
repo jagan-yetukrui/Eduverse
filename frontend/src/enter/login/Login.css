@@ -45,7 +45,7 @@
   /* background: linear-gradient(45deg, #0a0a2e, #1a1a3a, #2a2a4a); */
   background: var(--secondary-color);
   background-size: 400% 400%;
-  animation: backgroundFlow 15s ease infinite;
+  /* animation: backgroundFlow 15s ease infinite; */
   position: relative;
   overflow: hidden;
   padding: 20px;
@@ -67,11 +67,11 @@
 .holographic-panel {
   /* background: rgba(10, 10, 46, 0.8); */
   background: var(--primary-color);
-  backdrop-filter: blur(10px);
+  /* backdrop-filter: blur(10px); */
   padding: 40px;
   border-radius: 15px;
   width: min(90%, 450px);
-  max-height: 90vh;
+  /* max-height: 90vh; */
   overflow-y: auto;
   position: relative;
   border: 1px solid rgba(79, 195, 247, 0.3);
