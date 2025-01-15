@@ -203,9 +203,9 @@
   filter: brightness(0.8);
 }
 
-.submit-button:active {
+/* .submit-button:active { */
   /* transform: scale(0.95); */
-}
+/* } */
 
 .error-message {
   background: rgba(255, 23, 68, 0.1);
