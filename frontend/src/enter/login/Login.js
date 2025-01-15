@@ -7,6 +7,8 @@ import ParticlesBg from "particles-bg";
 import FirstLogo from "../../First_logo.png";
 import axios from "axios";
 
+const rotateCount = 0;
+
 // Create axios instance with base URL
 const apiClient = axios.create({
   baseURL: "http://127.0.0.1:8000/",
@@ -143,7 +145,7 @@ const Login = () => {
 
       <motion.div
         className="holographic-panel"
-        initial={{ opacity: 0, y: -50 }}
+        // initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, ease: "easeOut" }}
       >
@@ -152,8 +154,8 @@ const Login = () => {
           alt="EduVerse"
           className="login-logo"
           style={{ width: "60px", height: "auto" }}
-          whileHover={{ rotate: 360, scale: 1.1 }}
-          transition={{ duration: 0.8 }}
+          whileHover={{ rotate: 360, scale: 1.05 }}
+          transition={{ duration: 0.3 }}
         />
 
         <AnimatePresence>
@@ -206,13 +208,16 @@ const Login = () => {
                   whileFocus={{ scale: 1.02 }}
                   className={`neon-input ${errors.password ? "invalid" : ""}`}
                 />
+
                 <motion.div
                   className="password-toggle"
-                  whileHover={{ scale: 1.1 }}
+                  // whileHover={{ scale: 1.03 }}
                   onClick={() => setShowPassword(!showPassword)}
                 >
-                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  {showPassword ? <FaEye /> : <FaEyeSlash />}
+                  {showPassword ? "Hide Password" : "Show Password"}
                 </motion.div>
+
                 <div className="strength-meter">
                   {[...Array(4)].map((_, i) => (
                     <motion.div
@@ -231,7 +236,7 @@ const Login = () => {
                 type="submit"
                 className="submit-button"
                 disabled={isLoading}
-                whileHover={{ scale: 1.05 }}
+                // whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
                 {isLoading ? (
@@ -266,7 +271,7 @@ const Login = () => {
         <motion.button
           onClick={() => navigate("/register")}
           className="register-link"
-          whileHover={{ scale: 1.05, textShadow: "0 0 8px rgb(255,255,255)" }}
+          // whileHover={{ scale: 1.05, textShadow: "0 0 8px rgb(255,255,255)" }}
         >
           New to EduVerse? Join the future
         </motion.button>

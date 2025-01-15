@@ -1,3 +1,10 @@
+:root {
+  --primary-color: #0f3460;
+  --secondary-color: #0f2947;
+  --tertiary-color: rgb(238, 238, 238);
+  --quaternary-color: #333;
+}
+
 .App {
   display: grid;
   grid-template-columns: 100px auto;
