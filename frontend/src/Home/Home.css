@@ -198,7 +198,7 @@
   justify-content: center;
   gap: 1rem;
   font-size: 2rem;
-  margin: 1.5rem;
+  /* margin: 1.5rem; */
   animation: titlePulse 7s ease-in-out infinite;
 }
 
@@ -228,8 +228,8 @@
 .welcome-subtitle {
   font-size: 1.3rem;
   color: rgb(197, 197, 197);
-  margin: 2.5rem;
-  line-height: 1.6;
+  /* margin: 2.5rem; */
+  /* line-height: 1.6; */
 }
 
 .auth-buttons {
