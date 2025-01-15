@@ -35,6 +35,13 @@
   }
 }
 
+.login-div {
+  width: 100%;
+  height: 3px;
+  margin: 1rem 0;
+  background: linear-gradient(90deg, #4a90e2, #ffd700, #4a90e2);
+}
+
 .login-container {
   /* width: 100vw; */
   /* height: 100vh; */
@@ -69,7 +76,7 @@
   background: var(--primary-color);
   /* backdrop-filter: blur(10px); */
   padding: 40px;
-  border-radius: 15px;
+  border-radius: 10px;
   width: min(90%, 450px);
   /* max-height: 90vh; */
   overflow-y: auto;
@@ -81,9 +88,9 @@
   transition: all 0.1s ease;
 }
 
-.holographic-panel:hover {
-  transform: translateY(-5px) scale(1.02);
-}
+/* .holographic-panel:hover { */
+  /* transform: translateY(-5px) scale(1.02); */
+/* } */
 
 .success-container {
   filter: invert(1);
@@ -133,18 +140,20 @@
   transform: scale(1.02);
 }
 
-.password-toggle {
+.password-toggle-login {
   display: flex;
   align-items: center;
   gap: 5px;
   width: fit-content;
   padding: 1rem;
-  filter: invert(1);
+  font-size: 0.9em;
+  /* filter: invert(1); */
+  color: white;
   cursor: pointer;
 }
 
-.password-toggle:hover {
-  filter: invert(0.8);
+.password-toggle-login:hover {
+  filter: brightness(0.8);
 }
 
 .submit-button {
@@ -154,7 +163,7 @@
   background: linear-gradient(45deg, #4fc3f7, #2196f3);
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
   font-size: 16px;
   text-transform: uppercase;
@@ -192,7 +201,7 @@
   color: #ff1744;
   background: rgba(255, 23, 68, 0.1);
   padding: 10px;
-  border-radius: 8px;
+  border-radius: 10px;
   margin-top: 15px;
   text-align: center;
   border: 1px solid rgba(255, 23, 68, 0.3);
@@ -223,7 +232,7 @@
   height: 4px;
   flex: 1;
   background: rgba(79, 195, 247, 0.2);
-  border-radius: 2px;
+  border-radius: 10px;
 }
 
 .strength-segment.active {

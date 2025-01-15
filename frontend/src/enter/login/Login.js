@@ -146,8 +146,8 @@ const Login = () => {
       <motion.div
         className="holographic-panel"
         // initial={{ opacity: 0, y: -50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, ease: "easeOut" }}
+        // animate={{ opacity: 1, y: 0 }}
+        // transition={{ duration: 1, ease: "easeOut" }}
       >
         <motion.img
           src={FirstLogo}
@@ -157,6 +157,8 @@ const Login = () => {
           whileHover={{ rotate: 360, scale: 1.05 }}
           transition={{ duration: 0.3 }}
         />
+
+        <div className="login-div"></div>
 
         <AnimatePresence>
           {isSuccess ? (
@@ -210,11 +212,11 @@ const Login = () => {
                 />
 
                 <motion.div
-                  className="password-toggle"
+                  className="password-toggle-login"
                   // whileHover={{ scale: 1.03 }}
                   onClick={() => setShowPassword(!showPassword)}
                 >
-                  {showPassword ? <FaEye /> : <FaEyeSlash />}
+                  {showPassword ? <FaEye color="white"/> : <FaEyeSlash color="white"/>}
                   {showPassword ? "Hide Password" : "Show Password"}
                 </motion.div>
 
