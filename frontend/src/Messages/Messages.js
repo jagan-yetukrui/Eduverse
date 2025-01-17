@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import './Message.css';
+import React, { useState, useEffect } from "react";
+import "./Message.css";
 
 const Messages = () => {
   const [chats, setChats] = useState([]); // Array to hold chat data
-  const [message, setMessage] = useState(''); // Current message
+  const [message, setMessage] = useState(""); // Current message
   const [selectedChat, setSelectedChat] = useState(null); // Currently selected chat
-  const [searchTerm, setSearchTerm] = useState(''); // Search term for finding users
+  const [searchTerm, setSearchTerm] = useState(""); // Search term for finding users
   const [searchResults, setSearchResults] = useState([]); // Search results for users
 
   // Fetch real chats from backend
@@ -13,11 +13,11 @@ const Messages = () => {
     const fetchChats = async () => {
       try {
         // Replace with your actual API endpoint
-        const response = await fetch('/api/chats');
+        const response = await fetch("/api/chats");
         const data = await response.json();
         setChats(data);
       } catch (error) {
-        console.error('Error fetching chats:', error);
+        console.error("Error fetching chats:", error);
       }
     };
 
@@ -32,7 +32,7 @@ const Messages = () => {
       const data = await response.json();
       setSearchResults(data);
     } catch (error) {
-      console.error('Error searching users:', error);
+      console.error("Error searching users:", error);
     }
   };
 
@@ -48,23 +48,23 @@ const Messages = () => {
 
   const startNewChat = async (user) => {
     try {
-      if (!chats.find(chat => chat.id === user.id)) {
+      if (!chats.find((chat) => chat.id === user.id)) {
         // Replace with your actual API endpoint
-        const response = await fetch('/api/chats', {
-          method: 'POST',
+        const response = await fetch("/api/chats", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({ userId: user.id }),
         });
         const newChat = await response.json();
-        setChats(prev => [...prev, newChat]);
+        setChats((prev) => [...prev, newChat]);
       }
-      setSelectedChat(chats.find(chat => chat.id === user.id) || user);
-      setSearchTerm('');
+      setSelectedChat(chats.find((chat) => chat.id === user.id) || user);
+      setSearchTerm("");
       setSearchResults([]);
     } catch (error) {
-      console.error('Error starting new chat:', error);
+      console.error("Error starting new chat:", error);
     }
   };
 
@@ -73,19 +73,19 @@ const Messages = () => {
     if (message && selectedChat) {
       try {
         // Replace with your actual API endpoint
-        const response = await fetch('/api/messages', {
-          method: 'POST',
+        const response = await fetch("/api/messages", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             chatId: selectedChat.id,
             text: message,
           }),
         });
-        
+
         const newMessage = await response.json();
-        
+
         setChats((prevChats) =>
           prevChats.map((chat) =>
             chat.id === selectedChat.id
@@ -93,9 +93,9 @@ const Messages = () => {
               : chat
           )
         );
-        setMessage('');
+        setMessage("");
       } catch (error) {
-        console.error('Error sending message:', error);
+        console.error("Error sending message:", error);
       }
     }
   };
@@ -104,6 +104,7 @@ const Messages = () => {
     <div className="messages-container">
       <div className="chats-list">
         <div className="search-container">
+          <p>Messages</p>
           <input
             type="text"
             placeholder="Search users..."
@@ -113,26 +114,31 @@ const Messages = () => {
           />
           {searchResults.length > 0 && (
             <div className="search-results">
-              {searchResults.map(user => (
-                <div 
-                  key={user.id} 
+              {searchResults.map((user) => (
+                <div
+                  key={user.id}
                   className="search-result-item"
                   onClick={() => startNewChat(user)}
                 >
-                  <img src={user.avatar} alt={user.name} className="user-avatar" />
+                  <img
+                    src={user.avatar}
+                    alt={user.name}
+                    className="user-avatar"
+                  />
                   <span>{user.name}</span>
                 </div>
               ))}
             </div>
           )}
         </div>
-        
-        <h2>Messages</h2>
+
         <div className="chats-scroll">
           {chats.map((chat) => (
-            <div 
-              key={chat.id} 
-              className={`chat-item ${selectedChat?.id === chat.id ? 'active' : ''}`}
+            <div
+              key={chat.id}
+              className={`chat-item ${
+                selectedChat?.id === chat.id ? "active" : ""
+              }`}
               onClick={() => setSelectedChat(chat)}
             >
               <img src={chat.avatar} alt={chat.name} className="user-avatar" />
@@ -156,7 +162,11 @@ const Messages = () => {
         {selectedChat ? (
           <>
             <div className="chat-header">
-              <img src={selectedChat.avatar} alt={selectedChat.name} className="user-avatar" />
+              <img
+                src={selectedChat.avatar}
+                alt={selectedChat.name}
+                className="user-avatar"
+              />
               <div className="header-info">
                 <h3>{selectedChat.name}</h3>
                 <span className="status">{selectedChat.lastActive}</span>
@@ -164,9 +174,11 @@ const Messages = () => {
             </div>
             <div className="chat-messages">
               {selectedChat.messages.map((msg, index) => (
-                <div 
-                  key={index} 
-                  className={`chat-message ${msg.sender === 'me' ? 'sent' : 'received'}`}
+                <div
+                  key={index}
+                  className={`chat-message ${
+                    msg.sender === "me" ? "sent" : "received"
+                  }`}
                 >
                   <div className="message-content">
                     <p>{msg.text}</p>
@@ -188,7 +200,10 @@ const Messages = () => {
         ) : (
           <div className="no-chat-selected">
             <h3>Welcome to Messages</h3>
-            <p>Select a chat to start messaging or search for new people to connect with!</p>
+            <p>
+              Select a chat to start messaging or search for new people to
+              connect with!
+            </p>
           </div>
         )}
       </div>

@@ -1,9 +1,12 @@
 .messages-container {
   display: flex;
-  height: calc(100vh - 60px); /* Adjust for navbar height */
-  background-color: #fafafa;
-  margin-left: 80px; /* Width of collapsed navbar */
+  /* height: calc(100vh - 60px); */
+  /* background-color: #fafafa; */
+  background-color: var(--secondary-color);
+  color: white;
+  /* margin-left: 80px; */
   transition: margin-left 0.3s ease; /* Smooth transition */
+
 }
 
 .messages-container.nav-expanded {
@@ -12,20 +15,23 @@
 
 .chats-list {
   width: 350px;
-  border-right: 1px solid #dbdbdb;
-  background-color: white;
+  border-right: 1px solid #4d4d4d;
+  /* background-color: white; */
   display: flex;
   flex-direction: column;
 }
 
 .search-container {
-  padding: 20px;
-  border-bottom: 1px solid #dbdbdb;
+  /* padding: 20px; */
+  /* border-bottom: 1px solid #dbdbdb; */
+  padding: 1rem;
+  width: calc(100% - 2rem);
+  border-bottom: 1px solid #4d4d4d;
 }
 
 .search-input {
-  width: 100%;
-  padding: 10px;
+  width: calc(100% - 2rem);
+  padding: .5rem 1rem;
   border: 1px solid #dbdbdb;
   border-radius: 8px;
   font-size: 14px;
@@ -207,4 +213,5 @@
   color: #8e8e8e;
   text-align: center;
   padding: 20px;
+  background: var(--secondary-color);
 }
