@@ -52,6 +52,7 @@ def search(request):
     # Prepare post results
     post_results = [
         {
+            "id": post.id,
             "title": post.title,
             "author": post.author.username,
             "content": post.content,

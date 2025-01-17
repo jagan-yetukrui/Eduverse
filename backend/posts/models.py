@@ -11,6 +11,7 @@ class Post(models.Model):
         ('review', 'Review'),
     )
 
+    id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=255)
     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     content = models.TextField()

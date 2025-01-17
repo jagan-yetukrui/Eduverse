@@ -137,7 +137,9 @@ const Search = () => {
       try {
         // const response = await fetch(`/api/users/search?query=${encodeURIComponent(query)}&detailed=true`);
         const response = await fetch(
-          `http://localhost:8000/api/search/?name=${encodeURIComponent(query)}&?post_author=${encodeURIComponent(query)}`
+          `http://localhost:8000/api/search/?name=${encodeURIComponent(
+            query
+          )}&post_author=${encodeURIComponent(query)}`
         );
 
         const results = await response.json();
@@ -194,13 +196,9 @@ const Search = () => {
               onClick={() => handleSuggestionClick(user.id)}
               className="suggestion-item"
             >
-              <img
-                src={user.avatar}
-                alt={user.name}
-                className="user-avatar"
-              />
+              <img src={user.avatar} alt={user.name} className="user-avatar" />
               <div className="user-info">
-                <h4>{user.username}</h4>
+                <h3>{user.username}</h3>
                 <p className="user-title">{user.title}</p>
                 <div className="mutual-connections">
                   {user.mutualCount > 0 && (
@@ -247,7 +245,7 @@ const Search = () => {
                   className="user-avatar"
                 />
                 <div className="user-info">
-                  <h4>{user.name}</h4>
+                  <h3>{user.name}</h3>
                   <p className="user-title">{user.title}</p>
                   <p className="user-location">{user.location}</p>
                   {user.mutualCount > 0 && (
@@ -268,50 +266,60 @@ const Search = () => {
       )}
 
       {/* added new part to match the results of search api for now */}
-      {showResults && (
-        <div className="search-results">
-          <h3>Search Results</h3>
+      <div className="search-results-container">
+        {showResults && (
+          <div className="search-results">
+            {/* <h3>Search Results</h3> */}
 
-          {searchResults?.users?.length > 0 && (
-            <div className="users-results">
-              <h4>Users</h4>
-              <ul>
-                {searchResults.users.map((user) => (
-                  <li key={user.username}>
-                    <img
-                      src={user.profile_picture || "/default-avatar.jpg"}
-                      alt={user.username}
-                      className="user-avatar"
-                    />
-                    <div className="user-info">
-                      <h4>{user.username}</h4>
-                      <p>{user.email}</p>
-                      <p>{user.skills || "No skills listed"}</p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+            {searchResults?.users?.length > 0 && (
+              <div className="users-results">
+                <h3>Users</h3>
+                <div className="search-div"></div>
+                <ul>
+                  {searchResults.users.map((user) => (
+                    <li key={user.username}>
+                      <img
+                        src={user.profile_picture || "/default-avatar.jpg"}
+                        alt={user.username}
+                        className="user-avatar"
+                      />
+                      <div className="user-info">
+                        <p>{user.username}</p>
+                        <div className="small-div"></div>
+                        <p>{user.email}</p>
+                        <p>{user.skills || "No skills listed"}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        )}
 
-          {/* {searchResults?.posts?.length > 0 && (
-            <div className="posts-results">
-              <h4>Posts</h4>
-              <ul>
-                {searchResults.posts.map((post) => (
-                  <li key={post.title}>
-                    <h5>{post.title}</h5>
-                    <p>{post.content}</p>
-                    <p>
-                      <strong>Post Type:</strong> {post.post_type}
-                    </p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )} */}
-        </div>
-      )}
+        {showResults && (
+          <div className="search-results">
+            {/* <h3>Search Results</h3> */}
+            {searchResults?.posts?.length > 0 && (
+              <div className="posts-results">
+                <h3>Posts</h3>
+                <div className="search-div"></div>
+                <ul>
+                  {searchResults.posts.map((post) => (
+                    <li key={post.id}>
+                      <p>{post.title}</p>
+                      <p>{post.author}</p>
+                      <div className="small-div"></div>
+                      <p>{post.content}</p>
+                      <p>{post.post_type}</p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
