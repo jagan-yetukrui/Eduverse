@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.http import HttpResponse
 from django.urls import path, include
 from django.urls import path
-from .views import RegisterView, LoginView, ProtectedView, AccountsRootView
+
 
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
