@@ -25,9 +25,9 @@ const Search = () => {
       return particle;
     });
 
-    particles.forEach((particle) => {
-      animateParticle(particle);
-    });
+    // particles.forEach((particle) => {
+    //   animateParticle(particle);
+    // });
 
     // Slide in search bar
     searchBarRef.current.classList.add("slide-in");
@@ -91,29 +91,29 @@ const Search = () => {
     return () => clearTimeout(debounceTimer);
   }, [query]);
 
-  const animateParticle = (particle) => {
-    const animation = particle.animate(
-      [
-        {
-          transform: `translate(${Math.random() * 100}vw, ${
-            Math.random() * 100
-          }vh)`,
-          opacity: 0,
-        },
-        {
-          transform: `translate(${Math.random() * 100}vw, ${
-            Math.random() * 100
-          }vh)`,
-          opacity: 0.5,
-        },
-      ],
-      {
-        duration: 3000 + Math.random() * 2000,
-        iterations: Infinity,
-      }
-    );
-    return animation;
-  };
+  // const animateParticle = (particle) => {
+  //   const animation = particle.animate(
+  //     [
+  //       {
+  //         transform: `translate(${Math.random() * 100}vw, ${
+  //           Math.random() * 100
+  //         }vh)`,
+  //         opacity: 0,
+  //       },
+  //       {
+  //         transform: `translate(${Math.random() * 100}vw, ${
+  //           Math.random() * 100
+  //         }vh)`,
+  //         opacity: 0.5,
+  //       },
+  //     ],
+  //     {
+  //       duration: 3000 + Math.random() * 2000,
+  //       iterations: Infinity,
+  //     }
+  //   );
+  //   return animation;
+  // };
 
   const triggerSearchAnimation = () => {
     const container = searchContainerRef.current;
@@ -137,10 +137,11 @@ const Search = () => {
       try {
         // const response = await fetch(`/api/users/search?query=${encodeURIComponent(query)}&detailed=true`);
         const response = await fetch(
-          `http://localhost:8000/api/search/?name=${encodeURIComponent(query)}`
+          `http://localhost:8000/api/search/?name=${encodeURIComponent(query)}&?post_author=${encodeURIComponent(query)}`
         );
 
         const results = await response.json();
+        console.log(results);
 
         // Delay results to sync with animation
         setTimeout(() => {
@@ -194,12 +195,12 @@ const Search = () => {
               className="suggestion-item"
             >
               <img
-                src={user.profileImage}
+                src={user.avatar}
                 alt={user.name}
                 className="user-avatar"
               />
               <div className="user-info">
-                <h4>{user.name}</h4>
+                <h4>{user.username}</h4>
                 <p className="user-title">{user.title}</p>
                 <div className="mutual-connections">
                   {user.mutualCount > 0 && (

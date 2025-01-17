@@ -9,6 +9,7 @@
   display: grid;
   grid-template-columns: 100px auto;
   height: 100vh !important;
+  /* background: var(--secondary-color); */
 }
 
 .toggle-button {
