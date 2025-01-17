@@ -1,55 +1,59 @@
-import React, { useState, useEffect, useRef } from 'react';
-import './Notes.css';
+import React, { useState, useEffect, useRef } from "react";
+import "./Notes.css";
 
 const Notes = () => {
   const [messages, setMessages] = useState([
-    { id: 1, text: 'Welcome to EduVerse! I\'m Edura, your AI mentor. How can I assist you today?', sender: 'ai' },
+    {
+      id: 1,
+      text: "Welcome to EduVerse! I'm Edura, your AI mentor. How can I assist you today?",
+      sender: "ai",
+    },
   ]);
-  const [inputText, setInputText] = useState('');
+  const [inputText, setInputText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
   const chatContainerRef = useRef(null);
   const avatarRef = useRef(null);
 
-  useEffect(() => {
-    // Initialize boot-up animation sequence
-    const container = chatContainerRef.current;
-    container.classList.add('system-boot');
-    
-    // Initialize neural network background
-    const particles = Array.from({ length: 30 }, () => {
-      const particle = document.createElement('div');
-      particle.className = 'neural-particle';
-      container.appendChild(particle);
-      return particle;
-    });
+  // useEffect(() => {
+  // Initialize boot-up animation sequence
+  // const container = chatContainerRef.current;
+  // container.classList.add('system-boot');
 
-    particles.forEach(particle => {
-      animateNeuralParticle(particle);
-    });
+  // Initialize neural network background
+  // const particles = Array.from({ length: 30 }, () => {
+  //   const particle = document.createElement('div');
+  //   particle.className = 'neural-particle';
+  //   container.appendChild(particle);
+  //   return particle;
+  // });
 
-    return () => {
-      particles.forEach(particle => particle.remove());
-    };
-  }, []);
+  // particles.forEach(particle => {
+  //   animateNeuralParticle(particle);
+  // });
 
-  const animateNeuralParticle = (particle) => {
-    const animation = particle.animate([
-      { 
-        transform: `translate(${Math.random() * 100}vw, ${Math.random() * 100}vh)`,
-        opacity: 0.2
-      },
-      {
-        transform: `translate(${Math.random() * 100}vw, ${Math.random() * 100}vh)`,
-        opacity: 0.8
-      }
-    ], {
-      duration: 4000 + Math.random() * 3000,
-      iterations: Infinity
-    });
-    return animation;
-  };
+  // return () => {
+  // particles.forEach(particle => particle.remove());
+  // };
+  // }, []);
+
+  // const animateNeuralParticle = (particle) => {
+  //   const animation = particle.animate([
+  //     {
+  //       transform: `translate(${Math.random() * 100}vw, ${Math.random() * 100}vh)`,
+  //       opacity: 0.2
+  //     },
+  //     {
+  //       transform: `translate(${Math.random() * 100}vw, ${Math.random() * 100}vh)`,
+  //       opacity: 0.8
+  //     }
+  //   ], {
+  //     duration: 4000 + Math.random() * 3000,
+  //     iterations: Infinity
+  //   });
+  //   return animation;
+  // };
 
   const handleSendMessage = async () => {
     if (!inputText.trim()) return;
@@ -57,15 +61,15 @@ const Notes = () => {
     const userMessage = {
       id: messages.length + 1,
       text: inputText,
-      sender: 'user'
+      sender: "user",
     };
-    setMessages(prev => [...prev, userMessage]);
-    setInputText('');
+    setMessages((prev) => [...prev, userMessage]);
+    setInputText("");
     setIsTyping(true);
 
     // Animate Edura's avatar while processing
     if (avatarRef.current) {
-      avatarRef.current.classList.add('processing');
+      avatarRef.current.classList.add("processing");
     }
 
     try {
@@ -73,19 +77,19 @@ const Notes = () => {
         const aiMessage = {
           id: messages.length + 2,
           text: "I understand you're interested in learning. Let me analyze your query and provide personalized recommendations.",
-          sender: 'ai'
+          sender: "ai",
         };
-        setMessages(prev => [...prev, aiMessage]);
+        setMessages((prev) => [...prev, aiMessage]);
         setIsTyping(false);
         if (avatarRef.current) {
-          avatarRef.current.classList.remove('processing');
+          avatarRef.current.classList.remove("processing");
         }
       }, 1500);
     } catch (error) {
-      console.error('Error getting AI response:', error);
+      console.error("Error getting AI response:", error);
       setIsTyping(false);
       if (avatarRef.current) {
-        avatarRef.current.classList.remove('processing');
+        avatarRef.current.classList.remove("processing");
       }
     }
   };
@@ -97,7 +101,7 @@ const Notes = () => {
   };
 
   const handleKeyPress = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
     }
@@ -111,23 +115,33 @@ const Notes = () => {
           <div className="avatar-core"></div>
         </div>
         <h1 className="edura-title">Edura</h1>
+        <div className="edura-div"></div>
         <p className="edura-tagline">Your Personalized AI Mentor</p>
+      </div>
+
+      <div className="quick-actions glassmorphism">
+        <h3>Suggested Actions</h3>
+        <div className="action-buttons">
+          <button className="action-btn">Complete Profile</button>
+          <button className="action-btn">Explore Courses</button>
+          <button className="action-btn">Find Collaborators</button>
+        </div>
       </div>
 
       <div className="chat-interface">
         <div className="chat-messages glassmorphism">
           {messages.map((message) => (
             <div key={message.id} className={`message ${message.sender}`}>
-              <div className="message-bubble">
-                {message.text}
-              </div>
+              <div className="message-bubble">{message.text}</div>
             </div>
           ))}
           {isTyping && (
             <div className="message ai">
               <div className="message-bubble typing">
                 <div className="typing-indicator">
-                  <span></span><span></span><span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
                 </div>
               </div>
             </div>
@@ -143,28 +157,19 @@ const Notes = () => {
             placeholder="Ask me anything..."
             rows="2"
           />
-          <button 
-            className={`voice-input ${isListening ? 'listening' : ''}`}
+          <button
+            className={`voice-input ${isListening ? "listening" : ""}`}
             onClick={handleVoiceInput}
           >
             <span className="microphone-icon"></span>
           </button>
-          <button 
+          <button
             className="send-button"
             onClick={handleSendMessage}
             disabled={!inputText.trim() || isTyping}
           >
             Send
           </button>
-        </div>
-      </div>
-
-      <div className="quick-actions glassmorphism">
-        <h3>Suggested Actions</h3>
-        <div className="action-buttons">
-          <button className="action-btn">Complete Profile</button>
-          <button className="action-btn">Explore Courses</button>
-          <button className="action-btn">Find Collaborators</button>
         </div>
       </div>
     </div>

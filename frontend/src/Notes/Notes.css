@@ -1,47 +1,59 @@
 .edura-container {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #0f1b2d, #1a2942);
-  position: relative;
-  overflow: hidden;
+  height: max(100vh, 100%);
+  background: var(--secondary-color);
+  /* position: relative; */
+  /* overflow: hidden; */
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* justify-content: center; */
 }
 
-.neural-particle {
+.edura-div {
+  width: 100%;
+  height: 3px;
+  margin: 1rem 0;
+  background: linear-gradient(90deg, #4a90e2, #ffd700, #4a90e2);
+}
+
+/* .neural-particle {
   position: absolute;
   width: 4px;
   height: 4px;
   background: rgba(74, 144, 226, 0.4);
   border-radius: 50%;
   pointer-events: none;
-}
+} */
 
-.system-boot {
+/* .system-boot {
   animation: bootSequence 2s ease-out forwards;
-}
+} */
 
-@keyframes bootSequence {
+/* @keyframes bootSequence {
   0% { opacity: 0; filter: brightness(0); }
   50% { opacity: 0.5; filter: brightness(0.5); }
   100% { opacity: 1; filter: brightness(1); }
-}
+} */
 
 .glassmorphism {
   background: rgba(15, 25, 45, 0.6);
-  backdrop-filter: blur(12px);
+  /* backdrop-filter: blur(12px); */
   border: 1px solid rgba(74, 144, 226, 0.2);
-  border-radius: 20px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
 }
 
 .edura-header {
   text-align: center;
   padding: 2rem;
-  margin-bottom: 2rem;
+  /* margin-bottom: 2rem; */
 }
 
 .avatar-container {
   position: relative;
-  width: 120px;
-  height: 120px;
+  width: 90px;
+  height: 90px;
   margin: 0 auto;
 }
 
@@ -62,7 +74,7 @@
 }
 
 .hologram-effect::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: -10px;
   border: 2px solid rgba(155, 81, 224, 0.4);
@@ -75,16 +87,17 @@
 }
 
 .chat-interface {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 0 2rem;
+  /* max-width: 1000px; */
+  width: calc(100% - 8rem);
+  margin: 2rem;
+  /* padding: 1rem; */
 }
 
 .chat-messages {
   padding: 2rem;
   margin-bottom: 2rem;
   max-height: 60vh;
-  overflow-y: auto;
+  /* overflow-y: auto; */
 }
 
 .message {
@@ -158,17 +171,32 @@
   transform: translateY(-2px);
 }
 
-.voice-input, .send-button {
+.chat-input::placeholder {
+  font-size: 15px;
+}
+
+.voice-input {
   padding: 1rem;
+  background: linear-gradient(135deg, #4a90e2, #9b51e0);
+  border: 1px solid rgba(74, 144, 226, 0.2);
+  border-radius: 100%;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.send-button {
+  padding: 1rem 3rem;
   border: none;
-  border-radius: 50%;
+  border-radius: 10px;
   background: linear-gradient(135deg, #4a90e2, #9b51e0);
   color: white;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
-.voice-input:hover, .send-button:hover {
+.voice-input:hover,
+.send-button:hover {
   transform: scale(1.1);
   box-shadow: 0 0 20px rgba(74, 144, 226, 0.4);
 }
@@ -177,34 +205,107 @@
   animation: listeningPulse 1.5s infinite;
 }
 
+.quick-actions {
+  display: flex;
+  flex-direction: column;
+  /* gap: 1rem; */
+  /* padding: 2rem; */
+  justify-content: center;
+  align-items: center;
+  margin: 2rem;
+  /* position: sticky; */
+  /* bottom: 0; */
+  width: calc(100% - 2px);
+  border: none;
+  border-radius: 0;
+}
+
+.quick-actions h3 {
+  margin: 1rem 0 0 0;
+  font-weight: 300;
+}
+
+.action-btn {
+  padding: 0.5rem 1rem;
+  margin: 1rem;
+  background: linear-gradient(45deg, #4fc3f7, #2196f3);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  /* text-transform: uppercase; */
+  letter-spacing: 1px;
+  position: relative;
+  /* overflow: hidden; */
+  transition: all 0.2s ease;
+}
+
 @keyframes pulse {
-  0%, 100% { transform: scale(1); opacity: 0.8; }
-  50% { transform: scale(1.05); opacity: 1; }
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
 }
 
 @keyframes rotate {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes typing {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 @keyframes messageAppear {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes listeningPulse {
-  0% { box-shadow: 0 0 0 0 rgba(74, 144, 226, 0.4); }
-  70% { box-shadow: 0 0 0 20px rgba(74, 144, 226, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(74, 144, 226, 0); }
+  0% {
+    box-shadow: 0 0 0 0 rgba(74, 144, 226, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 20px rgba(74, 144, 226, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(74, 144, 226, 0);
+  }
 }
 
 @keyframes processingPulse {
-  0% { transform: scale(1); opacity: 0.8; }
-  50% { transform: scale(1.1); opacity: 1; }
-  100% { transform: scale(1); opacity: 0.8; }
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
 }
