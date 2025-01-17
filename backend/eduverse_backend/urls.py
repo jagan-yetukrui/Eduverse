@@ -13,10 +13,10 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
-    path("api/accounts/", include("accounts.urls")),  # Include the accounts app's URLs
-    path("api/profiles/", include("profiles.urls")),
-    path("api/search/", include("search.urls")),
-    path("api/posts/", include("posts.urls")),  # Include the posts app's URLs
+    path("api/accounts/", include("accounts.urls")),  # Include the accounts app's URLs #Doesn't work
+    path("api/profiles/", include("profiles.urls")), #works
+    path("api/search/", include("search.urls")), #works
+    path("api/posts/", include("posts.urls")),  # Include the posts app's URLs #Works
 ]
 
 # Serve media files during development
