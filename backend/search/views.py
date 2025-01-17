@@ -36,37 +36,31 @@ def search(request):
     if post_type_filter:
         posts = posts.filter(post_type=post_type_filter)
 
-    # If searching by username, return only user results and hide posts
-    if name_filter:
-        user_results = [
-            {
-                "username": user.username,
-                "email": user.email,
-                "skills": user.skills,
-                "profile_picture": (
-                    user.profile_picture.url if user.profile_picture else None
-                ),
-            }
-            for user in users
-        ]
-        return JsonResponse({"users": user_results})  # Hide posts
+    # Prepare user results
+    user_results = [
+        {
+            "username": user.username,
+            "email": user.email,
+            "skills": user.skills,
+            "profile_picture": (
+                user.profile_picture.url if user.profile_picture else None
+            ),
+        }
+        for user in users
+    ]
 
-    # If searching for posts, return only post results and hide users
-    if post_author_filter or post_type_filter:
-        post_results = [
-            {
-                "title": post.title,
-                "author": post.author.username,
-                "content": post.content,
-                "post_type": post.post_type,
-                "created_at": post.created_at,
-                "updated_at": post.updated_at,
-            }
-            for post in posts
-        ]
+    # Prepare post results
+    post_results = [
+        {
+            "title": post.title,
+            "author": post.author.username,
+            "content": post.content,
+            "post_type": post.post_type,
+            "created_at": post.created_at,
+            "updated_at": post.updated_at,
+        }
+        for post in posts
+    ]
 
-        return JsonResponse(
-            {
-                "posts": post_results,
-            }
-        )
+    # Return both user and post results
+    return JsonResponse({"users": user_results, "posts": post_results})
