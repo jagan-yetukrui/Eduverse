@@ -8,6 +8,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 import logging
 from django.http import JsonResponse
+from django.urls import path
 
 logger = logging.getLogger(__name__)
 
