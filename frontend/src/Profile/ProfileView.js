@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './ProfileView.css';
-import { FaGithub, FaLinkedin, FaShare, FaEnvelope, FaCog, FaEdit, FaChevronDown } from 'react-icons/fa';
+import { format, isValid } from 'date-fns';
+import React, { useEffect, useState } from 'react';
+import { FaChevronDown, FaCog, FaEdit, FaEnvelope, FaGithub, FaLinkedin, FaShare } from 'react-icons/fa';
 import { useNavigate, useParams } from 'react-router-dom';
-import { format } from 'date-fns';
-import LoadingSpinner from '../components/LoadingSpinner';
-import ErrorMessage from '../components/ErrorMessage';
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
+import ErrorMessage from '../components/ErrorMessage';
+import LoadingSpinner from '../components/LoadingSpinner';
+import './ProfileView.css';
 
 // Profile Header Component
 const ProfileHeader = ({ user, stats, isEditing, handleEditChange, handleSaveEdit }) => (
@@ -46,7 +46,9 @@ const ProfileHeader = ({ user, stats, isEditing, handleEditChange, handleSaveEdi
         <h1 className="profile-name">{user.name}</h1>
         <p className="profile-username">@{user.username}</p>
         <p className="profile-join-date">
-          Joined {format(new Date(user.joinedDate), 'MMMM yyyy')}
+          Joined {user.joinedDate && isValid(new Date(user.joinedDate)) 
+            ? format(new Date(user.joinedDate), 'MMMM yyyy') 
+            : 'N/A'}
         </p>
         <p className="profile-bio">{user.bio || 'No bio provided'}</p>
         <div className="profile-stats">
