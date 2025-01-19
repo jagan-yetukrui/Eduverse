@@ -103,7 +103,7 @@ const Messages = () => {
   return (
     <div className="messages-container">
       <div className="chats-list">
-        <div className="search-container">
+        <div className="search-container-messages">
           <p>Messages</p>
           <input
             type="text"

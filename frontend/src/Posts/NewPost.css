@@ -24,14 +24,6 @@
   }
 }
 
-h2 {
-  text-align: center;
-  margin-bottom: 2.5rem;
-  color: #2d3748;
-  font-size: 2rem;
-  font-weight: 600;
-  animation: titleFloat 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-}
 
 @keyframes titleFloat {
   0% {
@@ -173,7 +165,7 @@ h2 {
   transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-button {
+/* button {
   background-color: #4299e1;
   color: white;
   padding: 1rem 2rem;
@@ -207,7 +199,7 @@ button:disabled {
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
-}
+} */
 
 .error-messages {
   color: #e53e3e;

@@ -21,12 +21,16 @@
   flex-direction: column;
 }
 
-.search-container {
+.search-container-messages {
   /* padding: 20px; */
   /* border-bottom: 1px solid #dbdbdb; */
   padding: 1rem;
   width: calc(100% - 2rem);
   border-bottom: 1px solid #4d4d4d;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .search-input {
@@ -210,7 +214,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  color: #8e8e8e;
+  /* color: #8e8e8e; */
   text-align: center;
   padding: 20px;
   background: var(--secondary-color);
