@@ -7,6 +7,8 @@ from .serializers import RegisterSerializer, LoginSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 import logging
+from django.http import JsonResponse
+from django.urls import path
 
 logger = logging.getLogger(__name__)
 
@@ -28,6 +30,25 @@ class RegisterView(APIView):
             {"errors": serializer.errors, "message": "Registration failed."},
             status=status.HTTP_400_BAD_REQUEST
         )
+    
+
+class AccountsRootView(APIView):
+    """
+    Root view for /api/accounts/
+    Provides information about available endpoints.
+    """
+    permission_classes = [AllowAny]  # Accessible to anyone
+
+    def get(self, request):
+        return JsonResponse({
+            "message": "Welcome to the Accounts API!",
+            "endpoints": {
+                "register": "/api/accounts/register/",
+                "login": "/api/accounts/login/",
+                "protected-endpoint": "/api/accounts/protected-endpoint/"
+            }
+        })
+
 
 class LoginView(APIView):
     """
