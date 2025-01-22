@@ -50,7 +50,15 @@
   border: none;
   margin: 0 1rem;
   cursor: pointer;
-  font-weight: 700;
+  /* font-weight: 700; */
+}
+
+.nav-button {
+  background: transparent;
+  border: none;
+  margin: 0 1rem;
+  cursor: pointer;
+  /* font-weight: 700; */
 }
 
 .nav-item p {

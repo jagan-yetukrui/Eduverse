@@ -93,10 +93,10 @@ const Navbar = () => {
         </div>
       ) : (
         <div>
-          <button onClick={() => navigate("/login")} className="nav-button ">
+          <button onClick={() => navigate("/login")} className="nav-item nav-button">
             LOGIN
           </button>
-          <button onClick={() => navigate("/register")} className="nav-button ">
+          <button onClick={() => navigate("/register")} className="nav-item nav-button">
             REGISTER
           </button>
         </div>
