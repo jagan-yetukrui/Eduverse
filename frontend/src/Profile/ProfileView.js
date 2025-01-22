@@ -1,16 +1,30 @@
-import axios from 'axios';
-import { format, isValid } from 'date-fns';
-import React, { useEffect, useState } from 'react';
-import { FaChevronDown, FaCog, FaEdit, FaEnvelope, FaGithub, FaLinkedin, FaShare } from 'react-icons/fa';
-import { useNavigate, useParams } from 'react-router-dom';
-import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
-import 'react-tabs/style/react-tabs.css';
-import ErrorMessage from '../components/ErrorMessage';
-import LoadingSpinner from '../components/LoadingSpinner';
-import './ProfileView.css';
+import axios from "axios";
+import { format, isValid } from "date-fns";
+import React, { useEffect, useState } from "react";
+import {
+  FaChevronDown,
+  FaCog,
+  FaEdit,
+  FaEnvelope,
+  FaGithub,
+  FaLinkedin,
+  FaShare,
+} from "react-icons/fa";
+import { useNavigate, useParams } from "react-router-dom";
+import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
+import "react-tabs/style/react-tabs.css";
+import ErrorMessage from "../components/ErrorMessage";
+import LoadingSpinner from "../components/LoadingSpinner";
+import "./ProfileView.css";
 
 // Profile Header Component
-const ProfileHeader = ({ user, stats, isEditing, handleEditChange, handleSaveEdit }) => (
+const ProfileHeader = ({
+  user,
+  stats,
+  isEditing,
+  handleEditChange,
+  handleSaveEdit,
+}) => (
   <div className="profile-header-container">
     {isEditing ? (
       <div className="edit-profile-form">
@@ -22,7 +36,7 @@ const ProfileHeader = ({ user, stats, isEditing, handleEditChange, handleSaveEdi
           placeholder="Name"
         />
         <input
-          type="text" 
+          type="text"
           name="username"
           value={user.username}
           onChange={handleEditChange}
@@ -43,14 +57,6 @@ const ProfileHeader = ({ user, stats, isEditing, handleEditChange, handleSaveEdi
           src={user.avatarUrl || "/default-avatar.jpg"}
           alt={`${user.name}'s avatar`}
         />
-        <h1 className="profile-name">{user.name}</h1>
-        <p className="profile-username">@{user.username}</p>
-        <p className="profile-join-date">
-          Joined {user.joinedDate && isValid(new Date(user.joinedDate)) 
-            ? format(new Date(user.joinedDate), 'MMMM yyyy') 
-            : 'N/A'}
-        </p>
-        <p className="profile-bio">{user.bio || 'No bio provided'}</p>
         <div className="profile-stats">
           {Object.entries(stats).map(([key, value]) => (
             <div key={key} className="stat-item">
@@ -59,13 +65,33 @@ const ProfileHeader = ({ user, stats, isEditing, handleEditChange, handleSaveEdi
             </div>
           ))}
         </div>
+
+        <div className="profile-content">
+          <h1 className="profile-name">{user.username}Test Name</h1>
+          <p className="profile-username">@ testusername{user.username}</p>
+          <p className="profile-join-date">
+            Joined
+            {user.joinedDate && isValid(new Date(user.joinedDate))
+              ? format(new Date(user.joinedDate), "MMMM yyyy")
+              : " Unknown"}
+          </p>
+          <p className="profile-bio">{user.bio || "No bio provided"}</p>
+        </div>
       </>
     )}
   </div>
 );
 
 // Profile Actions Component
-const ProfileActions = ({ isOwnProfile, handleEdit, handleSettings, handleFollowToggle, handleMessage, handleShare, isFollowing }) => (
+const ProfileActions = ({
+  isOwnProfile,
+  handleEdit,
+  handleSettings,
+  handleFollowToggle,
+  handleMessage,
+  handleShare,
+  isFollowing,
+}) => (
   <div className="profile-actions">
     {isOwnProfile ? (
       <>
@@ -78,22 +104,30 @@ const ProfileActions = ({ isOwnProfile, handleEdit, handleSettings, handleFollow
       </>
     ) : (
       <>
-        <button className={`follow-btn ${isFollowing ? 'following' : ''}`} onClick={handleFollowToggle}>
-          {isFollowing ? 'Following' : 'Follow'}
+        <button
+          className={`follow-btn ${isFollowing ? "following" : ""}`}
+          onClick={handleFollowToggle}
+        >
+          {isFollowing ? "Following" : "Follow"}
         </button>
         <button className="message-btn" onClick={handleMessage}>
           Message
         </button>
       </>
     )}
-    <button className="share-btn" onClick={handleShare}>
+    <button className="action-btn share-btn" onClick={handleShare}>
       <FaShare /> Share
     </button>
   </div>
 );
 
 // Profile Details Component with Edit Mode
-const ProfileDetails = ({ user, isEditing, handleEditChange, handleSaveEdit }) => (
+const ProfileDetails = ({
+  user,
+  isEditing,
+  handleEditChange,
+  handleSaveEdit,
+}) => (
   <div className="profile-details-container">
     <section className="education-section">
       <h3>Education</h3>
@@ -124,20 +158,20 @@ const ProfileDetails = ({ user, isEditing, handleEditChange, handleSaveEdit }) =
               />
             </div>
           ))}
-          <button onClick={() => handleEditChange({ type: 'ADD_EDUCATION' })}>Add Education</button>
+          <button onClick={() => handleEditChange({ type: "ADD_EDUCATION" })}>
+            Add Education
+          </button>
         </div>
+      ) : user.education?.length > 0 ? (
+        user.education.map((edu, index) => (
+          <div key={index} className="education-item">
+            <h4>{edu.school}</h4>
+            <p>{edu.degree}</p>
+            <p>{edu.year}</p>
+          </div>
+        ))
       ) : (
-        user.education?.length > 0 ? (
-          user.education.map((edu, index) => (
-            <div key={index} className="education-item">
-              <h4>{edu.school}</h4>
-              <p>{edu.degree}</p>
-              <p>{edu.year}</p>
-            </div>
-          ))
-        ) : (
-          <p className="empty-section">No education information provided</p>
-        )
+        <p className="empty-section">No education information provided</p>
       )}
     </section>
 
@@ -170,20 +204,20 @@ const ProfileDetails = ({ user, isEditing, handleEditChange, handleSaveEdit }) =
               />
             </div>
           ))}
-          <button onClick={() => handleEditChange({ type: 'ADD_EXPERIENCE' })}>Add Experience</button>
+          <button onClick={() => handleEditChange({ type: "ADD_EXPERIENCE" })}>
+            Add Experience
+          </button>
         </div>
+      ) : user.experience?.length > 0 ? (
+        user.experience.map((exp, index) => (
+          <div key={index} className="experience-item">
+            <h4>{exp.company}</h4>
+            <p>{exp.position}</p>
+            <p>{exp.duration}</p>
+          </div>
+        ))
       ) : (
-        user.experience?.length > 0 ? (
-          user.experience.map((exp, index) => (
-            <div key={index} className="experience-item">
-              <h4>{exp.company}</h4>
-              <p>{exp.position}</p>
-              <p>{exp.duration}</p>
-            </div>
-          ))
-        ) : (
-          <p className="empty-section">No experience information provided</p>
-        )
+        <p className="empty-section">No experience information provided</p>
       )}
     </section>
 
@@ -196,12 +230,12 @@ const ProfileDetails = ({ user, isEditing, handleEditChange, handleSaveEdit }) =
             name="newSkill"
             placeholder="Add new skill"
             onKeyPress={(e) => {
-              if (e.key === 'Enter') {
+              if (e.key === "Enter") {
                 handleEditChange({
-                  type: 'ADD_SKILL',
-                  payload: e.target.value
+                  type: "ADD_SKILL",
+                  payload: e.target.value,
                 });
-                e.target.value = '';
+                e.target.value = "";
               }
             }}
           />
@@ -209,24 +243,30 @@ const ProfileDetails = ({ user, isEditing, handleEditChange, handleSaveEdit }) =
             {user.skills?.map((skill, index) => (
               <span key={index} className="skill-tag">
                 {skill}
-                <button onClick={() => handleEditChange({
-                  type: 'REMOVE_SKILL',
-                  payload: index
-                })}>×</button>
+                <button
+                  onClick={() =>
+                    handleEditChange({
+                      type: "REMOVE_SKILL",
+                      payload: index,
+                    })
+                  }
+                >
+                  ×
+                </button>
               </span>
             ))}
           </div>
         </div>
+      ) : user.skills?.length > 0 ? (
+        <div className="skills-container">
+          {user.skills.map((skill, index) => (
+            <span key={index} className="skill-tag">
+              {skill}
+            </span>
+          ))}
+        </div>
       ) : (
-        user.skills?.length > 0 ? (
-          <div className="skills-container">
-            {user.skills.map((skill, index) => (
-              <span key={index} className="skill-tag">{skill}</span>
-            ))}
-          </div>
-        ) : (
-          <p className="empty-section">No skills listed</p>
-        )
+        <p className="empty-section">No skills listed</p>
       )}
     </section>
   </div>
@@ -241,19 +281,19 @@ const ProfileView = () => {
   const [stats, setStats] = useState({
     followers: 0,
     following: 0,
-    posts: 0
+    posts: 0,
   });
   const [isFollowing, setIsFollowing] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
-  
+
   const navigate = useNavigate();
   const { userId } = useParams();
 
   const handleEditChange = (e) => {
     const { name, value } = e.target;
-    setUser(prev => ({
+    setUser((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -262,7 +302,7 @@ const ProfileView = () => {
       await axios.put(`/api/users/${user.id}`, user);
       setIsEditing(false);
     } catch (err) {
-      setError('Failed to save changes');
+      setError("Failed to save changes");
     }
   };
 
@@ -275,7 +315,7 @@ const ProfileView = () => {
       }
       setIsFollowing(!isFollowing);
     } catch (err) {
-      setError('Failed to update follow status');
+      setError("Failed to update follow status");
     }
   };
 
@@ -289,8 +329,8 @@ const ProfileView = () => {
   };
 
   const scrollToContent = () => {
-    document.querySelector('.profile-details-container')?.scrollIntoView({ 
-      behavior: 'smooth' 
+    document.querySelector(".profile-details-container")?.scrollIntoView({
+      behavior: "smooth",
     });
   };
 
@@ -303,12 +343,12 @@ const ProfileView = () => {
         setStats({
           followers: response.data.followers_count,
           following: response.data.following_count,
-          posts: response.data.posts_count
+          posts: response.data.posts_count,
         });
         setIsFollowing(response.data.is_following);
         setLoading(false);
       } catch (err) {
-        setError('Failed to fetch user data');
+        setError("Failed to fetch user data");
         setLoading(false);
       }
     };
@@ -320,184 +360,218 @@ const ProfileView = () => {
   if (!user) return <ErrorMessage message="No user data available." />;
 
   return (
-    <div className="profile-view-container">
-      <div className="profile-banner" style={{backgroundImage: `url(${user.bannerUrl || '/default-banner.jpg'})`}}>
-        <div className="holographic-overlay"></div>
-      </div>
+    <div className="profile-page">
+      <div className="profile-view-container">
+        <div
+          className="profile-banner"
+          style={{
+            backgroundImage: `url(${user.bannerUrl || "/default-banner.jpg"})`,
+          }}
+        >
+          {/* <div className="holographic-overlay"></div> */}
+        </div>
 
-      <ProfileHeader 
-        user={user} 
-        stats={stats}
-        isEditing={isEditing}
-        handleEditChange={handleEditChange}
-        handleSaveEdit={handleSaveEdit}
-      />
-      
-      <div className="profile-social-links">
-        {user.email && (
-          <a href={`mailto:${user.email}`} aria-label="Email">
-            <FaEnvelope className="social-icon" />
-          </a>
-        )}
-        {user.linkedin && (
-          <a href={user.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-            <FaLinkedin className="social-icon" />
-          </a>
-        )}
-        {user.github && (
-          <a href={user.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-            <FaGithub className="social-icon" />
-          </a>
-        )}
-      </div>
+        <ProfileHeader
+          user={user}
+          stats={stats}
+          isEditing={isEditing}
+          handleEditChange={handleEditChange}
+          handleSaveEdit={handleSaveEdit}
+        />
 
-      <ProfileActions 
-        isOwnProfile={!userId}
-        handleEdit={() => setIsEditing(!isEditing)}
-        handleSettings={() => setShowSettings(!showSettings)}
-        handleFollowToggle={handleFollowToggle}
-        handleMessage={handleMessage}
-        handleShare={handleShare}
-        isFollowing={isFollowing}
-      />
+        <div className="profile-social-links">
+          {user.email && (
+            <a href={`mailto:${user.email}`} aria-label="Email">
+              <FaEnvelope className="social-icon" />
+            </a>
+          )}
+          {user.linkedin && (
+            <a
+              href={user.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
+            >
+              <FaLinkedin className="social-icon" />
+            </a>
+          )}
+          {user.github && (
+            <a
+              href={user.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="GitHub"
+            >
+              <FaGithub className="social-icon" />
+            </a>
+          )}
+        </div>
 
-      <div className="scroll-prompt" onClick={scrollToContent}>
-        <FaChevronDown /> Scroll for more
-      </div>
+        <ProfileActions
+          isOwnProfile={!userId}
+          handleEdit={() => setIsEditing(!isEditing)}
+          handleSettings={() => setShowSettings(!showSettings)}
+          handleFollowToggle={handleFollowToggle}
+          handleMessage={handleMessage}
+          handleShare={handleShare}
+          isFollowing={isFollowing}
+        />
 
-      <ProfileDetails 
-        user={user}
-        isEditing={isEditing}
-        handleEditChange={handleEditChange}
-        handleSaveEdit={handleSaveEdit}
-      />
+        {/* <div className="scroll-prompt" onClick={scrollToContent}>
+          <FaChevronDown /> Scroll for more
+        </div> */}
 
-      <Tabs selectedIndex={activeTab} onSelect={index => setActiveTab(index)}>
-        <TabList>
-          <Tab>Posts</Tab>
-          <Tab>Projects</Tab>
-          <Tab>Saved</Tab>
-          {!userId && <Tab>Settings</Tab>}
-        </TabList>
+        <ProfileDetails
+          user={user}
+          isEditing={isEditing}
+          handleEditChange={handleEditChange}
+          handleSaveEdit={handleSaveEdit}
+        />
 
-        <TabPanel>
-          <div className="posts-section">
-            {user.posts?.length > 0 ? (
-              user.posts.map(post => (
-                <div key={post.id} className="post-card">
-                  <h3>{post.title}</h3>
-                  <p>{post.content}</p>
-                  <span>{format(new Date(post.created_at), 'MMM dd, yyyy')}</span>
-                </div>
-              ))
-            ) : (
-              <p>No posts yet</p>
-            )}
-          </div>
-        </TabPanel>
-        
-        <TabPanel>
-          <div className="projects-section">
-            {user.projects?.length > 0 ? (
-              user.projects.map(project => (
-                <div key={project.id} className="project-card">
-                  <h3>{project.title}</h3>
-                  <p>{project.description}</p>
-                  <div className="project-links">
-                    {project.github && (
-                      <a href={project.github} target="_blank" rel="noopener noreferrer">
-                        <FaGithub /> GitHub
-                      </a>
-                    )}
-                  </div>
-                </div>
-              ))
-            ) : (
-              <p>No projects yet</p>
-            )}
-          </div>
-        </TabPanel>
-        
-        <TabPanel>
-          <div className="saved-items-section">
-            {user.savedItems?.length > 0 ? (
-              user.savedItems.map(item => (
-                <div key={item.id} className="saved-item-card">
-                  <h3>{item.title}</h3>
-                  <p>{item.description}</p>
-                  <span>{format(new Date(item.saved_at), 'MMM dd, yyyy')}</span>
-                </div>
-              ))
-            ) : (
-              <p>No saved items</p>
-            )}
-          </div>
-        </TabPanel>
+        <Tabs
+          selectedIndex={activeTab}
+          onSelect={(index) => setActiveTab(index)}
+        >
+          <TabList>
+            <Tab>Posts</Tab>
+            <Tab>Projects</Tab>
+            <Tab>Saved</Tab>
+            {!userId && <Tab>Settings</Tab>}
+          </TabList>
 
-        {!userId && (
           <TabPanel>
-            <div className="settings-section">
-              <h2>Account Settings</h2>
-              <form className="settings-form">
-                <div className="setting-group">
-                  <h3>Privacy</h3>
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={user.settings?.privateProfile}
-                      onChange={(e) => handleEditChange({
-                        target: {
-                          name: 'settings.privateProfile',
-                          value: e.target.checked
-                        }
-                      })}
-                    />
-                    Private Profile
-                  </label>
-                </div>
-                
-                <div className="setting-group">
-                  <h3>Notifications</h3>
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={user.settings?.emailNotifications}
-                      onChange={(e) => handleEditChange({
-                        target: {
-                          name: 'settings.emailNotifications',
-                          value: e.target.checked
-                        }
-                      })}
-                    />
-                    Email Notifications
-                  </label>
-                </div>
-                
-                <div className="setting-group">
-                  <h3>Theme</h3>
-                  <select
-                    value={user.settings?.theme}
-                    onChange={(e) => handleEditChange({
-                      target: {
-                        name: 'settings.theme',
-                        value: e.target.value
-                      }
-                    })}
-                  >
-                    <option value="light">Light</option>
-                    <option value="dark">Dark</option>
-                    <option value="system">System</option>
-                  </select>
-                </div>
-                
-                <button type="button" onClick={handleSaveEdit}>
-                  Save Settings
-                </button>
-              </form>
+            <div className="posts-section">
+              {user.posts?.length > 0 ? (
+                user.posts.map((post) => (
+                  <div key={post.id} className="post-card">
+                    <h3>{post.title}</h3>
+                    <p>{post.content}</p>
+                    <span>
+                      {format(new Date(post.created_at), "MMM dd, yyyy")}
+                    </span>
+                  </div>
+                ))
+              ) : (
+                <p>No posts yet</p>
+              )}
             </div>
           </TabPanel>
-        )}
-      </Tabs>
+
+          <TabPanel>
+            <div className="projects-section">
+              {user.projects?.length > 0 ? (
+                user.projects.map((project) => (
+                  <div key={project.id} className="project-card">
+                    <h3>{project.title}</h3>
+                    <p>{project.description}</p>
+                    <div className="project-links">
+                      {project.github && (
+                        <a
+                          href={project.github}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <FaGithub /> GitHub
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p>No projects yet</p>
+              )}
+            </div>
+          </TabPanel>
+
+          <TabPanel>
+            <div className="saved-items-section">
+              {user.savedItems?.length > 0 ? (
+                user.savedItems.map((item) => (
+                  <div key={item.id} className="saved-item-card">
+                    <h3>{item.title}</h3>
+                    <p>{item.description}</p>
+                    <span>
+                      {format(new Date(item.saved_at), "MMM dd, yyyy")}
+                    </span>
+                  </div>
+                ))
+              ) : (
+                <p>No saved items</p>
+              )}
+            </div>
+          </TabPanel>
+
+          {!userId && (
+            <TabPanel>
+              <div className="settings-section">
+                <h2>Account Settings</h2>
+                <form className="settings-form">
+                  <div className="setting-group">
+                    <h3>Privacy</h3>
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={user.settings?.privateProfile}
+                        onChange={(e) =>
+                          handleEditChange({
+                            target: {
+                              name: "settings.privateProfile",
+                              value: e.target.checked,
+                            },
+                          })
+                        }
+                      />
+                      Private Profile
+                    </label>
+                  </div>
+
+                  <div className="setting-group">
+                    <h3>Notifications</h3>
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={user.settings?.emailNotifications}
+                        onChange={(e) =>
+                          handleEditChange({
+                            target: {
+                              name: "settings.emailNotifications",
+                              value: e.target.checked,
+                            },
+                          })
+                        }
+                      />
+                      Email Notifications
+                    </label>
+                  </div>
+
+                  <div className="setting-group">
+                    <h3>Theme</h3>
+                    <select
+                      value={user.settings?.theme}
+                      onChange={(e) =>
+                        handleEditChange({
+                          target: {
+                            name: "settings.theme",
+                            value: e.target.value,
+                          },
+                        })
+                      }
+                    >
+                      <option value="light">Light</option>
+                      <option value="dark">Dark</option>
+                      <option value="system">System</option>
+                    </select>
+                  </div>
+
+                  <button type="button" onClick={handleSaveEdit}>
+                    Save Settings
+                  </button>
+                </form>
+              </div>
+            </TabPanel>
+          )}
+        </Tabs>
+      </div>
     </div>
   );
 };
