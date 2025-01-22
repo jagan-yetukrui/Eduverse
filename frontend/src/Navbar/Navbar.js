@@ -10,21 +10,13 @@ import {
   AiFillPlusSquare,
   AiOutlineUser,
 } from "react-icons/ai";
-import { motion, AnimatePresence } from "framer-motion";
 
 const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [isExpanded, setIsExpanded] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const refreshHomePage = () => {
     if (location.pathname === "/") {
@@ -34,216 +26,91 @@ const Navbar = () => {
     }
   };
 
-  const navItems = [
-    { path: "/", label: "Home", icon: <AiFillHome />, tooltip: "Home" },
-    {
-      path: "/search",
-      label: "Search",
-      icon: <AiOutlineSearch />,
-      tooltip: "Search",
-    },
-    {
-      path: "/messages",
-      label: "Messages",
-      icon: <AiFillMessage />,
-      tooltip: "Messages",
-    },
-    {
-      path: "/notes",
-      label: "Edura",
-      icon: <AiOutlineGlobal />,
-      tooltip: "AI Assistant",
-    },
-    {
-      path: "/newpost",
-      label: "New Post",
-      icon: <AiFillPlusSquare />,
-      tooltip: "Create Post",
-    },
-    {
-      path: "/profile",
-      label: "Profile",
-      icon: <AiOutlineUser />,
-      tooltip: "Profile",
-    },
-  ];
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
-  const playHoverSound = () => {
-    const audio = new Audio("/hover-sound.mp3");
-    audio.volume = 0.1;
-    audio.play().catch(() => {});
-  };
+  useEffect(() => {
+    // get token from local storage
+    const token = localStorage.getItem("access_token");
+    setIsAuthenticated(Boolean(token));
+  }, [location]);
 
   return (
-    <motion.nav
-      className={`navbar ${isExpanded ? "expanded" : ""} ${
-        isMobile ? "mobile" : ""
-      }`}
-      // initial={{ x: -100, opacity: 0 }}
-      animate={{ x: 0, opacity: 1 }}
-      transition={{ duration: 0.3, ease: "easeOut" }}
-      onMouseEnter={() => !isMobile && setIsExpanded(true)}
-      onMouseLeave={() => !isMobile && setIsExpanded(false)}
-    >
-      <div className="navbar-background">
-        {/* <div className="gradient-overlay"></div> */}
-        <div className="particle-container"></div>
+    <nav className={`navbar ${isMobile ? "mobile" : ""}`}>
+      <div className="nav-item-container">
+        <div className="logo-container-nav" onClick={refreshHomePage}>
+          <img src={FirstLogo} alt="EduVerse" className="nav-logo" />
+          <p>EduVerse</p>
+        </div>
+
+        <div className="nav-item">
+          <button onClick={() => navigate("/")} className="nav-button">
+            {/* <AiFillHome className="nav-icon" /> */}
+            <p>HOME</p>
+          </button>
+        </div>
+
+        <div className="nav-item">
+          <button onClick={() => navigate("/search")} className="nav-button">
+            {/* <AiOutlineSearch className="nav-icon" /> */}
+            <p>SEARCH</p>
+          </button>
+        </div>
+
+        <div className="nav-item">
+          <button onClick={() => navigate("/messages")} className="nav-button">
+            {/* <AiFillMessage className="nav-icon" /> */}
+            <p>MESSAGES</p>
+          </button>
+        </div>
+
+        <div className="nav-item">
+          <button onClick={() => navigate("/notes")} className="nav-button">
+            {/* <AiOutlineGlobal className="nav-icon" /> */}
+            <p>EDURA</p>
+          </button>
+        </div>
+
+        <div className="nav-item">
+          <button onClick={() => navigate("/newpost")} className="nav-button">
+            {/* <AiFillPlusSquare className="nav-icon" /> */}
+            <p>NEW POST</p>
+          </button>
+        </div>
       </div>
 
-      <motion.div
-        className="logo-container-nav"
-        onClick={refreshHomePage}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-      >
-        <motion.img
-          src={FirstLogo}
-          alt="EduVerse"
-          className="nav-logo"
-          initial={{ rotate: -180, opacity: 0 }}
-          animate={{ rotate: 0, opacity: 1 }}
-          transition={{ duration: 0.5 }}
-        />
-        <p>Eduverse</p>
-        {/* <AnimatePresence>
-          {isExpanded && (
-            <motion.span
-              className="app-title"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3 }}
-            >
-              EduVerse
-            </motion.span>
-          )}
-        </AnimatePresence> */}
-      </motion.div>
-
-      <div className="nav-sep"></div>
-
-      <div className="nav-items">
-        <div className="nav-item-container">
-          <Link
-            to="/"
-            className={`nav-item ${location.pathname === "/" ? "active" : ""}`}
-            data-tooltip="Home"
-            onMouseEnter={playHoverSound}
-          >
-            <div className="nav-icon-container">
-              <div className="nav-icon">
-                <AiFillHome />
-                {location.pathname === "/" && <div className="active-indicator" />}
-              </div>
-            </div>
-            <div className="nav-label-container">
-              {isExpanded && <span className="nav-label">Home</span>}
-            </div>
-          </Link>
+      {isAuthenticated ? (
+        <div className="nav-item nav-profile">
+          <button onClick={() => navigate("/profile")} className="nav-button">
+            {/* <AiOutlineUser className="nav-icon" /> */}
+            <p>PROFILE</p>
+          </button>
         </div>
-        <div className="nav-item-container">
-          <Link
-            to="/search"
-            className={`nav-item ${location.pathname === "/search" ? "active" : ""}`}
-            data-tooltip="Search"
-            onMouseEnter={playHoverSound}
-          >
-            <div className="nav-icon-container">
-              <div className="nav-icon">
-                <AiOutlineSearch />
-                {location.pathname === "/search" && <div className="active-indicator" />}
-              </div>
-            </div>
-            <div className="nav-label-container">
-              {isExpanded && <span className="nav-label">Search</span>}
-            </div>
-          </Link>
+      ) : (
+        <div>
+          <button onClick={() => navigate("/login")} className="nav-button ">
+            LOGIN
+          </button>
+          <button onClick={() => navigate("/register")} className="nav-button ">
+            REGISTER
+          </button>
         </div>
-        <div className="nav-item-container">
-          <Link
-            to="/messages"
-            className={`nav-item ${location.pathname === "/messages" ? "active" : ""}`}
-            data-tooltip="Messages"
-            onMouseEnter={playHoverSound}
-          >
-            <div className="nav-icon-container">
-              <div className="nav-icon">
-                <AiFillMessage />
-                {location.pathname === "/messages" && <div className="active-indicator" />}
-              </div>
-            </div>
-            <div className="nav-label-container">
-              {isExpanded && <span className="nav-label">Messages</span>}
-            </div>
-          </Link>
-        </div>
-        <div className="nav-item-container">
-          <Link
-            to="/notes"
-            className={`nav-item ${location.pathname === "/notes" ? "active" : ""}`}
-            data-tooltip="AI Assistant"
-            onMouseEnter={playHoverSound}
-          >
-            <div className="nav-icon-container">
-              <div className="nav-icon">
-                <AiOutlineGlobal />
-                {location.pathname === "/notes" && <div className="active-indicator" />}
-              </div>
-            </div>
-            <div className="nav-label-container">
-              {isExpanded && <span className="nav-label">Edura</span>}
-            </div>
-          </Link>
-        </div>
-        <div className="nav-item-container">
-          <Link
-            to="/newpost"
-            className={`nav-item ${location.pathname === "/newpost" ? "active" : ""}`}
-            data-tooltip="Create Post"
-            onMouseEnter={playHoverSound}
-          >
-            <div className="nav-icon-container">
-              <div className="nav-icon">
-                <AiFillPlusSquare />
-                {location.pathname === "/newpost" && <div className="active-indicator" />}
-              </div>
-            </div>
-            <div className="nav-label-container">
-              {isExpanded && <span className="nav-label">New Post</span>}
-            </div>
-          </Link>
-        </div>
-        <div className="nav-item-container">
-          <Link
-            to="/profile"
-            className={`nav-item ${location.pathname === "/profile" ? "active" : ""}`}
-            data-tooltip="Profile"
-            onMouseEnter={playHoverSound}
-          >
-            <div className="nav-icon-container">
-              <div className="nav-icon">
-                <AiOutlineUser />
-                {location.pathname === "/profile" && <div className="active-indicator" />}
-              </div>
-            </div>
-            <div className="nav-label-container">
-              {isExpanded && <span className="nav-label">Profile</span>}
-            </div>
-          </Link>
-        </div>
-      </div>
+      )}
 
       {isMobile && (
-        <motion.button
+        <button
           className="mobile-toggle"
           onClick={() => setIsExpanded(!isExpanded)}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
         >
           <div className={`hamburger ${isExpanded ? "active" : ""}`}></div>
-        </motion.button>
+        </button>
       )}
-    </motion.nav>
+    </nav>
   );
 };
 

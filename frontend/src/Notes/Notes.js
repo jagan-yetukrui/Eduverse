@@ -16,45 +16,6 @@ const Notes = () => {
   const chatContainerRef = useRef(null);
   const avatarRef = useRef(null);
 
-  // useEffect(() => {
-  // Initialize boot-up animation sequence
-  // const container = chatContainerRef.current;
-  // container.classList.add('system-boot');
-
-  // Initialize neural network background
-  // const particles = Array.from({ length: 30 }, () => {
-  //   const particle = document.createElement('div');
-  //   particle.className = 'neural-particle';
-  //   container.appendChild(particle);
-  //   return particle;
-  // });
-
-  // particles.forEach(particle => {
-  //   animateNeuralParticle(particle);
-  // });
-
-  // return () => {
-  // particles.forEach(particle => particle.remove());
-  // };
-  // }, []);
-
-  // const animateNeuralParticle = (particle) => {
-  //   const animation = particle.animate([
-  //     {
-  //       transform: `translate(${Math.random() * 100}vw, ${Math.random() * 100}vh)`,
-  //       opacity: 0.2
-  //     },
-  //     {
-  //       transform: `translate(${Math.random() * 100}vw, ${Math.random() * 100}vh)`,
-  //       opacity: 0.8
-  //     }
-  //   ], {
-  //     duration: 4000 + Math.random() * 3000,
-  //     iterations: Infinity
-  //   });
-  //   return animation;
-  // };
-
   const handleSendMessage = async () => {
     if (!inputText.trim()) return;
 
@@ -108,68 +69,70 @@ const Notes = () => {
   };
 
   return (
-    <div className="edura-container" ref={chatContainerRef}>
-      <div className="edura-header">
-        <div className="avatar-container" ref={avatarRef}>
-          <div className="hologram-effect"></div>
-          <div className="avatar-core"></div>
+    <div className="edura-page">
+      <div className="edura-container" ref={chatContainerRef}>
+        <div className="edura-header">
+          <div className="avatar-container" ref={avatarRef}>
+            <div className="hologram-effect"></div>
+            <div className="avatar-core"></div>
+          </div>
+          <h1 className="edura-title">Edura</h1>
+          <div className="edura-div"></div>
+          <p className="edura-tagline">Your Personalized AI Mentor</p>
         </div>
-        <h1 className="edura-title">Edura</h1>
-        <div className="edura-div"></div>
-        <p className="edura-tagline">Your Personalized AI Mentor</p>
-      </div>
 
-      <div className="quick-actions glassmorphism">
-        <h3>Suggested Actions</h3>
-        <div className="action-buttons">
-          <button className="action-btn">Complete Profile</button>
-          <button className="action-btn">Explore Courses</button>
-          <button className="action-btn">Find Collaborators</button>
+        <div className="quick-actions">
+          {/* <h3>Suggested Actions</h3> */}
+          <div className="action-buttons">
+            <button className="action-btn">Complete Profile</button>
+            <button className="action-btn">Explore Courses</button>
+            <button className="action-btn">Find Collaborators</button>
+          </div>
         </div>
-      </div>
 
-      <div className="chat-interface">
-        <div className="chat-messages glassmorphism">
-          {messages.map((message) => (
-            <div key={message.id} className={`message ${message.sender}`}>
-              <div className="message-bubble">{message.text}</div>
-            </div>
-          ))}
-          {isTyping && (
-            <div className="message ai">
-              <div className="message-bubble typing">
-                <div className="typing-indicator">
-                  <span></span>
-                  <span></span>
-                  <span></span>
+        <div className="chat-interface">
+          <div className="chat-messages glassmorphism">
+            {messages.map((message) => (
+              <div key={message.id} className={`message ${message.sender}`}>
+                <div className="message-bubble">{message.text}</div>
+              </div>
+            ))}
+            {isTyping && (
+              <div className="message ai">
+                <div className="message-bubble typing">
+                  <div className="typing-indicator">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
 
-        <div className="input-section glassmorphism">
-          <textarea
-            className="chat-input"
-            value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder="Ask me anything..."
-            rows="2"
-          />
-          <button
+          <div className="input-section glassmorphism">
+            <textarea
+              className="chat-input"
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder="Ask me anything..."
+              rows="2"
+            />
+            {/* <button
             className={`voice-input ${isListening ? "listening" : ""}`}
             onClick={handleVoiceInput}
           >
             <span className="microphone-icon"></span>
-          </button>
-          <button
-            className="send-button"
-            onClick={handleSendMessage}
-            disabled={!inputText.trim() || isTyping}
-          >
-            Send
-          </button>
+          </button> */}
+            <button
+              className="send-button"
+              onClick={handleSendMessage}
+              disabled={!inputText.trim() || isTyping}
+            >
+              Send
+            </button>
+          </div>
         </div>
       </div>
     </div>

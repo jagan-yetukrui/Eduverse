@@ -12,31 +12,6 @@ const Search = () => {
   const searchContainerRef = useRef(null);
   const searchBarRef = useRef(null);
 
-  // Initialize page load animations
-  useEffect(() => {
-    const container = searchContainerRef.current;
-    container.classList.add("fade-in");
-
-    // Initialize particle effects
-    const particles = Array.from({ length: 50 }, () => {
-      const particle = document.createElement("div");
-      particle.className = "particle";
-      container.appendChild(particle);
-      return particle;
-    });
-
-    // particles.forEach((particle) => {
-    //   animateParticle(particle);
-    // });
-
-    // Slide in search bar
-    searchBarRef.current.classList.add("slide-in");
-
-    return () => {
-      particles.forEach((particle) => particle.remove());
-    };
-  }, []);
-
   // Fetch current user data on mount
   useEffect(() => {
     const fetchCurrentUser = async () => {
@@ -90,30 +65,6 @@ const Search = () => {
     const debounceTimer = setTimeout(fetchSuggestions, 300);
     return () => clearTimeout(debounceTimer);
   }, [query]);
-
-  // const animateParticle = (particle) => {
-  //   const animation = particle.animate(
-  //     [
-  //       {
-  //         transform: `translate(${Math.random() * 100}vw, ${
-  //           Math.random() * 100
-  //         }vh)`,
-  //         opacity: 0,
-  //       },
-  //       {
-  //         transform: `translate(${Math.random() * 100}vw, ${
-  //           Math.random() * 100
-  //         }vh)`,
-  //         opacity: 0.5,
-  //       },
-  //     ],
-  //     {
-  //       duration: 3000 + Math.random() * 2000,
-  //       iterations: Infinity,
-  //     }
-  //   );
-  //   return animation;
-  // };
 
   const triggerSearchAnimation = () => {
     const container = searchContainerRef.current;
@@ -174,7 +125,7 @@ const Search = () => {
       <form onSubmit={handleSearch} className="search-bar" ref={searchBarRef}>
         <input
           type="text"
-          placeholder="Search for people..."
+          placeholder="Search anything"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onFocus={(e) => e.target.classList.add("focused")}
