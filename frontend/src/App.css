@@ -14,10 +14,15 @@ h1, h2, h3, p {
   font-family: "Montserrat", sans-serif;
 }
 
-.App {
-  height: 100%;
+body {
+  height: 100dvh;
   width: auto;
-  /* background-color: var(--quaternary-color); */
+  margin: 0;
+  padding: 0;
+}
+
+.App {
+  min-height: 100%;
   padding: 2rem;
   font-family: "Montserrat", sans-serif;
 }

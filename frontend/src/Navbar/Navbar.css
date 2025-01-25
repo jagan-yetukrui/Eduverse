@@ -7,6 +7,7 @@
   height: fit-content;
   box-shadow: #21355530 0px 3px 10px 0px;
   border-radius: 7px;
+  margin-bottom: 2rem;
 }
 
 .logo-container-nav {
@@ -46,6 +47,9 @@
 
 .nav-item {
   height: 100%;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 500;
+  color: var(--text-color);
 }
 
 .nav-item button {
