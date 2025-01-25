@@ -149,13 +149,11 @@ const Login = () => {
         // animate={{ opacity: 1, y: 0 }}
         // transition={{ duration: 1, ease: "easeOut" }}
       >
-        <motion.img
+        <img
           src={FirstLogo}
           alt="EduVerse"
           className="login-logo"
           style={{ width: "60px", height: "auto" }}
-          whileHover={{ rotate: 360, scale: 1.05 }}
-          transition={{ duration: 0.3 }}
         />
 
         <div className="login-div"></div>
@@ -186,7 +184,6 @@ const Login = () => {
                   placeholder="Username or Email"
                   value={formData.username}
                   onChange={handleChange}
-                  whileFocus={{ scale: 1.02 }}
                   className={`neon-input ${errors.username ? "invalid" : ""}`}
                 />
                 {errors.username && (
@@ -207,7 +204,6 @@ const Login = () => {
                   placeholder="Password"
                   value={formData.password}
                   onChange={handleChange}
-                  whileFocus={{ scale: 1.02 }}
                   className={`neon-input ${errors.password ? "invalid" : ""}`}
                 />
 
@@ -216,11 +212,15 @@ const Login = () => {
                   // whileHover={{ scale: 1.03 }}
                   onClick={() => setShowPassword(!showPassword)}
                 >
-                  {showPassword ? <FaEye color="white"/> : <FaEyeSlash color="white"/>}
+                  {showPassword ? (
+                    <FaEye color="white" />
+                  ) : (
+                    <FaEyeSlash color="white" />
+                  )}
                   {showPassword ? "Hide Password" : "Show Password"}
                 </motion.div>
 
-                <div className="strength-meter">
+                {/* <div className="strength-meter">
                   {[...Array(4)].map((_, i) => (
                     <motion.div
                       key={i}
@@ -231,7 +231,7 @@ const Login = () => {
                       animate={{ width: "100%" }}
                     />
                   ))}
-                </div>
+                </div> */}
               </div>
 
               <motion.button

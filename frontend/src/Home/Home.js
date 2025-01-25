@@ -25,7 +25,7 @@ const Home = () => {
 
   const fetchProfileSuggestions = async () => {
     try {
-      const response = await fetch("/api/profiles/suggestions");
+      const response = await fetch("http://127.0.0.1:8000/api/profiles/");
       const data = await response.json();
       setProfileSuggestions(data);
     } catch (error) {
@@ -71,72 +71,52 @@ const Home = () => {
           </p>
         </div>
       ) : (
-        <div className="feed-container">
-          <div className="connection-suggestions">
-            <h2>Dashboard</h2>
-            <div className="suggestions-grid">
-              {profileSuggestions.map((profile) => (
-                <ProfileCardHome
-                  key={profile.id}
-                  profile={profile}
-                  onFollow={handleFollow}
-                />
-              ))}
+        <div className="welcome-section">
+          <div className="feed-container">
+            <div className="suggestions trending-projects">
+              <div className="suggestions-title">
+                <h3>Trending Projects </h3>
+                <div className="divider-horizontal"></div>
+              </div>
+
+              <div className="suggestions-grid">
+                Trending Projects
+              </div>
             </div>
-            <div>
-              <section className="sidebar-section trending-projects">
-                <p>Trending Projects</p>
-                <div className="project-cards">
-                  {trendingProjects.map((project) => (
-                    <div key={project.id} className="project-card">
-                      <h4>{project.title}</h4>
-                      <p>{project.description}</p>
-                    </div>
-                  ))}
-                </div>
-              </section>
 
-              <section className="sidebar-section upcoming-events">
-                <p>Upcoming Events</p>
-                <div className="event-cards">
-                  {upcomingEvents.map((event) => (
-                    <div key={event.id} className="event-card">
-                      <h4>{event.title}</h4>
-                      <p>{event.date}</p>
-                    </div>
-                  ))}
-                </div>
-              </section>
+            <div className="suggestions profile-suggestions">
+              <div className="suggestions-title">
+                <h3>Connection</h3>
+                <div className="divider-horizontal"></div>
+              </div>
 
-              <section className="sidebar-section trending-projects">
-                <p>Example 1</p>
-                <div className="project-cards">
-                  {trendingProjects.map((project) => (
-                    <div key={project.id} className="project-card">
-                      <h4>{project.title}</h4>
-                      <p>{project.description}</p>
-                    </div>
-                  ))}
-                </div>
-              </section>
+              <div className="suggestions-grid ">
+                {profileSuggestions.map((profile) => (
+                  <ProfileCardHome
+                    key={profile.id}
+                    profile={profile}
+                    onFollow={handleFollow}
+                  />
+                ))}
+              </div>
+            </div>
 
-              <section className="sidebar-section trending-projects">
-                <p>Exampel 2</p>
-                <div className="project-cards">
-                  {trendingProjects.map((project) => (
-                    <div key={project.id} className="project-card">
-                      <h4>{project.title}</h4>
-                      <p>{project.description}</p>
-                    </div>
-                  ))}
-                </div>
-              </section>
+            <div className="suggestions upcoming-events">
+              <div className="suggestions-title">
+                <h3>Upcoming Events </h3>
+                <div className="divider-horizontal"></div>
+              </div>
+
+              <div className="suggestions-grid ">
+                Upcoming Events
+              </div>
             </div>
           </div>
         </div>
       )}
 
       {/* Footer */}
+
       <footer className="footer-container">
         <div className="footer-links">
           <a href="/about">About</a>

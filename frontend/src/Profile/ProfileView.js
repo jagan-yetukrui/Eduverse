@@ -52,30 +52,34 @@ const ProfileHeader = ({
       </div>
     ) : (
       <>
-        <img
-          className="profile-avatar"
-          src={user.avatarUrl || "/default-avatar.jpg"}
-          alt={`${user.name}'s avatar`}
-        />
         <div className="profile-stats">
-          {Object.entries(stats).map(([key, value]) => (
-            <div key={key} className="stat-item">
-              <span className="stat-value">{value}</span>
-              <span className="stat-label">{key}</span>
-            </div>
-          ))}
+          <img
+            className="profile-avatar"
+            src={user.avatarUrl || "/default-avatar.jpg"}
+            alt={`${user.name}'s avatar`}
+          />
+          <div style={{ display: "flex", gap: "1rem" }}>
+            {Object.entries(stats).map(([key, value]) => (
+              <div key={key} className="stat-item">
+                <span className="stat-value">{value}</span>
+                <span className="stat-label">{key}</span>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="profile-content">
-          <h1 className="profile-name">{user.username}Test Name</h1>
-          <p className="profile-username">@ testusername{user.username}</p>
-          <p className="profile-join-date">
-            Joined
-            {user.joinedDate && isValid(new Date(user.joinedDate))
-              ? format(new Date(user.joinedDate), "MMMM yyyy")
-              : " Unknown"}
-          </p>
-          <p className="profile-bio">{user.bio || "No bio provided"}</p>
+          <h1 className="profile-name">{user.username}</h1>
+          <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+            <p className="profile-username">@ {user.username}</p>
+            <p className="profile-join-date">
+              Joined
+              {user.joinedDate && isValid(new Date(user.joinedDate))
+                ? format(new Date(user.joinedDate), "MMMM yyyy")
+                : " Unknown"}
+            </p>
+            <p className="profile-bio">{user.bio || "No bio provided"}</p>
+          </div>
         </div>
       </>
     )}
@@ -335,25 +339,52 @@ const ProfileView = () => {
   };
 
   useEffect(() => {
+    const controller = new AbortController();
     const fetchUserData = async () => {
       try {
-        // const response = await axios.get(`/api/profiles/${userId || 'me'}`);
-        const response = await axios.get(`http://127.0.0.1:8000/api/profiles/`);
+        const token = localStorage.getItem("access_token");
+        if (!token) {
+          setError("No access token found. Please log in.");
+          setLoading(false);
+          return;
+        }
+
+        const response = await axios.get(
+          `http://127.0.0.1:8000/api/profiles/me/`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            signal: controller.signal,
+          }
+        );
         setUser(response.data);
+        {
+          console.log(response.data);
+        }
         setStats({
           followers: response.data.followers_count,
           following: response.data.following_count,
-          posts: response.data.posts_count,
+          // posts: response.data.posts_count,
         });
         setIsFollowing(response.data.is_following);
         setLoading(false);
       } catch (err) {
-        setError("Failed to fetch user data");
+        if (axios.isCancel(err)) {
+          console.log("Fetch cancelled");
+        } else if (err.response && err.response.status === 401) {
+          setError("Unauthorized. Please log in again.");
+          localStorage.removeItem("access_token"); // Clear invalid token
+          window.location.href = "/login"; // Redirect to login
+        } else {
+          setError("Failed to fetch user data");
+        }
         setLoading(false);
       }
     };
+
     fetchUserData();
-  }, [userId]);
+
+    return () => controller.abort(); // Cleanup on unmount
+  }, []);
 
   if (loading) return <LoadingSpinner />;
   if (error) return <ErrorMessage message={error} />;

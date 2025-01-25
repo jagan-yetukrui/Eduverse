@@ -68,25 +68,20 @@ class ProfileViewSet(viewsets.ModelViewSet):
         return Response(stats)
 
     @action(detail=False, methods=['get', 'put', 'patch'], permission_classes=[IsAuthenticated], url_path='me', url_name='me')
-    def me(self, request):
-        """Handle current user's profile operations"""
-        try:
-            profile = request.user.profile
-        except Profile.DoesNotExist:
-            return Response(
-                {'error': 'Profile not found for this user'}, 
-                status=status.HTTP_404_NOT_FOUND
-            )
+    def me(self, request, *args, **kwargs):
+        user = request.user
+        if not user.is_authenticated:
+            return Response({"detail": "Authentication credentials were not provided."}, status=401)
 
-        if request.method == 'GET':
-            serializer = self.get_serializer(profile)
-            return Response(serializer.data)
-        
-        serializer = EditProfileSerializer(profile, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # Assuming 'profile' is a related name on your User model
+        try:
+            profile = user.profile
+        except AttributeError:
+            return Response({"detail": "Profile not found."}, status=404)
+
+        # Serialize and return the profile
+        serializer = self.get_serializer(profile)
+        return Response(serializer.data)
 
     @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated], url_path='me/stats', url_name='me-stats')
     def me_stats(self, request):

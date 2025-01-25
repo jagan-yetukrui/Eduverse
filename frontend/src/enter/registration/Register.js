@@ -167,7 +167,7 @@ const Register = () => {
           type="button"
           className="social-button google"
           // whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+          // whileTap={{ scale: 0.95 }}
         >
           <FaGoogle /> <span>Sign up with Google</span>
         </motion.button>
@@ -175,7 +175,7 @@ const Register = () => {
           type="button"
           className="social-button linkedin"
           // whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+          // whileTap={{ scale: 0.95 }}
         >
           <FaLinkedin /> <span>Sign up with LinkedIn</span>
         </motion.button>
@@ -206,7 +206,7 @@ const Register = () => {
             placeholder={config.placeholder}
             value={formData[field]}
             onChange={handleChange}
-            whileFocus={{ scale: 1.02 }}
+            // whileFocus={{ scale: 1.02 }}
             className={`neon-input ${
               field === "email"
                 ? isEmailValid === true
@@ -303,17 +303,17 @@ const Register = () => {
 
       <motion.div
         className="holographic-panel"
-        initial={{ opacity: 0, y: -50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, ease: "easeOut" }}
+        // initial={{ opacity: 0, y: -50 }}
+        // animate={{ opacity: 1, y: 0 }}
+        // transition={{ duration: 1, ease: "easeOut" }}
       >
         <motion.img
           src={FirstLogo}
           alt="EduVerse"
           className="register-logo"
           style={{ width: "60px", height: "60px" }}
-          whileHover={{ rotate: 360, scale: 1.1 }}
-          transition={{ duration: 0.3 }}
+          // whileHover={{ rotate: 360, scale: 1.1 }}
+          // transition={{ duration: 0.3 }}
         />
         <motion.div
           className="register-title"
@@ -345,9 +345,9 @@ const Register = () => {
         {errorMessage && (
           <motion.div
             className="error-message"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 20 }}
+            // initial={{ opacity: 0, x: -20 }}
+            // animate={{ opacity: 1, x: 0 }}
+            // exit={{ opacity: 0, x: 20 }}
           >
             <FaTimesCircle /> {errorMessage}
           </motion.div>
