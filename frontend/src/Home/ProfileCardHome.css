@@ -1,12 +1,12 @@
 .profile-card {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
     align-items: center;
-    padding: 10px;
-    border-radius: 8px;
-    background-color: #1c1c1e;
-    margin-bottom: 15px;
-    transition: box-shadow 0.3s;
-    cursor: pointer;
+    justify-content: space-between;
+    color: var(--text-color);
+    border-radius: 7px;
+    padding: 1rem;
+    gap: 1rem;
   }
   
   .profile-card:hover {
@@ -27,7 +27,6 @@
   
   .profile-username {
     font-weight: bold;
-    color: #ffffff;
     margin: 0;
   }
   

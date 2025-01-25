@@ -48,12 +48,11 @@ const Navbar = () => {
           <p>EduVerse</p>
         </div>
 
-        <div className="nav-item">
+        {/* <div className="nav-item">
           <button onClick={() => navigate("/")} className="nav-button">
-            {/* <AiFillHome className="nav-icon" /> */}
             <p>HOME</p>
           </button>
-        </div>
+        </div> */}
 
         <div className="nav-item">
           <button onClick={() => navigate("/search")} className="nav-button">
@@ -88,7 +87,8 @@ const Navbar = () => {
         <div className="nav-item nav-profile">
           <button onClick={() => navigate("/profile")} className="nav-button">
             {/* <AiOutlineUser className="nav-icon" /> */}
-            <p>PROFILE</p>
+            {/* <p>PROFILE</p> */}
+            <p><AiOutlineUser/></p>
           </button>
         </div>
       ) : (
