@@ -78,14 +78,14 @@
 }
 
 .nav-item p:hover {
-  /* color: var(--quaternary-color); */
-  background-color: var(--hover-color);
+  color: white;
+  background-color: var(--secondary-color);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .nav-profile p {
-  color: var(--tertiary-color);
+  color: white;
   border: 2px solid var(--primary-color);
   background-color: var(--secondary-color);
   /* box-shadow: rgba(100, 100, 111, 0.3) 0px 3px 3px 1px; */

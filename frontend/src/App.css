@@ -15,7 +15,7 @@ h1, h2, h3, p {
 }
 
 .App {
-  height: 100vh;
+  height: 100%;
   width: auto;
   /* background-color: var(--quaternary-color); */
   padding: 2rem;
