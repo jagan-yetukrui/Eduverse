@@ -1,8 +1,8 @@
 .messages-container {
   display: flex;
-  height: 100%;
+  flex-grow: 1;
   color: var(--text-color);
-  padding: 3rem;
+  padding: 0 2rem;
 }
 
 .messages-container.nav-expanded {
@@ -11,7 +11,7 @@
 
 .chats-list {
   width: 350px;
-  border: 1px solid var(--quaternary-color);
+  /* border: 1px solid var(--quaternary-color); */
 
   border-radius: 7px;
   /* background-color: white; */
@@ -23,17 +23,24 @@
   /* padding: 20px; */
   /* border-bottom: 1px solid #dbdbdb; */
   padding: 1rem;
-  width: calc(100% - 2rem);
+  /* width: calc(100% - 2rem); */
+  box-sizing: border-box;
   border-bottom: 1px solid var(--quaternary-color);
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
+  gap: 1rem;
+}
+
+.search-container-messages h3 {
+  margin: 0;
+  font-weight: 500;
 }
 
 .search-input {
   width: calc(100% - 2rem);
-  padding: .5rem 1rem;
+  padding: 0.5rem 1rem;
   border: 1px solid #dbdbdb;
   border-radius: 8px;
   font-size: 14px;
@@ -67,7 +74,7 @@
   align-items: center;
   padding: 15px;
   cursor: pointer;
-  border-bottom: 1px solid #dbdbdb;
+  border-top: 1px solid #dbdbdb;
 }
 
 .chat-item:hover {
@@ -75,7 +82,7 @@
 }
 
 .chat-item.active {
-  background-color: #e8f5fe;
+  background-color: #f0f9ff;
 }
 
 .user-avatar {
@@ -91,9 +98,8 @@
 
 .chat-header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 5px;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .chat-name {
@@ -115,16 +121,16 @@
 }
 
 .chat-window {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  width: 100%;
+  padding: 1rem;
 }
 
-.chat-header {
-  padding: 15px;
-  border-bottom: 1px solid #dbdbdb;
+.selected-chat-header {
   display: flex;
   align-items: center;
+  padding: 20px;
 }
 
 .header-info {
@@ -141,7 +147,7 @@
 }
 
 .chat-messages {
-  flex: 1;
+  max-height: 60dvh;
   padding: 20px;
   overflow-y: auto;
 }
@@ -150,6 +156,8 @@
   margin-bottom: 15px;
   display: flex;
 }
+
+.chat-message
 
 .message-content {
   max-width: 60%;
@@ -162,7 +170,7 @@
 }
 
 .sent .message-content {
-  background-color: #0095f6;
+  background-color: var(--secondary-color);
   color: white;
 }
 
@@ -178,31 +186,31 @@
 }
 
 .message-input {
-  padding: 20px;
-  border-top: 1px solid #dbdbdb;
+  padding: 1rem;
   display: flex;
-  gap: 10px;
+  gap: 1rem;
 }
 
 .message-input input {
   flex: 1;
-  padding: 10px;
+  padding: 1rem 2rem;
   border: 1px solid #dbdbdb;
-  border-radius: 20px;
+  border-radius: 7px;
   font-size: 14px;
 }
 
 .message-input button {
   padding: 10px 20px;
-  background-color: #0095f6;
+  background-color: var(--primary-color);
   color: white;
   border: none;
-  border-radius: 20px;
+  border-radius: 7px;
   cursor: pointer;
 }
 
 .no-chat-selected {
-  flex: 1;
+  flex-grow: 1;
+  height: 70dvh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -210,4 +218,5 @@
   text-align: center;
   padding: 20px;
   color: var(--text-color);
+  gap: 1rem;
 }

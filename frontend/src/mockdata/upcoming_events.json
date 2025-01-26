@@ -1,0 +1,52 @@
+[
+  {
+    "id": 1,
+    "eventName": "Global Hackathon 2025",
+    "date": "2025-03-15",
+    "time": "10:00 AM - 6:00 PM",
+    "location": "Online",
+    "description": "A 24-hour hackathon bringing together students and professionals to solve real-world challenges with code.",
+    "tags": ["Tech", "Coding", "Networking"],
+    "registrationLink": "https://globalhackathon2025.com/register"
+  },
+  {
+    "id": 2,
+    "eventName": "Green Future Summit",
+    "date": "2025-04-05",
+    "time": "9:00 AM - 4:00 PM",
+    "location": "San Francisco, CA",
+    "description": "A conference focused on sustainability, featuring workshops, keynote speakers, and networking opportunities.",
+    "tags": ["Environment", "Innovation", "Careers"],
+    "registrationLink": "https://greenfuturesummit.com/register"
+  },
+  {
+    "id": 3,
+    "eventName": "AI in Education Webinar",
+    "date": "2025-02-28",
+    "time": "5:00 PM - 6:30 PM",
+    "location": "Online",
+    "description": "An online webinar exploring how AI is transforming the way we teach and learn, with guest speakers from top edtech companies.",
+    "tags": ["Education", "AI", "Webinar"],
+    "registrationLink": "https://aiineduwebinar.com/register"
+  },
+  {
+    "id": 4,
+    "eventName": "Startup Pitch Night",
+    "date": "2025-03-10",
+    "time": "6:00 PM - 9:00 PM",
+    "location": "Austin, TX",
+    "description": "A live event where startups pitch their ideas to investors and a panel of judges for feedback and potential funding.",
+    "tags": ["Startups", "Entrepreneurship", "Investors"],
+    "registrationLink": "https://startup-pitchnight.com"
+  },
+  {
+    "id": 5,
+    "eventName": "Career Fair 2025",
+    "date": "2025-03-20",
+    "time": "11:00 AM - 4:00 PM",
+    "location": "New York, NY",
+    "description": "A massive career fair with top companies offering internships, jobs, and networking opportunities.",
+    "tags": ["Careers", "Networking", "Jobs"],
+    "registrationLink": "https://careerfair2025.com/register"
+  }
+]
