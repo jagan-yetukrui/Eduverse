@@ -29,6 +29,12 @@
     font-weight: bold;
     margin: 0;
   }
+
+  .profile-follower {
+    font-size: 0.75rem;
+    color: #919191;
+    margin: 2px 0;
+  }
   
   .profile-reason, .profile-mutuals {
     font-size: 0.85rem;

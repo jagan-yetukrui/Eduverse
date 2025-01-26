@@ -15,7 +15,7 @@ const ProfileCardHome = ({ profile, onFollow }) => {
         <p className="profile-username">{profile.username}</p>
         {/* {profile.reason && <p className="profile-reason">{profile.reason}</p>} */}
         <p className="profile-bio">{profile.bio}</p>
-        <p className="profile-follower">{profile.followers_count}</p>
+        <p className="profile-follower">{profile.followers_count} followers</p>
         {profile.mutuals && (
           <p className="profile-mutuals">
             Followed by {profile.mutuals.join(", ")}
