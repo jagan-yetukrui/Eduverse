@@ -41,11 +41,16 @@
 .profile-details-container {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 2rem;
   padding: 1rem 0;
   margin: 1rem 0;
-  
-  border-top: 2px solid var(--text-color);
+  border-top: 2px solid var(--primary-color);
+}
+
+.profile-details-container h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-color);
 }
 
 /* Stats Layout */
