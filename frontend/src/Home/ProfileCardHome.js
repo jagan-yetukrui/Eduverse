@@ -1,12 +1,14 @@
 import React from "react";
 import "./ProfileCardHome.css";
 
+import placeholder from "../images/placeholder.png";
+
 const ProfileCardHome = ({ profile, onFollow }) => {
   return (
     <div className="profile-card">
       <img
-        src={profile.picture}
-        alt={`${profile.username}'s profile`}
+        src={placeholder}
+        alt={placeholder}
         className="profile-image"
       />
       <div className="profile-info">

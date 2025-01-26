@@ -17,6 +17,8 @@ import ErrorMessage from "../components/ErrorMessage";
 import LoadingSpinner from "../components/LoadingSpinner";
 import "./ProfileView.css";
 
+import placeholder from "../images/placeholder.png";
+
 // Profile Header Component
 const ProfileHeader = ({
   user,
@@ -55,8 +57,9 @@ const ProfileHeader = ({
         <div className="profile-stats">
           <img
             className="profile-avatar"
-            src={user.avatarUrl || "/default-avatar.jpg"}
-            alt={`${user.name}'s avatar`}
+            // src={user.avatarUrl || "/default-avatar.jpg"}
+            src={placeholder}
+            alt={placeholder}
           />
           <div style={{ display: "flex", gap: "1rem" }}>
             {Object.entries(stats).map(([key, value]) => (

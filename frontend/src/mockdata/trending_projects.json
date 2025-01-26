@@ -1,0 +1,52 @@
+[
+  {
+    "id": 1,
+    "name": "EcoHive",
+    "description": "A cool app that helps you find eco-friendly products and rewards you for making sustainable choices. It even scores how 'green' different products are!",
+    "category": "Environment",
+    "popularity": "1.2 million users",
+    "teamSize": "10 people",
+    "likes": 54000,
+    "comments": 1200
+  },
+  {
+    "id": 2,
+    "name": "HealthSync AI",
+    "description": "A smart health app that works with your smartwatch to give you tips for staying healthy and even predicts health risks before they happen.",
+    "category": "Health",
+    "popularity": "Used by 500,000+ people",
+    "teamSize": "25 people",
+    "likes": 82000,
+    "comments": 2300
+  },
+  {
+    "id": 3,
+    "name": "MetaMaker",
+    "description": "An easy-to-use tool where anyone can design their own virtual worlds for gaming, school projects, or just for fun!",
+    "category": "Tech & Gaming",
+    "popularity": "Over 1 million downloads",
+    "teamSize": "18 people",
+    "likes": 67000,
+    "comments": 1500
+  },
+  {
+    "id": 4,
+    "name": "FarmIQ",
+    "description": "An app that uses smart tech to help farmers grow more crops while saving resources like water and energy.",
+    "category": "Agriculture",
+    "popularity": "10,000+ farmers using it",
+    "teamSize": "12 people",
+    "likes": 32000,
+    "comments": 800
+  },
+  {
+    "id": 5,
+    "name": "NeuroLearn",
+    "description": "An AI tutor that helps you learn faster, translates stuff into other languages, and creates personalized lessons just for you.",
+    "category": "Education",
+    "popularity": "Used in 500+ schools",
+    "teamSize": "30 people",
+    "likes": 91000,
+    "comments": 3400
+  }
+]

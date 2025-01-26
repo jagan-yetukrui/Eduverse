@@ -1,8 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./Message.css";
 
+import mockchat from "../mockdata/chat.json";
+import placeholder from "../images/placeholder.png";
+
 const Messages = () => {
-  const [chats, setChats] = useState([]); // Array to hold chat data
+  const [chats, setChats] = useState(mockchat);
+  // const [chats, setChats] = useState([]);
   const [message, setMessage] = useState(""); // Current message
   const [selectedChat, setSelectedChat] = useState(null); // Currently selected chat
   const [searchTerm, setSearchTerm] = useState(""); // Search term for finding users
@@ -104,7 +108,8 @@ const Messages = () => {
     <div className="messages-container">
       <div className="chats-list">
         <div className="search-container-messages">
-          <p>Messages</p>
+          <h3>Messages</h3>
+          <div className="divider-horizontal"></div>
           <input
             type="text"
             placeholder="Search users..."
@@ -121,7 +126,8 @@ const Messages = () => {
                   onClick={() => startNewChat(user)}
                 >
                   <img
-                    src={user.avatar}
+                    // src={user.avatar}
+                    src={placeholder}
                     alt={user.name}
                     className="user-avatar"
                   />
@@ -141,11 +147,13 @@ const Messages = () => {
               }`}
               onClick={() => setSelectedChat(chat)}
             >
-              <img src={chat.avatar} alt={chat.name} className="user-avatar" />
+              <img src={placeholder} alt={chat.name} className="user-avatar" />
               <div className="chat-info">
                 <div className="chat-header">
                   <span className="chat-name">{chat.name}</span>
-                  <span className="last-active">{chat.lastActive}</span>
+                  <span className="last-active">
+                    Last Active {chat.lastActive}
+                  </span>
                 </div>
                 {chat.messages.length > 0 && (
                   <p className="last-message">
@@ -161,32 +169,38 @@ const Messages = () => {
       <div className="chat-window">
         {selectedChat ? (
           <>
-            <div className="chat-header">
+            <div className="selected-chat-header">
               <img
-                src={selectedChat.avatar}
+                // src={selectedChat.avatar}
+                src={placeholder}
                 alt={selectedChat.name}
                 className="user-avatar"
               />
               <div className="header-info">
                 <h3>{selectedChat.name}</h3>
-                <span className="status">{selectedChat.lastActive}</span>
+                <span className="status">
+                  Last Active {selectedChat.lastActive}
+                </span>
               </div>
             </div>
+
             <div className="chat-messages">
               {selectedChat.messages.map((msg, index) => (
                 <div
                   key={index}
                   className={`chat-message ${
-                    msg.sender === "me" ? "sent" : "received"
+                    msg.sender === "You" ? "sent" : "received"
                   }`}
                 >
                   <div className="message-content">
-                    <p>{msg.text}</p>
+                    <p>{msg.content}</p>
                     <span className="timestamp">{msg.timestamp}</span>
                   </div>
                 </div>
               ))}
+              
             </div>
+
             <form onSubmit={handleMessageSend} className="message-input">
               <input
                 type="text"

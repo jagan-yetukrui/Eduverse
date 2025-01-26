@@ -3,6 +3,9 @@ import { useNavigate, useLocation } from "react-router-dom";
 import "./Home.css";
 import ProfileCardHome from "./ProfileCardHome";
 
+import mockTrendingProjects from "../mockdata/trending_projects.json";
+import mockUpcomingEvents from "../mockdata/upcoming_events.json";
+
 const Home = () => {
   const navigate = useNavigate();
   // const location = useLocation();
@@ -79,8 +82,30 @@ const Home = () => {
                 <div className="divider-horizontal"></div>
               </div>
 
-              <div className="suggestions-grid">
-                Trending Projects
+              <div className="suggestions-grid project-grid">
+                {mockTrendingProjects.map((project) => (
+                  <div key={project.id} className="project-card">
+                    <div className="project-card-header">
+                      <div className="project-card-title">
+                        <h3>{project.name}</h3>
+                        <p>{project.description}</p>
+                      </div>
+                    </div>
+                    <p># {project.category}</p>
+                    <div className="project-card-body">
+                      <p>{project.popularity}</p>
+                      <p>{project.teamSize} working on this project</p>
+                    </div>
+
+                    <div className="project-card-footer">
+                      <div className="project-card-stats">
+                        <p>{project.likes} Likes</p>
+                        <p>{project.comments} Comments</p>
+                      </div>
+                      <button className="project-card-button">View</button>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -107,8 +132,32 @@ const Home = () => {
                 <div className="divider-horizontal"></div>
               </div>
 
-              <div className="suggestions-grid ">
-                Upcoming Events
+              <div className="suggestions-grid events-grid">
+                {mockUpcomingEvents.map((event) => (
+                  <div key={event.id} className="project-card">
+                    <div className="project-card-header">
+                      <div className="project-card-title">
+                        <h3>{event.eventName}</h3>
+                        <p>{event.description}</p>
+                      </div>
+                    </div>
+                    <p># {event.tags}</p>
+                    <div className="project-card-footer">
+                      <div className="project-card-stats">
+                        <p>
+                          {event.date} {event.time}
+                        </p>
+                        <p>{event.location}</p>
+                      </div>
+                      <button
+                        href={event.registrationLink}
+                        className="project-card-button"
+                      >
+                        Register
+                      </button>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>

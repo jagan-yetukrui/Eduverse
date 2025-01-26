@@ -2,9 +2,10 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from .models import Profile, Education, License, Experience
 
+
 # Main serializer for Profile model handling basic profile information and related counts
 class ProfileSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(source='user.username', read_only=True)
+    username = serializers.CharField(source="user.username", read_only=True)
     display_name = serializers.CharField(max_length=100)
     followers_count = serializers.SerializerMethodField()
     following_count = serializers.SerializerMethodField()
@@ -12,20 +13,45 @@ class ProfileSerializer(serializers.ModelSerializer):
     blocked_users = serializers.SerializerMethodField()
     notification_settings = serializers.JSONField(required=False)
     privacy_settings = serializers.JSONField(required=False)
-    account_status = serializers.ChoiceField(choices=Profile.ACCOUNT_STATUS_CHOICES, read_only=True)
+    account_status = serializers.ChoiceField(
+        choices=Profile.ACCOUNT_STATUS_CHOICES, read_only=True
+    )
     highlights = serializers.JSONField(required=False)
     website = serializers.URLField(required=False, allow_blank=True)
 
     class Meta:
         model = Profile
         fields = [
-            'user', 'username', 'display_name', 'bio', 'avatar',
-            'website', 'location', 'followers_count', 'following_count',
-            'posts', 'highlights', 'education_details', 'experiences',
-            'licenses', 'blocked_users', 'notification_settings', 'privacy_settings',
-            'account_status', 'is_verified', 'skills'
+            "user",
+            "username",
+            "display_name",
+            "bio",
+            "avatar",
+            "website",
+            "location",
+            "followers_count",
+            "following_count",
+            "posts",
+            "highlights",
+            "education_details",
+            "experiences",
+            "licenses",
+            "blocked_users",
+            "notification_settings",
+            "privacy_settings",
+            "account_status",
+            "is_verified",
+            "skills",
         ]
-        read_only_fields = ['user', 'username', 'followers_count', 'following_count', 'posts', 'is_verified', 'skills']
+        read_only_fields = [
+            "user",
+            "username",
+            "followers_count",
+            "following_count",
+            "posts",
+            "is_verified",
+            "skills",
+        ]
 
     # Get total number of followers
     def get_followers_count(self, obj):
@@ -34,30 +60,39 @@ class ProfileSerializer(serializers.ModelSerializer):
     # Get total number of users being followed
     def get_following_count(self, obj):
         return obj.following.count()
-        
+
     # Get simplified list of user's posts
     def get_posts(self, obj):
         if obj.posts:
             return {
-                'id': obj.posts.id,
-                'title': obj.posts.title,
-                'thumbnail': obj.posts.thumbnail.url if obj.posts.thumbnail else None
+                "id": obj.posts.id,
+                "title": obj.posts.title,
+                "thumbnail": obj.posts.thumbnail.url if obj.posts.thumbnail else None,
             }
         return None
 
     # Get list of blocked users with basic info
     def get_blocked_users(self, obj):
-        return [{'id': user.id, 'username': user.username} for user in obj.blocked_users.all()]
+        return [
+            {"id": user.id, "username": user.username}
+            for user in obj.blocked_users.all()
+        ]
+
 
 # Dedicated serializer for privacy settings with strict choices validation
 class PrivacySettingsSerializer(serializers.Serializer):
-    profile_visibility = serializers.ChoiceField(choices=['public', 'private'])
-    posts_visibility = serializers.ChoiceField(choices=['public', 'friends', 'private'])
-    followers_visibility = serializers.ChoiceField(choices=['public', 'friends', 'private'])
-    following_visibility = serializers.ChoiceField(choices=['public', 'friends', 'private'])
+    profile_visibility = serializers.ChoiceField(choices=["public", "private"])
+    posts_visibility = serializers.ChoiceField(choices=["public", "friends", "private"])
+    followers_visibility = serializers.ChoiceField(
+        choices=["public", "friends", "private"]
+    )
+    following_visibility = serializers.ChoiceField(
+        choices=["public", "friends", "private"]
+    )
     allow_friend_requests = serializers.BooleanField(default=True)
     show_online_status = serializers.BooleanField(default=True)
-    
+
+
 # Dedicated serializer for notification preferences across different channels
 class NotificationSettingsSerializer(serializers.Serializer):
     email = serializers.BooleanField(default=True)
@@ -68,23 +103,29 @@ class NotificationSettingsSerializer(serializers.Serializer):
     follows = serializers.BooleanField(default=True)
     messages = serializers.BooleanField(default=True)
 
+
 # Dedicated serializer for security-related settings including 2FA
 class SecuritySettingsSerializer(serializers.Serializer):
     two_factor_auth = serializers.BooleanField(default=False)
     login_alerts = serializers.BooleanField(default=True)
     backup_codes = serializers.ListField(child=serializers.CharField(), read_only=True)
 
+
 # Dedicated serializer for blocked user entries with additional metadata
 class BlockedUserSerializer(serializers.Serializer):
     user_id = serializers.IntegerField()
     block_reason = serializers.CharField(required=False, allow_blank=True)
-    block_duration = serializers.ChoiceField(choices=['temporary', 'permanent'], default='permanent')
+    block_duration = serializers.ChoiceField(
+        choices=["temporary", "permanent"], default="permanent"
+    )
+
 
 # Dedicated serializer for close friends list management
 class CloseFriendSerializer(serializers.Serializer):
     user_id = serializers.IntegerField()
     added_at = serializers.DateTimeField(read_only=True)
     custom_list = serializers.CharField(required=False, allow_blank=True)
+
 
 # Comprehensive settings serializer that combines all setting-specific serializers
 class SettingsSerializer(serializers.ModelSerializer):
@@ -99,9 +140,14 @@ class SettingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = [
-            'blocked_users', 'notification_settings', 'privacy_settings',
-            'security_settings', 'account_status', 'liked_posts', 
-            'close_friends', 'highlights'
+            "blocked_users",
+            "notification_settings",
+            "privacy_settings",
+            "security_settings",
+            "account_status",
+            "liked_posts",
+            "close_friends",
+            "highlights",
         ]
 
     # Validate notification settings using dedicated serializer
@@ -128,18 +174,23 @@ class SettingsSerializer(serializers.ModelSerializer):
     # Ensure blocked users list doesn't exceed platform limits
     def validate_blocked_users(self, value):
         if len(value) > 1000:  # Limit number of blocked users
-            raise serializers.ValidationError("Maximum number of blocked users exceeded")
+            raise serializers.ValidationError(
+                "Maximum number of blocked users exceeded"
+            )
         return value
 
     # Ensure close friends list doesn't exceed platform limits
     def validate_close_friends(self, value):
         if len(value) > 500:  # Limit number of close friends
-            raise serializers.ValidationError("Maximum number of close friends exceeded")
+            raise serializers.ValidationError(
+                "Maximum number of close friends exceeded"
+            )
         return value
+
 
 # Serializer for handling profile edits with field-specific validation
 class EditProfileSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(source='user.username', read_only=True)
+    username = serializers.CharField(source="user.username", read_only=True)
     display_name = serializers.CharField(max_length=100)
     bio = serializers.CharField(max_length=500, required=False, allow_blank=True)
     avatar = serializers.ImageField(required=False, allow_null=True)
@@ -148,15 +199,25 @@ class EditProfileSerializer(serializers.ModelSerializer):
     education_details = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     experiences = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     licenses = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
-    skills = serializers.JSONField(read_only=True, help_text="This field is managed by AI")
+    skills = serializers.JSONField(
+        read_only=True, help_text="This field is managed by AI"
+    )
     highlights = serializers.JSONField(required=False)
 
     class Meta:
         model = Profile
         fields = [
-            'username', 'display_name', 'bio', 'avatar', 'website', 
-            'location', 'education_details', 'experiences', 'licenses', 
-            'skills', 'highlights'
+            "username",
+            "display_name",
+            "bio",
+            "avatar",
+            "website",
+            "location",
+            "education_details",
+            "experiences",
+            "licenses",
+            "skills",
+            "highlights",
         ]
 
     # Validate avatar file size

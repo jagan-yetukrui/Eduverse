@@ -71,22 +71,25 @@ const Notes = () => {
   return (
     <div className="edura-page">
       <div className="edura-container" ref={chatContainerRef}>
-        <div className="edura-header">
-          <div className="avatar-container" ref={avatarRef}>
-            <div className="hologram-effect"></div>
-            <div className="avatar-core"></div>
+        <div>
+          <div className="edura-header">
+            <div className="avatar-container" ref={avatarRef}>
+              <div className="hologram-effect"></div>
+              <div className="avatar-core"></div>
+            </div>
+            <div>
+              <h2 className="edura-title">Edura</h2>
+              <p className="edura-tagline">Your Personalized AI Mentor</p>
+            </div>
           </div>
-          <h1 className="edura-title">Edura</h1>
-          <div className="edura-div"></div>
-          <p className="edura-tagline">Your Personalized AI Mentor</p>
-        </div>
 
-        <div className="quick-actions">
-          {/* <h3>Suggested Actions</h3> */}
-          <div className="action-buttons">
-            <button className="action-btn">Complete Profile</button>
-            <button className="action-btn">Explore Courses</button>
-            <button className="action-btn">Find Collaborators</button>
+          <div className="quick-actions">
+            {/* <h3>Suggested Actions</h3> */}
+            <div className="action-buttons">
+              <button className="action-btn">Complete Profile</button>
+              <button className="action-btn">Explore Courses</button>
+              <button className="action-btn">Find Collaborators</button>
+            </div>
           </div>
         </div>
 
