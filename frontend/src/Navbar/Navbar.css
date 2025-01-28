@@ -1,55 +1,75 @@
 .navbar {
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
   width: 100%;
-  padding: 1rem 0;
+  padding: 1rem 2rem;
   height: fit-content;
-  box-shadow: #21355530 0px 3px 10px 0px;
-  border-radius: 7px;
-  margin-bottom: 1rem;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(15px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+  border-radius: 16px;
+  margin-bottom: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
 .logo-container-nav {
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: fit-content;
-  padding: 0.3rem 0.7rem;
-  border-right: 2px solid var(--secondary-color);
-  padding-right: 2rem;
-  margin-right: 2rem;
+  position: relative;
+  padding: 0.5rem 2.5rem 0.5rem 0;
+  margin-right: 2.5rem;
+}
+
+.logo-container-nav::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  height: 70%;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, var(--secondary-color) 50%, transparent);
+  opacity: 0.6;
 }
 
 .logo-container-nav:hover {
   cursor: pointer;
-  text-decoration: underline;
+  transform: translateY(-2px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .logo-container-nav p {
-  font-size: 1.4rem;
-  font-weight: 600;
+  font-size: 1.6rem;
+  font-weight: 800;
   color: var(--text-color);
-  margin: 0 0 0 5px;
+  margin: 0 0 0 12px;
+  letter-spacing: -0.75px;
+  background: linear-gradient(120deg, var(--text-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .nav-logo {
-  width: 25px;
-  height: 25px;
-  /* filter: grayscale(100%); */
+  width: 32px;
+  height: 32px;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.nav-logo:hover {
+  transform: rotate(15deg) scale(1.1);
 }
 
 .nav-item-container {
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  gap: 1.25rem;
+  margin-right: 2.5rem; /* Increased margin to move profile more to the left */
 }
 
 .nav-item {
   height: 100%;
   font-family: "Montserrat", sans-serif;
-  font-weight: 500;
-  color: var(--text-color);
+  font-weight: 600;
 }
 
 .nav-item button {
@@ -58,51 +78,54 @@
   justify-content: center;
   background: transparent;
   border: none;
-  margin: 0 1rem;
+  padding: 0.5rem;
   cursor: pointer;
-  /* font-weight: 700; */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .nav-button {
   background: transparent;
   border: none;
-  margin: 0 1rem;
+  padding: 0.5rem;
   cursor: pointer;
   font-size: 1rem;
-  /* font-weight: 700; */
+  transition: all 0.3s ease;
 }
 
 .nav-item p {
-  font-size: 15px;
-  font-weight: 500;
-  margin: 0 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin: 0;
   color: var(--text-color);
-  padding: 0.5rem;
-  border-radius: 7px;
+  padding: 0.8rem 1.2rem;
+  border-radius: 12px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid transparent;
 }
 
 .nav-item p:hover {
   color: white;
   background-color: var(--secondary-color);
-  cursor: pointer;
-  transition: all 0.2s ease;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .nav-profile p {
   color: white;
-  border: 2px solid var(--primary-color);
-  background-color: var(--secondary-color);
-  /* box-shadow: rgba(100, 100, 111, 0.3) 0px 3px 3px 1px; */
+  border: none;
+  background: linear-gradient(135deg, var(--secondary-color), var(--hover-color));
   font-size: 1rem;
-  padding: 0.5rem 0.5rem;
+  padding: 0.8rem 1.4rem;
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 0.6rem;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
 }
 
 .nav-profile p:hover {
-  text-decoration: none;
-  background-color: var(--hover-color);
-  color: var(--primary-color);
-  transition: all 0.2s ease;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.18);
+  background: linear-gradient(135deg, var(--hover-color), var(--secondary-color));
 }

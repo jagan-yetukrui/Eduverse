@@ -17,6 +17,8 @@ const PostList = lazy(() => import('./Posts/PostList'));
 const Search = lazy(() => import('./Search/Searchpage'));
 const Settings = lazy(() => import('./Settings/Settings'));
 const TinyMCEDemo = lazy(() => import('./TinyMCEDemo'));
+const ProjectSuggestions = lazy(() => import('./Notes/ProjectSuggestions'));
+const CareerGuidance = lazy(() => import('./Notes/CareerGuidance'));
 
 // Settings subpages
 const ProfilePrivacy = lazy(() => import('./Settings/ProfilePrivacy'));
@@ -62,6 +64,8 @@ function App() {
                   </Route>
                   <Route path="/messages" element={<Messages />} />
                   <Route path="/notes" element={<Notes />} />
+                  <Route path="/project-suggestions" element={<ProjectSuggestions />} />
+                  <Route path="/career-guidance" element={<CareerGuidance />} />
                   <Route path="/posts" element={<PostList />} />
                   <Route path="/newpost" element={<NewPost />} />
                   <Route path="/search" element={<Search />} />

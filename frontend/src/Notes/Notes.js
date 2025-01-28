@@ -1,11 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Notes.css";
+import ProjectSuggestions from "./ProjectSuggestions";
+import CareerGuidance from "./CareerGuidance";
 
 const Notes = () => {
+  const navigate = useNavigate();
   const [messages, setMessages] = useState([
     {
       id: 1,
-      text: "Welcome to EduVerse! I'm Edura, your AI mentor. How can I assist you today?",
+      text: "Welcome to EduVerse! I'm Edura, your AI mentor. I can help you with:\n1. Project suggestions\n2. Career guidance\n3. Course recommendations\n4. Code review\n5. FAQs\nHow can I assist you today?",
       sender: "ai",
     },
   ]);
@@ -34,20 +38,63 @@ const Notes = () => {
     }
 
     try {
-      setTimeout(() => {
-        const aiMessage = {
-          id: messages.length + 2,
-          text: "I understand you're interested in learning. Let me analyze your query and provide personalized recommendations.",
+      const response = await fetch('http://127.0.0.1:8000/ai/chat/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}` // Add auth token
+        },
+        credentials: 'include', // Include cookies
+        body: JSON.stringify({
+          message: inputText,
+          user_id: localStorage.getItem('user_id'), // Get actual user ID from storage
+          channel: {
+            id: 'web_chat',
+            name: 'Web Chat Interface'
+          },
+          locale: 'en-US',
+          timestamp: new Date().toISOString()
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      if (!data.response) {
+        throw new Error('No response received from server');
+      }
+
+      const aiMessage = {
+        id: messages.length + 2,
+        text: data.response,
+        sender: "ai",
+      };
+
+      // If there are code suggestions, add them as a separate message
+      if (data.suggestions && data.suggestions.length > 0) {
+        const suggestionMessage = {
+          id: messages.length + 3,
+          text: "Code Analysis Results:\n" + data.suggestions.join("\n"),
           sender: "ai",
+          type: "code-analysis"
         };
+        setMessages((prev) => [...prev, aiMessage, suggestionMessage]);
+      } else {
         setMessages((prev) => [...prev, aiMessage]);
-        setIsTyping(false);
-        if (avatarRef.current) {
-          avatarRef.current.classList.remove("processing");
-        }
-      }, 1500);
+      }
+
     } catch (error) {
       console.error("Error getting AI response:", error);
+      const errorMessage = {
+        id: messages.length + 2,
+        text: "I apologize, but I'm having trouble connecting right now. Please check your connection and authentication, then try again.",
+        sender: "ai",
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+    } finally {
       setIsTyping(false);
       if (avatarRef.current) {
         avatarRef.current.classList.remove("processing");
@@ -68,6 +115,14 @@ const Notes = () => {
     }
   };
 
+  const handleProjectSuggestions = () => {
+    navigate('/project-suggestions');
+  };
+
+  const handleCareerGuidance = () => {
+    navigate('/career-guidance');
+  };
+
   return (
     <div className="edura-page">
       <div className="edura-container" ref={chatContainerRef}>
@@ -84,11 +139,10 @@ const Notes = () => {
           </div>
 
           <div className="quick-actions">
-            {/* <h3>Suggested Actions</h3> */}
             <div className="action-buttons">
-              <button className="action-btn">Complete Profile</button>
-              <button className="action-btn">Explore Courses</button>
-              <button className="action-btn">Find Collaborators</button>
+              <button className="action-btn" onClick={handleProjectSuggestions}>Project Suggestions</button>
+              <button className="action-btn" onClick={handleCareerGuidance}>Career Guidance</button>
+              <button className="action-btn">Course Recommendations</button>
             </div>
           </div>
         </div>
@@ -97,7 +151,11 @@ const Notes = () => {
           <div className="chat-messages glassmorphism">
             {messages.map((message) => (
               <div key={message.id} className={`message ${message.sender}`}>
-                <div className="message-bubble">{message.text}</div>
+                <div className={`message-bubble ${message.type || ''}`}>
+                  {message.text.split('\n').map((line, i) => (
+                    <div key={i}>{line}</div>
+                  ))}
+                </div>
               </div>
             ))}
             {isTyping && (
@@ -119,15 +177,9 @@ const Notes = () => {
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder="Ask me anything..."
+              placeholder="Ask me anything or paste code for review..."
               rows="2"
             />
-            {/* <button
-            className={`voice-input ${isListening ? "listening" : ""}`}
-            onClick={handleVoiceInput}
-          >
-            <span className="microphone-icon"></span>
-          </button> */}
             <button
               className="send-button"
               onClick={handleSendMessage}
