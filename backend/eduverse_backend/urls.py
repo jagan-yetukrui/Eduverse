@@ -20,6 +20,7 @@ urlpatterns = [
     path("api/profiles/", include("profiles.urls")), #works
     path("api/search/", include("search.urls")), #works
     path("api/posts/", include("posts.urls")),  # Include the posts app's URLs #Works 
+    path('ai/', include('ai.urls')),# has the chatbot   
 ]
 
 # Serve media files during development
