@@ -1,8 +1,11 @@
 import React, { lazy, Suspense, useState } from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import './App.css';
+import NewPost from "./components/NewPost";
+import PostList from "./components/PostList";
 import ErrorBoundary from './ErrorBoundary/ErrorBoundary';
 import Navbar from './Navbar/Navbar';
+
 
 // Lazy load components
 const Home = lazy(() => import('./Home/Home'));
@@ -12,8 +15,8 @@ const ProfileView = lazy(() => import('./Profile/ProfileView'));
 const Profile = lazy(() => import('./EditProfile/EditProfile'));
 const Messages = lazy(() => import('./Messages/Messages'));
 const Notes = lazy(() => import('./Notes/Notes'));
-const NewPost = lazy(() => import('./Posts/NewPost'));
-const PostList = lazy(() => import('./Posts/PostList'));
+//const NewPost = lazy(() => import('./Posts/NewPost'));
+//const PostList = lazy(() => import('./Posts/PostList'));
 const Search = lazy(() => import('./Search/Searchpage'));
 const Settings = lazy(() => import('./Settings/Settings'));
 const TinyMCEDemo = lazy(() => import('./TinyMCEDemo'));
