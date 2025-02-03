@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Register.css";
@@ -114,16 +113,13 @@ const Register = () => {
 
     setIsLoading(true);
     try {
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/accounts/register/",
-        {
-          username: formData.username,
-          email: formData.email,
-          password: formData.password,
-          password2: formData.password2,
-          agreeToTerms: formData.agreeToTerms,
-        }
-      );
+      const response = await axios.post("http://127.0.0.1:8000/api/register/", {
+        username: formData.username,
+        email: formData.email,
+        password: formData.password,
+        password2: formData.password2,
+        agreeToTerms: formData.agreeToTerms,
+      });
 
       setIsSuccess(true);
       setErrorMessage("");
@@ -155,30 +151,14 @@ const Register = () => {
   };
 
   const renderForm = () => (
-    <motion.form
-      onSubmit={handleSubmit}
-      className="register-form"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-    >
+    <form onSubmit={handleSubmit} className="register-form">
       <div className="social-signup">
-        <motion.button
-          type="button"
-          className="social-button google"
-          // whileHover={{ scale: 1.05 }}
-          // whileTap={{ scale: 0.95 }}
-        >
+        <button type="button" className="social-button google">
           <FaGoogle /> <span>Sign up with Google</span>
-        </motion.button>
-        <motion.button
-          type="button"
-          className="social-button linkedin"
-          // whileHover={{ scale: 1.05 }}
-          // whileTap={{ scale: 0.95 }}
-        >
+        </button>
+        <button type="button" className="social-button linkedin">
           <FaLinkedin /> <span>Sign up with LinkedIn</span>
-        </motion.button>
+        </button>
       </div>
 
       <div className="register-div"></div>
@@ -190,7 +170,7 @@ const Register = () => {
         password2: { type: "password", placeholder: "Confirm Password" },
       }).map(([field, config]) => (
         <div key={field} className="input-group">
-          <motion.input
+          <input
             type={
               field.includes("password")
                 ? field === "password"
@@ -206,7 +186,6 @@ const Register = () => {
             placeholder={config.placeholder}
             value={formData[field]}
             onChange={handleChange}
-            // whileFocus={{ scale: 1.02 }}
             className={`neon-input ${
               field === "email"
                 ? isEmailValid === true
@@ -218,9 +197,8 @@ const Register = () => {
             } ${errors[field] ? "error" : ""}`}
           />
           {field.includes("password") && (
-            <motion.div
+            <div
               className="password-toggle-register"
-              // whileHover={{ scale: 1.1 }}
               onClick={() =>
                 field === "password"
                   ? setShowPassword(!showPassword)
@@ -228,25 +206,23 @@ const Register = () => {
               }
             >
               {(field === "password" ? showPassword : showPassword2) ? (
-                <FaEye color="white"/>
+                <FaEye color="white" />
               ) : (
-                <FaEyeSlash color="white"/>
+                <FaEyeSlash color="white" />
               )}
               {(field === "password" ? showPassword : showPassword2)
                 ? "Hide Password"
                 : "Show Password"}
-            </motion.div>
+            </div>
           )}
           {field === "password" && (
             <div className="strength-meter">
               {[...Array(4)].map((_, i) => (
-                <motion.div
+                <div
                   key={i}
                   className={`strength-segment ${
                     i < passwordStrength ? "active" : ""
                   }`}
-                  initial={{ width: 0 }}
-                  animate={{ width: "100%" }}
                 />
               ))}
             </div>
@@ -277,90 +253,52 @@ const Register = () => {
         )}
       </div>
 
-      <motion.button
-        type="submit"
-        className="submit-button"
-        disabled={isLoading}
-        // whileHover={{ scale: 1.05 }}
-        // whileTap={{ scale: 0.95 }}
-      >
+      <button type="submit" className="submit-button" disabled={isLoading}>
         {isLoading ? (
-          <motion.div
-            className="loading-spinner"
-            animate={{ rotate: 360 }}
-            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-          />
+          <div className="loading-spinner"></div>
         ) : (
           <span>Join EduVerse</span>
         )}
-      </motion.button>
-    </motion.form>
+      </button>
+    </form>
   );
 
   return (
     <div className="register-container">
       <ParticlesBg type="cobweb" bg={true} color="#4fc3f7" />
 
-      <motion.div
-        className="holographic-panel"
-        // initial={{ opacity: 0, y: -50 }}
-        // animate={{ opacity: 1, y: 0 }}
-        // transition={{ duration: 1, ease: "easeOut" }}
-      >
-        <motion.img
+      <div className="holographic-panel">
+        <img
           src={FirstLogo}
           alt="EduVerse"
           className="register-logo"
           style={{ width: "60px", height: "60px" }}
-          // whileHover={{ rotate: 360, scale: 1.1 }}
-          // transition={{ duration: 0.3 }}
         />
-        <motion.div
-          className="register-title"
-          // initial={{ opacity: 0 }}
-          // animate={{ opacity: 1 }}
-          // transition={{ delay: 0.5 }}
-        >
+        <div className="register-title">
           <p>Join the Future of Learning and Collaboration</p>
-        </motion.div>
+        </div>
 
-        <AnimatePresence>
-          {isSuccess ? (
-            <motion.div
-              className="success-container"
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0 }}
-            >
-              <FaRocket className="rocket-icon" />
-              <p className="success-text">
-                Welcome aboard! Redirecting to login...
-              </p>
-            </motion.div>
-          ) : (
-            renderForm()
-          )}
-        </AnimatePresence>
-
-        {errorMessage && (
-          <motion.div
-            className="error-message"
-            // initial={{ opacity: 0, x: -20 }}
-            // animate={{ opacity: 1, x: 0 }}
-            // exit={{ opacity: 0, x: 20 }}
-          >
-            <FaTimesCircle /> {errorMessage}
-          </motion.div>
+        {isSuccess ? (
+          <div className="success-container">
+            <FaRocket className="rocket-icon" />
+            <p className="success-text">
+              Welcome aboard! Redirecting to login...
+            </p>
+          </div>
+        ) : (
+          renderForm()
         )}
 
-        <motion.button
-          onClick={() => navigate("/login")}
-          className="login-link"
-          // whileHover={{ scale: 1.05, textShadow: "0 0 8px rgb(255,255,255)" }}
-        >
+        {errorMessage && (
+          <div className="error-message">
+            <FaTimesCircle /> {errorMessage}
+          </div>
+        )}
+
+        <button onClick={() => navigate("/login")} className="login-link">
           <span>BACK TO LOGIN PAGE</span>
-        </motion.button>
-      </motion.div>
+        </button>
+      </div>
     </div>
   );
 };

@@ -1,60 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
-import { FaRocket, FaEye, FaEyeSlash, FaTimesCircle } from "react-icons/fa";
-import ParticlesBg from "particles-bg";
-import FirstLogo from "../../First_logo.png";
+import { FaEye, FaEyeSlash, FaTimesCircle } from "react-icons/fa";
 import axios from "axios";
-
-const rotateCount = 0;
 
 // Create axios instance with base URL
 const apiClient = axios.create({
   baseURL: "http://127.0.0.1:8000/",
 });
 
-// Add response interceptor
-apiClient.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    if (error.response?.status === 401) {
-      const refreshToken = localStorage.getItem("refresh_token");
-      if (refreshToken) {
-        try {
-          const response = await axios.post(
-            "http://127.0.0.1:8000/api/token/refresh/",
-            {
-              refresh: refreshToken,
-            }
-          );
-          const newAccessToken = response.data.access;
-          localStorage.setItem("access_token", newAccessToken);
-
-          // Retry original request with new token
-          error.config.headers["Authorization"] = `Bearer ${newAccessToken}`;
-          return apiClient.request(error.config);
-        } catch (refreshError) {
-          console.error("Failed to refresh token:", refreshError);
-          window.location.href = "/login";
-        }
-      }
-    }
-    return Promise.reject(error);
-  }
-);
-
 const Login = () => {
   const [formData, setFormData] = useState({
-    username: "", // This will store either username or email
+    username: "",
     password: "",
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [passwordStrength, setPasswordStrength] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -71,19 +34,6 @@ const Login = () => {
       ...prev,
       [name]: value,
     }));
-
-    if (name === "password") {
-      calculatePasswordStrength(value);
-    }
-  };
-
-  const calculatePasswordStrength = (password) => {
-    let strength = 0;
-    if (password.length >= 8) strength += 1;
-    if (/[A-Z]/.test(password)) strength += 1;
-    if (/[0-9]/.test(password)) strength += 1;
-    if (/[^A-Za-z0-9]/.test(password)) strength += 1;
-    setPasswordStrength(strength);
   };
 
   const validateForm = () => {
@@ -93,7 +43,6 @@ const Login = () => {
     if (!formData.password) newErrors.password = "Password is required";
     else if (formData.password.length < 8)
       newErrors.password = "Password must be at least 8 characters";
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -105,34 +54,23 @@ const Login = () => {
       setErrorMessage("");
 
       try {
-        const response = await apiClient.post("api/accounts/login/", formData, {
-          headers: {
-            "Content-Type": "application/json",
-            // Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-          },
+        const response = await axios.post("http://127.0.0.1:8000/api/login/", {
+          username: formData.username,
+          password: formData.password,
         });
 
-        localStorage.setItem("access_token", response.data.access);
-        localStorage.setItem("refresh_token", response.data.refresh);
-        setIsSuccess(true);
-
-        setTimeout(() => {
-          navigate("/profile");
-        }, 2000);
-      } catch (error) {
-        if (error.response && error.response.data) {
-          const errorData = error.response.data;
-          if (typeof errorData === "object") {
-            const errorMessage = Object.values(errorData)[0];
-            setErrorMessage(
-              Array.isArray(errorMessage) ? errorMessage[0] : errorMessage
-            );
-          } else {
-            setErrorMessage("Invalid credentials");
-          }
-        } else {
-          setErrorMessage("Network error. Please try again.");
+        if (response.status === 200) {
+          // Save the JWT token in localStorage or state for further requests
+          localStorage.setItem("access_token", response.data.access);
+          localStorage.setItem('refresh_token', response.data.refresh);
+          // setIsSuccess(true);
+          navigate("/profile"); // Navigate to profile or dashboard
         }
+      } catch (error) {
+        // Display the error message from the backend
+        setErrorMessage(
+          error.response?.data.detail || "Login failed. Please try again."
+        );
       } finally {
         setIsLoading(false);
       }
@@ -141,143 +79,60 @@ const Login = () => {
 
   return (
     <div className="login-container">
-      <ParticlesBg type="cobweb" bg={true} color="#4a90e2" />
-
-      <motion.div
-        className="holographic-panel"
-        // initial={{ opacity: 0, y: -50 }}
-        // animate={{ opacity: 1, y: 0 }}
-        // transition={{ duration: 1, ease: "easeOut" }}
-      >
+      <div className="login-panel">
         <img
-          src={FirstLogo}
+          src={require("../../First_logo.png")}
           alt="EduVerse"
           className="login-logo"
-          style={{ width: "60px", height: "auto" }}
         />
 
-        <div className="login-div"></div>
-
-        <AnimatePresence>
-          {isSuccess ? (
-            <motion.div
-              className="success-container"
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0 }}
-            >
-              <FaRocket className="rocket-icon" />
-              <p className="success-text">Launching into EduVerse...</p>
-            </motion.div>
-          ) : (
-            <motion.form
-              onSubmit={handleSubmit}
-              className="login-form"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            >
-              <div className="input-group">
-                <motion.input
-                  type="text"
-                  name="username"
-                  placeholder="Username or Email"
-                  value={formData.username}
-                  onChange={handleChange}
-                  className={`neon-input ${errors.username ? "invalid" : ""}`}
-                />
-                {errors.username && (
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    className="validation-icon"
-                  >
-                    <FaTimesCircle className="invalid-icon" />
-                  </motion.div>
-                )}
+        <form onSubmit={handleSubmit} className="login-form">
+          <div className="input-group">
+            <input
+              type="text"
+              name="username"
+              placeholder="Username or Email"
+              value={formData.username}
+              onChange={handleChange}
+              className={`neon-input ${errors.username ? "invalid" : ""}`}
+            />
+            {errors.username && (
+              <div className="validation-icon">
+                <FaTimesCircle className="invalid-icon" />
               </div>
+            )}
+          </div>
 
-              <div className="input-group">
-                <motion.input
-                  type={showPassword ? "text" : "password"}
-                  name="password"
-                  placeholder="Password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  className={`neon-input ${errors.password ? "invalid" : ""}`}
-                />
+          <div className="input-group">
+            <input
+              type={showPassword ? "text" : "password"}
+              name="password"
+              placeholder="Password"
+              value={formData.password}
+              onChange={handleChange}
+              className={`neon-input ${errors.password ? "invalid" : ""}`}
+            />
 
-                <motion.div
-                  className="password-toggle-login"
-                  // whileHover={{ scale: 1.03 }}
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? (
-                    <FaEye color="white" />
-                  ) : (
-                    <FaEyeSlash color="white" />
-                  )}
-                  {showPassword ? "Hide Password" : "Show Password"}
-                </motion.div>
+            <div
+              className="password-toggle"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+              {showPassword ? "Hide Password" : "Show Password"}
+            </div>
+          </div>
 
-                {/* <div className="strength-meter">
-                  {[...Array(4)].map((_, i) => (
-                    <motion.div
-                      key={i}
-                      className={`strength-segment ${
-                        i < passwordStrength ? "active" : ""
-                      }`}
-                      initial={{ width: 0 }}
-                      animate={{ width: "100%" }}
-                    />
-                  ))}
-                </div> */}
-              </div>
+          <button type="submit" className="submit-button" disabled={isLoading}>
+            {isLoading ? "Logging in..." : "Login"}
+          </button>
+        </form>
 
-              <motion.button
-                type="submit"
-                className="submit-button"
-                disabled={isLoading}
-                // whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                {isLoading ? (
-                  <motion.div
-                    className="loading-spinner"
-                    animate={{ rotate: 360 }}
-                    transition={{
-                      duration: 1,
-                      repeat: Infinity,
-                      ease: "linear",
-                    }}
-                  />
-                ) : (
-                  "Enter EduVerse"
-                )}
-              </motion.button>
-            </motion.form>
-          )}
-        </AnimatePresence>
+        {errorMessage && <div className="error-message">{errorMessage}</div>}
 
-        {errorMessage && (
-          <motion.div
-            className="error-message"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 20 }}
-          >
-            {errorMessage}
-          </motion.div>
-        )}
-
-        <motion.button
-          onClick={() => navigate("/register")}
-          className="register-link"
-          // whileHover={{ scale: 1.05, textShadow: "0 0 8px rgb(255,255,255)" }}
-        >
+        <button onClick={() => navigate("/register")} className="register-link">
           New to EduVerse? Join the future
-        </motion.button>
-      </motion.div>
+        </button>
+      </div>
     </div>
   );
 };
