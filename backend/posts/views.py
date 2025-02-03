@@ -13,7 +13,8 @@ class PostListView(generics.ListCreateAPIView):
 
     queryset = Post.objects.all().order_by("-created_at")
     serializer_class = PostSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]  # Ensure only logged-in users can post
+
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
