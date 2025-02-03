@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useNavigate } from "react-router-dom";
-import "./Login.css";
-import { FaRocket, FaEye, FaEyeSlash, FaTimesCircle } from "react-icons/fa";
-import ParticlesBg from "particles-bg";
-import FirstLogo from "../../First_logo.png";
 import axios from "axios";
+import { AnimatePresence, motion } from "framer-motion";
+import ParticlesBg from "particles-bg";
+import React, { useEffect, useState } from "react";
+import { FaEye, FaEyeSlash, FaRocket, FaTimesCircle } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import FirstLogo from "../../First_logo.png";
+import "./Login.css";
 
 const rotateCount = 0;
 
@@ -138,6 +138,27 @@ const Login = () => {
       }
     }
   };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    const response = await fetch("http://127.0.0.1:8000/api/token/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+    });
+
+    if (response.ok) {
+        const data = await response.json();
+        localStorage.setItem("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4NjIyMjA4LCJpYXQiOjE3Mzg2MTg2MDgsImp0aSI6ImFkYWYyNmEyOTk5NDRkYWY5ZDAxYTNlYWU3NmVhMDlkIiwidXNlcl9pZCI6NH0.NEfv_f8a4extJKJFypxWzdhR3DdKjVIt_36pzQDJfiA", data.access); // ✅ Save token to local storage
+        alert("Login successful!");
+        window.location.href = "/";  // ✅ Redirect after login
+    } else {
+        alert("Invalid username or password");
+    }
+};
+
 
   return (
     <div className="login-container">
