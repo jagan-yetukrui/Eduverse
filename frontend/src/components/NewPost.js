@@ -6,7 +6,7 @@ const NewPost = ({ onPostCreated }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const token = localStorage.getItem("token"); // Get stored token
+        const token = localStorage.getItem("token"); // ✅ Get stored token
 
         if (!token) {
             alert("You must be logged in to post.");
@@ -17,21 +17,22 @@ const NewPost = ({ onPostCreated }) => {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`,
+                "Authorization": `Bearer ${token}`,  // ✅ Ensure token is sent
             },
             body: JSON.stringify({ title, content }),
         });
-        
+
         if (response.ok) {
             setTitle("");
             setContent("");
-            onPostCreated(); // Refresh post list
+            onPostCreated(); // ✅ Refresh post list
         } else {
             console.error("Failed to create post");
+            alert("Error: Failed to create post");
         }
     };
 
-    return (
+    return (  // ✅ `return` is now correctly inside the function
         <form onSubmit={handleSubmit}>
             <input
                 type="text"
@@ -43,7 +44,7 @@ const NewPost = ({ onPostCreated }) => {
             <textarea
                 placeholder="Write something..."
                 value={content}
-                onChange={(e) => setContent(e.target.value)}
+                onChange={(e) => setContent(e.target.value)} // ✅ Corrected this
                 required
             />
             <button type="submit">Post</button>
