@@ -6,17 +6,22 @@ const NewPost = ({ onPostCreated }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const token = localStorage.getItem("token"); // Assuming token is stored in localStorage
+        const token = localStorage.getItem("token"); // Get stored token
+
+        if (!token) {
+            alert("You must be logged in to post.");
+            return;
+        }
 
         const response = await fetch("http://localhost:8000/api/posts/", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
+                "Authorization": `Bearer ${token}`,
             },
             body: JSON.stringify({ title, content }),
         });
-
+        
         if (response.ok) {
             setTitle("");
             setContent("");
