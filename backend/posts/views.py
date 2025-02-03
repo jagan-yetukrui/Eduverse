@@ -29,6 +29,13 @@ class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
 
 
+class PostListCreateView(generics.ListCreateAPIView):
+    queryset = Post.objects.all().order_by('-created_at')  # Fetch latest posts first
+    serializer_class = PostSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+
+
 class CommentListView(generics.ListCreateAPIView):
     """
     API View to list all comments and create a new comment.

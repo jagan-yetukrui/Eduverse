@@ -16,4 +16,5 @@ urlpatterns = [
     path("favorite/<int:pk>/", FavoriteDetailView.as_view(), name="favorite-detail"),
     path("report/", ReportListView.as_view(), name="report-list"),
     path("report/<int:pk>/", ReportDetailView.as_view(), name="report-detail"),
+     path('', PostListCreateView.as_view(), name='post-list-create'),
 ]
