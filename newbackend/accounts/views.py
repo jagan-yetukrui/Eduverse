@@ -78,3 +78,12 @@ class ProfileView(APIView):
             data['email'] = request.user.email
             return Response(data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+class ProfileListView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        profiles = Profile.objects.all()
+        serializer = ProfileSerializer(profiles, many=True)
+        return Response(serializer.data)

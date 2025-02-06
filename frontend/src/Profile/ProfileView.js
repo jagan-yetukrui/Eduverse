@@ -464,8 +464,8 @@ const ProfilePage = () => {
           <p>Username: {profile.username}</p>
           <p>Bio: {profile.bio}</p>
           <p>Email: {profile.email}</p>
-          {/* <p>Education: {profile.education}</p> */}
-          {/* <p>Experience: {profile.experience}</p> */}
+          <p>Education: {profile.education}</p>
+          <p>Experience: {profile.experience}</p>
         </>
       )}
     </div>
