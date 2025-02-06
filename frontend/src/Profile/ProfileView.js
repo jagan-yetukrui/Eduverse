@@ -413,7 +413,6 @@
 
 // export default UserProfile;
 
-
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -426,7 +425,9 @@ const ProfilePage = () => {
     const fetchProfile = async () => {
       try {
         const token = localStorage.getItem("access_token");
-        {console.log(token)}
+        {
+          console.log(token);
+        }
         if (!token) {
           setError("No access token found. Please log in.");
           setLoading(false);
@@ -455,8 +456,16 @@ const ProfilePage = () => {
       <h1>Profile</h1>
       {profile && (
         <>
+          {profile.profile_picture ? (
+            <img src={profile.profile_picture} alt="Profile" />
+          ) : (
+            <img src={require("../images/placeholder.png")} alt="Profile" />
+          )}
+          <p>Username: {profile.username}</p>
           <p>Bio: {profile.bio}</p>
-          <img src={profile.profile_picture} alt="Profile" />
+          <p>Email: {profile.email}</p>
+          {/* <p>Education: {profile.education}</p> */}
+          {/* <p>Experience: {profile.experience}</p> */}
         </>
       )}
     </div>
