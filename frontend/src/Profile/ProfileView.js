@@ -417,6 +417,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+import "./ProfileView.css";
+
 const ProfilePage = () => {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -455,14 +457,14 @@ const ProfilePage = () => {
   if (error) return <div>{error}</div>;
 
   return (
-    <div>
-      <h1>Profile</h1>
+    <div className="profile-page">
+      <h1>Welcome, {profile.username}</h1>
       {profile && (
         <>
           {profile.profile_picture ? (
-            <img src={profile.profile_picture} alt="Profile" />
+            <img className="profile-img" src={profile.profile_picture} alt="Profile" />
           ) : (
-            <img src={require("../images/placeholder.png")} alt="Profile" />
+            <img className="profile-img" src={require("../images/placeholder.png")} alt="Profile" />
           )}
           <p>Username: {profile.username}</p>
           <p>Bio: {profile.bio}</p>
