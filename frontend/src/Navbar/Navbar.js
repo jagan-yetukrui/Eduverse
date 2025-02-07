@@ -18,6 +18,18 @@ const Navbar = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+  const handleLogout = async (e) => {
+    e.preventDefault();
+    try {
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("refresh_token");
+      setIsAuthenticated(false);
+      navigate("/");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+
   const refreshHomePage = () => {
     if (location.pathname === "/") {
       window.location.reload();
@@ -85,18 +97,31 @@ const Navbar = () => {
 
       {isAuthenticated ? (
         <div className="nav-item nav-profile">
+          <button onClick={handleLogout} className="nav-button logout">
+            {/* <AiOutlineUser className="nav-icon" /> */}
+            {/* <p>PROFILE</p> */}
+            <p>LOGOUT</p>
+          </button>
           <button onClick={() => navigate("/profile")} className="nav-button">
             {/* <AiOutlineUser className="nav-icon" /> */}
             {/* <p>PROFILE</p> */}
-            <p><AiOutlineUser/></p>
+            <p>
+              <AiOutlineUser />
+            </p>
           </button>
         </div>
       ) : (
-        <div>
-          <button onClick={() => navigate("/login")} className="nav-item nav-button">
+        <div className="nav-item nav-profile">
+          <button
+            onClick={() => navigate("/login")}
+            className="nav-item nav-button"
+          >
             LOGIN
           </button>
-          <button onClick={() => navigate("/register")} className="nav-item nav-button">
+          <button
+            onClick={() => navigate("/register")}
+            className="nav-item nav-button"
+          >
             REGISTER
           </button>
         </div>

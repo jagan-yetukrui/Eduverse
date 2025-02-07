@@ -415,11 +415,13 @@
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const ProfilePage = () => {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -442,6 +444,7 @@ const ProfilePage = () => {
       } catch (err) {
         setError("Failed to fetch profile data");
         setLoading(false);
+        navigate("/login");
       }
     };
 

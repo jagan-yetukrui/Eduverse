@@ -161,7 +161,7 @@ const Register = () => {
         </button>
       </div>
 
-      <div className="register-div"></div>
+      {/* <div className="register-div"></div> */}
 
       {Object.entries({
         username: { type: "text", placeholder: "Username" },
@@ -265,15 +265,10 @@ const Register = () => {
 
   return (
     <div className="register-container">
-      <ParticlesBg type="cobweb" bg={true} color="#4fc3f7" />
+      <ParticlesBg type="cobweb" bg={true} color="#bfc3f7" />
 
       <div className="holographic-panel">
-        <img
-          src={FirstLogo}
-          alt="EduVerse"
-          className="register-logo"
-          style={{ width: "60px", height: "60px" }}
-        />
+        <img src={FirstLogo} alt="EduVerse" className="register-logo" />
         <div className="register-title">
           <p>Join the Future of Learning and Collaboration</p>
         </div>

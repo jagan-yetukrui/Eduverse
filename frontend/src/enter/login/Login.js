@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./Login.css";
 import { FaEye, FaEyeSlash, FaTimesCircle } from "react-icons/fa";
 import axios from "axios";
+import ParticlesBg from "particles-bg";
 
 // Create axios instance with base URL
 const apiClient = axios.create({
@@ -79,6 +80,8 @@ const Login = () => {
 
   return (
     <div className="login-container">
+      <ParticlesBg type="cobweb" bg={true} color="#bfc3f7" />
+
       <div className="login-panel">
         <img
           src={require("../../First_logo.png")}
@@ -130,7 +133,7 @@ const Login = () => {
         {errorMessage && <div className="error-message">{errorMessage}</div>}
 
         <button onClick={() => navigate("/register")} className="register-link">
-          New to EduVerse? Join the future
+          Register
         </button>
       </div>
     </div>

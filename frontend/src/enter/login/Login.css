@@ -1,3 +1,7 @@
+.login-logo {
+  width: 50px;
+  height: 50px;
+}
 
 .login-div {
   width: 100%;
@@ -20,7 +24,7 @@
   padding: 20px;
 }
 
-.holographic-panel {
+.login-panel {
   padding: 40px;
   border-radius: 7px;
   width: min(90%, 450px);
@@ -51,6 +55,7 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  padding: 1rem 0;
   /* width: 100%; */
 }
 
@@ -62,7 +67,7 @@
 .neon-input {
   /* width: 100%; */
   width: calc(100% - 2rem);
-  padding: 1rem;
+  padding: .8rem 1rem;
   background: var(--secondary-color);
   border: 1px solid rgba(79, 195, 247, 0.3);
   border-radius: 10px;
@@ -81,19 +86,19 @@
   box-shadow: 0 0 15px rgba(79, 195, 247, 0.5);
 }
 
-.password-toggle-login {
+.password-toggle {
   display: flex;
   align-items: center;
   gap: 5px;
   width: fit-content;
-  padding: 1rem;
+  padding: .5rem;
   font-size: 0.9em;
   /* filter: invert(1); */
   color: white;
   cursor: pointer;
 }
 
-.password-toggle-login:hover {
+.password-toggle:hover {
   filter: brightness(0.8);
 }
 

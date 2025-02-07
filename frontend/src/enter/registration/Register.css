@@ -23,17 +23,13 @@
 }
 
 .holographic-panel {
-  background: var(--primary-color);
-  /* backdrop-filter: blur(10px); */
   padding: 40px;
-  border-radius: 10px;
-  width: 400px;
-  position: relative;
+  border-radius: 7px;
+  width: min(90%, 450px);
   border: 1px solid rgba(79, 195, 247, 0.3);
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-  /* animation: glowPulse 3s infinite; */
-  color: white;
-  /* font-size: 18px; */
+  box-shadow: 0 0 20px rgba(56, 53, 82, 0.5);
+  transition: all 0.1s ease;
+  background-color: var(--primary-color);
 }
 
 /* Logo styling */
@@ -49,6 +45,10 @@
   transform: scale(1.05);
 } */
 
+.register-logo {
+  width: 50px;
+  height: 50px;
+}
 
 .register-title {
   display: flex;
@@ -64,6 +64,7 @@
   margin: 0 0;
   padding: 1rem;
   font-size: 1rem;
+  color: white;
 }
 
 .register-form {
@@ -224,7 +225,7 @@
   display: flex;
   gap: 15px;
   justify-content: center;
-  /* margin-top: 20px; */
+  margin-bottom: 2rem;
 }
 
 .social-button {
@@ -266,7 +267,7 @@
   align-items: center;
   gap: 5px;
   width: fit-content;
-  padding: 1rem;
+  padding: .5rem;
   font-size: 0.9em;
   /* filter: invert(1); */
   color: white;
