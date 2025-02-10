@@ -5,8 +5,7 @@ import NewPost from "./components/NewPost";
 import PostList from "./components/PostList";
 import ErrorBoundary from './ErrorBoundary/ErrorBoundary';
 import Navbar from './Navbar/Navbar';
-
-
+//import PostList from "./components/PostList";
 // Lazy load components
 const Home = lazy(() => import('./Home/Home'));
 const Login = lazy(() => import('./enter/login/Login'));
