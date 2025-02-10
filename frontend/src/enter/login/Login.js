@@ -152,7 +152,7 @@ const Login = () => {
     if (response.ok) {
         const data = await response.json();
         localStorage.setItem("token", data.access);  // ✅ Store token in localStorage
-        localStorage.setItem("refresh_token", data.refresh);  // ✅ Save refresh token (optional)
+        //localStorage.setItem("refresh_token", data.refresh);  // ✅ Save refresh token (optional)
         window.location.href = "/";  // ✅ Redirect after login
     } else {
         alert("Invalid username or password");
