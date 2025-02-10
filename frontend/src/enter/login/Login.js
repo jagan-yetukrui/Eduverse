@@ -46,8 +46,8 @@ apiClient.interceptors.response.use(
 
 const Login = () => {
   const [formData, setFormData] = useState({
-    username: "", // This will store either username or email
-    password: "",
+    username: "john_doe", // This will store either username or email
+    password: "securepassword",
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -151,9 +151,8 @@ const Login = () => {
 
     if (response.ok) {
         const data = await response.json();
-        localStorage.setItem("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4NjIyMjA4LCJpYXQiOjE3Mzg2MTg2MDgsImp0aSI6ImFkYWYyNmEyOTk5NDRkYWY5ZDAxYTNlYWU3NmVhMDlkIiwidXNlcl9pZCI6NH0.NEfv_f8a4extJKJFypxWzdhR3DdKjVIt_36pzQDJfiA", data.access); // ✅ Save token to local storage
-        localStorage.setItem("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4NjIyMjA4LCJpYXQiOjE3Mzg2MTg2MDgsImp0aSI6ImFkYWYyNmEyOTk5NDRkYWY5ZDAxYTNlYWU3NmVhMDlkIiwidXNlcl9pZCI6NH0.NEfv_f8a4extJKJFypxWzdhR3DdKjVIt_36pzQDJfiA", data.refresh); // ✅ Save token to local storage
-        alert("Login successful!");
+        localStorage.setItem("token", data.access);  // ✅ Store token in localStorage
+        localStorage.setItem("refresh_token", data.refresh);  // ✅ Save refresh token (optional)
         window.location.href = "/";  // ✅ Redirect after login
     } else {
         alert("Invalid username or password");

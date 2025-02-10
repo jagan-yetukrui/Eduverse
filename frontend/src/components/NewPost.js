@@ -6,18 +6,18 @@ const NewPost = ({ onPostCreated }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const token = localStorage.getItem("token"); // ✅ Get stored token
+        const token = localStorage.getItem("token");  // ✅ Retrieve token from localStorage
 
         if (!token) {
             alert("You must be logged in to post.");
             return;
         }
 
-        const response = await fetch("http://localhost:8000/api/posts/", {
+        const response = await fetch("http://127.0.0.1:8000/api/posts/", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`,  // ✅ Ensure token is sent
+                "Authorization": `Bearer ${token}`,  // ✅ Send token in header
             },
             body: JSON.stringify({ title, content }),
         });
@@ -25,14 +25,15 @@ const NewPost = ({ onPostCreated }) => {
         if (response.ok) {
             setTitle("");
             setContent("");
-            onPostCreated(); // ✅ Refresh post list
+            onPostCreated();  // ✅ Trigger re-render of post list
         } else {
-            console.error("Failed to create post");
-            alert("Error: Failed to create post");
+            const errorData = await response.json();
+            console.error("Failed to create post:", errorData);
+            alert(`Error: ${errorData.detail || "Failed to create post"}`);
         }
     };
 
-    return (  // ✅ `return` is now correctly inside the function
+    return (
         <form onSubmit={handleSubmit}>
             <input
                 type="text"
@@ -44,7 +45,7 @@ const NewPost = ({ onPostCreated }) => {
             <textarea
                 placeholder="Write something..."
                 value={content}
-                onChange={(e) => setContent(e.target.value)} // ✅ Corrected this
+                onChange={(e) => setContent(e.target.value)}
                 required
             />
             <button type="submit">Post</button>
