@@ -146,12 +146,13 @@ const Login = () => {
         headers: {
             "Content-Type": "application/json",
         },
-        //body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ username, password }),
     });
 
     if (response.ok) {
         const data = await response.json();
         localStorage.setItem("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4NjIyMjA4LCJpYXQiOjE3Mzg2MTg2MDgsImp0aSI6ImFkYWYyNmEyOTk5NDRkYWY5ZDAxYTNlYWU3NmVhMDlkIiwidXNlcl9pZCI6NH0.NEfv_f8a4extJKJFypxWzdhR3DdKjVIt_36pzQDJfiA", data.access); // ✅ Save token to local storage
+        localStorage.setItem("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4NjIyMjA4LCJpYXQiOjE3Mzg2MTg2MDgsImp0aSI6ImFkYWYyNmEyOTk5NDRkYWY5ZDAxYTNlYWU3NmVhMDlkIiwidXNlcl9pZCI6NH0.NEfv_f8a4extJKJFypxWzdhR3DdKjVIt_36pzQDJfiA", data.refresh); // ✅ Save token to local storage
         alert("Login successful!");
         window.location.href = "/";  // ✅ Redirect after login
     } else {
