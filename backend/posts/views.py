@@ -178,3 +178,14 @@ class ReportDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ReportSerializer
     permission_classes = [IsAuthenticated]
     
+class PostListCreateView(ListCreateAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    permission_classes = [IsAuthenticated]  # Require authentication
+
+    def get_queryset(self):
+        # Filter by current logged-in user if requested
+        user = self.request.user
+        if self.request.query_params.get("my_posts"):
+            return Post.objects.filter(author=user)
+        return super().get_queryset()
