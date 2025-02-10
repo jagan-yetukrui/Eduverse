@@ -97,17 +97,17 @@ const Navbar = () => {
 
       {isAuthenticated ? (
         <div className="nav-item nav-profile">
-          <button onClick={handleLogout} className="nav-button logout">
-            {/* <AiOutlineUser className="nav-icon" /> */}
-            {/* <p>PROFILE</p> */}
-            <p>LOGOUT</p>
-          </button>
           <button onClick={() => navigate("/profile")} className="nav-button">
             {/* <AiOutlineUser className="nav-icon" /> */}
             {/* <p>PROFILE</p> */}
             <p>
               <AiOutlineUser />
             </p>
+          </button>
+          <button onClick={handleLogout} className="nav-button logout">
+            {/* <AiOutlineUser className="nav-icon" /> */}
+            {/* <p>PROFILE</p> */}
+            <p>LOGOUT</p>
           </button>
         </div>
       ) : (
