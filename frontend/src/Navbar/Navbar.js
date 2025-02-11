@@ -90,7 +90,7 @@ const Navbar = () => {
         <div className="nav-item">
           <button onClick={() => navigate("/newpost")} className="nav-button">
             {/* <AiFillPlusSquare className="nav-icon" /> */}
-            <p>NEW POST</p>
+            <p>POSTS</p>
           </button>
         </div>
       </div>
