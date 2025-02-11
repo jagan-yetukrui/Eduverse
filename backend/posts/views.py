@@ -4,8 +4,8 @@ from .models import Post
 from .serializers import PostSerializer
 from .models import *
 from .serializers import *
-
-
+from rest_framework.generics import ListCreateAPIView
+from rest_framework.permissions import IsAuthenticated
 class PostListView(generics.ListCreateAPIView):
     """
     API View to list all posts and create a new post.
