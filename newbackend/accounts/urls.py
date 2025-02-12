@@ -1,4 +1,5 @@
 from django.urls import path
+from django.contrib import admin
 from .views import (
     RegisterView,
     LoginView,
@@ -16,4 +17,5 @@ urlpatterns = [
     path("api/profiles/", ProfileListView.as_view(), name="profile_list"),
     path("api/posts/new/", CreatePostView.as_view(), name="create_post"),
     path("api/posts/", ListPostsView.as_view(), name="list_posts"),
+   
 ]
