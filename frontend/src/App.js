@@ -5,6 +5,8 @@ import ErrorBoundary from './ErrorBoundary/ErrorBoundary';
 import Navbar from './Navbar/Navbar';
 import PostsPage from "./components/PostsPage";
 
+
+
 // Lazy load components to improve performance
 const Home = lazy(() => import('./Home/Home'));
 const Login = lazy(() => import('./enter/login/Login'));
