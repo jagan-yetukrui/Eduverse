@@ -1,15 +1,12 @@
 from rest_framework import serializers
-from django.contrib.auth import get_user_model, authenticate
-from rest_framework_simplejwt.tokens import RefreshToken
-from accounts.models import Profile, CustomUser
+from accounts.models import Profile, CustomUser, Post  # Import Post model
 
-
-# register serializer
+# Register Serializer
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
 
     class Meta:
-        model = get_user_model()
+        model = CustomUser
         fields = ["username", "email", "password"]
 
     def create(self, validated_data):
@@ -21,7 +18,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
 
 
-# login serializer with jwt
+# Login Serializer
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField()
@@ -43,10 +40,17 @@ class LoginSerializer(serializers.Serializer):
         }
 
 
-# profile serializer from accounts.models import UserProfile
+# Profile Serializer
 class ProfileSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(source='user.username', read_only=True)
-
     class Meta:
         model = Profile
-        fields = ["user", "username", "bio", "profile_picture", "education", "experience"]
+        fields = ["user", "bio", "profile_picture", "education", "experience"]
+
+
+# Post Serializer
+class PostSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source="user.username", read_only=True)
+
+    class Meta:
+        model = Post
+        fields = ["post_id", "user", "username", "content", "created_at"]
