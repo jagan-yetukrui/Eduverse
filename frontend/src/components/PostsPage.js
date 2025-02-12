@@ -2,16 +2,22 @@ import React, { useState } from "react";
 import NewPost from "../Posts/NewPost";
 
 const PostsPage = () => {
-  const [isModalOpen, setModalOpen] = useState(true); // Open modal by default
+  const [showNewPostForm, setShowNewPostForm] = useState(false); // Toggle the form
 
-  const closeNewPost = () => {
-    setModalOpen(false); // Allow closing the modal
+  const toggleNewPostForm = () => {
+    setShowNewPostForm((prev) => !prev);
   };
 
   return (
-    <div>
+    <div className="posts-page">
       <h1>Posts</h1>
-      <NewPost isOpen={isModalOpen} onClose={closeNewPost} />
+      {/* New Post Button */}
+      <button className="cyber-button" onClick={toggleNewPostForm}>
+        {showNewPostForm ? "Close New Post" : "Create New Post"}
+      </button>
+
+      {/* Show the NewPost form when toggled */}
+      {showNewPostForm && <NewPost isOpen={true} onClose={toggleNewPostForm} />}
     </div>
   );
 };
