@@ -3,16 +3,18 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import authenticate
-from .models import Profile
-from rest_framework_simplejwt.tokens import RefreshToken  # Correct import for JWT
-from .serializers import RegisterSerializer, ProfileSerializer
 from django.http import JsonResponse
+from rest_framework_simplejwt.tokens import RefreshToken  # Correct import for JWT
+from .models import Profile, Post  # Import Post model
+from .serializers import RegisterSerializer, ProfileSerializer, PostSerializer
 
 
+# Dummy endpoint for profiles (can be removed if unnecessary)
 def profiles(request):
-    # Return a placeholder response
     return JsonResponse({"profiles": []})
 
+
+# User Registration
 class RegisterView(APIView):
     def post(self, request):
         serializer = RegisterSerializer(data=request.data)
@@ -20,7 +22,7 @@ class RegisterView(APIView):
             user = serializer.save()
             Profile.objects.create(user=user)  # Create profile automatically
 
-            refresh = RefreshToken.for_user(user) # Generate JWT tokens
+            refresh = RefreshToken.for_user(user)  # Generate JWT tokens
 
             return Response(
                 {
@@ -33,6 +35,7 @@ class RegisterView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+# User Login
 class LoginView(APIView):
     def post(self, request):
         username = request.data.get("username")
@@ -52,8 +55,9 @@ class LoginView(APIView):
         return Response(
             {"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED
         )
-    
 
+
+# User Logout
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -67,14 +71,15 @@ class LogoutView(APIView):
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
+# User Profile
 class ProfileView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        try:  # Use try-except to handle profile not found
+        try:
             profile = Profile.objects.get(user=request.user)
         except Profile.DoesNotExist:
-            profile = Profile.objects.create(user=request.user, bio='') # Create if doesn't exist
+            profile = Profile.objects.create(user=request.user, bio='')  # Create if not found
 
         serializer = ProfileSerializer(profile)
         data = serializer.data
@@ -88,7 +93,6 @@ class ProfileView(APIView):
         except Profile.DoesNotExist:
             return Response({"error": "Profile not found"}, status=status.HTTP_404_NOT_FOUND)
 
-
         serializer = ProfileSerializer(profile, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
@@ -97,8 +101,9 @@ class ProfileView(APIView):
             data['email'] = request.user.email
             return Response(data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
 
+
+# List All Profiles
 class ProfileListView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -106,3 +111,33 @@ class ProfileListView(APIView):
         profiles = Profile.objects.all()
         serializer = ProfileSerializer(profiles, many=True)
         return Response(serializer.data)
+
+
+# Create New Post
+class CreatePostView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        try:
+            data = request.data
+            content = data.get("content", "").strip()
+
+            if not content:
+                return Response({"error": "Content cannot be empty"}, status=status.HTTP_400_BAD_REQUEST)
+
+            post = Post.objects.create(user=request.user, content=content)
+            serializer = PostSerializer(post)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+# List All Posts
+class ListPostsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        posts = Post.objects.all()
+        serializer = PostSerializer(posts, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

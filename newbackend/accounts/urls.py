@@ -12,6 +12,7 @@ urlpatterns = [
     path('profile/', ProfileView.as_view(), name='profile'),
     path('profile/list', ProfileListView.as_view(), name='profile_list'),
     path('token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path("api/profiles/", views.profiles, name="profiles"),
+    path("api/posts/", views.get_posts, name="get_posts"),  # For retrieving posts
+    path("api/posts/new/", views.create_post, name="create_post"),  # For creating new posts
     path('token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
 ]
