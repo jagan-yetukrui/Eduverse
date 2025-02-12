@@ -1,7 +1,8 @@
-import React, { useState, useRef } from "react";
 import { Editor } from "@tinymce/tinymce-react";
-import "./NewPost.css";
+import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+//import NewPost from "./NewPost";
+import "./NewPost.css";
 
 const NewPost = ({ isOpen, onClose }) => {
   const [postTitle, setPostTitle] = useState("");
@@ -80,6 +81,7 @@ const NewPost = ({ isOpen, onClose }) => {
   return (
     <div className="modal-overlay">
       <div className="holographic-panel modal-content">
+         {/* Modal Header */}
         <div className="modal-header">
           <h2 className="neon-text">
             {isPreview ? "Preview Post" : "Create New Post"}
@@ -101,7 +103,7 @@ const NewPost = ({ isOpen, onClose }) => {
                 maxLength={100}
               />
             </div>
-
+            {/* Category Selection */}
             <div className="input-group">
               <select
                 value={selectedCategory}
