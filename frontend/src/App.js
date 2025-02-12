@@ -2,9 +2,17 @@ import React, { lazy, Suspense, useEffect } from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import './App.css';
 import ErrorBoundary from './ErrorBoundary/ErrorBoundary';
-import Navbar from './Navbar/Navbar';
+//import Navbar from './Navbar/Navbar';
 import PostsPage from "./components/PostsPage";
 
+import { Link } from "react-router-dom";
+
+const Navbar = () => (
+  <nav>
+    {/* Add the Posts button */}
+    <Link to="/posts">Posts</Link>
+  </nav>
+);
 
 
 // Lazy load components to improve performance
