@@ -6,6 +6,12 @@ from django.contrib.auth import authenticate
 from .models import Profile
 from rest_framework_simplejwt.tokens import RefreshToken  # Correct import for JWT
 from .serializers import RegisterSerializer, ProfileSerializer
+from django.http import JsonResponse
+
+
+def profiles(request):
+    # Return a placeholder response
+    return JsonResponse({"profiles": []})
 
 class RegisterView(APIView):
     def post(self, request):
