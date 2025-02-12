@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import NewPost from "./NewPost";
+import NewPost from "../Posts/NewPost";
 
 const PostsPage = () => {
-  const [isModalOpen, setModalOpen] = useState(true); // Auto-open the New Post form
+  const [isModalOpen, setModalOpen] = useState(true); // Open modal by default
 
   const closeNewPost = () => {
     setModalOpen(false); // Allow closing the modal
