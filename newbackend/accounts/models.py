@@ -17,3 +17,12 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.username
+
+class Post(models.Model):
+    post_id = models.AutoField(primary_key=True)  # Unique Post ID
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)  # Link to the CustomUser
+    content = models.TextField()  # Content of the post
+    created_at = models.DateTimeField(auto_now_add=True)  # Timestamp of creation
+
+    def __str__(self):
+        return f"Post by {self.user.username}: {self.content[:20]}"

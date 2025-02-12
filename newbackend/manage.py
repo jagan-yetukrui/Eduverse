@@ -2,21 +2,13 @@
 """Django's command-line utility for administrative tasks."""
 
 import os
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'newbackend.settings')
+#os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'newbackend.settings')
 
 import sys
 
 from django.db import models
 #from django.contrib.auth.models import User  # Assuming you're using Django's User model
 
-class Post(models.Model):
-    post_id = models.AutoField(primary_key=True)  # Unique ID
-    user = models.ForeignKey(User, on_delete=models.CASCADE)  # Link to the User
-    content = models.TextField()  # Post content
-    created_at = models.DateTimeField(auto_now_add=True)  # Timestamp
-
-    def __str__(self):
-        return f"Post by {self.user.username}: {self.content[:20]}"
 
 
 def main():
