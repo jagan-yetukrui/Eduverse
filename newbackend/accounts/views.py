@@ -38,8 +38,8 @@ class RegisterView(APIView):
 # User Login
 class LoginView(APIView):
     def post(self, request):
-        username = request.data.get("john_doe")
-        password = request.data.get("securepassword")
+        username = request.data.get("username")
+        password = request.data.get("password")
         user = authenticate(username=username, password=password)
 
         if user:
