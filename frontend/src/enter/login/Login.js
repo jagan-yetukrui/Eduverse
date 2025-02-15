@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import "./Login.css";
-import { FaEye, FaEyeSlash, FaTimesCircle } from "react-icons/fa";
 import axios from "axios";
 import ParticlesBg from "particles-bg";
+import React, { useEffect, useState } from "react";
+import { FaEye, FaEyeSlash, FaTimesCircle } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import "./Login.css";
+
+const rotateCount = 0;
 
 // Create axios instance with base URL
 const apiClient = axios.create({
@@ -77,6 +79,27 @@ const Login = () => {
       }
     }
   };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    const response = await fetch("http://127.0.0.1:8000/api/token/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        //body: JSON.stringify({ username, password }),
+    });
+
+    if (response.ok) {
+        const data = await response.json();
+        localStorage.setItem("token", data.access);  // ✅ Store token in localStorage
+        //localStorage.setItem("refresh_token", data.refresh);  // ✅ Save refresh token (optional)
+        window.location.href = "/";  // ✅ Redirect after login
+    } else {
+        alert("Invalid username or password");
+    }
+};
+
 
   return (
     <div className="login-container">

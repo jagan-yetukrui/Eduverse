@@ -1,10 +1,11 @@
-from rest_framework import generics
+from rest_framework import generics, permissions
 from rest_framework.permissions import IsAuthenticated
-
+from .models import Post
+from .serializers import PostSerializer
 from .models import *
 from .serializers import *
-
-
+from rest_framework.generics import ListCreateAPIView
+from rest_framework.permissions import IsAuthenticated
 class PostListView(generics.ListCreateAPIView):
     """
     API View to list all posts and create a new post.
@@ -12,7 +13,8 @@ class PostListView(generics.ListCreateAPIView):
 
     queryset = Post.objects.all().order_by("-created_at")
     serializer_class = PostSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]  # Ensure only logged-in users can post
+
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
@@ -26,6 +28,17 @@ class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticated]
+
+
+class PostListCreateView(generics.ListCreateAPIView):
+    queryset = Post.objects.all().order_by('-created_at')
+    serializer_class = PostSerializer
+    permission_classes = [permissions.IsAuthenticated]  # Only logged-in users can post
+    
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)  # Automatically assign the logged-in user as the author of the post.
+
+
 
 
 class CommentListView(generics.ListCreateAPIView):
@@ -165,3 +178,14 @@ class ReportDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ReportSerializer
     permission_classes = [IsAuthenticated]
     
+class PostListCreateView(ListCreateAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    permission_classes = [IsAuthenticated]  # Require authentication
+
+    def get_queryset(self):
+        # Filter by current logged-in user if requested
+        user = self.request.user
+        if self.request.query_params.get("my_posts"):
+            return Post.objects.filter(author=user)
+        return super().get_queryset()
