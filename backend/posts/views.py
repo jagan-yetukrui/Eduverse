@@ -6,6 +6,8 @@ from .models import *
 from .serializers import *
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.permissions import IsAuthenticated
+
+
 class PostListView(generics.ListCreateAPIView):
     """
     API View to list all posts and create a new post.
@@ -189,3 +191,11 @@ class PostListCreateView(ListCreateAPIView):
         if self.request.query_params.get("my_posts"):
             return Post.objects.filter(author=user)
         return super().get_queryset()
+
+class Share(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey('Post', related_name='shares', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} shared {self.post.title}"
