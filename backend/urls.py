@@ -1,5 +1,5 @@
 from django.urls import path, include
-from profiles.views import ProfileView
+from profiles.views import ProfileView, PostListCreateView, CommentListView
 
 urlpatterns = [
     path('api/profiles/me', ProfileView.as_view(), name='profile_me'),
