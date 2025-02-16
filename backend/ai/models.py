@@ -25,3 +25,11 @@ class Like(models.Model):
 
     def __str__(self):
         return f"{self.user.username} liked {self.post.title}"
+
+class Save(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey('Post', related_name='saves', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} saved {self.post.title}"
