@@ -192,10 +192,13 @@ class PostListCreateView(ListCreateAPIView):
             return Post.objects.filter(author=user)
         return super().get_queryset()
 
-class Share(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    post = models.ForeignKey('Post', related_name='shares', on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
+class UserPostListView(ListAPIView):
+    """
+    API View to list all posts created by the logged-in user.
+    """
+    serializer_class = PostSerializer
+    permission_classes = [IsAuthenticated]
 
-    def __str__(self):
-        return f"{self.user.username} shared {self.post.title}"
+    def get_queryset(self):
+        # Filter posts by the currently logged-in user
+        return Post.objects.filter(author=self.request.user).order_by("-created_at")

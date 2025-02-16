@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.auth.models import User
+
 
 from accounts.models import CustomUser  # accounts app
 from django.utils import timezone
@@ -63,7 +65,10 @@ class Favorite(models.Model):
 
 
 class Report(models.Model):
-    post = models.ForeignKey("Post", on_delete=models.CASCADE, related_name="reports")
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    reason = models.TextField(max_length=255)
-    reported_at = models.DateTimeField(default=timezone.now)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey('Post', related_name='reports', on_delete=models.CASCADE)
+    reason = models.TextField()  # Reason for reporting
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} reported {self.post.title} for {self.reason}"
