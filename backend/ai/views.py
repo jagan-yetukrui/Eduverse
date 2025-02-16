@@ -1,24 +1,51 @@
-from django.shortcuts import render
+from rest_framework import generics, permissions
+from rest_framework.permissions import IsAuthenticated
+from .models import Post, Comment, Like, Save, Share, Favorite, Report
+from .serializers import (
+    PostSerializer, CommentSerializer, LikeSerializer, SaveSerializer,
+    ShareSerializer, FavoriteSerializer, ReportSerializer
+)
 
-# Create your views here.
-from .serializers import PostSerializer
-from .models import Post
-from rest_framework.views import APIView
-from rest_framework.response import Response
+class PostListCreateView(generics.ListCreateAPIView):
+    queryset = Post.objects.all().order_by('-created_at')
+    serializer_class = PostSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-class PostListCreateView(APIView):
-    def get(self, request):
-        posts = Post.objects.all()
-        serializer = PostSerializer(posts, many=True)
-        return Response(serializer.data)
-
-    def post(self, request):
-        serializer = PostSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=201)
-        return Response(serializer.errors, status=400)
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
 
 class CommentListView(generics.ListCreateAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+
+class LikeListView(generics.ListCreateAPIView):
+    queryset = Like.objects.all()
+    serializer_class = LikeSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+class LikeDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Like.objects.all()
+    serializer_class = LikeSerializer
+    permission_classes = [IsAuthenticated]
+
+# Repeat similar structures for Save, Share, Favorite, and Report models
+# Example for Save:
+class SaveListView(generics.ListCreateAPIView):
+    queryset = Save.objects.all()
+    serializer_class = SaveSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+class SaveDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Save.objects.all()
+    serializer_class = SaveSerializer
+    permission_classes = [IsAuthenticated]
