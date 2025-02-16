@@ -37,13 +37,7 @@ class LikeDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 # Repeat similar structures for Save, Share, Favorite, and Report models
 # Example for Save:
-class SaveListView(generics.ListCreateAPIView):
-    queryset = Save.objects.all()
-    serializer_class = SaveSerializer
-    permission_classes = [IsAuthenticated]
 
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
 
 class SaveDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Save.objects.all()
