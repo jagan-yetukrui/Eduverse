@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import './Blocked.css';
 
 const Blocked = () => {
   const [blockedUsers, setBlockedUsers] = useState([]);
-  const [feedback, setFeedback] = useState('');
+  const [feedback, setFeedback] = useState({ message: '', type: '' });
   const [isLoading, setIsLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const navigate = useNavigate();
 
   // Fetch blocked users from the backend
   useEffect(() => {
@@ -12,98 +16,146 @@ const Blocked = () => {
       try {
         const token = localStorage.getItem('token');
         if (!token) {
-          setFeedback('Please log in to view blocked users.');
-          setIsLoading(false);
+          setFeedback({
+            message: 'Please log in to view blocked users.',
+            type: 'error'
+          });
+          navigate('/login');
           return;
         }
 
-        const response = await axios.get('/api/profiles/me/blocked-users/', {
+        const response = await axios.get('/api/profiles/me/blocked/', {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        if (response.data && Array.isArray(response.data.blocked_users)) {
-          setBlockedUsers(response.data.blocked_users);
-        } else {
-          setBlockedUsers([]);
-          console.warn('Unexpected response format:', response.data);
-        }
+        setBlockedUsers(response.data.blocked_users || []);
       } catch (error) {
-        console.error('Error fetching blocked users:', error);
-        setFeedback(error.response?.data?.message || 'Failed to load blocked users.');
+        handleError(error);
       } finally {
         setIsLoading(false);
       }
     };
     fetchBlockedUsers();
-  }, []);
+  }, [navigate]);
 
-  // Handle unblocking a user
-  const handleUnblockUser = async (userId) => {
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        setFeedback('Please log in to unblock users.');
-        return;
-      }
+  // Handle errors
+  const handleError = (error) => {
+    console.error('Error:', error);
+    const errorMessage = error.response?.data?.detail || error.message;
+    setFeedback({
+      message: errorMessage,
+      type: 'error'
+    });
 
-      // Show loading state for feedback
-      setFeedback('Unblocking user...');
-
-      const response = await axios.post('/api/profiles/unblock-user/', {
-        user_id: userId
-      }, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (response.data && response.data.success) {
-        // Remove the user from the blocked users list after successful unblock
-        setBlockedUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
-        setFeedback('User unblocked successfully!');
-      } else {
-        setFeedback('Unable to unblock user. Please try again.');
-      }
-    } catch (error) {
-      console.error('Error unblocking user:', error);
-      setFeedback(error.response?.data?.message || 'Failed to unblock user. Please try again.');
+    if (error.response?.status === 401) {
+      navigate('/login');
     }
   };
 
-  if (isLoading) {
+  // Handle unblocking a user
+  const handleUnblockUser = async (username) => {
+    try {
+      setIsLoading(true);
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('Authentication required');
+      }
+
+      await axios.delete(`/api/profiles/${username}/unfollow/`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      // Remove the user from the blocked users list
+      setBlockedUsers(prevUsers => 
+        prevUsers.filter(user => user.username !== username)
+      );
+
+      setFeedback({
+        message: `Successfully unblocked ${username}`,
+        type: 'success'
+      });
+
+    } catch (error) {
+      handleError(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Filter blocked users based on search query
+  const filteredUsers = blockedUsers.filter(user => 
+    user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    user.display_name?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  if (isLoading && blockedUsers.length === 0) {
     return (
-      <div className="settings-section">
-        <h3>Blocked Users</h3>
-        <p>Loading...</p>
+      <div className="blocked-users-container">
+        <h2>Blocked Users</h2>
+        <div className="loading-spinner">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="settings-section">
-      <h3>Blocked Users</h3>
+    <div className="blocked-users-container">
+      <h2>Blocked Users</h2>
+      
+      {/* Search input */}
+      <div className="search-container">
+        <input
+          type="text"
+          placeholder="Search blocked users..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="search-input"
+        />
+      </div>
 
-      {blockedUsers.length === 0 ? (
-        <p>No blocked users.</p>
+      {/* Feedback message */}
+      {feedback.message && (
+        <div className={`feedback-message ${feedback.type}`}>
+          {feedback.message}
+        </div>
+      )}
+
+      {/* Blocked users list */}
+      {filteredUsers.length === 0 ? (
+        <div className="no-users-message">
+          {searchQuery 
+            ? "No blocked users match your search"
+            : "You haven't blocked any users"}
+        </div>
       ) : (
         <ul className="blocked-users-list">
-          {blockedUsers.map((user) => (
-            <li key={user.id} className="blocked-user-item">
-              <span className="user-info">
-                <span className="username">{user.username}</span>
-                {user.display_name && <span className="display-name">({user.display_name})</span>}
-              </span>
+          {filteredUsers.map((user) => (
+            <li key={user.username} className="blocked-user-item">
+              <div className="user-info">
+                {user.avatar && (
+                  <img 
+                    src={user.avatar} 
+                    alt={`${user.username}'s avatar`} 
+                    className="user-avatar"
+                  />
+                )}
+                <div className="user-details">
+                  <span className="username">{user.username}</span>
+                  {user.display_name && (
+                    <span className="display-name">{user.display_name}</span>
+                  )}
+                </div>
+              </div>
               <button 
                 className="unblock-button"
-                onClick={() => handleUnblockUser(user.id)}
+                onClick={() => handleUnblockUser(user.username)}
                 disabled={isLoading}
               >
-                Unblock
+                {isLoading ? 'Unblocking...' : 'Unblock'}
               </button>
             </li>
           ))}
         </ul>
       )}
-
-      {feedback && <p className="feedback">{feedback}</p>}
     </div>
   );
 };

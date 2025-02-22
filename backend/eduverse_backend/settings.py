@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'profiles',
     'posts',
     'rest_framework',
+    'rest_framework.authtoken',
     'corsheaders',
     'messaging',
     'notifications', 

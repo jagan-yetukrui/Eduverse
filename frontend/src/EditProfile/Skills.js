@@ -6,163 +6,58 @@ import './Skills.css';
  * Skills component for managing user's professional skills
  * Allows users to view, add and remove skills from their profile
  */
-const Skills = () => {
-  // State management for skills list and form handling
-  const [skills, setSkills] = useState([]); // Array of user's skills
-  const [newSkill, setNewSkill] = useState(''); // Input field for new skill
-  const [error, setError] = useState(''); // Error message state
-  const [successMessage, setSuccessMessage] = useState(''); // Success message state
-  const [isLoading, setIsLoading] = useState(false); // Loading state for API operations
+const Skills = ({ skills: initialSkills, onUpdate }) => {
+  const [skills, setSkills] = useState({});
+  const [newSkill, setNewSkill] = useState('');
+  const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Fetch skills when component mounts
+  // Initialize with passed skills data
   useEffect(() => {
-    fetchSkills();
-  }, []);
+    if (initialSkills) {
+      setSkills(initialSkills);
+    }
+  }, [initialSkills]);
 
   /**
-   * Fetches user's skills from the backend API
-   * Updates skills state with the response data
+   * Note: Skills are managed by AI according to the backend,
+   * so we'll only implement viewing functionality
    */
-  const fetchSkills = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const response = await axios.get('/api/profiles/me/', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setSkills(response.data.skills || []);
-    } catch (error) {
-      console.error('Error fetching skills:', error);
-      setError('Failed to load skills. Please try again.');
-    }
-  };
-
-  /**
-   * Handles the addition of a new skill
-   * Validates input and makes API call to add skill
-   * @param {Event} e - Form submission event
-   */
-  const handleAddSkill = async (e) => {
-    e.preventDefault();
-    setError('');
-    setSuccessMessage('');
-    setIsLoading(true);
   
-    // Input validation
-    if (!newSkill.trim()) {
-      setError('Please enter a skill.');
-      setIsLoading(false);
-      return;
-    }
-  
-    try {
-      const token = localStorage.getItem('token');
-      const response = await axios.post(
-        '/api/profiles/add-skill/',
-        { skill: newSkill.trim() },
-        {
-          headers: { Authorization: `Bearer ${token}` }
-        }
-      );
-  
-      // Update state on successful addition
-      setSkills(response.data.skills);
-      setNewSkill('');
-      setSuccessMessage('Skill added successfully!');
-    } catch (error) {
-      console.error('Error adding skill:', error);
-      // Handle error messages from backend
-      if (error.response?.data?.message) {
-        setError(error.response.data.message);
-      } else {
-        setError('Failed to add skill. Please try again.');
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  /**
-   * Handles the deletion of a skill
-   * Makes API call to remove skill from user's profile
-   * @param {string} skillToDelete - The skill to be removed
-   */
-  const handleDeleteSkill = async (skillToDelete) => {
-    setError('');
-    setSuccessMessage('');
-    setIsLoading(true);
-
-    try {
-      const token = localStorage.getItem('token');
-      const response = await axios.post(
-        '/api/profiles/remove-skill/',
-        { skill: skillToDelete },
-        {
-          headers: { Authorization: `Bearer ${token}` }
-        }
-      );
-
-      // Update skills list after successful deletion
-      setSkills(response.data.skills);
-      setSuccessMessage('Skill removed successfully!');
-    } catch (error) {
-      console.error('Error deleting skill:', error);
-      // Handle error messages from backend
-      if (error.response?.data?.message) {
-        setError(error.response.data.message);
-      } else {
-        setError('Failed to remove skill. Please try again.');
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   return (
     <div className="skills-container">
       <h2>Skills</h2>
-
-      {/* Form for adding new skills */}
-      <form onSubmit={handleAddSkill}>
-        <div className="input-group">
-          <input
-            type="text"
-            value={newSkill}
-            onChange={(e) => setNewSkill(e.target.value)}
-            placeholder="Enter a skill"
-            disabled={isLoading}
-          />
-          <button 
-            type="submit" 
-            className="add-button"
-            disabled={isLoading}
-          >
-            {isLoading ? 'Adding...' : 'Add Skill'}
-          </button>
-        </div>
-        {/* Error and success message display */}
-        {error && <p className="error-text">{error}</p>}
-        {successMessage && <p className="success-text">{successMessage}</p>}
-      </form>
-
-      {/* Skills list display */}
-      <div className="skills-list">
-        {skills.length === 0 ? (
-          <p>No skills added yet.</p>
-        ) : (
-          skills.map((skill, index) => (
-            <div key={index} className="skill-item">
-              <span>{skill}</span>
-              <button
-                className="delete-button"
-                onClick={() => handleDeleteSkill(skill)}
-                disabled={isLoading}
-              >
-                {isLoading ? 'Removing...' : 'Delete'}
-              </button>
-            </div>
-          ))
-        )}
+      <div className="skills-info">
+        <p className="info-text">
+          Your skills are automatically analyzed and updated based on your profile information,
+          education, and experience.
+        </p>
       </div>
+
+      {/* Display skills by category */}
+      <div className="skills-list">
+        {Object.entries(skills).map(([category, categorySkills]) => (
+          <div key={category} className="skill-category">
+            <h3>{category}</h3>
+            <div className="category-skills">
+              {categorySkills.map((skill, index) => (
+                <div key={index} className="skill-item">
+                  <span>{skill}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Show message if no skills are present */}
+      {Object.keys(skills).length === 0 && (
+        <p className="no-skills">
+          Your skills will be automatically generated based on your profile information.
+          Please complete your education and experience sections.
+        </p>
+      )}
     </div>
   );
 };

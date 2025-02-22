@@ -9,6 +9,9 @@ import {
   FaGithub,
   FaLinkedin,
   FaShare,
+  FaUserPlus,
+  FaUserMinus,
+  FaBan,
 } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
@@ -16,6 +19,8 @@ import "react-tabs/style/react-tabs.css";
 import ErrorMessage from "../components/ErrorMessage";
 import LoadingSpinner from "../components/LoadingSpinner";
 import "./ProfileView.css";
+import { useUser } from '../Accounts/UserContext';
+import { useProfile } from './ProfileContext';
 
 import placeholder from "../images/placeholder.png";
 
@@ -98,6 +103,7 @@ const ProfileActions = ({
   handleMessage,
   handleShare,
   isFollowing,
+  isBlocked,
 }) => (
   <div className="profile-actions">
     {isOwnProfile ? (
@@ -112,10 +118,17 @@ const ProfileActions = ({
     ) : (
       <>
         <button
-          className={`follow-btn ${isFollowing ? "following" : ""}`}
+          className={`follow-btn ${isFollowing ? "following" : ""} ${isBlocked ? "blocked" : ""}`}
+          onClick={handleFollowToggle}
+          disabled={isBlocked}
+        >
+          {isFollowing ? <><FaUserMinus /> Unfollow</> : <><FaUserPlus /> Follow</>}
+        </button>
+        <button
+          className={`block-btn ${isBlocked ? "blocked" : ""}`}
           onClick={handleFollowToggle}
         >
-          {isFollowing ? "Following" : "Follow"}
+          <FaBan /> {isBlocked ? "Unblock" : "Block"}
         </button>
         <button className="message-btn" onClick={handleMessage}>
           Message
@@ -280,7 +293,8 @@ const ProfileDetails = ({
 );
 
 const ProfileView = () => {
-  const [user, setUser] = useState(null);
+  const { user, setUser } = useUser();
+  const { profile } = useProfile();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -292,6 +306,7 @@ const ProfileView = () => {
   });
   const [isFollowing, setIsFollowing] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [isBlocked, setIsBlocked] = useState(false);
 
   const navigate = useNavigate();
   const { userId } = useParams();
@@ -316,7 +331,7 @@ const ProfileView = () => {
   const handleFollowToggle = async () => {
     try {
       if (isFollowing) {
-        await axios.delete(`/api/users/${userId}/follow`);
+        await axios.delete(`/api/users/${userId}/unfollow`);
       } else {
         await axios.post(`/api/users/${userId}/follow`);
       }
@@ -369,6 +384,7 @@ const ProfileView = () => {
           // posts: response.data.posts_count,
         });
         setIsFollowing(response.data.is_following);
+        setIsBlocked(response.data.is_blocked);
         setLoading(false);
       } catch (err) {
         if (axios.isCancel(err)) {
@@ -449,6 +465,7 @@ const ProfileView = () => {
           handleMessage={handleMessage}
           handleShare={handleShare}
           isFollowing={isFollowing}
+          isBlocked={isBlocked}
         />
 
         {/* <div className="scroll-prompt" onClick={scrollToContent}>

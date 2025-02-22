@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './Navbar/Navbar';
 import ErrorBoundary from './ErrorBoundary/ErrorBoundary';
 import './App.css';
+import { UserProvider } from './Accounts/UserContext';
+import { ProfileProvider } from './Profile/ProfileContext';
 
 // Lazy load components to improve performance
 const Home = lazy(() => import('./Home/Home'));
@@ -43,56 +45,58 @@ function App() {
   }, []);
 
   return (
-    <React.StrictMode>
-      <ErrorBoundary>
-        <Router>
-          <div className="App">
-            <Navbar />
-            <ErrorBoundary>
-              <Suspense fallback={<div>Loading...</div>}>
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/register" element={<Register />} />
-                  <Route path="/profile" element={<ProfileView />} />
-                  <Route path="/profile/edit" element={<Profile />}>
-                    <Route path="experience" element={<Experience />} />
-                    <Route path="education" element={<Education />} />
-                    <Route path="skills" element={<Skills />} />
-                    <Route path="licenses" element={<Licenses />} />
-                    <Route path="projects" element={<Projects />} />
-                  </Route>
-                  <Route path="/messages" element={<Messages />} />
-                  <Route path="/notes" element={<Notes />} />
-                  <Route path="/project-suggestions" element={<ProjectSuggestions />} />
-                  <Route path="/career-guidance" element={<CareerGuidance />} />
-                  <Route path="/posts" element={<PostList />} />
-                  <Route path="/newpost" element={<NewPost />} />
-                  <Route path="/search" element={<Search />} />
-                  <Route path="/settings" element={<Settings />}>
-                    <Route path="profile-privacy" element={<ProfilePrivacy />} />
-                    <Route path="notifications" element={<Notifications />} />
-                    <Route path="account-security" element={<AccountSettings />} />
-                    <Route path="blocked" element={<Blocked />} />
-                    <Route path="help" element={<Help />} />
-                  </Route>
-                  <Route
-                    path="/tinymce-demo"
-                    element={
-                      <ErrorBoundary>
-                        <TinyMCEDemo />
-                      </ErrorBoundary>
-                    }
-                  />
-                  {/* Fallback for unmatched routes */}
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </Suspense>
-            </ErrorBoundary>
-          </div>
-        </Router>
-      </ErrorBoundary>
-    </React.StrictMode>
+    <UserProvider>
+      <ProfileProvider>
+        <ErrorBoundary>
+          <Router>
+            <div className="App">
+              <Navbar />
+              <ErrorBoundary>
+                <Suspense fallback={<div>Loading...</div>}>
+                  <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/profile" element={<ProfileView />} />
+                    <Route path="/profile/edit" element={<Profile />}>
+                      <Route path="experience" element={<Experience />} />
+                      <Route path="education" element={<Education />} />
+                      <Route path="skills" element={<Skills />} />
+                      <Route path="licenses" element={<Licenses />} />
+                      <Route path="projects" element={<Projects />} />
+                    </Route>
+                    <Route path="/messages" element={<Messages />} />
+                    <Route path="/notes" element={<Notes />} />
+                    <Route path="/project-suggestions" element={<ProjectSuggestions />} />
+                    <Route path="/career-guidance" element={<CareerGuidance />} />
+                    <Route path="/posts" element={<PostList />} />
+                    <Route path="/newpost" element={<NewPost />} />
+                    <Route path="/search" element={<Search />} />
+                    <Route path="/settings" element={<Settings />}>
+                      <Route path="profile-privacy" element={<ProfilePrivacy />} />
+                      <Route path="notifications" element={<Notifications />} />
+                      <Route path="account-security" element={<AccountSettings />} />
+                      <Route path="blocked" element={<Blocked />} />
+                      <Route path="help" element={<Help />} />
+                    </Route>
+                    <Route
+                      path="/tinymce-demo"
+                      element={
+                        <ErrorBoundary>
+                          <TinyMCEDemo />
+                        </ErrorBoundary>
+                      }
+                    />
+                    {/* Fallback for unmatched routes */}
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </Suspense>
+              </ErrorBoundary>
+            </div>
+          </Router>
+        </ErrorBoundary>
+      </ProfileProvider>
+    </UserProvider>
   );
 }
 export default App;

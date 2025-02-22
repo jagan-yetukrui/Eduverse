@@ -6,6 +6,7 @@ from django.contrib.auth.password_validation import validate_password
 User = get_user_model()
 
 class RegisterSerializer(serializers.ModelSerializer):
+    user_id = serializers.IntegerField(read_only=True)
     email = serializers.EmailField(
         required=True,
         validators=[UniqueValidator(queryset=User.objects.all())]
@@ -20,7 +21,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'password', 'password2', 'agreeToTerms')
+        fields = ('user_id', 'username', 'email', 'password', 'password2', 'agreeToTerms')
     
     def validate(self, attrs):
         if attrs['password'] != attrs['password2']:

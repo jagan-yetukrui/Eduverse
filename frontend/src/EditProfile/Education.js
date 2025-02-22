@@ -6,7 +6,7 @@ import './Education.css';
  * Education component for managing user's educational history
  * Allows users to view, add, edit and delete education entries from their profile
  */
-const Education = () => {
+const Education = ({ education, onUpdate }) => {
   // State management
   const [educationEntries, setEducationEntries] = useState([]); // Array of education entries
   const [error, setError] = useState(''); // Error message state
@@ -105,117 +105,127 @@ const Education = () => {
     'Web Development',
   ];
 
-  // Fetch education entries when component mounts
+  // Initialize with passed education data
   useEffect(() => {
-    fetchEducation();
-  }, []);
+    if (education) {
+      setEducationEntries(education);
+    }
+  }, [education]);
 
   /**
-   * Fetches user's education entries from the backend API
+   * Handles adding new education entry
    */
-  const fetchEducation = async () => {
+  const handleAddEducation = async (educationData) => {
     try {
       setIsLoading(true);
       const token = localStorage.getItem('token');
-      const response = await axios.get('/api/profiles/me/', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setEducationEntries(response.data.education || [{
-        university: '',
-        degree: '',
-        major: '',
-        start_date: '',
-        end_date: '',
-        bio: '',
-      }]);
+      const response = await axios.post(
+        '/api/profiles/me/education/',
+        educationData,
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      );
+      
+      // Update local state and notify parent
+      const updatedEntries = [...educationEntries, response.data];
+      setEducationEntries(updatedEntries);
+      onUpdate(updatedEntries);
+      setSuccessMessage('Education entry added successfully');
     } catch (error) {
-      console.error('Error fetching education:', error);
-      setError('Failed to load education history. Please try again.');
+      console.error('Error adding education:', error);
+      setError(error.response?.data?.message || 'Failed to add education entry');
     } finally {
       setIsLoading(false);
     }
   };
 
   /**
-   * Handles input changes in the education form
-   * @param {number} index - Index of education entry being edited
-   * @param {Event} event - Input change event
+   * Handles updating existing education entry
    */
-  const handleChange = (index, event) => {
-    const { name, value } = event.target;
-    const updatedEntries = [...educationEntries];
-    updatedEntries[index][name] = value;
-    setEducationEntries(updatedEntries);
-    setError('');
-    setSuccessMessage('');
-  };
-
-  /**
-   * Adds a new empty education entry
-   */
-  const handleAddEntry = () => {
-    setEducationEntries([
-      ...educationEntries,
-      {
-        university: '',
-        degree: '',
-        major: '',
-        start_date: '',
-        end_date: '',
-        bio: '',
-      },
-    ]);
-  };
-
-  /**
-   * Removes an education entry at specified index
-   * @param {number} index - Index of entry to remove
-   */
-  const handleRemoveEntry = async (index) => {
+  const handleUpdateEducation = async (id, educationData) => {
     try {
       setIsLoading(true);
       const token = localStorage.getItem('token');
-      const entryToDelete = educationEntries[index];
-      
-      if (entryToDelete.id) {
-        await axios.delete(`/api/education/${entryToDelete.id}`, {
+      const response = await axios.put(
+        `/api/profiles/me/education/`,
+        { ...educationData, id },
+        {
           headers: { Authorization: `Bearer ${token}` }
-        });
-      }
+        }
+      );
       
-      const updatedEntries = educationEntries.filter((_, i) => i !== index);
+      // Update local state and notify parent
+      const updatedEntries = educationEntries.map(entry => 
+        entry.id === id ? response.data : entry
+      );
       setEducationEntries(updatedEntries);
+      onUpdate(updatedEntries);
+      setSuccessMessage('Education entry updated successfully');
+    } catch (error) {
+      console.error('Error updating education:', error);
+      setError(error.response?.data?.message || 'Failed to update education entry');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  /**
+   * Handles removing education entry
+   */
+  const handleRemoveEducation = async (id) => {
+    try {
+      setIsLoading(true);
+      const token = localStorage.getItem('token');
+      await axios.delete(`/api/profiles/me/education/`, {
+        headers: { Authorization: `Bearer ${token}` },
+        data: { id }
+      });
+      
+      // Update local state and notify parent
+      const updatedEntries = educationEntries.filter(entry => entry.id !== id);
+      setEducationEntries(updatedEntries);
+      onUpdate(updatedEntries);
       setSuccessMessage('Education entry removed successfully');
     } catch (error) {
-      console.error('Error removing education entry:', error);
-      setError('Failed to remove education entry. Please try again.');
+      console.error('Error removing education:', error);
+      setError(error.response?.data?.message || 'Failed to remove education entry');
     } finally {
       setIsLoading(false);
     }
   };
 
   /**
-   * Handles form submission to save all education entries
-   * @param {Event} event - Form submission event
+   * Handles form submission
    */
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event, entry) => {
     event.preventDefault();
-    try {
-      setIsLoading(true);
-      const token = localStorage.getItem('token');
-      await axios.put('/api/profiles/education/', 
-        { education: educationEntries },
-        { headers: { Authorization: `Bearer ${token}` }}
-      );
-      setSuccessMessage('Education history saved successfully');
-      setError('');
-    } catch (error) {
-      console.error('Error saving education history:', error);
-      setError('Failed to save education history. Please try again.');
-      setSuccessMessage('');
-    } finally {
-      setIsLoading(false);
+    
+    // Validate dates
+    if (new Date(entry.end_date) < new Date(entry.start_date)) {
+      setError('End date cannot be before start date');
+      return;
     }
+
+    try {
+      if (entry.id) {
+        await handleUpdateEducation(entry.id, entry);
+      } else {
+        await handleAddEducation(entry);
+      }
+    } catch (error) {
+      setError('Failed to save education entry');
+    }
+  };
+
+  const handleChange = (e, index) => {
+    const { name, value } = e.target;
+    const updatedEducation = [...educationEntries];
+    updatedEducation[index] = {
+      ...updatedEducation[index],
+      [name]: value
+    };
+    setEducationEntries(updatedEducation);
   };
 
   return (
@@ -224,16 +234,17 @@ const Education = () => {
       {error && <div className="error-message">{error}</div>}
       {successMessage && <div className="success-message">{successMessage}</div>}
       
-      <form onSubmit={handleSubmit}>
-        {educationEntries.map((entry, index) => (
-          <div key={index} className="education-entry">
+      {/* Display existing education entries */}
+      {educationEntries.map((entry, index) => (
+        <div key={entry.id || index} className="education-entry">
+          <form onSubmit={(e) => handleSubmit(e, entry)}>
             <div className="input-group">
               <label>University</label>
               <input
                 type="text"
                 name="university"
                 value={entry.university}
-                onChange={(e) => handleChange(index, e)}
+                onChange={(e) => handleChange(e, index)}
                 placeholder="Enter university name"
                 required
               />
@@ -243,7 +254,7 @@ const Education = () => {
               <select
                 name="degree"
                 value={entry.degree}
-                onChange={(e) => handleChange(index, e)}
+                onChange={(e) => handleChange(e, index)}
                 required
               >
                 <option value="">Select degree</option>
@@ -259,7 +270,7 @@ const Education = () => {
               <select
                 name="major"
                 value={entry.major}
-                onChange={(e) => handleChange(index, e)}
+                onChange={(e) => handleChange(e, index)}
                 required
               >
                 <option value="">Select major</option>
@@ -276,7 +287,7 @@ const Education = () => {
                 type="date"
                 name="start_date"
                 value={entry.start_date}
-                onChange={(e) => handleChange(index, e)}
+                onChange={(e) => handleChange(e, index)}
                 required
               />
             </div>
@@ -286,7 +297,7 @@ const Education = () => {
                 type="date"
                 name="end_date"
                 value={entry.end_date}
-                onChange={(e) => handleChange(index, e)}
+                onChange={(e) => handleChange(e, index)}
                 min={entry.start_date}
                 required
               />
@@ -296,34 +307,49 @@ const Education = () => {
               <textarea
                 name="bio"
                 value={entry.bio}
-                onChange={(e) => handleChange(index, e)}
+                onChange={(e) => handleChange(e, index)}
                 placeholder="Describe your educational experience, achievements, etc."
               />
             </div>
-            {educationEntries.length > 1 && (
-              <button
-                type="button"
-                onClick={() => handleRemoveEntry(index)}
-                className="remove-button"
+            <div className="button-group">
+              <button 
+                type="submit" 
+                className="save-button"
                 disabled={isLoading}
               >
-                {isLoading ? 'Removing...' : 'Remove Entry'}
+                {isLoading ? 'Saving...' : 'Save Entry'}
               </button>
-            )}
-          </div>
-        ))}
-        <button
-          type="button"
-          onClick={handleAddEntry}
-          className="add-button"
-          disabled={isLoading}
-        >
-          Add Another Education Entry
-        </button>
-        <button type="submit" className="submit-button" disabled={isLoading}>
-          {isLoading ? 'Saving...' : 'Save Education History'}
-        </button>
-      </form>
+              {entry.id && (
+                <button
+                  type="button"
+                  onClick={() => handleRemoveEducation(entry.id)}
+                  className="remove-button"
+                  disabled={isLoading}
+                >
+                  {isLoading ? 'Removing...' : 'Remove Entry'}
+                </button>
+              )}
+            </div>
+          </form>
+        </div>
+      ))}
+
+      {/* Add new education entry button */}
+      <button
+        type="button"
+        onClick={() => setEducationEntries([...educationEntries, {
+          university: '',
+          degree: '',
+          major: '',
+          start_date: '',
+          end_date: '',
+          bio: '',
+        }])}
+        className="add-button"
+        disabled={isLoading}
+      >
+        Add New Education Entry
+      </button>
     </div>
   );
 };

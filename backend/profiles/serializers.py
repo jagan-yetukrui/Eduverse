@@ -1,11 +1,13 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from .models import Profile, Education, License, Experience
+from .models import Profile, Education, License, Experience, Project
 
 
 # Main serializer for Profile model handling basic profile information and related counts
 class ProfileSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(source="user.username", read_only=True)
+    user = serializers.PrimaryKeyRelatedField(read_only=True)
+    email = serializers.EmailField(read_only=True)
+    username = serializers.CharField(read_only=True)
     display_name = serializers.CharField(max_length=100)
     followers_count = serializers.SerializerMethodField()
     following_count = serializers.SerializerMethodField()
@@ -14,44 +16,40 @@ class ProfileSerializer(serializers.ModelSerializer):
     notification_settings = serializers.JSONField(required=False)
     privacy_settings = serializers.JSONField(required=False)
     account_status = serializers.ChoiceField(
-        choices=Profile.ACCOUNT_STATUS_CHOICES, read_only=True
+        choices=Profile.ACCOUNT_STATUS_CHOICES,
+        read_only=True
     )
+    is_verified = serializers.BooleanField(read_only=True)
+    created_at = serializers.DateTimeField(read_only=True)
+    updated_at = serializers.DateTimeField(read_only=True)
     highlights = serializers.JSONField(required=False)
     website = serializers.URLField(required=False, allow_blank=True)
 
     class Meta:
         model = Profile
         fields = [
-            "user",
-            "username",
-            "display_name",
-            "bio",
-            "avatar",
-            "website",
-            "location",
-            "followers_count",
-            "following_count",
-            "posts",
-            "highlights",
-            "education_details",
-            "experiences",
-            "licenses",
-            "blocked_users",
-            "notification_settings",
-            "privacy_settings",
-            "account_status",
-            "is_verified",
-            "skills",
+            'id', 'user', 'username', 'display_name', 'email',
+            'bio', 'avatar', 'skills', 'account_status',
+            'is_verified', 'created_at', 'updated_at',
+            'followers_count', 'following_count', 'posts',
+            'blocked_users', 'notification_settings', 'privacy_settings',
+            'highlights', 'website', 'location', 'education_details',
+            'experiences', 'licenses', 'close_friends', 'liked_posts'
         ]
-        read_only_fields = [
-            "user",
-            "username",
-            "followers_count",
-            "following_count",
-            "posts",
-            "is_verified",
-            "skills",
-        ]
+        read_only_fields = ['id', 'user', 'username', 'email', 'account_status', 'is_verified']
+
+    def update(self, instance, validated_data):
+        # Handle avatar update separately if needed
+        avatar = validated_data.pop('avatar', None)
+        if avatar:
+            instance.avatar = avatar
+
+        # Update other fields
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+
+        instance.save()
+        return instance
 
     # Get total number of followers
     def get_followers_count(self, obj):
@@ -225,3 +223,31 @@ class EditProfileSerializer(serializers.ModelSerializer):
         if value and value.size > 5 * 1024 * 1024:  # 5MB limit
             raise serializers.ValidationError("Avatar file size must be under 5MB")
         return value
+
+
+class EducationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Education
+        fields = '__all__'
+        read_only_fields = ['profile']
+
+
+class LicenseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = License
+        fields = '__all__'
+        read_only_fields = ['profile']
+
+
+class ExperienceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Experience
+        fields = '__all__'
+        read_only_fields = ['profile']
+
+
+class ProjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Project
+        fields = '__all__'
+        read_only_fields = ['profile']

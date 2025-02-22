@@ -98,6 +98,7 @@ urlpatterns = [
     path('<str:username>/followers/', ProfileViewSet.as_view({'get': 'followers'}), name='profile-followers'),
     path('<str:username>/following/', ProfileViewSet.as_view({'get': 'following'}), name='profile-following'),
     path('<str:username>/follow/', ProfileViewSet.as_view({'post': 'follow', 'delete': 'unfollow'}), name='profile-follow'),
+    path('<str:username>/unfollow/', ProfileViewSet.as_view({'post': 'unfollow'}), name='profile-unfollow'),
     
     # Search
     path('search/', ProfileViewSet.as_view({'get': 'list'}), name='profile-search'),

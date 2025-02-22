@@ -29,50 +29,41 @@ const Settings = () => {
     localStorage.setItem('darkMode', darkMode);
   }, [darkMode]);
 
-  // Fetch initial settings from backend
+  // Fetch initial settings
   useEffect(() => {
     const fetchSettings = async () => {
       setLoading(true);
       try {
-        const access_token = localStorage.getItem('access_token');
-        if (!access_token) {
-          throw new Error('No access token found');
+        const token = localStorage.getItem('token');
+        if (!token) {
+          throw new Error('No authentication token found');
         }
 
-        // API call to fetch user settings
-        const response = await axios.get('http://127.0.0.1:8000/api/profiles/me/settings/', {
-          headers: {
-            Authorization: `Bearer ${access_token}`,
-          },
-        });
+        // Fetch all settings in parallel
+        const [profileResponse, privacyResponse, notificationResponse] = await Promise.all([
+          axios.get('/api/profiles/me/', {
+            headers: { Authorization: `Bearer ${token}` }
+          }),
+          axios.get('/api/profiles/me/privacy/', {
+            headers: { Authorization: `Bearer ${token}` }
+          }),
+          axios.get('/api/profiles/me/notifications/', {
+            headers: { Authorization: `Bearer ${token}` }
+          })
+        ]);
 
-        // Update state with fetched settings
-        setOriginalSettings({
-          ...response.data,
-          darkMode: darkMode // Include dark mode in settings
-        });
-        setCurrentSettings({
-          ...response.data,
-          darkMode: darkMode
-        });
+        const combinedSettings = {
+          profile: profileResponse.data,
+          privacy: privacyResponse.data,
+          notifications: notificationResponse.data,
+          darkMode
+        };
+
+        setOriginalSettings(combinedSettings);
+        setCurrentSettings(combinedSettings);
         setFeedback({ message: 'Settings loaded successfully', type: 'success' });
       } catch (error) {
-        const errorMessage = error.response?.data?.detail || error.message;
-        console.error('Error fetching settings:', {
-          message: errorMessage,
-          status: error.response?.status,
-          data: error.response?.data
-        });
-        setError(errorMessage);
-        setFeedback({
-          message: 'Failed to load settings. Please try again later.',
-          type: 'error'
-        });
-        
-        // Redirect to login if unauthorized
-        if (error.response?.status === 401) {
-          navigate('/login');
-        }
+        handleError(error);
       } finally {
         setLoading(false);
       }
@@ -81,60 +72,55 @@ const Settings = () => {
     fetchSettings();
   }, [navigate, darkMode]);
 
-  // Handle saving updated settings
+  const handleError = (error) => {
+    const errorMessage = error.response?.data?.detail || error.message;
+    console.error('Error:', {
+      message: errorMessage,
+      status: error.response?.status,
+      data: error.response?.data
+    });
+    setError(errorMessage);
+    setFeedback({
+      message: 'Failed to load settings. Please try again later.',
+      type: 'error'
+    });
+    
+    if (error.response?.status === 401) {
+      navigate('/login');
+    }
+  };
+
   const handleSaveChanges = async () => {
     setLoading(true);
     try {
-      const access_token = localStorage.getItem('access_token');
-      if (!access_token) {
-        throw new Error('No access token found');
-      }
+      const token = localStorage.getItem('token');
+      if (!token) throw new Error('No authentication token found');
 
-      // API call to update settings
-      const response = await axios.put(
-        'http://127.0.0.1:8000/api/profiles/me/settings/',
-        currentSettings,
-        {
-          headers: {
-            Authorization: `Bearer ${access_token}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      );
+      // Update different settings in parallel
+      await Promise.all([
+        axios.put('/api/profiles/me/', currentSettings.profile, {
+          headers: { Authorization: `Bearer ${token}` }
+        }),
+        axios.put('/api/profiles/me/privacy/', currentSettings.privacy, {
+          headers: { Authorization: `Bearer ${token}` }
+        }),
+        axios.put('/api/profiles/me/notifications/', currentSettings.notifications, {
+          headers: { Authorization: `Bearer ${token}` }
+        })
+      ]);
 
-      setOriginalSettings(response.data);
+      setOriginalSettings(currentSettings);
       setFeedback({
         message: 'Settings updated successfully!',
         type: 'success'
       });
-      
-      // Delayed navigation to dashboard
-      setTimeout(() => {
-        navigate('/dashboard');
-      }, 1500);
-
     } catch (error) {
-      const errorMessage = error.response?.data?.detail || error.message;
-      console.error('Error updating settings:', {
-        message: errorMessage,
-        status: error.response?.status,
-        data: error.response?.data
-      });
-      
-      setFeedback({
-        message: `Failed to update settings: ${errorMessage}`,
-        type: 'error'
-      });
-
-      if (error.response?.status === 401) {
-        navigate('/login');
-      }
+      handleError(error);
     } finally {
       setLoading(false);
     }
   };
 
-  // Reset settings to original values
   const handleResetToOriginal = () => {
     setCurrentSettings(originalSettings);
     setFeedback({
@@ -143,17 +129,24 @@ const Settings = () => {
     });
   };
 
-  // Handle user logout
-  const handleLogout = () => {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    setFeedback({
-      message: 'You have been successfully logged out',
-      type: 'success'
-    });
-    setTimeout(() => {
-      navigate('/login');
-    }, 1000);
+  const handleLogout = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (token) {
+        await axios.post('/api/profiles/logout/', null, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      localStorage.removeItem('token');
+      setFeedback({
+        message: 'You have been successfully logged out',
+        type: 'success'
+      });
+      setTimeout(() => navigate('/login'), 1000);
+    }
   };
 
   // Toggle dark mode
