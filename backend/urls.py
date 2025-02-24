@@ -1,9 +1,13 @@
-from django.urls import path, include
-from profiles.views import ProfileView
+from django.urls import path
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from .views import RegisterView, LogoutView, ProfileView, ProfileListView
 
 urlpatterns = [
-    path('api/profiles/me', ProfileView.as_view(), name='profile_me'),
-    path('api/profiles/<str:user_id>', ProfileView.as_view(), name='profile_detail'),
-    path('api/', include('accounts.urls')),  # ✅ Ensures /api/login/ works
-    path('api/profiles/', include('profiles.urls')),
-] 
+    path('register/', RegisterView.as_view(), name='register'),
+    path('login/', TokenObtainPairView.as_view(), name='login'),  # ✅ Login endpoint
+    path('logout/', LogoutView.as_view(), name='logout'),
+    path('profile/', ProfileView.as_view(), name='profile'),
+    path('profile/list/', ProfileListView.as_view(), name='profile_list'),
+    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # ✅ JWT login
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+]
