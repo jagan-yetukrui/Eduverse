@@ -1,11 +1,11 @@
 from django.urls import path
-from .views import AccountsRootView, RegisterView, LoginView, ProtectedView
-from rest_framework_simplejwt.views import TokenRefreshView,  TokenObtainPairView
-
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from django.contrib import admin
+from django.urls import path, include
 urlpatterns = [
-    path('', AccountsRootView.as_view(), name='accounts-root'),  # Root of `/api/accounts/`
-    path('register/', RegisterView.as_view(), name='register'),
-     path('login/', TokenObtainPairView.as_view(), name='login'),  # ✅ Ensures login works
+  
+    path('login/', TokenObtainPairView.as_view(), name='login'),  # ✅ Login endpoint
+  
+    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # ✅ JWT login
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('protected-endpoint/', ProtectedView.as_view(), name='protected-endpoint'),
 ]
