@@ -1,8 +1,17 @@
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
-
+from rest_framework import viewsets
 from .models import *
 from .serializers import *
+
+
+class PostViewSet(viewsets.ModelViewSet):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    permission_classes = [IsAuthenticated]  # ✅ Requires authentication
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)  # ✅ Auto-assign logged-in user
 
 
 class PostListView(generics.ListCreateAPIView):
