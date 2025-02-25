@@ -50,6 +50,8 @@ INSTALLED_APPS = [
     'ai',
     'scraper',
     'search'
+    'rest_framework_simplejwt.token_blacklist',  # ✅ Enables token blacklisting
+
 ]
 
 MIDDLEWARE = [
@@ -195,11 +197,13 @@ REST_FRAMEWORK = {
 
 # Simple JWT settings
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME':  timedelta(hours=1),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7)
-    'ROTATE_REFRESH_TOKENS': False,
-    'BLACKLIST_AFTER_ROTATION': True,
-    'UPDATE_LAST_LOGIN': False,
+     'ACCESS_TOKEN_LIFETIME': timedelta(days=7),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'BLACKLIST_AFTER_ROTATION': True,  # ✅ Ensures old tokens are blacklisted
+    'ROTATE_REFRESH_TOKENS': True,
+
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_BLACKLIST_ENABLED': True,  # ✅ Enables blacklisting
 }
 
 # Support and Help Settings
