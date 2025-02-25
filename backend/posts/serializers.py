@@ -9,7 +9,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
 
 class PostSerializer(serializers.ModelSerializer):
-    author = CustomUserSerializer()
+    author = serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.all(), required=False)  # ✅ Allow manual assignment
     comments_count = serializers.IntegerField(source="comments.count", read_only=True)
     likes_count = serializers.IntegerField(source="likes.count", read_only=True)
 

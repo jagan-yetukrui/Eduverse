@@ -19,7 +19,7 @@ class PostListView(generics.ListCreateAPIView):
     API View to list all posts and create a new post.
     """
 
-    queryset = Post.objects.all().order_by("-created_at")
+    queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticated]
 
