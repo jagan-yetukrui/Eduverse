@@ -27,9 +27,7 @@ Eduverse uses **JWT authentication** (`Simple JWT`) to secure API endpoints.
 ### **🔹 Login & Get an Access Token**
 To authenticate, first obtain an **access token** using `/api/token/`:
 ```sh
-curl -X POST http://127.0.0.1:8000/api/token/ \
-     -H "Content-Type: application/json" \
-     -d '{"username": "john_doe", "password": "securepassword"}'
+curl -X POST http://127.0.0.1:8000/api/token/ -H "Content-Type: application/json" -d '{"username": "john_doe", "password": "securepassword"}'
 
 You should see: 
 {
