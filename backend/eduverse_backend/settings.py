@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'scraper',
     'search'
     #'rest_framework_simplejwt.token_blacklist',  # ✅ Enables token blacklisting
+    'django_extensions',  # ✅ Enables `show_urls` command
 
 ]
 
