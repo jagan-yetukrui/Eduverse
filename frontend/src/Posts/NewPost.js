@@ -37,40 +37,37 @@ const NewPost = ({ onPostCreated }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!validatePost() || isSubmitting) return;
-
+    
         setIsSubmitting(true);
         try {
-            const formData = new FormData();
-            formData.append("title", title.trim());
-            formData.append("content", content.trim());
-            formData.append("post_type", selectedCategory);
-            files.forEach((file) => formData.append("files", file));
-
             const token = localStorage.getItem("token");
             if (!token) throw new Error("Authentication required");
-
-            //localStorage.setItem("token", data.access); 
-
+    
             const response = await fetch("http://127.0.0.1:8000/api/posts/", {
                 method: "POST",
                 headers: {
-                    Authorization: `Bearer ${token}`,
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json",
                 },
-                body: formData,
+                body: JSON.stringify({
+                    title: title.trim(),
+                    content: content.trim(),
+                    post_type: selectedCategory
+                }),
             });
-
+    
             if (response.ok) {
                 setTitle("");
                 setContent("");
                 setSelectedCategory("");
-                setFiles([]);
-                onPostCreated();
+                onPostCreated();  // ✅ Update post list in frontend
+                alert("Post created successfully!");
             } else {
-                throw new Error("Failed to create post");
+                const errorData = await response.json();
+                throw new Error(errorData.detail || "Failed to create post");
             }
         } catch (err) {
             setErrors([err.message]);
-            setErrors(["Failed to create post. Please check your input."]);
         } finally {
             setIsSubmitting(false);
         }
@@ -178,13 +175,12 @@ const NewPost = ({ onPostCreated }) => {
                     )}
 
                     <div className="modal-actions d-flex justify-content-between">
-                        <button className="button-preview" type="button" onClick={() => setIsPreview(true)}>Preview</button>
                         
-                    </div>
-                    
                         <button className='button-post' type="submit" disabled={isSubmitting}>
                             {isSubmitting ? "Posting..." : "Post"}
                         </button>
+
+                    </div>
                     
                 </form>
             ) : (
