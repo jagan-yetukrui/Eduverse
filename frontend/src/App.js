@@ -21,10 +21,12 @@ const Settings = lazy(() => import('./Settings/Settings'));
 const TinyMCEDemo = lazy(() => import('./TinyMCEDemo'));
 const ProjectSuggestions = lazy(() => import('./Notes/ProjectSuggestions'));
 const CareerGuidance = lazy(() => import('./Notes/CareerGuidance'));
+const ProjectDetails = lazy(() => import('./Notes/ProjectsData')); // Fixed import path and component name
+const Steps = lazy(() => import('./Notes/Steps'));
 
 // Settings subpages
 const ProfilePrivacy = lazy(() => import('./Settings/ProfilePrivacy'));
-const Notifications = lazy(() => import('./Settings/Notifications'));
+const Notifications = lazy(() => import('./Settings/Notifications')); 
 const Blocked = lazy(() => import('./Settings/Blocked'));
 const Help = lazy(() => import('./Settings/Help'));
 const AccountSettings = lazy(() => import('./Settings/AccountSettings'));
@@ -45,58 +47,59 @@ function App() {
   }, []);
 
   return (
-    <UserProvider>
-      <ProfileProvider>
-        <ErrorBoundary>
-          <Router>
-            <div className="App">
-              <Navbar />
-              <ErrorBoundary>
-                <Suspense fallback={<div>Loading...</div>}>
-                  <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
-                    <Route path="/profile" element={<ProfileView />} />
-                    <Route path="/profile/edit" element={<Profile />}>
-                      <Route path="experience" element={<Experience />} />
-                      <Route path="education" element={<Education />} />
-                      <Route path="skills" element={<Skills />} />
-                      <Route path="licenses" element={<Licenses />} />
-                      <Route path="projects" element={<Projects />} />
-                    </Route>
-                    <Route path="/messages" element={<Messages />} />
-                    <Route path="/notes" element={<Notes />} />
-                    <Route path="/project-suggestions" element={<ProjectSuggestions />} />
-                    <Route path="/career-guidance" element={<CareerGuidance />} />
-                    <Route path="/posts" element={<PostList />} />
-                    <Route path="/newpost" element={<NewPost />} />
-                    <Route path="/search" element={<Search />} />
-                    <Route path="/settings" element={<Settings />}>
-                      <Route path="profile-privacy" element={<ProfilePrivacy />} />
-                      <Route path="notifications" element={<Notifications />} />
-                      <Route path="account-security" element={<AccountSettings />} />
-                      <Route path="blocked" element={<Blocked />} />
-                      <Route path="help" element={<Help />} />
-                    </Route>
-                    <Route
-                      path="/tinymce-demo"
-                      element={
-                        <ErrorBoundary>
-                          <TinyMCEDemo />
-                        </ErrorBoundary>
-                      }
-                    />
-                    {/* Fallback for unmatched routes */}
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
-                </Suspense>
-              </ErrorBoundary>
-            </div>
-          </Router>
-        </ErrorBoundary>
-      </ProfileProvider>
-    </UserProvider>
+    <React.StrictMode>
+      <ErrorBoundary>
+        <Router>
+          <div className="App">
+            <Navbar />
+            <ErrorBoundary>
+              <Suspense fallback={<div>Loading...</div>}>
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/register" element={<Register />} />
+                  <Route path="/profile" element={<ProfileView />} />
+                  <Route path="/profile/edit" element={<Profile />}>
+                    <Route path="experience" element={<Experience />} />
+                    <Route path="education" element={<Education />} />
+                    <Route path="skills" element={<Skills />} />
+                    <Route path="licenses" element={<Licenses />} />
+                    <Route path="projects" element={<Projects />} />
+                  </Route>
+                  <Route path="/messages" element={<Messages />} />
+                  <Route path="/notes" element={<Notes />} />
+                  <Route path="/project-suggestions" element={<ProjectSuggestions />} />
+                  <Route path="/career-guidance" element={<CareerGuidance />} />
+                  <Route path="/projects/:projectId" element={<ProjectDetails />} />
+                  <Route path="/projects/:projectId/steps" element={<Steps />} />
+                  <Route path="/posts" element={<PostList />} />
+                  <Route path="/newpost" element={<NewPost />} />
+                  <Route path="/search" element={<Search />} />
+                  <Route path="/settings" element={<Settings />}>
+                    <Route path="profile-privacy" element={<ProfilePrivacy />} />
+                    <Route path="notifications" element={<Notifications />} />
+                    <Route path="account-security" element={<AccountSettings />} />
+                    <Route path="blocked" element={<Blocked />} />
+                    <Route path="help" element={<Help />} />
+                  </Route>
+                  <Route
+                    path="/tinymce-demo"
+                    element={
+                      <ErrorBoundary>
+                        <TinyMCEDemo />
+                      </ErrorBoundary>
+                    }
+                  />
+                  {/* Fallback for unmatched routes */}
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </Suspense>
+            </ErrorBoundary>
+          </div>
+        </Router>
+      </ErrorBoundary>
+    </React.StrictMode>
   );
 }
+
 export default App;

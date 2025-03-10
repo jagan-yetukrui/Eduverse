@@ -1,22 +1,20 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Notes.css";
+// eslint-disable-next-line no-unused-vars
 import ProjectSuggestions from "./ProjectSuggestions";
+// eslint-disable-next-line no-unused-vars
 import CareerGuidance from "./CareerGuidance";
 
 const Notes = () => {
   const navigate = useNavigate();
-  const [messages, setMessages] = useState([
-    {
-      id: 1,
-      text: "Welcome to EduVerse! I'm Edura, your AI mentor. I can help you with:\n1. Project suggestions\n2. Career guidance\n3. Course recommendations\n4. Code review\n5. FAQs\nHow can I assist you today?",
-      sender: "ai",
-    },
-  ]);
+  const [messages, setMessages] = useState([{
+    id: 0,
+    text: "🌟 Welcome to the Enchanted Portal! I'm your magical assistant, ready to help you on your coding journey. What mysteries shall we unravel today? 🌟",
+    sender: "ai"
+  }]);
   const [inputText, setInputText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
-  const [isListening, setIsListening] = useState(false);
-  const [suggestions, setSuggestions] = useState([]);
   const chatContainerRef = useRef(null);
   const avatarRef = useRef(null);
 
@@ -32,9 +30,8 @@ const Notes = () => {
     setInputText("");
     setIsTyping(true);
 
-    // Animate Edura's avatar while processing
     if (avatarRef.current) {
-      avatarRef.current.classList.add("processing");
+      avatarRef.current.classList.add("casting-spell");
     }
 
     try {
@@ -42,15 +39,15 @@ const Notes = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}` // Add auth token
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`
         },
-        credentials: 'include', // Include cookies
+        credentials: 'include',
         body: JSON.stringify({
           message: inputText,
-          user_id: localStorage.getItem('user_id'), // Get actual user ID from storage
+          user_id: localStorage.getItem('user_id'),
           channel: {
             id: 'web_chat',
-            name: 'Web Chat Interface'
+            name: 'Magic Portal Interface'
           },
           locale: 'en-US',
           timestamp: new Date().toISOString()
@@ -58,13 +55,13 @@ const Notes = () => {
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(`Quest failed! Status: ${response.status}`);
       }
 
       const data = await response.json();
       
       if (!data.response) {
-        throw new Error('No response received from server');
+        throw new Error('The magic scroll returned empty!');
       }
 
       const aiMessage = {
@@ -73,13 +70,12 @@ const Notes = () => {
         sender: "ai",
       };
 
-      // If there are code suggestions, add them as a separate message
-      if (data.suggestions && data.suggestions.length > 0) {
+      if (data.suggestions?.length > 0) {
         const suggestionMessage = {
           id: messages.length + 3,
-          text: "Code Analysis Results:\n" + data.suggestions.join("\n"),
+          text: data.suggestions.join("\n"),
           sender: "ai",
-          type: "code-analysis"
+          type: "magical-scroll"
         };
         setMessages((prev) => [...prev, aiMessage, suggestionMessage]);
       } else {
@@ -87,25 +83,19 @@ const Notes = () => {
       }
 
     } catch (error) {
-      console.error("Error getting AI response:", error);
+      console.error("Connection failed:", error);
       const errorMessage = {
         id: messages.length + 2,
-        text: "I apologize, but I'm having trouble connecting right now. Please check your connection and authentication, then try again.",
+        text: "🌋 The mystical connection was lost! Let's try again, brave adventurer.",
         sender: "ai",
       };
       setMessages((prev) => [...prev, errorMessage]);
     } finally {
       setIsTyping(false);
       if (avatarRef.current) {
-        avatarRef.current.classList.remove("processing");
+        avatarRef.current.classList.remove("casting-spell");
       }
     }
-  };
-
-  const handleVoiceInput = () => {
-    setIsListening(true);
-    // Voice recognition logic would go here
-    setTimeout(() => setIsListening(false), 3000);
   };
 
   const handleKeyPress = (e) => {
@@ -115,79 +105,82 @@ const Notes = () => {
     }
   };
 
-  const handleProjectSuggestions = () => {
-    navigate('/project-suggestions');
-  };
-
-  const handleCareerGuidance = () => {
-    navigate('/career-guidance');
-  };
-
   return (
-    <div className="edura-page">
-      <div className="edura-container" ref={chatContainerRef}>
-        <div>
-          <div className="edura-header">
-            <div className="avatar-container" ref={avatarRef}>
-              <div className="hologram-effect"></div>
-              <div className="avatar-core"></div>
-            </div>
-            <div>
-              <h2 className="edura-title">Edura</h2>
-              <p className="edura-tagline">Your Personalized AI Mentor</p>
-            </div>
+    <div className="notes-page">
+      <div className="notes-container" ref={chatContainerRef}>
+        <div className="notes-header">
+          <div className="avatar-crystal" ref={avatarRef}>
+            <div className="magical-aura"></div>
+            <div className="crystal-core"></div>
           </div>
-
-          <div className="quick-actions">
-            <div className="action-buttons">
-              <button className="action-btn" onClick={handleProjectSuggestions}>Project Suggestions</button>
-              <button className="action-btn" onClick={handleCareerGuidance}>Career Guidance</button>
-              <button className="action-btn">Course Recommendations</button>
-            </div>
+          
+          <div className="quest-board">
+            <button 
+              className="quest-btn glow-effect" 
+              onClick={() => navigate('/project-suggestions')}
+            >
+              <span className="quest-icon bounce">🎯</span>
+              <span>Quests</span>
+            </button>
+            
+            <button 
+              className="quest-btn glow-effect"
+              onClick={() => navigate('/career-guidance')}
+            >
+              <span className="quest-icon swing">⚔️</span>
+              <span>Journey</span>
+            </button>
+            
+            <button className="quest-btn glow-effect">
+              <span className="quest-icon pulse">🔮</span>
+              <span>Spells</span>
+            </button>
           </div>
         </div>
 
-        <div className="chat-interface">
-          <div className="chat-messages glassmorphism">
-            {messages.map((message) => (
-              <div key={message.id} className={`message ${message.sender}`}>
-                <div className={`message-bubble ${message.type || ''}`}>
-                  {message.text.split('\n').map((line, i) => (
-                    <div key={i}>{line}</div>
-                  ))}
-                </div>
-              </div>
-            ))}
-            {isTyping && (
-              <div className="message ai">
-                <div className="message-bubble typing">
-                  <div className="typing-indicator">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
+        <div className="notes-divider" />
 
-          <div className="input-section glassmorphism">
-            <textarea
-              className="chat-input"
-              value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
-              onKeyPress={handleKeyPress}
-              placeholder="Ask me anything or paste code for review..."
-              rows="2"
-            />
-            <button
-              className="send-button"
-              onClick={handleSendMessage}
-              disabled={!inputText.trim() || isTyping}
+        <div className="notes-list custom-scrollbar">
+          {messages.map((message) => (
+            <div 
+              key={message.id} 
+              className={`note-item fade-in ${message.sender === "user" ? "note-right" : "note-left"}`}
             >
-              Send
-            </button>
-          </div>
+              <div className={`message ${message.sender} ${message.type || ''}`}>
+                {message.text.split('\n').map((line, i) => (
+                  <div key={i} className="message-line">{line}</div>
+                ))}
+              </div>
+            </div>
+          ))}
+          {isTyping && (
+            <div className="note-item typing fade-in">
+              <div className="casting-indicator">
+                <span className="sparkle">🌟</span>
+                <span className="sparkle delay-1">💫</span>
+                <span className="sparkle delay-2">⭐</span>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="note-input floating">
+          <textarea
+            className="note-textarea custom-scrollbar"
+            value={inputText}
+            onChange={(e) => setInputText(e.target.value)}
+            onKeyPress={handleKeyPress}
+            placeholder="✨ Whisper your thoughts into the magical realm..."
+            rows="2"
+          />
+          <button
+            className="add-note-btn pulse-effect"
+            onClick={handleSendMessage}
+            disabled={!inputText.trim() || isTyping}
+          >
+            <span className="btn-text">Cast</span>
+            <span className="btn-icon">🌠</span>
+          </button>
         </div>
       </div>
     </div>

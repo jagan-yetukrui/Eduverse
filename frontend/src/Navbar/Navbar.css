@@ -3,129 +3,83 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 1rem 2rem;
+  padding: 1rem 0.5rem; /* Adjusted padding for a more balanced feel */
   height: fit-content;
-  background: rgba(255, 255, 255, 0.98);
-  backdrop-filter: blur(15px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
-  border-radius: 16px;
-  margin-bottom: 2rem;
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(200, 200, 255, 0.8)); /* Futuristic gradient */
+  backdrop-filter: blur(20px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1); /* Softer shadow for a lighter touch */
+  border-radius: 15px; /* Reduced border radius for a more subtle look */
+  margin-bottom: 1.5rem; /* Adjusted margin for a more compact separation */
 }
 
 .logo-container-nav {
   display: flex;
   align-items: center;
   position: relative;
-  padding: 0.5rem 2.5rem 0.5rem 0;
-  margin-right: 2.5rem;
-}
-
-.logo-container-nav::after {
-  content: '';
-  position: absolute;
-  right: 0;
-  height: 70%;
-  width: 1px;
-  background: linear-gradient(to bottom, transparent, var(--secondary-color) 50%, transparent);
-  opacity: 0.6;
+  padding: 0.5rem 2rem; /* Balanced padding for a cleaner appearance */
+  margin-right: 2rem; /* Adjusted margin for spacing */
 }
 
 .logo-container-nav:hover {
   cursor: pointer;
-  transform: translateY(-2px);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(-2px); /* Subtle hover effect */
+  transition: transform 0.3s ease-in-out; /* Smoother transition */
 }
 
 .logo-container-nav p {
-  font-size: 1.6rem;
-  font-weight: 800;
+  font-size: 1.5rem; /* Slightly reduced font size for a more refined look */
+  font-weight: 800; /* Bolder font weight for emphasis */
   color: var(--text-color);
-  margin: 0 0 0 12px;
-  letter-spacing: -0.75px;
-  background: linear-gradient(120deg, var(--text-color), var(--secondary-color));
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  margin-left: 10px; /* Adjusted margin for spacing */
 }
 
 .nav-logo {
-  width: 32px;
-  height: 32px;
-  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  width: 30px; /* Slightly reduced size for a more elegant look */
+  height: 30px; /* Slightly reduced size for a more elegant look */
+  transition: transform 0.3s ease-in-out; /* Smoother transition */
 }
 
 .nav-logo:hover {
-  transform: rotate(15deg) scale(1.1);
+  transform: rotate(10deg) scale(1.05); /* Subtle hover effect */
 }
 
 .nav-item-container {
   display: flex;
   align-items: center;
-  gap: 1.25rem;
-  margin-right: 2.5rem; /* Increased margin to move profile more to the left */
-}
-
-.nav-item {
-  height: 100%;
-  font-family: "Montserrat", sans-serif;
-  font-weight: 600;
-}
-
-.nav-item button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: transparent;
-  border: none;
-  padding: 0.5rem;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.nav-button {
-  background: transparent;
-  border: none;
-  padding: 0.5rem;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: all 0.3s ease;
+  gap: 1rem; /* Adjusted gap for better spacing */
+  margin-right: 2rem; /* Adjusted margin for spacing */
 }
 
 .nav-item p {
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-size: 0.85rem; /* Slightly reduced font size for a more refined look */
+  font-weight: 600; /* Adjusted font weight for balance */
   margin: 0;
   color: var(--text-color);
-  padding: 0.8rem 1.2rem;
-  border-radius: 12px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid transparent;
+  padding: 0.6rem 1.2rem; /* Adjusted padding for comfort */
+  border-radius: 12px; /* Reduced border radius for a softer look */
+  background: transparent; /* Removed background for a cleaner look */
+  transition: color 0.3s ease; /* Smooth color transition */
 }
 
 .nav-item p:hover {
-  color: white;
-  background-color: var(--secondary-color);
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8); /* Highlight text color on hover */
 }
 
 .nav-profile p {
   color: white;
   border: none;
   background: linear-gradient(135deg, var(--secondary-color), var(--hover-color));
-  font-size: 1rem;
-  padding: 0.8rem 1.4rem;
+  font-size: 0.95rem; /* Slightly reduced font size for balance */
+  padding: 0.6rem 1.2rem; /* Adjusted padding for comfort */
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  border-radius: 12px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  gap: 0.5rem; /* Adjusted gap for spacing */
+  border-radius: 12px; /* Reduced border radius for a softer look */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Softer shadow for a lighter touch */
+  transition: transform 0.3s ease; /* Smooth transform transition */
 }
 
 .nav-profile p:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.18);
-  background: linear-gradient(135deg, var(--hover-color), var(--secondary-color));
+  transform: scale(1.03); /* Slightly enlarge on hover */
+  background: transparent; /* Removed background for a cleaner look */
 }
