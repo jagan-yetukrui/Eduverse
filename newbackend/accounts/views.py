@@ -1,11 +1,14 @@
+import logging
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, get_user_model
 from .models import Profile
 from rest_framework_simplejwt.tokens import RefreshToken  # Correct import for JWT
 from .serializers import RegisterSerializer, ProfileSerializer
+
+logger = logging.getLogger(__name__)
 
 class RegisterView(APIView):
     def post(self, request):
@@ -29,23 +32,57 @@ class RegisterView(APIView):
 
 class LoginView(APIView):
     def post(self, request):
-        username = request.data.get("username")
-        password = request.data.get("password")
-        user = authenticate(username=username, password=password)
-
-        if user:
-            refresh = RefreshToken.for_user(user)
+        try:
+            email = request.data.get("email")
+            password = request.data.get("password")
+            
+            # Debug logging
+            logger.debug(f"Login attempt with email: {email}")
+            
+            if not email or not password:
+                return Response(
+                    {"error": "Email and password are required"}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+                
+            # First try to get the user by email
+            User = get_user_model()
+            try:
+                user = User.objects.get(email=email)
+                # Authenticate with the retrieved username and provided password
+                auth_user = authenticate(username=user.username, password=password)
+                
+                if auth_user:
+                    refresh = RefreshToken.for_user(auth_user)
+                    return Response(
+                        {
+                            "refresh": str(refresh),
+                            "access": str(refresh.access_token),
+                            "token": str(refresh.access_token),  # Added for frontend compatibility
+                            "user": {"username": user.username, "email": user.email},
+                        },
+                        status=status.HTTP_200_OK,
+                    )
+                else:
+                    # Authentication failed even though user exists
+                    logger.warning(f"Authentication failed for existing email: {email}")
+                    return Response(
+                        {"error": "Invalid password"}, 
+                        status=status.HTTP_401_UNAUTHORIZED
+                    )
+            except User.DoesNotExist:
+                logger.warning(f"No user found with email: {email}")
+                return Response(
+                    {"error": "No user found with this email"}, 
+                    status=status.HTTP_401_UNAUTHORIZED
+                )
+        except Exception as e:
+            # Catch all other exceptions
+            logger.error(f"Error in login: {str(e)}", exc_info=True)
             return Response(
-                {
-                    "refresh": str(refresh),
-                    "access": str(refresh.access_token),
-                    "user": {"username": user.username, "email": user.email},
-                },
-                status=status.HTTP_200_OK,
+                {"error": "An unexpected error occurred. Please try again later."}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
-        return Response(
-            {"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED
-        )
     
 
 class LogoutView(APIView):

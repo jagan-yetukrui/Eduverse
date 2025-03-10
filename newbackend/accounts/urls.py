@@ -5,8 +5,8 @@ from .views import RegisterView, LoginView, ProfileView, ProfileListView, Logout
 
 urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
-    path('login/', LoginView.as_view(), name='login'),
-    path('logout/', LogoutView.as_view(), name='logout'),
+    path('auth/login/', LoginView.as_view(), name='login'),
+    path('auth/logout/', LogoutView.as_view(), name='logout'),
     path('profile/', ProfileView.as_view(), name='profile'),
     path('profile/list', ProfileListView.as_view(), name='profile_list'),
     path('token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
