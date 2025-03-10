@@ -18,13 +18,16 @@ const Header = () => {
         <nav className="hidden md:block">
           <ul className="flex space-x-8">
             <li>
-              <a href="/about">Paths</a>
+              <a href="/paths">Paths</a>
             </li>
             <li>
               <a href="/courses">Courses</a>
             </li>
             <li>
-              <a href="/contact">Message</a>
+              <a href="/message">Message</a>
+            </li>
+            <li>
+              <a href="/edura">Edura</a>
             </li>
           </ul>
         </nav>

@@ -12,8 +12,9 @@ const Home = () => {
             <p class="text-slate-100 text-4xl font-bold">Eduverse</p>
           </div>
 
-          <div class="flex w-4/5 h-1/2 p-8 bg-yellow-50 rounded-lg shadow-lg">
+          <div class="flex flex-col w-4/5 h-1/2 p-8 bg-yellow-50 rounded-lg shadow-lg">
             <p class="">Eduverse</p>
+            <p>Example posts</p>
           </div>
         </div>
       ) : (
