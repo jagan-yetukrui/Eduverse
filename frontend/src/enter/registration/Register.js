@@ -7,12 +7,11 @@ import {
   FaRocket,
   FaEye,
   FaEyeSlash,
-  FaCheckCircle,
+  // FaCheckCircle is imported but never used - removing it
   FaTimesCircle,
   FaGoogle,
   FaLinkedin,
 } from "react-icons/fa";
-import ParticlesBg from "particles-bg";
 import FirstLogo from "../../First_logo.png";
 
 const Register = () => {
@@ -114,7 +113,8 @@ const Register = () => {
 
     setIsLoading(true);
     try {
-      const response = await axios.post(
+      // Removed the unused 'response' variable
+      await axios.post(
         "http://127.0.0.1:8000/api/accounts/register/",
         {
           username: formData.username,
@@ -166,16 +166,16 @@ const Register = () => {
         <motion.button
           type="button"
           className="social-button google"
-          // whileHover={{ scale: 1.05 }}
-          // whileTap={{ scale: 0.95 }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
         >
           <FaGoogle /> <span>Sign up with Google</span>
         </motion.button>
         <motion.button
           type="button"
           className="social-button linkedin"
-          // whileHover={{ scale: 1.05 }}
-          // whileTap={{ scale: 0.95 }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
         >
           <FaLinkedin /> <span>Sign up with LinkedIn</span>
         </motion.button>
@@ -206,7 +206,7 @@ const Register = () => {
             placeholder={config.placeholder}
             value={formData[field]}
             onChange={handleChange}
-            // whileFocus={{ scale: 1.02 }}
+            whileFocus={{ scale: 1.02 }}
             className={`neon-input ${
               field === "email"
                 ? isEmailValid === true
@@ -220,7 +220,7 @@ const Register = () => {
           {field.includes("password") && (
             <motion.div
               className="password-toggle-register"
-              // whileHover={{ scale: 1.1 }}
+              whileHover={{ scale: 1.1 }}
               onClick={() =>
                 field === "password"
                   ? setShowPassword(!showPassword)
@@ -228,9 +228,9 @@ const Register = () => {
               }
             >
               {(field === "password" ? showPassword : showPassword2) ? (
-                <FaEye color="white"/>
+                <FaEye color="#00e5ff"/>
               ) : (
-                <FaEyeSlash color="white"/>
+                <FaEyeSlash color="#00e5ff"/>
               )}
               {(field === "password" ? showPassword : showPassword2)
                 ? "Hide Password"
@@ -247,6 +247,7 @@ const Register = () => {
                   }`}
                   initial={{ width: 0 }}
                   animate={{ width: "100%" }}
+                  transition={{ duration: 0.3, delay: i * 0.1 }}
                 />
               ))}
             </div>
@@ -281,8 +282,8 @@ const Register = () => {
         type="submit"
         className="submit-button"
         disabled={isLoading}
-        // whileHover={{ scale: 1.05 }}
-        // whileTap={{ scale: 0.95 }}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
       >
         {isLoading ? (
           <motion.div
@@ -299,27 +300,29 @@ const Register = () => {
 
   return (
     <div className="register-container">
-      <ParticlesBg type="cobweb" bg={true} color="#4fc3f7" />
+      <div className="cyber-grid"></div>
+      <div className="cyber-lines"></div>
+      <div className="glow-orbs"></div>
 
       <motion.div
         className="holographic-panel"
-        // initial={{ opacity: 0, y: -50 }}
-        // animate={{ opacity: 1, y: 0 }}
-        // transition={{ duration: 1, ease: "easeOut" }}
+        initial={{ opacity: 0, y: -50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
       >
         <motion.img
           src={FirstLogo}
           alt="EduVerse"
           className="register-logo"
           style={{ width: "60px", height: "60px" }}
-          // whileHover={{ rotate: 360, scale: 1.1 }}
-          // transition={{ duration: 0.3 }}
+          whileHover={{ rotate: 360, scale: 1.1 }}
+          transition={{ duration: 0.5 }}
         />
         <motion.div
           className="register-title"
-          // initial={{ opacity: 0 }}
-          // animate={{ opacity: 1 }}
-          // transition={{ delay: 0.5 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
         >
           <p>Join the Future of Learning and Collaboration</p>
         </motion.div>
@@ -345,9 +348,9 @@ const Register = () => {
         {errorMessage && (
           <motion.div
             className="error-message"
-            // initial={{ opacity: 0, x: -20 }}
-            // animate={{ opacity: 1, x: 0 }}
-            // exit={{ opacity: 0, x: 20 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
           >
             <FaTimesCircle /> {errorMessage}
           </motion.div>
@@ -356,7 +359,7 @@ const Register = () => {
         <motion.button
           onClick={() => navigate("/login")}
           className="login-link"
-          // whileHover={{ scale: 1.05, textShadow: "0 0 8px rgb(255,255,255)" }}
+          whileHover={{ scale: 1.05 }}
         >
           <span>BACK TO LOGIN PAGE</span>
         </motion.button>
