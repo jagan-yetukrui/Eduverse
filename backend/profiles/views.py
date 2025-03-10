@@ -69,19 +69,19 @@ class ProfileViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get', 'put', 'patch'], permission_classes=[IsAuthenticated], url_path='me', url_name='me')
     def me(self, request, *args, **kwargs):
-        user = request.user
-        if not user.is_authenticated:
-            return Response({"detail": "Authentication credentials were not provided."}, status=401)
-
-        # Assuming 'profile' is a related name on your User model
         try:
-            profile = user.profile
-        except AttributeError:
-            return Response({"detail": "Profile not found."}, status=404)
+            logger.info("🔍 me() function called")  # ✅ Log function execution
+            user = request.user
+            logger.info(f"✅ Logged-in user: {user}")  # ✅ Log the user
 
-        # Serialize and return the profile
-        serializer = self.get_serializer(profile)
-        return Response(serializer.data)
+            if request.method == 'GET':
+                serializer = ProfileSerializer(user)
+                logger.info(f"📤 Returning profile data: {serializer.data}")  # ✅ Log response
+                return Response(serializer.data)
+
+        except Exception as e:
+            logger.error(f"🔥 Error in `me()`: {e}")  # ✅ Catch errors
+            return Response({"error": str(e)}, status=500)
 
     @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated], url_path='me/stats', url_name='me-stats')
     def me_stats(self, request):

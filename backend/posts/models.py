@@ -2,13 +2,15 @@ from django.db import models
 
 from accounts.models import CustomUser  # accounts app
 from django.utils import timezone
-
-
+    
 class Post(models.Model):
     POST_TYPES = (
         ('blog', 'Blog'),
         ('news', 'News'),
         ('review', 'Review'),
+        ("text", "Text"),
+        ("image", "Image"),
+        ("video", "Video"),
     )
 
     id = models.AutoField(primary_key=True)

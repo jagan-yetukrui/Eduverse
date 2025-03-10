@@ -25,9 +25,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-vd(nyu_b$gekaow9#@gyv&@9wuj(mb_v+b7z!%3xe+a%4nhm)u'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 
 
 # Application definition
@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'ai',
     'scraper',
     'search'
+    #'rest_framework_simplejwt.token_blacklist',  # ✅ Enables token blacklisting
 ]
 
 MIDDLEWARE = [
@@ -195,11 +196,13 @@ REST_FRAMEWORK = {
 
 # Simple JWT settings
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60 if DEBUG else 10),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    'ROTATE_REFRESH_TOKENS': False,
-    'BLACKLIST_AFTER_ROTATION': True,
-    'UPDATE_LAST_LOGIN': False,
+     'ACCESS_TOKEN_LIFETIME': timedelta(days=7),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'BLACKLIST_AFTER_ROTATION': True,  # ✅ Ensures old tokens are blacklisted
+    'ROTATE_REFRESH_TOKENS': True,
+
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_BLACKLIST_ENABLED': True,  # ✅ Enables blacklisting
 }
 
 # Support and Help Settings
