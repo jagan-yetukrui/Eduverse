@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'profiles',
     'posts',
     'rest_framework',
-  
+    "rest_framework_simplejwt",
     'messaging',
     'notifications', 
     'projects',
