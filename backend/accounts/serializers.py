@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
+from .models import CustomUser  # ✅ Import your custom user model
 
 User = get_user_model()
 
@@ -52,7 +53,7 @@ class LoginSerializer(serializers.Serializer):
             except User.DoesNotExist:
                 raise serializers.ValidationError("No user found with this email address.")
         return value
-        
+
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser

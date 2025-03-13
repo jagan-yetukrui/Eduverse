@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'profiles',
     'posts',
     'rest_framework',
-    'corsheaders',
+  
     'messaging',
     'notifications', 
     'projects',
