@@ -111,3 +111,14 @@ class ProtectedView(APIView):
     
     def get(self, request):
         return Response({"message": "This is a protected endpoint."})
+        
+class UpdateUserProfile(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request):
+        user = request.user  # Get logged-in user
+        serializer = UserProfileSerializer(user, data=request.data, partial=True)  # Allow partial updates
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "Profile updated successfully", "user": serializer.data})
+        return Response(serializer.errors, status=400)

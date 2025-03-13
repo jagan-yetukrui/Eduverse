@@ -64,9 +64,14 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+INSTALLED_APPS += ["corsheaders"]
+MIDDLEWARE.insert(1, "corsheaders.middleware.CorsMiddleware")
+
+
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
+    "http://localhost:5173",  # Update if your frontend is hosted elsewhere
 ]
 
 ROOT_URLCONF = 'eduverse_backend.urls'

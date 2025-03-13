@@ -52,3 +52,12 @@ class LoginSerializer(serializers.Serializer):
             except User.DoesNotExist:
                 raise serializers.ValidationError("No user found with this email address.")
         return value
+        
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ["username", "email", "first_name", "last_name", "bio", "profile_picture", "location"]
+        extra_kwargs = {
+            "username": {"read_only": True},  # Prevent username changes
+            "email": {"required": False},  # Optional email update
+        }

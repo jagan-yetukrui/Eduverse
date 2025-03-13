@@ -5,5 +5,6 @@ urlpatterns = [
     path('login/', TokenObtainPairView.as_view(), name='login'),  # ✅ Fixing the login route
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # ✅ JWT login
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    
+    path("update-profile/", UpdateUserProfile.as_view(), name="update-profile"),
+
 ]
