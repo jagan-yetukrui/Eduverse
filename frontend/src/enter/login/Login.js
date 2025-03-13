@@ -23,7 +23,7 @@ const Login = () => {
 
   useEffect(() => {
     // Check if user is already logged in
-    const token = localStorage.getItem("access_token");
+    const token = localStorage.getItem("token");  // ✅ Make sure it's the same as NewPost.js
     if (token) {
       navigate("/profile");
     }
@@ -55,20 +55,18 @@ const Login = () => {
       setErrorMessage("");
 
       try {
-        const response = await axios.post("http://127.0.0.1:8000/api/login/", {
+        const response = await axios.post("http://127.0.0.1:8000/api/token/", {  // ✅ Use correct endpoint
           username: formData.username,
           password: formData.password,
         });
 
         if (response.status === 200) {
-          // Save the JWT token in localStorage or state for further requests
-          localStorage.setItem("access_token", response.data.access);
-          localStorage.setItem('refresh_token', response.data.refresh);
-          // setIsSuccess(true);
+          // ✅ Save the JWT token using the correct key
+          localStorage.setItem("token", response.data.access);
+          localStorage.setItem("refresh_token", response.data.refresh);
           navigate("/profile"); // Navigate to profile or dashboard
         }
       } catch (error) {
-        // Display the error message from the backend
         setErrorMessage(
           error.response?.data.detail || "Login failed. Please try again."
         );
