@@ -75,3 +75,30 @@ curl -X POST http://127.0.0.1:8000/api/posts/ -H "Authorization: Bearer eyJhbGci
 {"id":14,"author":4,"comments_count":0,"likes_count":0,"title":"My First Post","content":"This is a test post.","post_type":"text","created_at":"2025-02-25T04:50:30.050043Z","updated_at":"2025-02-25T04:50:30.050043Z"}
 
 
+
+curl -X POST http://127.0.0.1:8000/api/posts/ ^
+More?      -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQyNTA0NDEyLCJpYXQiOjE3NDE4OTk2MTIsImp0aSI6IjMyOThhYTIzOTg0MDQyZTI4ZTkwOGYwOTY4ZTI4YzNiIiwidXNlcl9pZCI6NH0.KJnceQJm3xBsES4C2ZnXNwiPuFU7v-jpfXJnmXY5Zlo" ^
+More?      -H "Content-Type: application/json" ^
+More?      -d "{\"title\": \"My First Post\", \"content\": \"This is a test post.\", \"post_type\": \"text\"}"
+{"id":17,"author":4,"comments_count":0,"likes_count":0,"title":"My First Post","content":"This is a test post.","post_type":"text","created_at":"2025-03-13T21:01:10.430334Z","updated_at":"2025-03-13T21:01:10.430334Z"}
+
+//Update: This what I have to use to log in
+curl -X POST "http://127.0.0.1:8000/api/token/" `
+     -H "Content-Type: application/json" `
+     -d '{"username": "john_doe", "password": "securepassword"}'
+
+
+//To update a profile.
+curl -X PUT http://127.0.0.1:8000/api/accounts/update-profile/ ^
+     -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQyNTA0NDEyLCJpYXQiOjE3NDE4OTk2MTIsImp0aSI6IjMyOThhYTIzOTg0MDQyZTI4ZTkwOGYwOTY4ZTI4YzNiIiwidXNlcl9pZCI6NH0.KJnceQJm3xBsES4C2ZnXNwiPuFU7v-jpfXJnmXY5Zlo" ^
+     -H "Content-Type: application/json" ^
+     -d "{\"first_name\": \"John\", \"last_name\": \"Doe\", \"bio\": \"Loving life Edited!\", \"location\": \"New York\"}"
+
+
+To view updates use:
+  python manage.py shell
+  from django.contrib.auth import get_user_model
+  User = get_user_model()
+  user = User.objects.get(username="john_doe")
+  print(vars(user))
+

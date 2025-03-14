@@ -3,14 +3,23 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import authenticate, get_user_model
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import RegisterSerializer, LoginSerializer
+from .serializers import RegisterSerializer, LoginSerializer, UserProfileSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 import logging
 from django.http import JsonResponse
 from django.urls import path
+from .serializers import UserProfileSerializer
 
 logger = logging.getLogger(__name__)
+
+
+class UserProfileView(APIView):  # ✅ This class must exist!
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        serializer = UserProfileSerializer(request.user)
+        return Response(serializer.data)
 
 class RegisterView(APIView):
     """
@@ -111,7 +120,7 @@ class ProtectedView(APIView):
     
     def get(self, request):
         return Response({"message": "This is a protected endpoint."})
-        
+
 class UpdateUserProfile(APIView):
     permission_classes = [IsAuthenticated]
 

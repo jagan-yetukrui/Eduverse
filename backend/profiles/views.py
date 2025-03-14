@@ -13,6 +13,17 @@ from .serializers import (
 )
 from .models import Profile, Education, License, Experience
 
+class UserProfileView(APIView):
+    """
+    Retrieve the currently authenticated user's profile.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user  # Get logged-in user
+        serializer = UserProfileSerializer(user)
+        return Response(serializer.data)
+
 class ProfileViewSet(viewsets.ModelViewSet):
     """
     ViewSet for handling all profile-related operations including settings management

@@ -62,3 +62,9 @@ class UserProfileSerializer(serializers.ModelSerializer):
             "username": {"read_only": True},  # Prevent username changes
             "email": {"required": False},  # Optional email update
         }
+
+        
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser  # Ensure this is correct
+        fields = ["username", "email", "first_name", "last_name", "bio", "location"]

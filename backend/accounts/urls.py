@@ -1,10 +1,15 @@
 from django.urls import path
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from .views import UpdateUserProfile
-urlpatterns = [
-    path('login/', TokenObtainPairView.as_view(), name='login'),  # ✅ Fixing the login route
-    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # ✅ JWT login
-    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path("update-profile/", UpdateUserProfile.as_view(), name="update-profile"),
+from .serializers import UserProfileSerializer
+from accounts.views import UpdateUserProfile, UserProfileView
 
+
+urlpatterns = [
+    path('login/', TokenObtainPairView.as_view(), name='login'),
+    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+
+    # ✅ Profile-related endpoints
+    path("update-profile/", UpdateUserProfile.as_view(), name="update-profile"),
+    path("profiles/me/", UserProfileView.as_view(), name="user-profile"),
 ]
