@@ -1,8 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import Prism from 'prismjs';
+import 'prismjs/themes/prism.css'; // Import Prism's CSS for styling
 import './CodeEditor.css'; // Updated to match the correct CSS file
 
 const CodeEditor = () => {
   const [code, setCode] = useState('');
+
+  useEffect(() => {
+    Prism.highlightAll(); // Highlight code whenever it changes
+  }, [code]);
 
   const handleCodeChange = (event) => {
     setCode(event.target.value);
@@ -41,6 +47,11 @@ const CodeEditor = () => {
   return (
     <div className="coder-container">
       <h2>📝 Galactic Code Console</h2>
+      <pre className="language-javascript">
+        <code className="language-javascript">
+          {code}
+        </code>
+      </pre>
       <textarea 
         value={code} 
         onChange={handleCodeChange} 

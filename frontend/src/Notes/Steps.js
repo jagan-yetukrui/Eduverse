@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { pythonProjects, markStepComplete, unlockNextStep } from './ProjectsData';
+import { pythonProjects } from './ProjectsData';
 import CodeEditor from './CodeEditor';
 import './Steps.css';
 
@@ -41,7 +41,7 @@ const useGameProgress = () => {
   };
 
   const awardXP = (amount) => {
-    setXpEarned(amount);
+    setXpEarned(prev => prev + amount);
   };
 
   return {
@@ -56,8 +56,11 @@ const useGameProgress = () => {
   };
 };
 
-// Step component to separate rendering logic
-const Step = ({ step, isSelected, onSelect, onComplete, isProcessing, onRetry, currentStatus }) => {
+// Step component to display individual step cards
+// eslint-disable-next-line no-unused-vars
+const StepCard = ({ step, isSelected, onSelect, onComplete, currentStatus, onRetry }) => {
+  const stepProgress = step.isCompleted ? 100 : (step.progress || 0);
+  
   return (
     <li 
       className={`step-card game-step-card ${step.isUnlocked ? 'unlocked' : 'locked'} 
@@ -79,6 +82,13 @@ const Step = ({ step, isSelected, onSelect, onComplete, isProcessing, onRetry, c
         {step.isCompleted && <span className="step-xp">+{step.xpValue || 10} XP</span>}
       </div>
       
+      <div className="step-progress-bar">
+        <div 
+          className="step-progress-fill" 
+          style={{ width: `${stepProgress}%` }}
+        ></div>
+      </div>
+      
       {isSelected && (
         <div className="step-card-details">
           <div className="step-description futuristic-description">{step.description}</div>
@@ -86,7 +96,16 @@ const Step = ({ step, isSelected, onSelect, onComplete, isProcessing, onRetry, c
           {step.guidelines && (
             <div className="step-instructions game-instructions">
               <h4 className="instructions-title">Mission Briefing:</h4>
-              <div className="instruction-content futuristic-description">{step.guidelines}</div>
+              <ul className="guidelines-list">
+                {Array.isArray(step.guidelines) ? 
+                  step.guidelines.map((guideline, index) => (
+                    <li key={index} className="guideline-item">
+                      <span className="guideline-bullet">•</span> {guideline.replace(/^\d+\.\s*/, '')}
+                    </li>
+                  )) : 
+                  <div className="instruction-content futuristic-description">{step.guidelines}</div>
+                }
+              </ul>
             </div>
           )}
           
@@ -122,6 +141,7 @@ const Step = ({ step, isSelected, onSelect, onComplete, isProcessing, onRetry, c
   );
 };
 
+// Main Steps component
 const Steps = () => {
   const { projectId } = useParams();
   const navigate = useNavigate();
@@ -137,10 +157,13 @@ const Steps = () => {
   const [showHints, setShowHints] = useState(false);
   const [codeExecutionOutput, setCodeExecutionOutput] = useState('');
   const [showTerminal, setShowTerminal] = useState(false);
+  // eslint-disable-next-line no-unused-vars
   const [stepStatus, setStepStatus] = useState('idle'); // idle, processing, completed, failed
   const [notification, setNotification] = useState({ show: false, message: '', type: 'info' });
+  // eslint-disable-next-line no-unused-vars
   const [progressAnimation, setProgressAnimation] = useState(false);
   const [codeChanged, setCodeChanged] = useState(false);
+  // eslint-disable-next-line no-unused-vars
   const [hintsLevel, setHintsLevel] = useState(0);
   
   // Use our custom hook for game progress
@@ -151,28 +174,33 @@ const Steps = () => {
     achievementMessage, 
     increaseStreak, 
     decreaseStreak, 
-    awardXP, 
-    setShowAchievement 
+    awardXP
   } = useGameProgress();
   
-  const audioRef = useRef(null);
+  const audioRef = useRef({});
   const bottomRef = useRef(null);
+  // eslint-disable-next-line no-unused-vars
+  const editorRef = useRef(null);
 
   // Load saved state from localStorage
   useEffect(() => {
     const savedState = localStorage.getItem(`project_${projectId}_state`);
     if (savedState) {
-      const parsedState = JSON.parse(savedState);
-      if (parsedState.lastTaskId && parsedState.lastStepId) {
-        // We'll use this later to select the right task and step
-        localStorage.setItem('resumeState', JSON.stringify({
-          taskId: parsedState.lastTaskId,
-          stepId: parsedState.lastStepId
-        }));
+      try {
+        const parsedState = JSON.parse(savedState);
+        if (parsedState.lastTaskId && parsedState.lastStepId) {
+          localStorage.setItem('resumeState', JSON.stringify({
+            taskId: parsedState.lastTaskId,
+            stepId: parsedState.lastStepId
+          }));
+        }
+      } catch (error) {
+        console.error('Error parsing saved state:', error);
       }
     }
   }, [projectId]);
 
+  // Initialize audio and load project data
   useEffect(() => {
     // Initialize audio for sound effects
     audioRef.current = {
@@ -181,6 +209,11 @@ const Steps = () => {
       achievement: new Audio('/sounds/achievement.mp3'),
       error: new Audio('/sounds/error.mp3')
     };
+    
+    // Preload audio files
+    Object.values(audioRef.current).forEach(audio => {
+      audio.load();
+    });
     
     // Check if we have project data from navigation state
     if (location.state && location.state.project) {
@@ -198,115 +231,65 @@ const Steps = () => {
       }
       setLoading(false);
     } else {
-      // Fetch project data from JSON file
-      const fetchProjectData = async () => {
-        try {
-          const response = await fetch('/python_projects_detailed.json');
-          if (!response.ok) {
-            throw new Error('Failed to fetch project data');
-          }
-          const data = await response.json();
-          setProjectsData(data.projects);
-          setLoading(false);
-          
-          // Find the project based on the projectId from URL params
-          const foundProject = pythonProjects.find(p => p.id === projectId);
-          if (foundProject) {
-            setProject(foundProject);
+      // Fetch project data
+      fetchProjectData();
+    }
+
+    // Cleanup function
+    return () => {
+      Object.values(audioRef.current).forEach(audio => {
+        audio.pause();
+        audio.currentTime = 0;
+      });
+    };
+  }, [projectId, navigate, location]);
+
+  // Fetch project data from JSON file
+  const fetchProjectData = async () => {
+    try {
+      const response = await fetch('/python_projects_complete.json');
+      if (!response.ok) {
+        throw new Error('Failed to fetch project data');
+      }
+      const data = await response.json();
+      setProjectsData(data.projects);
+      
+      // Find the project based on the projectId from URL params
+      const foundProject = pythonProjects.find(p => p.id === projectId);
+      if (foundProject) {
+        setProject(foundProject);
+        
+        // Get detailed project data if available
+        const detailedProject = data.projects.find(p => p.project_id === projectId);
+        
+        // Check if we should resume from a saved state
+        const resumeState = localStorage.getItem('resumeState');
+        if (resumeState) {
+          try {
+            const { taskId, stepId } = JSON.parse(resumeState);
             
-            // Get detailed project data if available
-            const detailedProject = data.projects.find(p => p.project_id === projectId);
-            
-            // Check if we should resume from a saved state
-            const resumeState = localStorage.getItem('resumeState');
-            if (resumeState) {
-              const { taskId, stepId } = JSON.parse(resumeState);
-              
-              // Find the task and step to resume from
-              const resumeTask = foundProject.tasks.find(task => task.task_id === taskId);
-              if (resumeTask && resumeTask.isUnlocked) {
-                // Enhance task with detailed data if available
-                let enhancedTask = {...resumeTask};
-                if (detailedProject) {
-                  const detailedTask = detailedProject.tasks.find(t => t.task_id === resumeTask.task_id);
-                  if (detailedTask) {
-                    enhancedTask = {...enhancedTask, ...detailedTask};
-                  }
-                }
-                setSelectedTask(enhancedTask);
-                
-                // Find the step to resume from
-                const resumeStep = resumeTask.steps.find(step => step.step_id === stepId);
-                if (resumeStep && resumeStep.isUnlocked) {
-                  // Enhance step with detailed data if available
-                  let enhancedStep = {...resumeStep};
-                  if (detailedProject) {
-                    const detailedTask = detailedProject.tasks.find(t => t.task_id === resumeTask.task_id);
-                    if (detailedTask) {
-                      const detailedStep = detailedTask.steps.find(s => s.step_id === resumeStep.step_id);
-                      if (detailedStep) {
-                        enhancedStep = {...enhancedStep, ...detailedStep};
-                      }
-                    }
-                  }
-                  setSelectedStep(enhancedStep);
-                  
-                  // Get starting code
-                  let startCode = '';
-                  if (detailedProject) {
-                    const detailedTask = detailedProject.tasks.find(t => t.task_id === resumeTask.task_id);
-                    if (detailedTask) {
-                      const detailedStep = detailedTask.steps.find(s => s.step_id === resumeStep.step_id);
-                      if (detailedStep && detailedStep.startingCode) {
-                        startCode = detailedStep.startingCode;
-                      } else {
-                        startCode = resumeStep.starterCode || '';
-                      }
-                    }
-                  } else {
-                    startCode = resumeStep.starterCode || '';
-                  }
-                  setCode(startCode);
-                  setOriginalCode(startCode);
-                  
-                  // Clear the resume state after using it
-                  localStorage.removeItem('resumeState');
-                  
-                  // Show notification that we resumed
-                  setNotification({
-                    show: true,
-                    message: 'Resumed from your last session',
-                    type: 'info'
-                  });
-                  setTimeout(() => setNotification({ show: false, message: '', type: 'info' }), 3000);
-                  
-                  return; // Skip the default selection below
-                }
-              }
-            }
-            
-            // Default: Set the first unlocked task as selected
-            const firstUnlockedTask = foundProject.tasks.find(task => task.isUnlocked);
-            if (firstUnlockedTask) {
+            // Find the task and step to resume from
+            const resumeTask = foundProject.tasks.find(task => task.task_id === taskId);
+            if (resumeTask && resumeTask.isUnlocked) {
               // Enhance task with detailed data if available
-              let enhancedTask = {...firstUnlockedTask};
+              let enhancedTask = {...resumeTask};
               if (detailedProject) {
-                const detailedTask = detailedProject.tasks.find(t => t.task_id === firstUnlockedTask.task_id);
+                const detailedTask = detailedProject.tasks.find(t => t.task_id === resumeTask.task_id);
                 if (detailedTask) {
                   enhancedTask = {...enhancedTask, ...detailedTask};
                 }
               }
               setSelectedTask(enhancedTask);
               
-              // Set the first unlocked step as selected by default
-              const firstUnlockedStep = firstUnlockedTask.steps.find(step => step.isUnlocked);
-              if (firstUnlockedStep) {
+              // Find the step to resume from
+              const resumeStep = resumeTask.steps.find(step => step.step_id === stepId);
+              if (resumeStep && resumeStep.isUnlocked) {
                 // Enhance step with detailed data if available
-                let enhancedStep = {...firstUnlockedStep};
+                let enhancedStep = {...resumeStep};
                 if (detailedProject) {
-                  const detailedTask = detailedProject.tasks.find(t => t.task_id === firstUnlockedTask.task_id);
+                  const detailedTask = detailedProject.tasks.find(t => t.task_id === resumeTask.task_id);
                   if (detailedTask) {
-                    const detailedStep = detailedTask.steps.find(s => s.step_id === firstUnlockedStep.step_id);
+                    const detailedStep = detailedTask.steps.find(s => s.step_id === resumeStep.step_id);
                     if (detailedStep) {
                       enhancedStep = {...enhancedStep, ...detailedStep};
                     }
@@ -314,61 +297,120 @@ const Steps = () => {
                 }
                 setSelectedStep(enhancedStep);
                 
-                // Get starting code from the detailed JSON if available
+                // Get starting code
                 let startCode = '';
                 if (detailedProject) {
-                  const detailedTask = detailedProject.tasks.find(t => t.task_id === firstUnlockedTask.task_id);
+                  const detailedTask = detailedProject.tasks.find(t => t.task_id === resumeTask.task_id);
                   if (detailedTask) {
-                    const detailedStep = detailedTask.steps.find(s => s.step_id === firstUnlockedStep.step_id);
-                    if (detailedStep && detailedStep.startingCode) {
-                      startCode = detailedStep.startingCode;
+                    const detailedStep = detailedTask.steps.find(s => s.step_id === resumeStep.step_id);
+                    if (detailedStep && detailedStep.starting_code) {
+                      startCode = detailedStep.starting_code;
                     } else {
-                      startCode = firstUnlockedStep.starterCode || '';
+                      startCode = resumeStep.starterCode || '';
                     }
-                  } else {
-                    startCode = firstUnlockedStep.starterCode || '';
                   }
                 } else {
-                  startCode = firstUnlockedStep.starterCode || '';
+                  startCode = resumeStep.starterCode || '';
                 }
                 setCode(startCode);
                 setOriginalCode(startCode);
+                
+                // Clear the resume state after using it
+                localStorage.removeItem('resumeState');
+                
+                // Show notification that we resumed
+                showNotification('Resumed from your last session', 'info');
+                
+                setLoading(false);
+                return;
               }
             }
-          } else {
-            // Redirect to projects page if project not found
-            navigate('/projects');
-          }
-        } catch (error) {
-          console.error('Error fetching project data:', error);
-          setLoading(false);
-          
-          // Fallback to using the data from ProjectsData.js
-          const foundProject = pythonProjects.find(p => p.id === projectId);
-          if (foundProject) {
-            setProject(foundProject);
-            
-            const firstUnlockedTask = foundProject.tasks.find(task => task.isUnlocked);
-            if (firstUnlockedTask) {
-              setSelectedTask(firstUnlockedTask);
-              
-              const firstUnlockedStep = firstUnlockedTask.steps.find(step => step.isUnlocked);
-              if (firstUnlockedStep) {
-                setSelectedStep(firstUnlockedStep);
-                const startCode = firstUnlockedStep.starterCode || '';
-                setCode(startCode);
-                setOriginalCode(startCode);
-              }
-            }
-          } else {
-            navigate('/projects');
+          } catch (error) {
+            console.error('Error parsing resume state:', error);
           }
         }
-      };
-
-      fetchProjectData();
+        
+        // Default: Set the first unlocked task as selected
+        const firstUnlockedTask = foundProject.tasks.find(task => task.isUnlocked);
+        if (firstUnlockedTask) {
+          // Enhance task with detailed data if available
+          let enhancedTask = {...firstUnlockedTask};
+          if (detailedProject) {
+            const detailedTask = detailedProject.tasks.find(t => t.task_id === firstUnlockedTask.task_id);
+            if (detailedTask) {
+              enhancedTask = {...enhancedTask, ...detailedTask};
+            }
+          }
+          setSelectedTask(enhancedTask);
+          
+          // Set the first unlocked step as selected by default
+          const firstUnlockedStep = firstUnlockedTask.steps.find(step => step.isUnlocked);
+          if (firstUnlockedStep) {
+            // Enhance step with detailed data if available
+            let enhancedStep = {...firstUnlockedStep};
+            if (detailedProject) {
+              const detailedTask = detailedProject.tasks.find(t => t.task_id === firstUnlockedTask.task_id);
+              if (detailedTask) {
+                const detailedStep = detailedTask.steps.find(s => s.step_id === firstUnlockedStep.step_id);
+                if (detailedStep) {
+                  enhancedStep = {...enhancedStep, ...detailedStep};
+                }
+              }
+            }
+            setSelectedStep(enhancedStep);
+            
+            // Get starting code from the detailed JSON if available
+            let startCode = '';
+            if (detailedProject) {
+              const detailedTask = detailedProject.tasks.find(t => t.task_id === firstUnlockedTask.task_id);
+              if (detailedTask) {
+                const detailedStep = detailedTask.steps.find(s => s.step_id === firstUnlockedStep.step_id);
+                if (detailedStep && detailedStep.starting_code) {
+                  startCode = detailedStep.starting_code;
+                } else {
+                  startCode = firstUnlockedStep.starterCode || '';
+                }
+              } else {
+                startCode = firstUnlockedStep.starterCode || '';
+              }
+            } else {
+              startCode = firstUnlockedStep.starterCode || '';
+            }
+            setCode(startCode);
+            setOriginalCode(startCode);
+          }
+        }
+      } else {
+        // Redirect to projects page if project not found
+        navigate('/projects');
+      }
+    } catch (error) {
+      console.error('Error fetching project data:', error);
+      
+      // Fallback to using the data from ProjectsData.js
+      const foundProject = pythonProjects.find(p => p.id === projectId);
+      if (foundProject) {
+        setProject(foundProject);
+        
+        const firstUnlockedTask = foundProject.tasks.find(task => task.isUnlocked);
+        if (firstUnlockedTask) {
+          setSelectedTask(firstUnlockedTask);
+          
+          const firstUnlockedStep = firstUnlockedTask.steps.find(step => step.isUnlocked);
+          if (firstUnlockedStep) {
+            setSelectedStep(firstUnlockedStep);
+            const startCode = firstUnlockedStep.starterCode || '';
+            setCode(startCode);
+            setOriginalCode(startCode);
+          }
+        }
+      } else {
+        navigate('/projects');
+      }
+    } finally {
+      setLoading(false);
     }
-  }, [projectId, navigate, location]);
+  };
 
   // Save current state to localStorage whenever selected task or step changes
   useEffect(() => {
@@ -403,8 +445,19 @@ const Steps = () => {
       const timer = setTimeout(() => setProgressAnimation(false), 1500);
       return () => clearTimeout(timer);
     }
-  }, [project?.questProgress]);
+  }, [project]);
 
+  // Helper function to show notifications
+  const showNotification = (message, type = 'info') => {
+    setNotification({
+      show: true,
+      message,
+      type
+    });
+    setTimeout(() => setNotification({ show: false, message: '', type: 'info' }), 3000);
+  };
+
+  // Handle task selection
   const handleTaskSelect = (task) => {
     if (task.isUnlocked) {
       // Get enhanced task data from detailed JSON if available
@@ -423,45 +476,7 @@ const Steps = () => {
       // Select the first unlocked step in the task
       const firstUnlockedStep = task.steps.find(step => step.isUnlocked);
       if (firstUnlockedStep) {
-        // Get enhanced step data from detailed JSON if available
-        let enhancedStep = {...firstUnlockedStep};
-        if (projectsData.length > 0) {
-          const detailedProject = projectsData.find(p => p.project_id === projectId);
-          if (detailedProject) {
-            const detailedTask = detailedProject.tasks.find(t => t.task_id === task.task_id);
-            if (detailedTask) {
-              const detailedStep = detailedTask.steps.find(s => s.step_id === firstUnlockedStep.step_id);
-              if (detailedStep) {
-                enhancedStep = {...enhancedStep, ...detailedStep};
-              }
-            }
-          }
-        }
-        setSelectedStep(enhancedStep);
-        setStepStatus('idle');
-        setHintsLevel(0);
-        
-        // Try to get starting code from detailed JSON
-        let startCode = '';
-        if (projectsData.length > 0) {
-          const detailedProject = projectsData.find(p => p.project_id === projectId);
-          if (detailedProject) {
-            const detailedTask = detailedProject.tasks.find(t => t.task_id === task.task_id);
-            if (detailedTask) {
-              const detailedStep = detailedTask.steps.find(s => s.step_id === firstUnlockedStep.step_id);
-              if (detailedStep && detailedStep.startingCode) {
-                startCode = detailedStep.startingCode;
-                setCode(startCode);
-                setOriginalCode(startCode);
-                return;
-              }
-            }
-          }
-        }
-        // Fallback to the code from ProjectsData
-        startCode = firstUnlockedStep.starterCode || '';
-        setCode(startCode);
-        setOriginalCode(startCode);
+        handleStepSelect(firstUnlockedStep);
       }
     } else {
       // Show notification that task is locked
@@ -470,17 +485,16 @@ const Steps = () => {
         (task.dependencies && task.dependencies.includes(t.task_id))
       );
       
-      setNotification({
-        show: true,
-        message: previousTask 
+      showNotification(
+        previousTask 
           ? `You need to complete "${previousTask.task_name}" first` 
           : "This task is currently locked",
-        type: 'warning'
-      });
-      setTimeout(() => setNotification({ show: false, message: '', type: 'info' }), 3000);
+        'warning'
+      );
     }
   };
 
+  // Handle step selection
   const handleStepSelect = (step) => {
     if (step.isUnlocked) {
       // Get enhanced step data from detailed JSON if available
@@ -509,8 +523,8 @@ const Steps = () => {
           const detailedTask = detailedProject.tasks.find(t => t.task_id === selectedTask.task_id);
           if (detailedTask) {
             const detailedStep = detailedTask.steps.find(s => s.step_id === step.step_id);
-            if (detailedStep && detailedStep.startingCode) {
-              startCode = detailedStep.startingCode;
+            if (detailedStep && detailedStep.starting_code) {
+              startCode = detailedStep.starting_code;
               setCode(startCode);
               setOriginalCode(startCode);
               return;
@@ -529,17 +543,84 @@ const Steps = () => {
         (step.dependencies && step.dependencies.includes(s.step_id))
       );
       
-      setNotification({
-        show: true,
-        message: previousStep 
+      showNotification(
+        previousStep 
           ? `You need to complete "${previousStep.step_name}" first` 
           : "This step is currently locked",
-        type: 'warning'
-      });
-      setTimeout(() => setNotification({ show: false, message: '', type: 'info' }), 3000);
+        'warning'
+      );
     }
   };
 
+  // Helper function to mark a step as complete
+  const markStepComplete = (projectId, taskId, stepId) => {
+    // Find the project
+    const projectIndex = pythonProjects.findIndex(p => p.id === projectId);
+    if (projectIndex === -1) return false;
+    
+    // Find the task
+    const taskIndex = pythonProjects[projectIndex].tasks.findIndex(t => t.task_id === taskId);
+    if (taskIndex === -1) return false;
+    
+    // Find the step
+    const stepIndex = pythonProjects[projectIndex].tasks[taskIndex].steps.findIndex(s => s.step_id === stepId);
+    if (stepIndex === -1) return false;
+    
+    // Mark the step as completed
+    pythonProjects[projectIndex].tasks[taskIndex].steps[stepIndex].isCompleted = true;
+    
+    // Update project XP
+    const stepXP = pythonProjects[projectIndex].tasks[taskIndex].steps[stepIndex].xpValue || 10;
+    pythonProjects[projectIndex].xpGained += stepXP;
+    
+    // Calculate progress percentage
+    const totalSteps = pythonProjects[projectIndex].tasks.reduce((acc, task) => acc + task.steps.length, 0);
+    const completedSteps = pythonProjects[projectIndex].tasks.reduce((acc, task) => 
+      acc + task.steps.filter(step => step.isCompleted).length, 0);
+    
+    pythonProjects[projectIndex].questProgress = Math.round((completedSteps / totalSteps) * 100);
+    
+    return true;
+  };
+
+  // Helper function to unlock the next step
+  const unlockNextStep = (projectId, taskId, stepId) => {
+    // Find the project
+    const projectIndex = pythonProjects.findIndex(p => p.id === projectId);
+    if (projectIndex === -1) return false;
+    
+    // Find the task
+    const taskIndex = pythonProjects[projectIndex].tasks.findIndex(t => t.task_id === taskId);
+    if (taskIndex === -1) return false;
+    
+    // Find the step
+    const stepIndex = pythonProjects[projectIndex].tasks[taskIndex].steps.findIndex(s => s.step_id === stepId);
+    if (stepIndex === -1) return false;
+    
+    // Check if there's a next step in the same task
+    if (stepIndex < pythonProjects[projectIndex].tasks[taskIndex].steps.length - 1) {
+      // Unlock the next step in the same task
+      pythonProjects[projectIndex].tasks[taskIndex].steps[stepIndex + 1].isUnlocked = true;
+    } else {
+      // This was the last step in the task, mark the task as completed
+      pythonProjects[projectIndex].tasks[taskIndex].isCompleted = true;
+      
+      // Check if there's a next task to unlock
+      if (taskIndex < pythonProjects[projectIndex].tasks.length - 1) {
+        // Unlock the next task
+        pythonProjects[projectIndex].tasks[taskIndex + 1].isUnlocked = true;
+        
+        // Unlock the first step of the next task
+        if (pythonProjects[projectIndex].tasks[taskIndex + 1].steps.length > 0) {
+          pythonProjects[projectIndex].tasks[taskIndex + 1].steps[0].isUnlocked = true;
+        }
+      }
+    }
+    
+    return true;
+  };
+
+  // Handle step completion
   const handleStepComplete = () => {
     if (selectedTask && selectedStep) {
       // Set processing state
@@ -548,7 +629,7 @@ const Steps = () => {
       // Simulate processing delay
       setTimeout(() => {
         // Simulate success/failure based on some condition (e.g., code changes)
-        const isSuccessful = Math.random() > 0.2; // 80% success rate for demo
+        const isSuccessful = codeChanged && Math.random() > 0.2; // 80% success rate if code was changed
         
         if (isSuccessful) {
           const success = markStepComplete(projectId, selectedTask.task_id, selectedStep.step_id);
@@ -558,13 +639,13 @@ const Steps = () => {
             
             // Play completion sound
             if (audioRef.current && audioRef.current.complete) {
-              audioRef.current.complete.play();
+              audioRef.current.complete.play().catch(e => console.log('Audio play error:', e));
             }
             
             // Update streak and check for achievements
             const achievementUnlocked = increaseStreak();
             if (achievementUnlocked && audioRef.current && audioRef.current.achievement) {
-              audioRef.current.achievement.play();
+              audioRef.current.achievement.play().catch(e => console.log('Audio play error:', e));
             }
             
             // Show confetti and XP earned animation
@@ -577,7 +658,7 @@ const Steps = () => {
             
             // Play unlock sound for next step
             if (audioRef.current && audioRef.current.unlock) {
-              audioRef.current.unlock.play();
+              audioRef.current.unlock.play().catch(e => console.log('Audio play error:', e));
             }
             
             // Refresh project data
@@ -619,12 +700,7 @@ const Steps = () => {
             setSelectedStep(enhancedStep);
             
             // Show success notification
-            setNotification({
-              show: true,
-              message: 'Mission accomplished! Next step unlocked.',
-              type: 'success'
-            });
-            setTimeout(() => setNotification({ show: false, message: '', type: 'info' }), 3000);
+            showNotification('Mission accomplished! Next step unlocked.', 'success');
           }
         } else {
           // Set failed state
@@ -632,7 +708,7 @@ const Steps = () => {
           
           // Play error sound
           if (audioRef.current && audioRef.current.error) {
-            audioRef.current.error.play();
+            audioRef.current.error.play().catch(e => console.log('Audio play error:', e));
           }
           
           // Decrease streak
@@ -643,37 +719,37 @@ const Steps = () => {
           setShowHints(true);
           
           // Show failure notification
-          setNotification({
-            show: true,
-            message: 'Mission failed. Try again with the provided hints.',
-            type: 'error'
-          });
-          setTimeout(() => setNotification({ show: false, message: '', type: 'info' }), 3000);
+          showNotification(
+            codeChanged 
+              ? 'Mission failed. Try again with the provided hints.' 
+              : 'You need to modify the code before completing the mission.',
+            'error'
+          );
         }
       }, 1500);
     }
   };
 
+  // Handle retry after failure
+  // eslint-disable-next-line no-unused-vars
   const handleRetryStep = () => {
     setStepStatus('idle');
   };
 
+  // Handle code changes in the editor
   const handleCodeChange = (newCode) => {
     setCode(newCode);
   };
 
+  // Navigate back to project suggestions
   const handleBackClick = () => {
     navigate('/project-suggestions');
   };
 
+  // Simulate code execution
   const simulateCodeExecution = () => {
     if (!codeChanged) {
-      setNotification({
-        show: true,
-        message: 'Make changes to the code before running',
-        type: 'warning'
-      });
-      setTimeout(() => setNotification({ show: false, message: '', type: 'info' }), 3000);
+      showNotification('Make changes to the code before running', 'warning');
       return;
     }
     
@@ -841,7 +917,16 @@ const Steps = () => {
                           {step.guidelines && (
                             <div className="step-instructions game-instructions">
                               <h4 className="instructions-title">Mission Briefing:</h4>
-                              <div className="instruction-content futuristic-description">{step.guidelines}</div>
+                              <ul className="guidelines-list">
+                                {Array.isArray(step.guidelines) ? 
+                                  step.guidelines.map((guideline, index) => (
+                                    <li key={index} className="guideline-item">
+                                      <span className="guideline-bullet">•</span> {guideline}
+                                    </li>
+                                  )) : 
+                                  <div className="instruction-content futuristic-description">{step.guidelines}</div>
+                                }
+                              </ul>
                             </div>
                           )}
                           

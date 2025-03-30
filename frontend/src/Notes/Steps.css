@@ -272,16 +272,15 @@
 
 .step-cards {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.8rem;
+  flex-direction: column;
+  gap: 1.2rem;
   list-style: none;
   padding: 0;
   margin: 0 0 1.5rem 0;
 }
 
 .step-card {
-  flex: 1 1 calc(30% - 0.8rem);
-  padding: 1rem;
+  width: 100%;
   background: rgba(20, 25, 35, 0.7);
   border-radius: 14px;
   border-left: 4px solid rgba(0, 229, 255, 0.5);
@@ -290,31 +289,60 @@
   backdrop-filter: blur(10px);
   cursor: pointer;
   position: relative;
+  overflow: hidden;
+}
+
+.step-header {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: rgba(30, 34, 50, 0.6);
+  border-bottom: 1px solid rgba(99, 102, 241, 0.3);
+}
+
+.step-title {
+  font-weight: bold;
+  color: #fff;
+}
+
+.step-xp {
+  padding: 0.2rem 0.5rem;
+  background: rgba(99, 102, 241, 0.2);
+  border: 1px solid rgba(99, 102, 241, 0.6);
+  border-radius: 20px;
+  font-size: 0.8rem;
+  color: #a5b4fc;
+}
+
+.step-card-details {
+  padding: 1rem;
+}
+
+.step-description {
+  color: #a5b4fc;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.step-instructions {
+  background: rgba(30, 34, 50, 0.8);
+  border-radius: 10px;
+  padding: 1rem;
+  margin: 1rem 0;
+  border-left: 4px solid #6366f1;
+}
+
+.instruction-content {
+  color: #a5b4fc;
+  line-height: 1.6;
 }
 
 .step-card:hover {
   background: rgba(0, 229, 255, 0.1);
   border-left-color: #00e5ff;
   box-shadow: 0 0 30px rgba(0, 229, 255, 0.7);
-  transform: translateY(-5px) scale(1.02);
-}
-
-.step-card-content {
-  flex: 1;
-}
-
-.step-card-preview {
-  flex: 2;
-  margin-left: 0;
-  margin-top: 0.5rem;
-  padding: 0.6rem;
-  background: rgba(30, 34, 50, 0.6);
-  border-radius: 8px;
-  font-size: 0.9rem;
-  color: #a5b4fc;
-  max-height: 100px;
-  overflow-y: auto;
+  transform: translateY(-3px);
 }
 
 .step-card.locked {
@@ -327,7 +355,6 @@
   background: rgba(99, 102, 241, 0.2);
   border-left-color: #6366f1;
   box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
-  transform: translateY(-3px);
 }
 
 .step-card.completed {
@@ -350,71 +377,109 @@
   }
 }
 
-.step-header {
+/* Hints Panel */
+.hints-panel {
+  background: rgba(30, 34, 50, 0.8);
+  border-radius: 10px;
+  padding: 1rem;
+  margin: 1rem 0;
+  border-left: 4px solid #f59e0b;
+}
+
+.hints-title {
+  color: #fff;
+  margin-bottom: 0.8rem;
+  font-size: 1.1rem;
   display: flex;
-  justify-content: space-between;
   align-items: center;
 }
 
-.step-title {
-  font-weight: bold;
-  color: #fff;
+.hints-title::before {
+  content: '💡';
+  margin-right: 0.5rem;
+  font-size: 1.3rem;
 }
 
-.step-xp {
-  padding: 0.2rem 0.5rem;
-  background: rgba(99, 102, 241, 0.2);
-  border: 1px solid rgba(99, 102, 241, 0.6);
-  border-radius: 20px;
-  font-size: 0.8rem;
+.hints-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.hint-item {
+  margin-bottom: 0.6rem;
   color: #a5b4fc;
+  display: flex;
+  align-items: flex-start;
 }
 
-/* Step Details */
-.step-details {
-  background: rgba(40, 44, 60, 0.8);
-  border-radius: 15px;
-  padding: 1.5rem;
-  margin-top: 1.5rem;
-  border: 2px solid rgba(99, 102, 241, 0.4);
+.hint-icon {
+  margin-right: 0.6rem;
+  font-size: 1.1rem;
 }
 
-.step-title {
-  font-size: 1.5rem;
-  color: #fff;
-  margin-bottom: 1.2rem;
-  text-shadow: 0 0 15px rgba(99, 102, 241, 0.8);
-}
-
-.step-description {
-  color: #a5b4fc;
-  line-height: 1.6;
-  margin-bottom: 1.2rem;
-}
-
-.step-instructions {
+/* Expected Output */
+.expected-output {
   background: rgba(30, 34, 50, 0.8);
   border-radius: 10px;
-  padding: 1.2rem;
-  margin: 1.2rem 0;
-  border-left: 4px solid #6366f1;
+  padding: 1rem;
+  margin: 1rem 0;
+  border-left: 4px solid #0ea5e9;
 }
 
-.instructions-title {
+.output-title {
   color: #fff;
   margin-bottom: 0.8rem;
   font-size: 1.1rem;
 }
 
-.instruction-content {
+.output-content {
+  background: rgba(15, 18, 25, 0.98);
+  padding: 1rem;
+  border-radius: 8px;
   color: #a5b4fc;
-  line-height: 1.6;
+  font-family: 'Fira Code', monospace;
+  overflow-x: auto;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+}
+
+/* Starter Code Display */
+.starter-code {
+  background: rgba(30, 34, 50, 0.8);
+  border-radius: 10px;
+  padding: 1rem;
+  margin: 1rem 0;
+  border-left: 4px solid #10b981;
+}
+
+.starter-code-title {
+  color: #fff;
+  margin-bottom: 0.8rem;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+}
+
+.starter-code-title::before {
+  content: '🧩';
+  margin-right: 0.5rem;
+  font-size: 1.3rem;
+}
+
+.starter-code-content {
+  background: rgba(15, 18, 25, 0.98);
+  padding: 1rem;
+  border-radius: 8px;
+  color: #a5b4fc;
+  font-family: 'Fira Code', monospace;
+  overflow-x: auto;
+  border: 1px solid rgba(16, 185, 129, 0.3);
 }
 
 .step-actions {
   display: flex;
   justify-content: space-between;
-  margin: 1.2rem 0;
+  margin: 1rem 0;
 }
 
 .hint-toggle, .complete-button {
@@ -429,6 +494,13 @@
   background: rgba(99, 102, 241, 0.25);
   border: 2px solid rgba(99, 102, 241, 0.6);
   color: #a5b4fc;
+  display: flex;
+  align-items: center;
+}
+
+.hint-toggle::before {
+  content: '💡';
+  margin-right: 0.5rem;
 }
 
 .hint-toggle:hover {
@@ -459,64 +531,6 @@
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
-}
-
-/* Hints Panel */
-.hints-panel {
-  background: rgba(30, 34, 50, 0.8);
-  border-radius: 10px;
-  padding: 1.2rem;
-  margin: 1.2rem 0;
-  border-left: 4px solid #f59e0b;
-}
-
-.hints-title {
-  color: #fff;
-  margin-bottom: 0.8rem;
-  font-size: 1.1rem;
-}
-
-.hints-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.hint-item {
-  margin-bottom: 0.6rem;
-  color: #a5b4fc;
-  display: flex;
-  align-items: flex-start;
-}
-
-.hint-icon {
-  margin-right: 0.6rem;
-  font-size: 1.1rem;
-}
-
-/* Expected Output */
-.expected-output {
-  background: rgba(30, 34, 50, 0.8);
-  border-radius: 10px;
-  padding: 1.2rem;
-  margin: 1.2rem 0;
-  border-left: 4px solid #0ea5e9;
-}
-
-.output-title {
-  color: #fff;
-  margin-bottom: 0.8rem;
-  font-size: 1.1rem;
-}
-
-.output-content {
-  background: rgba(15, 18, 25, 0.98);
-  padding: 1.2rem;
-  border-radius: 8px;
-  color: #a5b4fc;
-  font-family: 'Fira Code', monospace;
-  overflow-x: auto;
-  border: 1px solid rgba(99, 102, 241, 0.3);
 }
 
 /* Code Editor Section */
@@ -857,10 +871,6 @@
   .tasks-sidebar {
     margin-bottom: 1.5rem;
   }
-  
-  .step-card {
-    flex: 1 1 calc(50% - 0.8rem);
-  }
 }
 
 @media (max-width: 768px) {
@@ -881,16 +891,6 @@
   
   .project-title {
     font-size: 1.8rem;
-  }
-  
-  .step-card {
-    flex: 1 1 100%;
-    flex-direction: column;
-  }
-  
-  .step-card-preview {
-    margin-left: 0;
-    margin-top: 0.8rem;
   }
   
   .step-actions {

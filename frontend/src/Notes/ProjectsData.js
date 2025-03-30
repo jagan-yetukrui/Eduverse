@@ -1,4 +1,4 @@
-import pythonProjectsData from './python_projects_detailed.json';
+import pythonProjectsData from './python_projects_complete.json';
 import { useParams, useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import './ProjectsData.css';
