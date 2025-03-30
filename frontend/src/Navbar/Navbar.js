@@ -35,6 +35,12 @@ const Navbar = () => {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("access_token");
+    setIsAuthenticated(false);
+    navigate("/login");
+  };
+
   useEffect(() => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
@@ -83,13 +89,23 @@ const Navbar = () => {
       </div>
 
       {isAuthenticated ? (
-        <NavbarButton
-          path="/profile"
-          label="PROFILE"
-          icon={<AiOutlineUser />}
-          onClick={() => handleNavigation("/profile")}
-          isActive={isActive("/profile", location.pathname)}
-        />
+        <div style={{ display: 'flex' }}>
+          <NavbarButton
+            path="/profile"
+            label="PROFILE"
+            icon={<AiOutlineUser />}
+            onClick={() => handleNavigation("/profile")}
+            isActive={isActive("/profile", location.pathname)}
+          />
+          <button
+            onClick={handleLogout}
+            className="nav-item nav-button"
+            aria-label="Logout"
+            style={{ border: 'none', background: 'none' }}
+          >
+            LOGOUT
+          </button>
+        </div>
       ) : (
         <div>
           <button

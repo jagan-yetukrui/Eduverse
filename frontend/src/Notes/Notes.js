@@ -8,11 +8,13 @@ import CareerGuidance from "./CareerGuidance";
 
 const Notes = () => {
   const navigate = useNavigate();
-  const [messages, setMessages] = useState([{
-    id: 0,
-    text: "🌟 Welcome to the Enchanted Portal! I'm your magical assistant, ready to help you on your coding journey. What mysteries shall we unravel today? 🌟",
-    sender: "ai"
-  }]);
+  const [messages, setMessages] = useState([
+    {
+      id: 0,
+      text: "🌟 Welcome to the Enchanted Portal! I'm your magical assistant, ready to help you on your coding journey. What mysteries shall we unravel today? 🌟",
+      sender: "ai",
+    },
+  ]);
   const [inputText, setInputText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const chatContainerRef = useRef(null);
@@ -35,23 +37,23 @@ const Notes = () => {
     }
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/ai/chat/', {
-        method: 'POST',
+      const response = await fetch("http://127.0.0.1:8000/ai/chat/", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
-        credentials: 'include',
+        credentials: "include",
         body: JSON.stringify({
           message: inputText,
-          user_id: localStorage.getItem('user_id'),
+          user_id: localStorage.getItem("user_id"),
           channel: {
-            id: 'web_chat',
-            name: 'Magic Portal Interface'
+            id: "web_chat",
+            name: "Magic Portal Interface",
           },
-          locale: 'en-US',
-          timestamp: new Date().toISOString()
-        })
+          locale: "en-US",
+          timestamp: new Date().toISOString(),
+        }),
       });
 
       if (!response.ok) {
@@ -59,9 +61,9 @@ const Notes = () => {
       }
 
       const data = await response.json();
-      
+
       if (!data.response) {
-        throw new Error('The magic scroll returned empty!');
+        throw new Error("The magic scroll returned empty!");
       }
 
       const aiMessage = {
@@ -75,21 +77,22 @@ const Notes = () => {
           id: messages.length + 3,
           text: data.suggestions.join("\n"),
           sender: "ai",
-          type: "magical-scroll"
+          type: "magical-scroll",
         };
         setMessages((prev) => [...prev, aiMessage, suggestionMessage]);
       } else {
         setMessages((prev) => [...prev, aiMessage]);
       }
-
     } catch (error) {
-      console.error("Connection failed:", error);
-      const errorMessage = {
-        id: messages.length + 2,
-        text: "🌋 The mystical connection was lost! Let's try again, brave adventurer.",
-        sender: "ai",
-      };
-      setMessages((prev) => [...prev, errorMessage]);
+      if (error) {
+        console.error("Connection failed:", error);
+        const errorMessage = {
+          id: messages.length + 2,
+          text: "🌋 The mystical connection was lost! Let's try again, brave adventurer.",
+          sender: "ai",
+        };
+        setMessages((prev) => [...prev, errorMessage]);
+      }
     } finally {
       setIsTyping(false);
       if (avatarRef.current) {
@@ -113,24 +116,24 @@ const Notes = () => {
             <div className="magical-aura"></div>
             <div className="crystal-core"></div>
           </div>
-          
+
           <div className="quest-board">
-            <button 
-              className="quest-btn glow-effect" 
-              onClick={() => navigate('/project-suggestions')}
+            <button
+              className="quest-btn glow-effect"
+              onClick={() => navigate("/project-suggestions")}
             >
               <span className="quest-icon bounce">🎯</span>
               <span>Quests</span>
             </button>
-            
-            <button 
+
+            <button
               className="quest-btn glow-effect"
-              onClick={() => navigate('/career-guidance')}
+              onClick={() => navigate("/career-guidance")}
             >
               <span className="quest-icon swing">⚔️</span>
               <span>Journey</span>
             </button>
-            
+
             <button className="quest-btn glow-effect">
               <span className="quest-icon pulse">🔮</span>
               <span>Spells</span>
@@ -142,13 +145,19 @@ const Notes = () => {
 
         <div className="notes-list custom-scrollbar">
           {messages.map((message) => (
-            <div 
-              key={message.id} 
-              className={`note-item fade-in ${message.sender === "user" ? "note-right" : "note-left"}`}
+            <div
+              key={message.id}
+              className={`note-item fade-in ${
+                message.sender === "user" ? "note-right" : "note-left"
+              }`}
             >
-              <div className={`message ${message.sender} ${message.type || ''}`}>
-                {message.text.split('\n').map((line, i) => (
-                  <div key={i} className="message-line">{line}</div>
+              <div
+                className={`message ${message.sender} ${message.type || ""}`}
+              >
+                {message.text.split("\n").map((line, i) => (
+                  <div key={i} className="message-line">
+                    {line}
+                  </div>
                 ))}
               </div>
             </div>

@@ -58,7 +58,7 @@ const Login = () => {
     // Check if user is already logged in
     const token = localStorage.getItem("access_token");
     if (token) {
-      navigate("/profile");
+      navigate("/");
     }
   }, [navigate]);
 
@@ -114,7 +114,7 @@ const Login = () => {
         setIsSuccess(true);
 
         setTimeout(() => {
-          navigate("/profile");
+          navigate("/");
         }, 2000);
       } catch (error) {
         if (error.response && error.response.data) {
