@@ -1,0 +1,256 @@
+.project-suggestions {
+  padding: 1.5rem; /* Decreased padding */
+  max-width: 90%; /* Added max-width to limit excess space */
+  margin: 0 auto; /* Center the container */
+  background: linear-gradient(135deg, rgba(16, 20, 35, 0.95), rgba(25, 30, 50, 0.95));
+  backdrop-filter: blur(30px);
+  border: 3px solid rgba(99, 102, 241, 0.4);
+  box-shadow: 0 0 100px rgba(99, 102, 241, 0.3);
+}
+
+.project-suggestions h2 {
+  text-align: center;
+  margin-bottom: 2rem; /* Decreased margin */
+  color: #e4e6eb;
+  font-size: 3rem; /* Decreased font size */
+  font-weight: 900;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899, #6366f1);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 50px rgba(99, 102, 241, 0.6);
+  animation: titleGradient 8s infinite, titlePulse 2s infinite;
+}
+
+.skill-selector {
+  margin-bottom: 2rem; /* Decreased margin */
+  padding: 1rem; /* Decreased padding */
+  background: rgba(16, 20, 35, 0.6);
+  border-radius: 20px;
+  border: 2px solid rgba(99, 102, 241, 0.2);
+  box-shadow: 0 0 40px rgba(99, 102, 241, 0.15);
+}
+
+.skill-selector h3 {
+  text-align: center;
+  margin-bottom: 1.5rem; /* Decreased margin */
+  font-size: 2rem; /* Decreased font size */
+  font-weight: 700;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6, #6366f1);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 2px;
+  text-shadow: 0 0 30px rgba(99, 102, 241, 0.5);
+  animation: gradientFlow 4s infinite;
+}
+
+.skill-buttons {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem; /* Decreased gap */
+}
+
+.skill-button {
+  padding: 0.8rem 1.5rem; /* Decreased padding */
+  border: none;
+  border-radius: 15px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.15));
+  color: #e4e6eb;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  font-size: 1rem; /* Decreased font size */
+  letter-spacing: 1px;
+  backdrop-filter: blur(12px);
+  border: 2px solid rgba(99, 102, 241, 0.3);
+  box-shadow: 0 0 30px rgba(99, 102, 241, 0.15);
+}
+
+.skill-button:hover {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(139, 92, 246, 0.25));
+  transform: translateY(-5px);
+  box-shadow: 0 0 40px rgba(99, 102, 241, 0.4);
+}
+
+.skill-button.active {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.5), rgba(139, 92, 246, 0.5));
+  box-shadow: 0 0 40px rgba(99, 102, 241, 0.5);
+  border: 2px solid rgba(99, 102, 241, 0.6);
+  animation: activeButtonPulse 2s infinite;
+}
+
+.projects-list {
+  margin-top: 1.5rem; /* Decreased margin */
+  padding: 1rem; /* Decreased padding */
+  background: rgba(16, 20, 35, 0.6);
+  border-radius: 20px;
+  border: 2px solid rgba(99, 102, 241, 0.2);
+  box-shadow: 0 0 40px rgba(99, 102, 241, 0.15);
+}
+
+.projects-list h3 {
+  text-align: center;
+  margin-bottom: 1.5rem; /* Decreased margin */
+  font-size: 2rem; /* Decreased font size */
+  font-weight: 700;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6, #6366f1);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 30px rgba(99, 102, 241, 0.5);
+  animation: gradientFlow 4s infinite;
+}
+
+.project-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Decreased min width */
+  gap: 1rem; /* Decreased gap */
+}
+
+.project-card {
+  background: rgba(16, 20, 35, 0.9);
+  border-radius: 15px;
+  padding: 1rem; /* Decreased padding */
+  box-shadow: 0 0 40px rgba(99, 102, 241, 0.2);
+  backdrop-filter: blur(20px);
+  border: 2px solid rgba(99, 102, 241, 0.3);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  animation: glowPulse 3s infinite;
+}
+
+.project-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 0 50px rgba(99, 102, 241, 0.4);
+  border: 2px solid rgba(99, 102, 241, 0.5);
+}
+
+.project-card h4 {
+  margin: 0 0 1rem 0; /* Decreased margin */
+  font-size: 1.8rem; /* Decreased font size */
+  font-weight: 700;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6, #6366f1);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 30px rgba(99, 102, 241, 0.5);
+  animation: gradientFlow 4s infinite;
+}
+
+.difficulty {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.difficulty.beginner {
+  background: linear-gradient(135deg, rgba(52, 211, 153, 0.3), rgba(52, 211, 153, 0.4));
+  color: #34d399;
+  border: 1px solid rgba(52, 211, 153, 0.5);
+}
+
+.difficulty.intermediate {
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.3), rgba(251, 191, 36, 0.4));
+  color: #fbbf24;
+  border: 1px solid rgba(251, 191, 36, 0.5);
+}
+
+.difficulty.advanced {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.3), rgba(239, 68, 68, 0.4));
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.5);
+}
+
+.project-card p {
+  color: #a8b3cf;
+  line-height: 1.6;
+  margin: 0;
+  font-size: 1rem;
+}
+
+.back-button {
+  padding: 0.8rem 1.5rem; /* Decreased padding */
+  border: none;
+  border-radius: 15px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6, #6366f1);
+  background-size: 200% 200%;
+  color: white;
+  font-weight: 600;
+  font-size: 1rem; /* Decreased font size */
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 30px rgba(99, 102, 241, 0.4);
+  margin-bottom: 1.5rem; /* Decreased margin */
+  animation: gradientFlow 4s infinite;
+}
+
+.back-button:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 40px rgba(99, 102, 241, 0.5);
+}
+
+@media (max-width: 768px) {
+  .project-suggestions {
+    padding: 1rem;
+  }
+  
+  .project-cards {
+    grid-template-columns: 1fr;
+  }
+  
+  .skill-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .skill-button {
+    width: 100%;
+    max-width: 250px; /* Decreased max-width */
+  }
+  
+  .project-suggestions h2 {
+    font-size: 2.5rem;
+  }
+}
+
+@keyframes titlePulse {
+  0% { text-shadow: 0 0 30px rgba(99, 102, 241, 0.5); }
+  50% { text-shadow: 0 0 60px rgba(99, 102, 241, 0.7); }
+  100% { text-shadow: 0 0 30px rgba(99, 102, 241, 0.5); }
+}
+
+@keyframes activeButtonPulse {
+  0% { box-shadow: 0 0 20px rgba(99, 102, 241, 0.4); }
+  50% { box-shadow: 0 0 40px rgba(99, 102, 241, 0.6); }
+  100% { box-shadow: 0 0 20px rgba(99, 102, 241, 0.4); }
+}
+
+@keyframes glowPulse {
+  0% { box-shadow: 0 0 20px rgba(99, 102, 241, 0.2); }
+  50% { box-shadow: 0 0 40px rgba(99, 102, 241, 0.3); }
+  100% { box-shadow: 0 0 20px rgba(99, 102, 241, 0.2); }
+}
+
+@keyframes gradientFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes titleGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}

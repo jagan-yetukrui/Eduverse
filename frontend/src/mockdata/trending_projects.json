@@ -1,0 +1,57 @@
+[
+  {
+    "id": 1,
+    "name": "EcoHive",
+    "description": "A blockchain-powered marketplace that tracks products' carbon footprints and rewards sustainable choices with eco-tokens. Features AI-driven recommendations, real-time environmental impact tracking, and partnerships with major retailers.",
+    "category": "Environment",
+    "popularity": "1.2M active users",
+    "teamSize": "32 people",
+    "likes": 154000,
+    "comments": 12400,
+    "techStack": ["React Native", "Solidity", "TensorFlow", "AWS"]
+  },
+  {
+    "id": 2,
+    "name": "HealthSync AI",
+    "description": "An advanced health analytics platform using federated learning to predict health risks with 94% accuracy. Integrates with Apple Health, Fitbit, and medical records while maintaining HIPAA compliance. Features include personalized nutrition plans and early disease detection.",
+    "category": "Health",
+    "popularity": "2.1M users globally",
+    "teamSize": "45 people",
+    "likes": 282000,
+    "comments": 23500,
+    "techStack": ["Flutter", "Python", "AWS", "TensorFlow"]
+  },
+  {
+    "id": 3,
+    "name": "MetaMaker Studio",
+    "description": "A no-code metaverse creation platform with real-time collaboration. Features include AI-powered 3D modeling, physics simulation, NFT integration, and cross-platform VR support. Used by major educational institutions and gaming studios.",
+    "category": "Tech & Gaming",
+    "popularity": "3.2M creators",
+    "teamSize": "58 people",
+    "likes": 467000,
+    "comments": 31500,
+    "techStack": ["Unity", "WebGL", "Node.js", "Ethereum"]
+  },
+  {
+    "id": 4,
+    "name": "FarmIQ Pro",
+    "description": "Precision agriculture platform using satellite imagery, IoT sensors, and machine learning for crop optimization. Features include drone integration, automated irrigation systems, and predictive pest management. Increased yield by 40% for users.",
+    "category": "Agriculture",
+    "popularity": "125,000 farms worldwide",
+    "teamSize": "42 people",
+    "likes": 132000,
+    "comments": 8800,
+    "techStack": ["Python", "TensorFlow", "React", "IoT"]
+  },
+  {
+    "id": 5,
+    "name": "NeuroLearn AI",
+    "description": "Revolutionary education platform using GPT-4 and reinforcement learning for personalized tutoring. Features include real-time language translation, AR/VR lessons, and adaptive learning paths. Proven 60% improvement in student performance.",
+    "category": "Education",
+    "popularity": "Used in 2,800+ institutions",
+    "teamSize": "75 people",
+    "likes": 391000,
+    "comments": 43400,
+    "techStack": ["Python", "React", "OpenAI API", "Unity"]
+  }
+]

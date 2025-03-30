@@ -1,0 +1,58 @@
+.profile-card {
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+    align-items: center;
+    /* justify-items: center; */
+    justify-content: space-between;
+    color: var(--text-color);
+    border-radius: 7px;
+    padding: 1rem;
+    gap: 1rem;
+  }
+  
+  .profile-card:hover {
+    /* box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.2); */
+  }
+  
+  .profile-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+  
+  .profile-info {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .profile-username {
+    font-weight: bold;
+    margin: 0;
+  }
+
+  .profile-follower {
+    font-size: 0.75rem;
+    color: #919191;
+    margin: 2px 0;
+  }
+  
+  .profile-reason, .profile-mutuals {
+    font-size: 0.85rem;
+    color: #a0a0a5;
+    margin: 2px 0;
+  }
+  
+  .follow-button {
+    background-color: transparent;
+    color: #0095f6;
+    border: none;
+    font-size: 0.9rem;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0;
+  }
+  
+  .follow-button:hover {
+    text-decoration: underline;
+  }
+  

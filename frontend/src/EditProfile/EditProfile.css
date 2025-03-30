@@ -1,0 +1,182 @@
+/* General container styling */
+.edit-profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+  transition: all 0.5s ease;
+  background-color: var(--background-color);
+}
+
+/* Sidebar active state */
+.edit-profile-container.sidebar-active {
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding-top: 50px;
+}
+
+/* Title Styling */
+.page-title {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  text-align: center;
+  color: var(--text-color);
+}
+
+/* Centered Navigation styling with grid layout */
+.edit-profile-nav {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 20px;
+  max-width: 800px;
+  width: 100%;
+  justify-items: center;
+  transition: all 0.5s ease;
+}
+
+/* Sidebar layout styling */
+.edit-profile-nav.sidebar {
+  grid-template-columns: none;
+  grid-template-rows: repeat(auto-fit, minmax(60px, 1fr));
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 300px;
+  width: 300px;
+  height: 100vh;
+  padding: 20px 10px;
+  position: fixed;
+  left: 0;
+  top: 0;
+  background-color: var(--card-background);
+  border-right: 1px solid var(--border-color);
+  box-shadow: var(--box-shadow);
+  z-index: 2;
+}
+
+/* Back button styling */
+.back-button {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+  padding: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  color: var(--primary-color);
+  transition: background-color 0.3s ease;
+  font-size: 16px;
+}
+
+.back-button:hover {
+  background-color: var(--hover-color);
+}
+
+.back-button .icon {
+  font-size: 20px;
+  margin-right: 8px;
+}
+
+/* Individual navigation item styling */
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 140px;
+  height: 140px;
+  background-color: var(--card-background);
+  border-radius: 12px;
+  box-shadow: var(--box-shadow);
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  text-align: center;
+  color: var(--text-color);
+}
+
+.edit-profile-nav.sidebar .nav-item {
+  width: 100%;
+  height: auto;
+  flex-direction: row;
+  justify-content: flex-start;
+  padding: 12px 15px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+/* Hover effect */
+.nav-item:hover {
+  background-color: var(--hover-color);
+  transform: scale(1.05);
+}
+
+/* Icon and label styling */
+.nav-item .icon {
+  font-size: 32px;
+  color: var(--primary-color);
+  margin-bottom: 12px;
+}
+
+.edit-profile-nav.sidebar .nav-item .icon {
+  font-size: 22px;
+  margin-right: 15px;
+  margin-bottom: 0;
+}
+
+/* Sidebar item text styling */
+.nav-item span {
+  font-size: 15px;
+  font-weight: bold;
+  color: var(--text-color);
+  text-align: center;
+}
+
+.edit-profile-nav.sidebar .nav-item span {
+  text-align: left;
+  font-size: 17px;
+}
+
+/* Content area styling */
+.edit-profile-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  width: 100%;
+  max-width: 900px;
+  padding: 30px;
+  background-color: var(--card-background);
+  border-radius: 12px;
+  box-shadow: var(--box-shadow);
+  transition: margin-left 0.5s ease;
+}
+
+/* Adjust content area when sidebar is active */
+.edit-profile-container.sidebar-active .edit-profile-content {
+  margin-left: 320px;
+  width: calc(100% - 320px);
+}
+
+/* Hide content area when no section is active */
+.edit-profile-content:empty {
+  display: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .edit-profile-nav {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
+
+  .nav-item {
+    width: 120px;
+    height: 120px;
+  }
+
+  .icon {
+    font-size: 24px;
+  }
+}

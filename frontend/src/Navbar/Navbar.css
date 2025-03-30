@@ -1,0 +1,158 @@
+/* Futuristic Navbar - Main container */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 1rem 0.5rem;
+  height: fit-content;
+  background: linear-gradient(135deg, #e0e0e0, #ffffff); /* Futuristic gradient background */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Enhanced shadow */
+  border-radius: 15px;
+  margin-bottom: 1.5rem;
+  border: 1px solid #d0d0d0; /* Light border */
+}
+
+/* Logo container styling */
+.logo-container-nav {
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding: 0.5rem 2rem;
+  margin-right: 2rem;
+  background: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  transition: all 0.3s ease; /* Smooth transition */
+}
+
+.logo-container-nav:hover {
+  cursor: pointer;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
+}
+
+/* Logo text styling */
+.logo-container-nav p {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #222222; /* Dark text for contrast */
+  margin-left: 10px;
+  font-family: 'Roboto', sans-serif;
+  letter-spacing: 1.2px;
+  transition: all 0.3s ease;
+}
+
+.logo-container-nav p:hover {
+  background: linear-gradient(45deg, rgba(99, 102, 241, 0.3), rgba(192, 132, 252, 0.3));
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  border-radius: 8px;
+  padding: 0 5px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Logo image styling */
+.nav-logo {
+  width: 35px;
+  height: 35px;
+  transition: all 0.3s ease-in-out;
+}
+
+.nav-logo:hover {
+  transform: rotate(15deg) scale(1.15);
+}
+
+/* Navigation items container */
+.nav-item-container {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem; /* Increased spacing between items */
+  margin-right: 2rem;
+}
+
+/* Navigation item styling */
+.nav-item p {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin: 0;
+  color: #444444; /* Medium gray text */
+  padding: 0.7rem 1.4rem;
+  border-radius: 15px;
+  background: transparent; /* Transparent for hover effect */
+  border: 1px solid transparent; /* Transparent border initially */
+  transition: all 0.3s ease;
+  letter-spacing: 1.2px;
+  font-family: 'Roboto', sans-serif;
+  text-transform: uppercase;
+  position: relative;
+}
+
+.nav-item p:hover {
+  color: #ffffff; /* White text on hover */
+  background: linear-gradient(45deg, rgba(99, 102, 241, 0.3), rgba(192, 132, 252, 0.3)); /* Gradient background */
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25); /* Enhanced shadow */
+  transform: scale(1.1);
+  border-radius: 15px;
+  border: 1px solid transparent;
+}
+
+/* Profile button styling */
+.nav-profile p {
+  color: #ffffff;
+  border: none;
+  background: #4a76a8; /* Clean blue */
+  font-size: 1rem;
+  padding: 0.7rem 1.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 15px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15); /* Enhanced shadow */
+  transition: all 0.3s ease;
+  font-family: 'Roboto', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+}
+
+.nav-profile p:hover {
+  transform: scale(1.1);
+  background: linear-gradient(45deg, rgba(99, 102, 241, 0.3), rgba(192, 132, 252, 0.3)); /* Gradient background on hover */
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2); /* Enhanced shadow */
+}
+
+/* Active navigation item styling */
+.nav-item.active p {
+  background: #e0e0e0;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15); /* Enhanced shadow */
+  border: 1px solid #d0d0d0;
+  color: #222222; /* Darker text for active items */
+}
+
+.nav-item.active p:hover {
+  background: linear-gradient(45deg, rgba(99, 102, 241, 0.3), rgba(192, 132, 252, 0.3));
+  color: #ffffff;
+  border: 1px solid transparent;
+}
+
+/* Media query for responsive design */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    padding: 0.8rem 0.4rem;
+  }
+  
+  .nav-item-container {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin-right: 0;
+    margin-top: 1rem;
+  }
+  
+  .logo-container-nav {
+    margin-right: 0;
+    margin-bottom: 0.5rem;
+  }
+}

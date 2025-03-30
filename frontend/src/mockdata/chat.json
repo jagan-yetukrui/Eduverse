@@ -1,0 +1,423 @@
+[
+  {
+    "id": 1,
+    "name": "Alice Johnson", 
+    "lastActive": "2025-01-26T14:30:00Z",
+    "avatar": "alice_profile.jpg",
+    "messages": [
+      {
+        "sender": "Alice",
+        "content": "Hey! How's it going?",
+        "timestamp": "2025-01-26T14:15:00Z"
+      },
+      {
+        "sender": "You", 
+        "content": "Pretty good, thanks! What about you?",
+        "timestamp": "2025-01-26T14:16:00Z"
+      },
+      {
+        "sender": "Alice",
+        "content": "I'm doing great! Just wanted to check in.",
+        "timestamp": "2025-01-26T14:18:00Z"
+      },
+      {
+        "sender": "You",
+        "content": "Nice! Anything new happening?",
+        "timestamp": "2025-01-26T14:19:00Z"
+      },
+      {
+        "sender": "Alice",
+        "content": "Yeah, actually! I started a new course on graphic design. It's super fun!",
+        "timestamp": "2025-01-26T14:20:00Z"
+      },
+      {
+        "sender": "You",
+        "content": "That's awesome! What software are you learning?",
+        "timestamp": "2025-01-26T14:21:00Z"
+      },
+      {
+        "sender": "Alice",
+        "content": "Mostly Adobe Photoshop and Illustrator. The learning curve is steep but I'm getting there!",
+        "timestamp": "2025-01-26T14:22:00Z"
+      },
+      {
+        "sender": "You",
+        "content": "Those are industry standards. You'll be a pro in no time!",
+        "timestamp": "2025-01-26T14:23:00Z"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Bob Smith",
+    "lastActive": "2025-01-26T13:50:00Z",
+    "avatar": "bob_profile.jpg",
+    "messages": [
+      {
+        "sender": "You",
+        "content": "Did you get the files I sent?",
+        "timestamp": "2025-01-26T13:30:00Z"
+      },
+      {
+        "sender": "Bob",
+        "content": "Yeah, got them. Thanks!",
+        "timestamp": "2025-01-26T13:35:00Z"
+      },
+      {
+        "sender": "You",
+        "content": "Great! Let me know if you need any clarification",
+        "timestamp": "2025-01-26T13:36:00Z"
+      },
+      {
+        "sender": "Bob",
+        "content": "Actually, I had a question about the third section",
+        "timestamp": "2025-01-26T13:38:00Z"
+      },
+      {
+        "sender": "You",
+        "content": "Sure, what's unclear?",
+        "timestamp": "2025-01-26T13:39:00Z"
+      },
+      {
+        "sender": "Bob",
+        "content": "Could you explain the implementation details?",
+        "timestamp": "2025-01-26T13:40:00Z"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Sarah Chen",
+    "lastActive": "2025-01-26T12:15:00Z",
+    "avatar": "sarah_profile.jpg",
+    "messages": [
+      {
+        "sender": "Sarah",
+        "content": "Hey! Just saw your post about the hackathon. Are you participating?",
+        "timestamp": "2025-01-26T11:30:00Z"
+      },
+      {
+        "sender": "You",
+        "content": "Yeah! Actually looking for team members. Interested?",
+        "timestamp": "2025-01-26T11:32:00Z"
+      },
+      {
+        "sender": "Sarah",
+        "content": "Definitely! What's your project idea?",
+        "timestamp": "2025-01-26T11:33:00Z"
+      },
+      {
+        "sender": "You",
+        "content": "Thinking of building an AI-powered study assistant",
+        "timestamp": "2025-01-26T11:34:00Z"
+      },
+      {
+        "sender": "Sarah",
+        "content": "That sounds amazing! I have some experience with NLP",
+        "timestamp": "2025-01-26T11:35:00Z"
+      },
+      {
+        "sender": "You",
+        "content": "Perfect! Want to meet tomorrow to discuss details?",
+        "timestamp": "2025-01-26T11:36:00Z"
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "Mike Rodriguez",
+    "lastActive": "2025-01-26T10:45:00Z",
+    "avatar": "mike_profile.jpg",
+    "messages": [
+      {
+        "sender": "Mike",
+        "content": "Yo! Did you finish the database assignment?",
+        "timestamp": "2025-01-26T10:30:00Z"
+      },
+      {
+        "sender": "You",
+        "content": "Almost done. The JOIN queries were tricky",
+        "timestamp": "2025-01-26T10:32:00Z"
+      },
+      {
+        "sender": "Mike",
+        "content": "Tell me about it! Especially the self joins",
+        "timestamp": "2025-01-26T10:33:00Z"
+      },
+      {
+        "sender": "You",
+        "content": "Yeah! Want to review each other's work?",
+        "timestamp": "2025-01-26T10:34:00Z"
+      },
+      {
+        "sender": "Mike",
+        "content": "That would be great! Library in 30?",
+        "timestamp": "2025-01-26T10:35:00Z"
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "name": "Emma Wilson",
+    "lastActive": "2025-01-26T09:20:00Z",
+    "avatar": "emma_profile.jpg",
+    "messages": [
+      {
+        "sender": "Emma",
+        "content": "Have you started the machine learning project?",
+        "timestamp": "2025-01-26T09:00:00Z"
+      },
+      {
+        "sender": "You",
+        "content": "Just beginning. The dataset preprocessing is taking forever",
+        "timestamp": "2025-01-26T09:02:00Z"
+      },
+      {
+        "sender": "Emma",
+        "content": "I found a great library for that! Want me to share?",
+        "timestamp": "2025-01-26T09:03:00Z"
+      },
+      {
+        "sender": "You",
+        "content": "Yes please! That would be super helpful",
+        "timestamp": "2025-01-26T09:04:00Z"
+      },
+      {
+        "sender": "Emma",
+        "content": "Sent you the link. It has great documentation too",
+        "timestamp": "2025-01-26T09:05:00Z"
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "name": "David Kim",
+    "lastActive": "2025-01-26T08:15:00Z",
+    "avatar": "david_profile.jpg",
+    "messages": [
+      {
+        "sender": "David",
+        "content": "Hey! Are you going to the tech meetup next week?",
+        "timestamp": "2025-01-26T08:00:00Z"
+      },
+      {
+        "sender": "You",
+        "content": "Yeah, wouldn't miss it! Heard they're covering WebAssembly",
+        "timestamp": "2025-01-26T08:02:00Z"
+      },
+      {
+        "sender": "David",
+        "content": "Awesome! Want to grab dinner before?",
+        "timestamp": "2025-01-26T08:03:00Z"
+      },
+      {
+        "sender": "You",
+        "content": "Sure! Thai place at 6?",
+        "timestamp": "2025-01-26T08:04:00Z"
+      },
+      {
+        "sender": "David",
+        "content": "Perfect! See you then",
+        "timestamp": "2025-01-26T08:05:00Z"
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "name": "Julia Martinez",
+    "lastActive": "2025-01-26T07:30:00Z",
+    "avatar": "julia_profile.jpg",
+    "messages": [
+      {
+        "sender": "Julia",
+        "content": "Check out this new VS Code extension I found!",
+        "timestamp": "2025-01-26T07:15:00Z"
+      },
+      {
+        "sender": "You",
+        "content": "This looks amazing! Love the AI code completion feature",
+        "timestamp": "2025-01-26T07:17:00Z"
+      },
+      {
+        "sender": "Julia",
+        "content": "Right? It's been boosting my productivity so much",
+        "timestamp": "2025-01-26T07:18:00Z"
+      },
+      {
+        "sender": "You",
+        "content": "Installing it now. Any other cool extensions you recommend?",
+        "timestamp": "2025-01-26T07:19:00Z"
+      },
+      {
+        "sender": "Julia",
+        "content": "Yes! Let me send you my must-have list",
+        "timestamp": "2025-01-26T07:20:00Z"
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "name": "Ryan Thompson",
+    "lastActive": "2025-01-26T06:45:00Z",
+    "avatar": "ryan_profile.jpg",
+    "messages": [
+      {
+        "sender": "Ryan",
+        "content": "Hey, want to join our study group for the algorithms course?",
+        "timestamp": "2025-01-26T06:30:00Z"
+      },
+      {
+        "sender": "You",
+        "content": "That would be great! When do you usually meet?",
+        "timestamp": "2025-01-26T06:32:00Z"
+      },
+      {
+        "sender": "Ryan",
+        "content": "Tuesdays and Thursdays at 5PM in the CS lab",
+        "timestamp": "2025-01-26T06:33:00Z"
+      },
+      {
+        "sender": "You",
+        "content": "Perfect timing! Count me in",
+        "timestamp": "2025-01-26T06:34:00Z"
+      },
+      {
+        "sender": "Ryan",
+        "content": "Great! We're covering dynamic programming next week",
+        "timestamp": "2025-01-26T06:35:00Z"
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "name": "Sophie Anderson",
+    "lastActive": "2025-01-26T05:20:00Z",
+    "avatar": "sophie_profile.jpg",
+    "messages": [
+      {
+        "sender": "Sophie",
+        "content": "Did you see the new AI research paper I shared?",
+        "timestamp": "2025-01-26T05:00:00Z"
+      },
+      {
+        "sender": "You",
+        "content": "Just started reading it. The findings are fascinating!",
+        "timestamp": "2025-01-26T05:05:00Z"
+      },
+      {
+        "sender": "Sophie",
+        "content": "The methodology is really innovative",
+        "timestamp": "2025-01-26T05:06:00Z"
+      },
+      {
+        "sender": "You",
+        "content": "Agreed! Could be useful for our research project",
+        "timestamp": "2025-01-26T05:07:00Z"
+      },
+      {
+        "sender": "Sophie",
+        "content": "My thoughts exactly! Let's discuss it tomorrow",
+        "timestamp": "2025-01-26T05:08:00Z"
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "name": "Lucas Garcia",
+    "lastActive": "2025-01-26T04:15:00Z",
+    "avatar": "lucas_profile.jpg",
+    "messages": [
+      {
+        "sender": "Lucas",
+        "content": "Our team won the coding competition! 🏆",
+        "timestamp": "2025-01-26T04:00:00Z"
+      },
+      {
+        "sender": "You",
+        "content": "Congratulations! Your solution was brilliant!",
+        "timestamp": "2025-01-26T04:02:00Z"
+      },
+      {
+        "sender": "Lucas",
+        "content": "Thanks! Couldn't have done it without the team",
+        "timestamp": "2025-01-26T04:03:00Z"
+      },
+      {
+        "sender": "You",
+        "content": "The optimization algorithm was really clever",
+        "timestamp": "2025-01-26T04:04:00Z"
+      },
+      {
+        "sender": "Lucas",
+        "content": "Want to join our team for the next competition?",
+        "timestamp": "2025-01-26T04:05:00Z"
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "name": "Olivia Lee",
+    "lastActive": "2025-01-26T03:30:00Z",
+    "avatar": "olivia_profile.jpg",
+    "messages": [
+      {
+        "sender": "Olivia",
+        "content": "Need help with the cybersecurity project?",
+        "timestamp": "2025-01-26T03:15:00Z"
+      },
+      {
+        "sender": "You",
+        "content": "Yes please! The encryption part is confusing",
+        "timestamp": "2025-01-26T03:17:00Z"
+      },
+      {
+        "sender": "Olivia",
+        "content": "No worries! Want to screen share and I'll walk you through it?",
+        "timestamp": "2025-01-26T03:18:00Z"
+      },
+      {
+        "sender": "You",
+        "content": "That would be perfect! Now?",
+        "timestamp": "2025-01-26T03:19:00Z"
+      },
+      {
+        "sender": "Olivia",
+        "content": "Sure! I'll send you a meeting link",
+        "timestamp": "2025-01-26T03:20:00Z"
+      }
+    ]
+  },
+  {
+    "id": 12,
+    "name": "Ethan Wright",
+    "lastActive": "2025-01-26T02:45:00Z",
+    "avatar": "ethan_profile.jpg",
+    "messages": [
+      {
+        "sender": "Ethan",
+        "content": "Want to collaborate on an open-source project?",
+        "timestamp": "2025-01-26T02:30:00Z"
+      },
+      {
+        "sender": "You",
+        "content": "Sounds interesting! What kind of project?",
+        "timestamp": "2025-01-26T02:32:00Z"
+      },
+      {
+        "sender": "Ethan",
+        "content": "A React component library with AI integration",
+        "timestamp": "2025-01-26T02:33:00Z"
+      },
+      {
+        "sender": "You",
+        "content": "That sounds really cool! What's the tech stack?",
+        "timestamp": "2025-01-26T02:34:00Z"
+      },
+      {
+        "sender": "Ethan",
+        "content": "React, TypeScript, and TensorFlow.js. Interested?",
+        "timestamp": "2025-01-26T02:35:00Z"
+      }
+    ]
+  }
+]
