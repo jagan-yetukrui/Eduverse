@@ -122,6 +122,30 @@
   box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2); /* Enhanced shadow */
 }
 
+/* Logout button styling */
+.nav-logout p {
+  color: #ffffff;
+  border: none;
+  background: #ff4a4a; /* Vibrant red */
+  font-size: 1rem;
+  padding: 0.7rem 1.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 15px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15); /* Enhanced shadow */
+  transition: all 0.3s ease;
+  font-family: 'Roboto', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+}
+
+.nav-logout p:hover {
+  transform: scale(1.1);
+  background: linear-gradient(45deg, rgba(255, 74, 74, 0.3), rgba(255, 74, 74, 0.5)); /* Gradient background on hover */
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2); /* Enhanced shadow */
+}
+
 /* Active navigation item styling */
 .nav-item.active p {
   background: #e0e0e0;

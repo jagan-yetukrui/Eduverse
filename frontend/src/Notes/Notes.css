@@ -8,26 +8,9 @@
   align-items: center;
   justify-content: center;
   padding: 2rem 0;
-  background: linear-gradient(135deg, rgba(16, 20, 35, 0.95), rgba(25, 30, 45, 0.95));
-  backdrop-filter: blur(20px);
+  background: rgba(16, 20, 35, 0.95);
   position: relative;
   overflow: hidden;
-}
-
-/* Background Grid Animation */
-.notes-page::before {
-  content: '';
-  position: absolute;
-  width: 200%;
-  height: 200%;
-  background: repeating-linear-gradient(
-    45deg,
-    rgba(99, 102, 241, 0.05) 0px,
-    rgba(99, 102, 241, 0.05) 2px,
-    transparent 2px,
-    transparent 10px
-  );
-  animation: gridMove 20s linear infinite;
 }
 
 /* Main Container */
@@ -44,7 +27,7 @@
     0 0 60px rgba(99, 102, 241, 0.25),
     inset 0 0 40px rgba(99, 102, 241, 0.15);
   padding: 2.5rem;
-  background: rgba(20, 24, 40, 0.9);
+  background: rgba(16, 20, 35, 0.95);
   position: relative;
   z-index: 1;
   transition: transform 0.3s ease;
@@ -86,12 +69,8 @@
   justify-content: center;
   gap: 2.5rem;
   padding: 2rem;
-  background: linear-gradient(135deg, 
-    rgba(99, 102, 241, 0.15), 
-    rgba(139, 92, 246, 0.15)
-  );
+  background: rgba(16, 20, 35, 0.95);
   border-radius: 20px;
-  backdrop-filter: blur(10px);
   border: 1px solid rgba(99, 102, 241, 0.3);
   position: relative;
   overflow: hidden;
@@ -112,7 +91,7 @@
   padding: 1rem 1.5rem;
   border: 2px solid rgba(99, 102, 241, 0.4);
   border-radius: 15px;
-  background: rgba(20, 24, 40, 0.8);
+  background: rgba(16, 20, 35, 0.95);
   color: #e4e6eb;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -218,7 +197,7 @@
 .notes-list {
   width: calc(100% - 4rem);
   margin: 2rem;
-  background: rgba(20, 24, 40, 0.97);
+  background: rgba(16, 20, 35, 0.95);
   border-radius: 20px;
   padding: 1.5rem;
   border: 1px solid rgba(99, 102, 241, 0.4);
@@ -265,7 +244,7 @@
 
 .note-textarea {
   flex: 1;
-  background: rgba(20, 24, 40, 0.97);
+  background: rgba(16, 20, 35, 0.95);
   border: 2px solid rgba(99, 102, 241, 0.35);
   border-radius: 12px;
   color: #e4e6eb;

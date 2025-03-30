@@ -199,30 +199,23 @@ export default MyComponent;`
   };
 
   const handleProjectSelect = (project) => {
-    // Check for projects in all available skills
+    // Find the selected project from the appropriate dataset
     let selectedProject = null;
     
-    if (selectedSkill === 'python') {
-      selectedProject = pythonProjects.find(p => p.id === project.id);
-    } else if (selectedSkill === 'java') {
-      selectedProject = javaProjects.find(p => p.id === project.id);
-    } else if (selectedSkill === 'aws') {
-      selectedProject = awsProjects.find(p => p.id === project.id);
-    } else if (selectedSkill === 'sql') {
-      selectedProject = sqlProjects.find(p => p.id === project.id);
-    } else if (selectedSkill === 'node') {
-      selectedProject = nodeProjects.find(p => p.id === project.id);
-    } else if (selectedSkill === 'react') {
-      selectedProject = reactProjects.find(p => p.id === project.id);
+    // Get the project from the corresponding dataset based on selected skill
+    if (projectsBySkill[selectedSkill]) {
+      selectedProject = projectsBySkill[selectedSkill].find(p => p.id === project.id);
     }
           
     if (selectedProject) {
+      // Unlock the first task and step
       if (selectedProject.tasks.length > 0) {
         selectedProject.tasks[0].isUnlocked = true;
         if (selectedProject.tasks[0].steps.length > 0) {
           selectedProject.tasks[0].steps[0].isUnlocked = true;
         }
       }
+      // Navigate to the project steps page with the selected project data
       navigate(`/projects/${selectedProject.id}/steps`, {
         state: { 
           project: selectedProject,
@@ -266,7 +259,7 @@ export default MyComponent;`
           <div className="projects-list">
             <h3>🏰 Available Quests 🏰</h3>
             <div className="project-cards">
-              {projectsBySkill[selectedSkill].map((project) => (
+              {projectsBySkill[selectedSkill] && projectsBySkill[selectedSkill].map((project) => (
                 <div 
                   key={project.id}
                   className="project-card"

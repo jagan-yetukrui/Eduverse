@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { pythonProjects, javaProjects } from './ProjectsData';
-import awsProjectsData from './aws_projects_complete.json';
-import sqlProjectsData from './sql_projects_complete.json';
-import nodeProjectsData from './node_projects_complete.json';
-import reactProjectsData from './react_projects_complete.json';
+import { awsProjects } from './ProjectsData';
+import { sqlProjects } from './ProjectsData';
+import { nodeProjects } from './ProjectsData';
+import { reactProjects } from './ProjectsData';
 import CodeEditor from './CodeEditor';
 import './Steps.css';
 
@@ -99,15 +99,15 @@ const StepCard = ({ step, isSelected, onSelect, onComplete, currentStatus, onRet
           
           {step.guidelines && (
             <div className="step-instructions game-instructions">
-              <h4 className="instructions-title">Mission Briefing:</h4>
+              <h4 className="instructions-title" style={{ color: 'white' }}>Mission Briefing:</h4>
               <ul className="guidelines-list">
                 {Array.isArray(step.guidelines) ? 
                   step.guidelines.map((guideline, index) => (
-                    <li key={index} className="guideline-item">
+                    <li key={index} className="guideline-item" style={{ color: 'white' }}>
                       <span className="guideline-bullet">•</span> {guideline.replace(/^\d+\.\s*/, '')}
                     </li>
                   )) : 
-                  <div className="instruction-content futuristic-description">{step.guidelines}</div>
+                  <div className="instruction-content futuristic-description" style={{ color: 'white' }}>{step.guidelines}</div>
                 }
               </ul>
             </div>
@@ -115,8 +115,8 @@ const StepCard = ({ step, isSelected, onSelect, onComplete, currentStatus, onRet
           
           {step.expectedOutput && (
             <div className="expected-output game-expected-output">
-              <h4 className="output-title">Expected Mission Outcome:</h4>
-              <pre className="output-content">{step.expectedOutput}</pre>
+              <h4 className="output-title" style={{ color: 'white' }}>Expected Mission Outcome:</h4>
+              <pre className="output-content" style={{ color: 'white' }}>{step.expectedOutput}</pre>
             </div>
           )}
           
@@ -262,152 +262,17 @@ const Steps = () => {
         projectsArray = pythonProjects;
         jsonData = await import('./python_projects_complete.json');
       } else if (projectId.startsWith('AWS')) {
-        projectsArray = awsProjectsData.projects.map(project => ({
-          id: project.project_id,
-          name: project.project_name,
-          difficulty: project.difficulty || "Beginner",
-          description: project.description,
-          questProgress: 0,
-          xpGained: 0,
-          tasks: project.tasks.map(task => ({
-            task_id: task.task_id,
-            task_name: task.task_name,
-            description: task.description,
-            isUnlocked: task.task_id === project.tasks[0].task_id, // First task is unlocked
-            isCompleted: false,
-            reward: Math.floor(Math.random() * 50) + 50,
-            steps: task.steps.map(step => ({
-              step_id: step.step_id,
-              step_name: step.step_name,
-              description: step.description,
-              guidelines: step.guidelines,
-              isCompleted: false,
-              isUnlocked: false,
-              xpValue: Math.floor(Math.random() * 20) + 10,
-              starterCode: `# 🎮 ${step.step_name}
-# 📝 Follow the guidelines to complete this step
-
-# AWS CLI or CloudFormation snippet
-# TODO: Implement your AWS solution here`
-            }))
-          }))
-        }));
-        jsonData = awsProjectsData;
+        projectsArray = awsProjects;
+        jsonData = await import('./aws_projects_complete.json');
       } else if (projectId.startsWith('S')) {
-        projectsArray = sqlProjectsData.projects.map(project => ({
-          id: project.project_id,
-          name: project.project_name,
-          difficulty: project.difficulty || "Beginner",
-          description: project.description,
-          questProgress: 0,
-          xpGained: 0,
-          tasks: project.tasks.map(task => ({
-            task_id: task.task_id,
-            task_name: task.task_name,
-            description: task.description,
-            isUnlocked: task.task_id === project.tasks[0].task_id, // First task is unlocked
-            isCompleted: false,
-            reward: Math.floor(Math.random() * 50) + 50,
-            steps: task.steps.map(step => ({
-              step_id: step.step_id,
-              step_name: step.step_name,
-              description: step.description,
-              guidelines: step.guidelines,
-              isCompleted: false,
-              isUnlocked: false,
-              xpValue: Math.floor(Math.random() * 20) + 10,
-              starterCode: `-- 🎮 ${step.step_name}
--- 📝 Follow the guidelines to complete this step
-
--- SQL Query
--- TODO: Write your SQL query here`
-            }))
-          }))
-        }));
-        jsonData = sqlProjectsData;
+        projectsArray = sqlProjects;
+        jsonData = await import('./sql_projects_complete.json');
       } else if (projectId.startsWith('N')) {
-        projectsArray = nodeProjectsData.projects.map(project => ({
-          id: project.project_id,
-          name: project.project_name,
-          difficulty: project.difficulty || "Beginner",
-          description: project.description,
-          questProgress: 0,
-          xpGained: 0,
-          tasks: project.tasks.map(task => ({
-            task_id: task.task_id,
-            task_name: task.task_name,
-            description: task.description,
-            isUnlocked: task.task_id === project.tasks[0].task_id, // First task is unlocked
-            isCompleted: false,
-            reward: Math.floor(Math.random() * 50) + 50,
-            steps: task.steps.map(step => ({
-              step_id: step.step_id,
-              step_name: step.step_name,
-              description: step.description,
-              guidelines: step.guidelines,
-              isCompleted: false,
-              isUnlocked: false,
-              xpValue: Math.floor(Math.random() * 20) + 10,
-              starterCode: `// 🎮 ${step.step_name}
-// 📝 Follow the guidelines to complete this step
-
-// Node.js code
-// TODO: Implement your Node.js solution here
-const express = require('express');
-const app = express();
-
-// Your code here
-
-app.listen(3000, () => {
-  console.log('Server running on port 3000');
-});`
-            }))
-          }))
-        }));
-        jsonData = nodeProjectsData;
+        projectsArray = nodeProjects;
+        jsonData = await import('./node_projects_complete.json');
       } else if (projectId.startsWith('R')) {
-        projectsArray = reactProjectsData.projects.map(project => ({
-          id: project.project_id,
-          name: project.project_name,
-          difficulty: project.difficulty || "Beginner",
-          description: project.description,
-          questProgress: 0,
-          xpGained: 0,
-          tasks: project.tasks.map(task => ({
-            task_id: task.task_id,
-            task_name: task.task_name,
-            description: task.description,
-            isUnlocked: task.task_id === project.tasks[0].task_id, // First task is unlocked
-            isCompleted: false,
-            reward: Math.floor(Math.random() * 50) + 50,
-            steps: task.steps.map(step => ({
-              step_id: step.step_id,
-              step_name: step.step_name,
-              description: step.description,
-              guidelines: step.guidelines,
-              isCompleted: false,
-              isUnlocked: false,
-              xpValue: Math.floor(Math.random() * 20) + 10,
-              starterCode: `// 🎮 ${step.step_name}
-// 📝 Follow the guidelines to complete this step
-
-import React, { useState } from 'react';
-
-function App() {
-  // TODO: Implement your React component here
-  return (
-    <div className="App">
-      <h1>React Project</h1>
-      {/* Your JSX code here */}
-    </div>
-  );
-}
-
-export default App;`
-            }))
-          }))
-        }));
-        jsonData = reactProjectsData;
+        projectsArray = reactProjects;
+        jsonData = await import('./react_projects_complete.json');
       } else {
         // Default to Python if no match
         projectsArray = pythonProjects;
@@ -1010,20 +875,20 @@ export default App;`
         <button className="back-button neon-button" onClick={handleBackClick}>← Return to Quest Hub</button>
         <h1 className="project-title game-title">{project.name}</h1>
         <div className="project-progress game-progress">
-          <div className="progress-bar">
+          <div className="progress-bar" style={{ backgroundColor: 'white' }}>
             <div 
               className="progress-fill" 
-              style={{ width: `${project.questProgress}%` }}
+              style={{ width: `${project.questProgress}%`, backgroundColor: 'white' }}
             ></div>
           </div>
-          <span className="progress-text">{project.questProgress}% Quest Completion</span>
+          <span className="progress-text" style={{ color: 'white' }}>{project.questProgress}% Quest Completion</span>
           <div className="xp-badge game-badge">
-            <span className="xp-icon">⭐</span>
-            <span>XP: {project.xpGained}</span>
+            <span className="xp-icon" style={{ color: 'white' }}>⭐</span>
+            <span style={{ color: 'white' }}>XP: {project.xpGained}</span>
           </div>
           <div className="streak-counter game-counter">
-            <span className="streak-icon">🔥</span>
-            <span>Streak: {streakCount}</span>
+            <span className="streak-icon" style={{ color: 'white' }}>🔥</span>
+            <span style={{ color: 'white' }}>Streak: {streakCount}</span>
           </div>
         </div>
         <button className="scroll-to-editor-button neon-button" onClick={scrollToCodeEditor}>
@@ -1094,15 +959,15 @@ export default App;`
                           
                           {step.guidelines && (
                             <div className="step-instructions game-instructions">
-                              <h4 className="instructions-title">Mission Briefing:</h4>
+                              <h4 className="instructions-title" style={{ color: 'white' }}>Mission Briefing:</h4>
                               <ul className="guidelines-list">
                                 {Array.isArray(step.guidelines) ? 
                                   step.guidelines.map((guideline, index) => (
-                                    <li key={index} className="guideline-item">
+                                    <li key={index} className="guideline-item" style={{ color: 'white' }}>
                                       <span className="guideline-bullet">•</span> {guideline}
                                     </li>
                                   )) : 
-                                  <div className="instruction-content futuristic-description">{step.guidelines}</div>
+                                  <div className="instruction-content futuristic-description" style={{ color: 'white' }}>{step.guidelines}</div>
                                 }
                               </ul>
                             </div>
@@ -1110,8 +975,8 @@ export default App;`
                           
                           {step.expectedOutput && (
                             <div className="expected-output game-expected-output">
-                              <h4 className="output-title">Expected Mission Outcome:</h4>
-                              <pre className="output-content">{step.expectedOutput}</pre>
+                              <h4 className="output-title" style={{ color: 'white' }}>Expected Mission Outcome:</h4>
+                              <pre className="output-content" style={{ color: 'white' }}>{step.expectedOutput}</pre>
                             </div>
                           )}
                           

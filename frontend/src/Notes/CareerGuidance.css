@@ -2,16 +2,17 @@
   padding: 3rem;
   max-width: 1200px;
   margin: 0 auto;
-  background: rgba(255, 255, 255, 0.98);
+  background: linear-gradient(135deg, #1a1a2e, #16213e); /* Cosmic background for the entire section */
   border-radius: 30px;
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.12);
   backdrop-filter: blur(10px);
+  color: #00ffcc; /* Bright text color for the entire section */
 }
 
 .career-guidance h2 {
   text-align: center;
   margin-bottom: 3rem;
-  color: #1a1a1a;
+  color: #00ffcc; /* Bright text color */
   font-size: 3.5rem;
   font-weight: 900;
   background: linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899);
@@ -27,7 +28,7 @@
   border: none;
   border-radius: 12px;
   background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-  color: white;
+  color: #00ffcc; /* Bright text color */
   font-weight: 600;
   font-size: 1.1rem;
   cursor: pointer;
@@ -62,13 +63,14 @@
 }
 
 .question-card {
-  background: #ffffff;
+  background: #1a1a2e; /* Dark background for the card */
   border-radius: 24px;
   padding: 3rem;
   margin-bottom: 3rem;
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
   border: 1px solid rgba(0, 0, 0, 0.06);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  color: #00ffcc; /* Bright text color */
 }
 
 .question-card:hover {
@@ -77,7 +79,7 @@
 }
 
 .question-card h3 {
-  color: #1a1a1a;
+  color: #00ffcc; /* Bright text color */
   font-size: 1.8rem;
   font-weight: 700;
   margin-bottom: 2.5rem;
@@ -95,7 +97,7 @@
   border: none;
   border-radius: 16px;
   background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-  color: #ffffff;
+  color: #00ffcc; /* Bright text color */
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   font-weight: 600;
@@ -120,8 +122,8 @@
   padding: 1.4rem;
   border-radius: 16px;
   border: 2px solid #e5e7eb;
-  background: #ffffff;
-  color: #1a1a1a;
+  background: #1a1a2e; /* Dark background for the input */
+  color: #00ffcc; /* Bright text color */
   font-size: 1.15rem;
   font-weight: 500;
   transition: all 0.3s ease;
@@ -134,13 +136,14 @@
 }
 
 .recommendation-card {
-  background: #ffffff;
+  background: #1a1a2e; /* Dark background for the card */
   border-radius: 24px;
   padding: 3rem;
   margin-top: 3rem;
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
   border: 1px solid rgba(0, 0, 0, 0.06);
   transition: all 0.4s ease;
+  color: #00ffcc; /* Bright text color */
 }
 
 .recommendation-card:hover {
@@ -149,7 +152,7 @@
 }
 
 .recommendation-card h3 {
-  color: #1a1a1a;
+  color: #00ffcc; /* Bright text color */
   font-size: 2.2rem;
   font-weight: 800;
   margin-bottom: 2rem;
@@ -161,7 +164,7 @@
 }
 
 .recommendation-card p {
-  color: #374151;
+  color: #00ffcc; /* Bright text color */
   line-height: 1.9;
   font-size: 1.15rem;
   margin-bottom: 1.5rem;
@@ -176,7 +179,7 @@
 
 .skill-tag {
   background: linear-gradient(135deg, #3b82f615, #8b5cf615);
-  color: #4f46e5;
+  color: #00ffcc; /* Bright text color */
   padding: 0.8rem 1.4rem;
   border-radius: 100px;
   font-size: 1.05rem;

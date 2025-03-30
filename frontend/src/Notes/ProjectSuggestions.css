@@ -186,7 +186,7 @@
   border-radius: 15px;
   background: linear-gradient(135deg, #6366f1, #8b5cf6, #6366f1);
   background-size: 200% 200%;
-  color: white;
+  color: #e4e6eb;
   font-weight: 600;
   font-size: 1rem; /* Decreased font size */
   cursor: pointer;
