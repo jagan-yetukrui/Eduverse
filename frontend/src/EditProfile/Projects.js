@@ -6,143 +6,123 @@ import './Projects.css';
  * Projects component for managing user's projects and research
  * Allows users to view, add, edit and delete projects from their profile
  */
-const Projects = ({ projects: initialProjects, onUpdate }) => {
-  const [projects, setProjects] = useState([]);
-  const [error, setError] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-
-  // Initialize with passed projects data
-  useEffect(() => {
-    if (initialProjects) {
-      setProjects(initialProjects);
-    }
-  }, [initialProjects]);
-
+const Projects = () => {
+  // State management for projects list and form handling
+  const [projects, setProjects] = useState([]); // Array of user's projects
   const [newProject, setNewProject] = useState({
     title: '',
-    description: '',
+    description: '', 
+    technologies: '',
     start_date: '',
     end_date: '',
-    url: '',
-    is_research: false,
-    collaborators: []
+    link: '',
   });
+  const [error, setError] = useState(''); // Error message state
+  const [successMessage, setSuccessMessage] = useState(''); // Success message state
+  const [isLoading, setIsLoading] = useState(false); // Loading state for API operations
+
+  // Fetch projects when component mounts
+  useEffect(() => {
+    fetchProjects();
+  }, []);
+
+  /**
+   * Fetches user's projects from the backend API
+   * Updates projects state with the response data
+   */
+  const fetchProjects = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get('/api/profiles/me/', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setProjects(response.data.projects || []);
+    } catch (error) {
+      console.error('Error fetching projects:', error);
+      setError('Failed to load projects. Please try again.');
+    }
+  };
 
   /**
    * Handles input changes in the project form
+   * @param {Event} e - Input change event
    */
   const handleChange = (e) => {
-    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-    setNewProject({ ...newProject, [e.target.name]: value });
+    setNewProject({ ...newProject, [e.target.name]: e.target.value });
     setError('');
     setSuccessMessage('');
   };
 
   /**
-   * Handles adding a new project
+   * Handles the addition of a new project
+   * Validates input and makes API call to add project
    */
   const handleAddProject = async () => {
+    setError('');
+    setSuccessMessage('');
+    setIsLoading(true);
+
+    // Input validation
+    if (!newProject.title.trim() || !newProject.description.trim()) {
+      setError('Title and description are required.');
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      setIsLoading(true);
-      setError('');
-      
-      // Validate required fields
-      if (!newProject.title || !newProject.description) {
-        setError('Title and description are required');
-        return;
-      }
-
-      // Validate dates
-      if (newProject.end_date && new Date(newProject.end_date) < new Date(newProject.start_date)) {
-        setError('End date cannot be before start date');
-        return;
-      }
-
       const token = localStorage.getItem('token');
       const response = await axios.post(
-        '/api/profiles/me/projects/',
+        '/api/profiles/add-project/',
         newProject,
         {
           headers: { Authorization: `Bearer ${token}` }
         }
       );
 
-      // Update state and notify parent
-      const updatedProjects = [...projects, response.data];
-      setProjects(updatedProjects);
-      onUpdate(updatedProjects);
-      
-      // Reset form
+      // Update state on successful addition
+      setProjects(response.data.projects);
       setNewProject({
         title: '',
         description: '',
+        technologies: '',
         start_date: '',
         end_date: '',
-        url: '',
-        is_research: false,
-        collaborators: []
+        link: '',
       });
-      
-      setSuccessMessage('Project added successfully');
+      setSuccessMessage('Project added successfully!');
     } catch (error) {
       console.error('Error adding project:', error);
-      setError(error.response?.data?.message || 'Failed to add project');
+      if (error.response?.data?.message) {
+        setError(error.response.data.message);
+      } else {
+        setError('Failed to add project. Please try again.');
+      }
     } finally {
       setIsLoading(false);
     }
   };
 
   /**
-   * Handles updating an existing project
+   * Handles the deletion of a project
+   * Makes API call to remove project
+   * @param {string} projectId - ID of project to delete
    */
-  const handleUpdateProject = async (id, projectData) => {
-    try {
-      setIsLoading(true);
-      const token = localStorage.getItem('token');
-      const response = await axios.put(
-        `/api/profiles/me/projects/`,
-        { ...projectData, id },
-        {
-          headers: { Authorization: `Bearer ${token}` }
-        }
-      );
+  const handleDeleteProject = async (projectId) => {
+    setError('');
+    setSuccessMessage('');
+    setIsLoading(true);
 
-      // Update state and notify parent
-      const updatedProjects = projects.map(project => 
-        project.id === id ? response.data : project
-      );
-      setProjects(updatedProjects);
-      onUpdate(updatedProjects);
-      setSuccessMessage('Project updated successfully');
-    } catch (error) {
-      console.error('Error updating project:', error);
-      setError(error.response?.data?.message || 'Failed to update project');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  /**
-   * Handles deleting a project
-   */
-  const handleDeleteProject = async (id) => {
     try {
-      setIsLoading(true);
       const token = localStorage.getItem('token');
-      await axios.delete(`/api/profiles/me/projects/`, {
-        headers: { Authorization: `Bearer ${token}` },
-        data: { id }
+      const response = await axios.delete(`/api/profiles/delete-project/${projectId}/`, {
+        headers: { Authorization: `Bearer ${token}` }
       });
 
-      // Update state and notify parent
-      const updatedProjects = projects.filter(project => project.id !== id);
-      setProjects(updatedProjects);
-      onUpdate(updatedProjects);
-      setSuccessMessage('Project deleted successfully');
+      setProjects(response.data.projects);
+      setSuccessMessage('Project deleted successfully!');
     } catch (error) {
       console.error('Error deleting project:', error);
-      setError(error.response?.data?.message || 'Failed to delete project');
+      setError('Failed to delete project. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -152,123 +132,82 @@ const Projects = ({ projects: initialProjects, onUpdate }) => {
     <div className="projects-container">
       <h2>Projects & Research</h2>
       
-      {/* Messages */}
-      {error && <div className="error-message">{error}</div>}
-      {successMessage && <div className="success-message">{successMessage}</div>}
-
-      {/* Add Project Form */}
+      {/* Project input form */}
       <div className="project-form">
-        <div className="input-group">
-          <label>Title</label>
-          <input
-            type="text"
-            name="title"
-            value={newProject.title}
-            onChange={handleChange}
-            placeholder="Project Title"
-            required
-          />
-        </div>
-
-        <div className="input-group">
-          <label>Description</label>
-          <textarea
-            name="description"
-            value={newProject.description}
-            onChange={handleChange}
-            placeholder="Project Description"
-            required
-          />
-        </div>
-
-        <div className="input-group">
-          <label>Start Date</label>
-          <input
-            type="date"
-            name="start_date"
-            value={newProject.start_date}
-            onChange={handleChange}
-          />
-        </div>
-
-        <div className="input-group">
-          <label>End Date</label>
-          <input
-            type="date"
-            name="end_date"
-            value={newProject.end_date}
-            onChange={handleChange}
-            min={newProject.start_date}
-          />
-        </div>
-
-        <div className="input-group">
-          <label>Project URL</label>
-          <input
-            type="url"
-            name="url"
-            value={newProject.url}
-            onChange={handleChange}
-            placeholder="Project URL (optional)"
-          />
-        </div>
-
-        <div className="input-group checkbox">
-          <label>
-            <input
-              type="checkbox"
-              name="is_research"
-              checked={newProject.is_research}
-              onChange={handleChange}
-            />
-            This is a research project
-          </label>
-        </div>
-
+        <input
+          type="text"
+          name="title"
+          value={newProject.title}
+          onChange={handleChange}
+          placeholder="Project Title"
+          required
+        />
+        <textarea
+          name="description"
+          value={newProject.description}
+          onChange={handleChange}
+          placeholder="Project Description"
+          required
+        />
+        <input
+          type="text"
+          name="technologies"
+          value={newProject.technologies}
+          onChange={handleChange}
+          placeholder="Technologies Used (comma-separated)"
+        />
+        <input
+          type="date"
+          name="start_date"
+          value={newProject.start_date}
+          onChange={handleChange}
+        />
+        <input
+          type="date"
+          name="end_date"
+          value={newProject.end_date}
+          onChange={handleChange}
+        />
+        <input
+          type="url"
+          name="link"
+          value={newProject.link}
+          onChange={handleChange}
+          placeholder="Project Link (optional)"
+        />
         <button 
           onClick={handleAddProject}
           disabled={isLoading}
-          className="add-button"
         >
           {isLoading ? 'Adding...' : 'Add Project'}
         </button>
       </div>
 
-      {/* Projects List */}
+      {/* Error and success messages */}
+      {error && <p className="error-message">{error}</p>}
+      {successMessage && <p className="success-message">{successMessage}</p>}
+
+      {/* Projects list */}
       <div className="projects-list">
         {projects.map((project) => (
           <div key={project.id} className="project-item">
             <h3>{project.title}</h3>
-            <p className="description">{project.description}</p>
-            <div className="project-details">
+            <p>{project.description}</p>
+            <p><strong>Technologies:</strong> {project.technologies}</p>
+            <p>
+              <strong>Duration:</strong> {project.start_date} to {project.end_date}
+            </p>
+            {project.link && (
               <p>
-                <strong>Duration:</strong> {project.start_date} to {project.end_date || 'Present'}
+                <strong>Link:</strong> <a href={project.link} target="_blank" rel="noopener noreferrer">{project.link}</a>
               </p>
-              {project.url && (
-                <p>
-                  <strong>URL:</strong> <a href={project.url} target="_blank" rel="noopener noreferrer">{project.url}</a>
-                </p>
-              )}
-              <p>
-                <strong>Type:</strong> {project.is_research ? 'Research Project' : 'Project'}
-              </p>
-            </div>
-            <div className="button-group">
-              <button 
-                onClick={() => handleUpdateProject(project.id, project)}
-                disabled={isLoading}
-                className="edit-button"
-              >
-                {isLoading ? 'Updating...' : 'Edit'}
-              </button>
-              <button 
-                onClick={() => handleDeleteProject(project.id)}
-                disabled={isLoading}
-                className="delete-button"
-              >
-                {isLoading ? 'Deleting...' : 'Delete'}
-              </button>
-            </div>
+            )}
+            <button 
+              onClick={() => handleDeleteProject(project.id)}
+              disabled={isLoading}
+            >
+              {isLoading ? 'Deleting...' : 'Delete'}
+            </button>
           </div>
         ))}
       </div>

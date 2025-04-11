@@ -2,11 +2,11 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
+from .models import CustomUser  # ✅ Import your custom user model
 
 User = get_user_model()
 
 class RegisterSerializer(serializers.ModelSerializer):
-    user_id = serializers.IntegerField(read_only=True)
     email = serializers.EmailField(
         required=True,
         validators=[UniqueValidator(queryset=User.objects.all())]
@@ -21,7 +21,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('user_id', 'username', 'email', 'password', 'password2', 'agreeToTerms')
+        fields = ('username', 'email', 'password', 'password2', 'agreeToTerms')
     
     def validate(self, attrs):
         if attrs['password'] != attrs['password2']:
@@ -53,3 +53,18 @@ class LoginSerializer(serializers.Serializer):
             except User.DoesNotExist:
                 raise serializers.ValidationError("No user found with this email address.")
         return value
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ["username", "email", "first_name", "last_name", "bio", "profile_picture", "location"]
+        extra_kwargs = {
+            "username": {"read_only": True},  # Prevent username changes
+            "email": {"required": False},  # Optional email update
+        }
+
+        
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser  # Ensure this is correct
+        fields = ["username", "email", "first_name", "last_name", "bio", "location"]

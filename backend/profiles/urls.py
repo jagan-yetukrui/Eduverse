@@ -1,7 +1,8 @@
 from django.urls import path, include
 from django.contrib import admin
 from rest_framework.routers import DefaultRouter
-from .views import ProfileViewSet
+from .views import UserProfileView, ProfileViewSet  # ✅ Correct import
+from accounts.views import UpdateUserProfile  # ✅ Import from accounts
 
 router = DefaultRouter()
 router.register(r'', ProfileViewSet, basename='profile')
@@ -11,6 +12,7 @@ urlpatterns = [
     
     # Profile detail and edit
     path('me/', ProfileViewSet.as_view({'get': 'me', 'put': 'me', 'patch': 'me'}), name='profile-me'),
+    path('', include(router.urls)),  # Include ViewSet URLs
     path('me/stats/', ProfileViewSet.as_view({'get': 'stats'}), name='profile-stats'),
     path('<str:username>/', ProfileViewSet.as_view({'get': 'retrieve'}), name='profile-detail'),
     path('<str:username>/edit/', ProfileViewSet.as_view({
@@ -98,7 +100,6 @@ urlpatterns = [
     path('<str:username>/followers/', ProfileViewSet.as_view({'get': 'followers'}), name='profile-followers'),
     path('<str:username>/following/', ProfileViewSet.as_view({'get': 'following'}), name='profile-following'),
     path('<str:username>/follow/', ProfileViewSet.as_view({'post': 'follow', 'delete': 'unfollow'}), name='profile-follow'),
-    path('<str:username>/unfollow/', ProfileViewSet.as_view({'post': 'unfollow'}), name='profile-unfollow'),
     
     # Search
     path('search/', ProfileViewSet.as_view({'get': 'list'}), name='profile-search'),

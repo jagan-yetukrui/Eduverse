@@ -1,11 +1,15 @@
 from django.urls import path
-from .views import AccountsRootView, RegisterView, LoginView, ProtectedView
-from rest_framework_simplejwt.views import TokenRefreshView
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from .serializers import UserProfileSerializer
+from accounts.views import UpdateUserProfile, UserProfileView
+
 
 urlpatterns = [
-    path('', AccountsRootView.as_view(), name='accounts-root'),  # Root of `/api/accounts/`
-    path('register/', RegisterView.as_view(), name='register'),
-    path('login/', LoginView.as_view(), name='login'),
+    path('login/', TokenObtainPairView.as_view(), name='login'),
+    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('protected-endpoint/', ProtectedView.as_view(), name='protected-endpoint'),
+
+    # ✅ Profile-related endpoints
+    path("update-profile/", UpdateUserProfile.as_view(), name="update-profile"),
+    path("profiles/me/", UserProfileView.as_view(), name="user-profile"),
 ]

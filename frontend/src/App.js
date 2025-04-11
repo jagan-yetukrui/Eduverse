@@ -3,8 +3,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './Navbar/Navbar';
 import ErrorBoundary from './ErrorBoundary/ErrorBoundary';
 import './App.css';
-import { UserProvider } from './Accounts/UserContext';
-import { ProfileProvider } from './Profile/ProfileContext';
 
 // Lazy load components to improve performance
 const Home = lazy(() => import('./Home/Home'));
@@ -19,14 +17,10 @@ const PostList = lazy(() => import('./Posts/PostList'));
 const Search = lazy(() => import('./Search/Searchpage'));
 const Settings = lazy(() => import('./Settings/Settings'));
 const TinyMCEDemo = lazy(() => import('./TinyMCEDemo'));
-const ProjectSuggestions = lazy(() => import('./Notes/ProjectSuggestions'));
-const CareerGuidance = lazy(() => import('./Notes/CareerGuidance'));
-const ProjectDetails = lazy(() => import('./Notes/ProjectsData')); // Fixed import path and component name
-const Steps = lazy(() => import('./Notes/Steps'));
 
 // Settings subpages
 const ProfilePrivacy = lazy(() => import('./Settings/ProfilePrivacy'));
-const Notifications = lazy(() => import('./Settings/Notifications')); 
+const Notifications = lazy(() => import('./Settings/Notifications'));
 const Blocked = lazy(() => import('./Settings/Blocked'));
 const Help = lazy(() => import('./Settings/Help'));
 const AccountSettings = lazy(() => import('./Settings/AccountSettings'));
@@ -68,10 +62,6 @@ function App() {
                   </Route>
                   <Route path="/messages" element={<Messages />} />
                   <Route path="/notes" element={<Notes />} />
-                  <Route path="/project-suggestions" element={<ProjectSuggestions />} />
-                  <Route path="/career-guidance" element={<CareerGuidance />} />
-                  <Route path="/projects/:projectId" element={<ProjectDetails />} />
-                  <Route path="/projects/:projectId/steps" element={<Steps />} />
                   <Route path="/posts" element={<PostList />} />
                   <Route path="/newpost" element={<NewPost />} />
                   <Route path="/search" element={<Search />} />
@@ -101,5 +91,4 @@ function App() {
     </React.StrictMode>
   );
 }
-
 export default App;

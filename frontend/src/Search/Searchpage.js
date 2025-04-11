@@ -86,6 +86,7 @@ const Search = () => {
       triggerSearchAnimation();
 
       try {
+        // const response = await fetch(`/api/users/search?query=${encodeURIComponent(query)}&detailed=true`);
         const response = await fetch(
           `http://localhost:8000/api/search/?name=${encodeURIComponent(
             query
@@ -95,6 +96,7 @@ const Search = () => {
         const results = await response.json();
         console.log(results);
 
+        // Delay results to sync with animation
         setTimeout(() => {
           setSearchResults(results);
           setLoading(false);
@@ -123,53 +125,88 @@ const Search = () => {
       <form onSubmit={handleSearch} className="search-bar" ref={searchBarRef}>
         <input
           type="text"
-          placeholder="Search for users, posts, and more..."
+          placeholder="Search anything"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onFocus={(e) => e.target.classList.add("focused")}
           onBlur={(e) => e.target.classList.remove("focused")}
           autoComplete="off"
-          className="search-input"
         />
-        <button type="submit" disabled={loading} className="search-button">
-          {loading ? (
-            <div className="loading-spinner-small"></div>
-          ) : (
-            <i className="fas fa-search"></i>
-          )}
+        <button type="submit" disabled={loading}>
+          {loading ? "Searching..." : "Search"}
         </button>
       </form>
 
-      {loading && (
-        <div className="loading-container">
-          <div className="loading-spinner"></div>
-          <p>Searching the universe...</p>
-        </div>
-      )}
+      {loading && <div className="loading-spinner">Loading...</div>}
 
       {suggestions.length > 0 && (
-        <div className="suggestions-container">
-          <ul className="suggestions-list">
-            {suggestions.map((user) => (
-              <li
-                key={user.id}
-                onClick={() => handleSuggestionClick(user.id)}
-                className="suggestion-item"
-              >
-                <div className="suggestion-avatar">
-                  <img src={user.avatar} alt={user.name} />
-                </div>
-                <div className="suggestion-content">
-                  <h3>{user.username}</h3>
-                  <p>{user.title}</p>
+        <ul className="suggestions-list">
+          {suggestions.map((user) => (
+            <li
+              key={user.id}
+              onClick={() => handleSuggestionClick(user.id)}
+              className="suggestion-item"
+            >
+              <img src={user.avatar} alt={user.name} className="user-avatar" />
+              <div className="user-info">
+                <h3>{user.username}</h3>
+                <p className="user-title">{user.title}</p>
+                <div className="mutual-connections">
                   {user.mutualCount > 0 && (
-                    <div className="mutual-info">
-                      <span>{user.mutualCount} mutual connections</span>
-                      <div className="mutual-avatars">
+                    <>
+                      <span className="mutual-count">
+                        {user.mutualCount} mutual connections
+                      </span>
+                      <div className="mutual-preview">
                         {user.mutualConnections.slice(0, 3).map((mutual) => (
-                          <img key={mutual.id} src={mutual.avatar} alt={mutual.name} />
+                          <span key={mutual.id} className="mutual-name">
+                            {mutual.name}
+                          </span>
                         ))}
                       </div>
+                    </>
+                  )}
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {showResults && searchResults.length > 0 && (
+        <div className="search-results">
+          <h3>Search Results</h3>
+          <ul>
+            {searchResults.map((user, index) => (
+              <li
+                key={user.id}
+                className="result-item"
+                style={{ animationDelay: `${index * 0.1}s` }}
+                onClick={() => {
+                  const card = document.querySelector(
+                    `[data-user-id="${user.id}"]`
+                  );
+                  card.classList.add("expanded");
+                }}
+                data-user-id={user.id}
+              >
+                <img
+                  src={user.profileImage}
+                  alt={user.name}
+                  className="user-avatar"
+                />
+                <div className="user-info">
+                  <h3>{user.name}</h3>
+                  <p className="user-title">{user.title}</p>
+                  <p className="user-location">{user.location}</p>
+                  {user.mutualCount > 0 && (
+                    <div className="mutual-connections">
+                      <h5>Mutual Connections ({user.mutualCount})</h5>
+                      <ul className="mutual-list">
+                        {user.mutualConnections.map((mutual) => (
+                          <li key={mutual.id}>{mutual.name}</li>
+                        ))}
+                      </ul>
                     </div>
                   )}
                 </div>
@@ -179,63 +216,59 @@ const Search = () => {
         </div>
       )}
 
+      {/* added new part to match the results of search api for now */}
       <div className="search-results-container">
         {showResults && (
-          <>
-            {searchResults?.users?.length > 0 && (
-              <div className="results-section users-section">
-                <h2>Users</h2>
-                <div className="results-grid">
-                  {searchResults.users.map((user) => (
-                    <div key={user.username} className="user-card">
-                      <div className="user-card-header">
-                        <img
-                          src={user.profile_picture || "/default-avatar.jpg"}
-                          alt={user.username}
-                          className="user-avatar"
-                        />
-                        <h3>{user.username}</h3>
-                      </div>
-                      <div className="user-card-body">
-                        <p className="user-email">{user.email}</p>
-                        <div className="skills-container">
-                          {user.skills ? (
-                            user.skills.split(',').map((skill, index) => (
-                              <span key={index} className="skill-tag">
-                                {skill.trim()}
-                              </span>
-                            ))
-                          ) : (
-                            <p className="no-skills">No skills listed</p>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+          <div className="search-results">
+            {/* <h3>Search Results</h3> */}
 
-            {searchResults?.posts?.length > 0 && (
-              <div className="results-section posts-section">
-                <h2>Posts</h2>
-                <div className="posts-grid">
-                  {searchResults.posts.map((post) => (
-                    <div key={post.id} className="post-card">
-                      <div className="post-card-header">
-                        <h3>{post.title}</h3>
-                        <span className="post-type">{post.post_type}</span>
+            {searchResults?.users?.length > 0 && (
+              <div className="users-results">
+                <h3>Users</h3>
+                <div className="search-div"></div>
+                <ul>
+                  {searchResults.users.map((user) => (
+                    <li key={user.username}>
+                      <img
+                        src={user.profile_picture || "/default-avatar.jpg"}
+                        alt={user.username}
+                        className="user-avatar"
+                      />
+                      <div className="user-info">
+                        <p>{user.username}</p>
+                        <div className="small-div"></div>
+                        <p>{user.email}</p>
+                        <p>{user.skills || "No skills listed"}</p>
                       </div>
-                      <div className="post-card-body">
-                        <p className="post-author">By {post.author}</p>
-                        <p className="post-content">{post.content}</p>
-                      </div>
-                    </div>
+                    </li>
                   ))}
-                </div>
+                </ul>
               </div>
             )}
-          </>
+          </div>
+        )}
+
+        {showResults && (
+          <div className="search-results">
+            {/* <h3>Search Results</h3> */}
+            {searchResults?.posts?.length > 0 && (
+              <div className="posts-results">
+                <h3>Posts</h3>
+                <div className="search-div"></div>
+                <ul>
+                  {searchResults.posts.map((post) => (
+                    <li key={post.id}>
+                      <p>{post.title}</p>
+                      <p>{post.author}</p>
+                      <div className="small-div"></div>
+                      <p>{post.content}</p>
+                      <p>{post.post_type}</p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
         )}
       </div>
     </div>

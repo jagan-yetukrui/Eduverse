@@ -1,97 +1,66 @@
 .projects-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
     padding: 20px;
   }
   
   .project-form {
-    margin-bottom: 30px;
-    padding: 20px;
-    background: #f5f5f5;
-    border-radius: 8px;
-  }
-  
-  .input-group {
-    margin-bottom: 15px;
-  }
-  
-  .input-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: 500;
-  }
-  
-  .input-group input,
-  .input-group textarea {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-  }
-  
-  .input-group.checkbox {
     display: flex;
-    align-items: center;
-  }
-  
-  .input-group.checkbox input {
-    width: auto;
-    margin-right: 10px;
-  }
-  
-  .project-item {
-    margin-bottom: 20px;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-  }
-  
-  .project-details {
-    margin: 10px 0;
-  }
-  
-  .button-group {
-    display: flex;
+    flex-direction: column;
     gap: 10px;
-    margin-top: 15px;
+    margin-bottom: 20px;
   }
   
-  .add-button,
-  .edit-button,
-  .delete-button {
-    padding: 8px 16px;
+  .project-form input,
+  .project-form textarea {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .project-form button {
+    padding: 10px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 5px;
     cursor: pointer;
   }
   
-  .add-button {
-    background: #4CAF50;
+  .project-form button:hover {
+    background-color: #0056b3;
+  }
+  
+  .projects-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .project-item {
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .project-item h3 {
+    margin-top: 0;
+  }
+  
+  .project-item button {
+    padding: 5px 10px;
+    font-size: 14px;
+    background-color: #dc3545;
     color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
   }
   
-  .edit-button {
-    background: #2196F3;
-    color: white;
-  }
-  
-  .delete-button {
-    background: #f44336;
-    color: white;
-  }
-  
-  .error-message,
-  .success-message {
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 4px;
-  }
-  
-  .error-message {
-    background: #ffebee;
-    color: #c62828;
-  }
-  
-  .success-message {
-    background: #e8f5e9;
-    color: #2e7d32;
+  .project-item button:hover {
+    background-color: #c82333;
   }
   

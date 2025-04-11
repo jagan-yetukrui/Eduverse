@@ -3,10 +3,6 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.utils import timezone
-from django.contrib.auth import get_user_model
-
-User = get_user_model()
 
 # Model for managing user education details
 class Education(models.Model):
@@ -100,34 +96,19 @@ class Project(models.Model):
 
 # Main Profile model managing user profile information
 class Profile(models.Model):
-    # Account status choices
     ACCOUNT_STATUS_CHOICES = [
         ('active', 'Active'),
-        ('inactive', 'Inactive'),
+        ('deactivated', 'Deactivated'),
         ('suspended', 'Suspended')
     ]
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    username = models.CharField(max_length=150, unique=True)
-    display_name = models.CharField(max_length=150, blank=True)
-    email = models.EmailField(unique=True)
-    bio = models.TextField(blank=True)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile')
+    display_name = models.CharField(max_length=100, verbose_name="Display Name", default="New User")
+    username = models.CharField(max_length=30, unique=True, db_index=True, default='default_user')
+    email = models.EmailField(max_length=255, unique=True, db_index=True, default='default@example.com')
+    password = models.CharField(max_length=128, help_text="Mandatory password for the user.", default='changeme123')
+    bio = models.TextField(max_length=500, blank=True, null=True, default="")
     avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
-    skills = models.JSONField(default=dict, blank=True)
-    account_status = models.CharField(
-        max_length=20,
-        choices=ACCOUNT_STATUS_CHOICES,
-        default='active'
-    )
-    is_verified = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)  # Timestamp when profile is created
-    updated_at = models.DateTimeField(auto_now=True)  # Timestamp for last update
-    website = models.URLField(max_length=200, blank=True, null=True, default="")
-    location = models.CharField(max_length=100, blank=True, null=True, default="")
-    # AI managed skills field
-    skills = models.JSONField(default=dict, blank=True, editable=False, help_text="This field is managed by AI")
-    last_login = models.DateTimeField(null=True, blank=True)
-    last_active = models.DateTimeField(null=True, blank=True)
     followers = models.ManyToManyField('self', symmetrical=False, related_name='following')
     blocked_users = models.ManyToManyField('self', symmetrical=False, related_name='blocked_by')
     close_friends = models.ManyToManyField('self', symmetrical=False, related_name='close_friend_of')
@@ -137,9 +118,21 @@ class Profile(models.Model):
     notification_settings = models.JSONField(default=dict, blank=True, help_text="Notification settings.")
     privacy_settings = models.JSONField(default=dict, blank=True, help_text="Privacy settings.")
     security_settings = models.JSONField(default=dict, blank=True, help_text="Security settings.")
+    account_status = models.CharField(
+        max_length=20,
+        choices=ACCOUNT_STATUS_CHOICES,
+        default='active'
+    )
+    is_verified = models.BooleanField(default=False)
+    website = models.URLField(max_length=200, blank=True, null=True, default="")
+    location = models.CharField(max_length=100, blank=True, null=True, default="")
+    # AI managed skills field
+    skills = models.JSONField(default=dict, blank=True, editable=False, help_text="This field is managed by AI")
+    last_login = models.DateTimeField(null=True, blank=True)
+    last_active = models.DateTimeField(null=True, blank=True)
     
     class Meta:
-        ordering = ['-created_at']
+        ordering = ['-last_active']
         verbose_name = "Profile"
         verbose_name_plural = "Profiles"
 

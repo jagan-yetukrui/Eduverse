@@ -7,31 +7,26 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 const ProfilePrivacy = () => {
   const [settings, setSettings] = useState({
     profile_visibility: 'public',
-    posts_visibility: 'public',
+    posts_visibility: 'public', 
     followers_visibility: 'public',
-    following_visibility: 'public',
-    account_status: 'active'
+    following_visibility: 'public'
   });
   const [originalSettings, setOriginalSettings] = useState({});
-  const [feedback, setFeedback] = useState({ message: '', type: '' });
-  const [loading, setLoading] = useState(false);
+  const [feedback, setFeedback] = useState('');
 
   // Fetch current privacy settings from the backend
   useEffect(() => {
     const fetchPrivacySettings = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('/api/profiles/me/privacy/', {
-          headers: { Authorization: `Bearer ${token}` }
+        const response = await axios.get('/api/profiles/me/privacy-settings/', {
+          headers: { Authorization: `Bearer ${token}` },
         });
         setSettings(response.data);
         setOriginalSettings(response.data);
       } catch (error) {
         console.error('Error fetching privacy settings:', error);
-        setFeedback({
-          message: error.response?.data?.detail || 'Failed to load privacy settings.',
-          type: 'error'
-        });
+        setFeedback('Failed to load privacy settings.');
       }
     };
     fetchPrivacySettings();
@@ -39,34 +34,23 @@ const ProfilePrivacy = () => {
 
   // Handle saving the updated privacy settings
   const handleSaveChanges = async () => {
-    setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      await axios.put('/api/profiles/me/privacy/', settings, {
-        headers: { Authorization: `Bearer ${token}` }
+      await axios.put('/api/profiles/me/update-privacy-settings/', settings, {
+        headers: { Authorization: `Bearer ${token}` },
       });
-      setFeedback({
-        message: 'Privacy settings updated successfully!',
-        type: 'success'
-      });
+      setFeedback('Privacy settings updated successfully!');
       setOriginalSettings(settings);
     } catch (error) {
-      setFeedback({
-        message: error.response?.data?.detail || 'Failed to update privacy settings.',
-        type: 'error'
-      });
-    } finally {
-      setLoading(false);
+      console.error('Error updating privacy settings:', error);
+      setFeedback('Failed to update privacy settings.');
     }
   };
 
   // Handle resetting settings to original state
   const handleResetChanges = () => {
     setSettings(originalSettings);
-    setFeedback({
-      message: 'Settings reset to last saved state.',
-      type: 'info'
-    });
+    setFeedback('Settings reset to last saved state.');
   };
 
   // Handle setting changes
@@ -155,8 +139,8 @@ const ProfilePrivacy = () => {
         </button>
       </div>
 
-      {feedback.message && <p className={`feedback ${feedback.type === 'error' ? 'error' : 'success'}`}>
-        {feedback.message}
+      {feedback && <p className={`feedback ${feedback.includes('Failed') ? 'error' : 'success'}`}>
+        {feedback}
       </p>}
     </div>
   );

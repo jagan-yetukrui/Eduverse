@@ -1,5 +1,4 @@
 from django.contrib import admin
-from django.utils.html import format_html
 from .models import Profile, Education, License, Experience, Project
 
 # Create custom admin site to avoid URL namespace collision
@@ -12,27 +11,10 @@ profiles_admin = ProfilesAdminSite(name='profiles_admin')
 
 @admin.register(Profile, site=profiles_admin)
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ['username', 'display_name', 'email', 'account_status', 'is_verified', 'profile_image_preview']
+    list_display = ['username', 'display_name', 'email', 'account_status', 'is_verified']
     list_filter = ['account_status', 'is_verified']
     search_fields = ['username', 'display_name', 'email']
     readonly_fields = ['skills']
-    fieldsets = (
-        ('Basic Information', {
-            'fields': ('user', 'username', 'display_name', 'email', 'bio', 'avatar')
-        }),
-        ('Profile Status', {
-            'fields': ('account_status', 'is_verified')
-        }),
-        ('Skills & Expertise', {
-            'fields': ('skills',)
-        })
-    )
-
-    def profile_image_preview(self, obj):
-        if obj.avatar:
-            return format_html('<img src="{}" width="50" height="50" style="border-radius: 50%;" />', obj.avatar.url)
-        return "No Image"
-    profile_image_preview.short_description = 'Avatar'
 
 @admin.register(Education, site=profiles_admin)
 class EducationAdmin(admin.ModelAdmin):

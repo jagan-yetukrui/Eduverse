@@ -16,6 +16,8 @@
     "@testing-library/user-event": "^13.5.0",
     "@tinymce/tinymce-react": "^5.1.1",
     "@uploadcare/blocks": "^0.50.4",
+    "ajv": "^8.17.1",
+    "ajv-keywords": "^5.1.0",
     "axios": "^1.7.9",
     "date-fns": "^4.1.0",
     "mdb-react-ui-kit": "^9.0.0",

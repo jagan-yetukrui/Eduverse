@@ -1,22 +1,18 @@
-import React, { useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useRef } from "react";
 import "./Notes.css";
-// eslint-disable-next-line no-unused-vars
-import ProjectSuggestions from "./ProjectSuggestions";
-// eslint-disable-next-line no-unused-vars
-import CareerGuidance from "./CareerGuidance";
 
 const Notes = () => {
-  const navigate = useNavigate();
   const [messages, setMessages] = useState([
     {
-      id: 0,
-      text: "🌟 Welcome to the Enchanted Portal! I'm your magical assistant, ready to help you on your coding journey. What mysteries shall we unravel today? 🌟",
+      id: 1,
+      text: "Welcome to EduVerse! I'm Edura, your AI mentor. How can I assist you today?",
       sender: "ai",
     },
   ]);
   const [inputText, setInputText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const [suggestions, setSuggestions] = useState([]);
   const chatContainerRef = useRef(null);
   const avatarRef = useRef(null);
 
@@ -32,73 +28,37 @@ const Notes = () => {
     setInputText("");
     setIsTyping(true);
 
+    // Animate Edura's avatar while processing
     if (avatarRef.current) {
-      avatarRef.current.classList.add("casting-spell");
+      avatarRef.current.classList.add("processing");
     }
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/ai/chat/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          message: inputText,
-          user_id: localStorage.getItem("user_id"),
-          channel: {
-            id: "web_chat",
-            name: "Magic Portal Interface",
-          },
-          locale: "en-US",
-          timestamp: new Date().toISOString(),
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Quest failed! Status: ${response.status}`);
-      }
-
-      const data = await response.json();
-
-      if (!data.response) {
-        throw new Error("The magic scroll returned empty!");
-      }
-
-      const aiMessage = {
-        id: messages.length + 2,
-        text: data.response,
-        sender: "ai",
-      };
-
-      if (data.suggestions?.length > 0) {
-        const suggestionMessage = {
-          id: messages.length + 3,
-          text: data.suggestions.join("\n"),
-          sender: "ai",
-          type: "magical-scroll",
-        };
-        setMessages((prev) => [...prev, aiMessage, suggestionMessage]);
-      } else {
-        setMessages((prev) => [...prev, aiMessage]);
-      }
-    } catch (error) {
-      if (error) {
-        console.error("Connection failed:", error);
-        const errorMessage = {
+      setTimeout(() => {
+        const aiMessage = {
           id: messages.length + 2,
-          text: "🌋 The mystical connection was lost! Let's try again, brave adventurer.",
+          text: "I understand you're interested in learning. Let me analyze your query and provide personalized recommendations.",
           sender: "ai",
         };
-        setMessages((prev) => [...prev, errorMessage]);
-      }
-    } finally {
+        setMessages((prev) => [...prev, aiMessage]);
+        setIsTyping(false);
+        if (avatarRef.current) {
+          avatarRef.current.classList.remove("processing");
+        }
+      }, 1500);
+    } catch (error) {
+      console.error("Error getting AI response:", error);
       setIsTyping(false);
       if (avatarRef.current) {
-        avatarRef.current.classList.remove("casting-spell");
+        avatarRef.current.classList.remove("processing");
       }
     }
+  };
+
+  const handleVoiceInput = () => {
+    setIsListening(true);
+    // Voice recognition logic would go here
+    setTimeout(() => setIsListening(false), 3000);
   };
 
   const handleKeyPress = (e) => {
@@ -109,87 +69,73 @@ const Notes = () => {
   };
 
   return (
-    <div className="notes-page">
-      <div className="notes-container" ref={chatContainerRef}>
-        <div className="notes-header">
-          <div className="avatar-crystal" ref={avatarRef}>
-            <div className="magical-aura"></div>
-            <div className="crystal-core"></div>
+    <div className="edura-page">
+      <div className="edura-container" ref={chatContainerRef}>
+        <div>
+          <div className="edura-header">
+            <div className="avatar-container" ref={avatarRef}>
+              <div className="hologram-effect"></div>
+              <div className="avatar-core"></div>
+            </div>
+            <div>
+              <h2 className="edura-title">Edura</h2>
+              <p className="edura-tagline">Your Personalized AI Mentor</p>
+            </div>
           </div>
 
-          <div className="quest-board">
-            <button
-              className="quest-btn glow-effect"
-              onClick={() => navigate("/project-suggestions")}
-            >
-              <span className="quest-icon bounce">🎯</span>
-              <span>Quests</span>
-            </button>
-
-            <button
-              className="quest-btn glow-effect"
-              onClick={() => navigate("/career-guidance")}
-            >
-              <span className="quest-icon swing">⚔️</span>
-              <span>Journey</span>
-            </button>
-
-            <button className="quest-btn glow-effect">
-              <span className="quest-icon pulse">🔮</span>
-              <span>Spells</span>
-            </button>
+          <div className="quick-actions">
+            {/* <h3>Suggested Actions</h3> */}
+            <div className="action-buttons">
+              <button className="action-btn">Complete Profile</button>
+              <button className="action-btn">Explore Courses</button>
+              <button className="action-btn">Find Collaborators</button>
+            </div>
           </div>
         </div>
 
-        <div className="notes-divider" />
-
-        <div className="notes-list custom-scrollbar">
-          {messages.map((message) => (
-            <div
-              key={message.id}
-              className={`note-item fade-in ${
-                message.sender === "user" ? "note-right" : "note-left"
-              }`}
-            >
-              <div
-                className={`message ${message.sender} ${message.type || ""}`}
-              >
-                {message.text.split("\n").map((line, i) => (
-                  <div key={i} className="message-line">
-                    {line}
+        <div className="chat-interface">
+          <div className="chat-messages glassmorphism">
+            {messages.map((message) => (
+              <div key={message.id} className={`message ${message.sender}`}>
+                <div className="message-bubble">{message.text}</div>
+              </div>
+            ))}
+            {isTyping && (
+              <div className="message ai">
+                <div className="message-bubble typing">
+                  <div className="typing-indicator">
+                    <span></span>
+                    <span></span>
+                    <span></span>
                   </div>
-                ))}
+                </div>
               </div>
-            </div>
-          ))}
-          {isTyping && (
-            <div className="note-item typing fade-in">
-              <div className="casting-indicator">
-                <span className="sparkle">🌟</span>
-                <span className="sparkle delay-1">💫</span>
-                <span className="sparkle delay-2">⭐</span>
-              </div>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
 
-        <div className="note-input floating">
-          <textarea
-            className="note-textarea custom-scrollbar"
-            value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder="✨ Whisper your thoughts into the magical realm..."
-            rows="2"
-          />
-          <button
-            className="add-note-btn pulse-effect"
-            onClick={handleSendMessage}
-            disabled={!inputText.trim() || isTyping}
+          <div className="input-section glassmorphism">
+            <textarea
+              className="chat-input"
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder="Ask me anything..."
+              rows="2"
+            />
+            {/* <button
+            className={`voice-input ${isListening ? "listening" : ""}`}
+            onClick={handleVoiceInput}
           >
-            <span className="btn-text">Cast</span>
-            <span className="btn-icon">🌠</span>
-          </button>
+            <span className="microphone-icon"></span>
+          </button> */}
+            <button
+              className="send-button"
+              onClick={handleSendMessage}
+              disabled={!inputText.trim() || isTyping}
+            >
+              Send
+            </button>
+          </div>
         </div>
       </div>
     </div>
