@@ -102,3 +102,4 @@ To view updates use:
   user = User.objects.get(username="john_doe")
   print(vars(user))
 
+//Backend is the new folder for the backend commands.
