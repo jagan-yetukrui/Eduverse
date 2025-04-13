@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-vd(nyu_b$gekaow9#@gyv&@9wuj(mb_v+b7z!%3xe+a%4nhm)u
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# ALLOWED_HOSTS = [
+#  = [
 #     "127.0.0.1",
 #     "localhost",
 # ]
@@ -101,8 +101,12 @@ WSGI_APPLICATION = 'eduverse_backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'Jagan',
+        'PASSWORD': 'Jagan%579',
+        'HOST': 'eduverse-db.crgqasis8mt9.us-east-2.rds.amazonaws.com',
+        'PORT': '5432',
     }
 }
 
