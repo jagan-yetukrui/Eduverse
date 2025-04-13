@@ -43,7 +43,7 @@ const NewPost = ({ onPostCreated }) => {
             const token = localStorage.getItem("token");
             if (!token) throw new Error("Authentication required");
     
-            const response = await fetch("http://127.0.0.1:8000/api/posts/", {
+            const response = await fetch("http://edu-verse.in/api/posts/", {
                 method: "POST",
                 headers: {
                     "Authorization": `Bearer ${token}`,

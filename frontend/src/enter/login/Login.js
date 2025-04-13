@@ -8,7 +8,7 @@ import axios from "axios";
 
 // Create axios instance with base URL
 const apiClient = axios.create({
-  baseURL: "http://127.0.0.1:8000/",
+  baseURL: "http://edu-verse.in/",
 });
 
 // Add response interceptor
@@ -20,7 +20,7 @@ apiClient.interceptors.response.use(
       if (refreshToken) {
         try {
           const response = await axios.post(
-            "http://127.0.0.1:8000/api/token/refresh/",
+            "http://edu-verse.in/api/token/refresh/",
             {
               refresh: refreshToken,
             }

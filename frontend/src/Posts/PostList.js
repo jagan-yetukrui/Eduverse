@@ -20,7 +20,7 @@ function PostList() {
         }
 
         // Make the API request with the Authorization header
-        const response = await axios.get("http://127.0.0.1:8000/api/posts/", {
+        const response = await axios.get("http://edu-verse.in/api/posts/", {
           headers: {
             Authorization: `Bearer ${token}`,
           },

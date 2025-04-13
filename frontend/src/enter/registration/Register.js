@@ -115,7 +115,7 @@ const Register = () => {
     try {
       // Removed the unused 'response' variable
       await axios.post(
-        "http://127.0.0.1:8000/api/accounts/register/",
+        "http://edu-verse.in/api/accounts/register/",
         {
           username: formData.username,
           email: formData.email,

@@ -17,7 +17,7 @@ const PostsFeed = ({ userId }) => {
     try {
       const token = localStorage.getItem('access_token');
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/posts/user/${userId}?page=${page}`,
+        `http://edu-verse.in/api/posts/user/${userId}?page=${page}`,
         {
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -58,7 +58,7 @@ const PostsFeed = ({ userId }) => {
     try {
       const token = localStorage.getItem('access_token');
       await axios.post(
-        `http://127.0.0.1:8000/api/posts/${postId}/like`,
+        `http://edu-verse.in/api/posts/${postId}/like`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` }
