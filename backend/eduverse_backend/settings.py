@@ -69,8 +69,8 @@ MIDDLEWARE.insert(1, "corsheaders.middleware.CorsMiddleware")
 
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
     "http://localhost:5173",  # Update if your frontend is hosted elsewhere
 ]
 
@@ -102,10 +102,14 @@ DATABASES = {
   'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'postgres',
-        'USER': 'Jagan',
+        'USER': 'team_user',
         'PASSWORD': 'TeamStrongPassword123!',
         'HOST': 'eduverse-db.crgqasis8mt9.us-east-2.rds.amazonaws.com',
         'PORT': '5432',
+        'OPTIONS': {
+           
+            'options': '-c search_path=public'
+        }
     }
 }
 
