@@ -8,7 +8,7 @@
 }
 
 .register-container {
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -21,17 +21,24 @@
 
 /* Animated background effect */
 @keyframes backgroundShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 /* Glassmorphic panel styling */
 .holographic-panel {
-  padding: 40px;
-  border-radius: 15px;
+  padding: 25px;
+  border-radius: 12px;
   width: 100%;
-  max-width: 600px;
+  max-width: 500px;
+  margin: 20px 0;
   border: 1px solid rgba(79, 195, 247, 0.3);
   box-shadow: 0 0 30px rgba(79, 195, 247, 0.4);
   transition: all 0.3s ease;
@@ -47,8 +54,13 @@
 }
 
 @keyframes floatingPanel {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 .register-title {
@@ -61,9 +73,9 @@
 
 .register-title p {
   margin: 0;
-  padding: 1rem;
-  font-size: 1.2rem;
-  font-family: 'Orbitron', sans-serif;
+  padding: 0.5rem;
+  font-size: 1rem;
+  font-family: "Orbitron", sans-serif;
   color: #4fc3f7;
   text-shadow: 0 0 10px rgba(79, 195, 247, 0.5);
   letter-spacing: 1px;
@@ -72,23 +84,26 @@
 .register-form {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 .input-group {
   position: relative;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .neon-input {
-  width: 100%;
-  padding: 1.2rem;
+  width: 80%;
+  padding: 0.8rem;
   background: rgba(10, 10, 30, 0.6);
   border: 2px solid rgba(79, 195, 247, 0.3);
-  border-radius: 12px;
+  border-radius: 8px;
   color: #fff;
-  font-size: 16px;
-  font-family: 'Orbitron', sans-serif;
+  font-size: 14px;
+  font-family: "Orbitron", sans-serif;
   transition: all 0.3s ease;
   box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
 }
@@ -100,7 +115,8 @@
 .neon-input:focus {
   outline: none;
   border-color: #4fc3f7;
-  box-shadow: 0 0 20px rgba(79, 195, 247, 0.5), inset 0 2px 10px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 20px rgba(79, 195, 247, 0.5),
+    inset 0 2px 10px rgba(0, 0, 0, 0.3);
   transform: scale(1.02);
 }
 
@@ -120,25 +136,30 @@
 }
 
 @keyframes errorPulse {
-  0%, 100% { box-shadow: 0 0 15px rgba(255, 23, 68, 0.3); }
-  50% { box-shadow: 0 0 25px rgba(255, 23, 68, 0.6); }
+  0%,
+  100% {
+    box-shadow: 0 0 15px rgba(255, 23, 68, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(255, 23, 68, 0.6);
+  }
 }
 
 .password-toggle-register {
   position: absolute;
-  right: 15px;
+  right: 10%;
   top: 50%;
   transform: translateY(-50%);
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   width: fit-content;
-  padding: 0.8rem;
-  font-size: 0.9em;
+  padding: 0.6rem;
+  font-size: 0.8em;
   color: #4fc3f7;
   cursor: pointer;
   transition: all 0.3s ease;
-  border-radius: 8px;
+  border-radius: 6px;
 }
 
 .password-toggle-register:hover {
@@ -149,17 +170,17 @@
 
 .submit-button {
   width: 100%;
-  padding: 1.2rem;
+  padding: 0.8rem;
   background: linear-gradient(45deg, #0f0c29, #302b63, #24243e);
   color: white;
   border: none;
-  border-radius: 12px;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
-  font-family: 'Orbitron', sans-serif;
+  font-family: "Orbitron", sans-serif;
   text-transform: uppercase;
-  letter-spacing: 2px;
+  letter-spacing: 1px;
   position: relative;
   overflow: hidden;
   transition: all 0.3s ease;
@@ -194,13 +215,22 @@
   justify-content: center;
   gap: 8px;
   margin: 0.3rem;
-  font-family: 'Orbitron', sans-serif;
+  font-family: "Orbitron", sans-serif;
 }
 
 @keyframes errorShake {
-  0%, 100% { transform: translateX(0); }
-  20%, 60% { transform: translateX(-5px); }
-  40%, 80% { transform: translateX(5px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-5px);
+  }
+  40%,
+  80% {
+    transform: translateX(5px);
+  }
 }
 
 .validation-icon {
@@ -223,15 +253,17 @@
 
 .strength-meter {
   display: flex;
-  gap: 5px;
-  margin-top: 10px;
+  gap: 4px;
+  margin-top: 8px;
+  width: 80%;
+  justify-content: center;
 }
 
 .strength-segment {
-  height: 5px;
+  height: 4px;
   flex: 1;
   background: rgba(79, 195, 247, 0.2);
-  border-radius: 10px;
+  border-radius: 8px;
   transition: all 0.3s ease;
 }
 
@@ -243,11 +275,11 @@
 .terms-label {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   color: rgba(255, 255, 255, 0.9);
-  font-size: 14px;
-  font-family: 'Orbitron', sans-serif;
-  padding: 10px;
+  font-size: 12px;
+  font-family: "Orbitron", sans-serif;
+  padding: 8px;
   border-radius: 8px;
   transition: all 0.3s ease;
 }
@@ -258,19 +290,20 @@
 
 .social-signup {
   display: flex;
-  gap: 15px;
+  gap: 10px;
   justify-content: center;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 .social-button {
   width: 100%;
-  padding: 1rem;
+  padding: 0.8rem;
   background: rgba(10, 10, 30, 0.6);
   border: 2px solid rgba(79, 195, 247, 0.3);
-  border-radius: 12px;
+  border-radius: 8px;
   color: white;
-  font-family: 'Orbitron', sans-serif;
+  font-family: "Orbitron", sans-serif;
+  font-size: 14px;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
@@ -304,28 +337,37 @@
 }
 
 .login-link {
-  margin-top: 25px;
+  margin-top: 15px;
   background: none;
   border: none;
   color: #4fc3f7;
   cursor: pointer;
-  font-size: 1em;
-  font-family: 'Orbitron', sans-serif;
+  font-size: 0.9em;
+  font-family: "Orbitron", sans-serif;
   text-transform: uppercase;
-  letter-spacing: 1.5px;
+  letter-spacing: 1px;
   transition: all 0.3s ease;
   animation: pulsate 2s infinite alternate;
 }
 
 @keyframes pulsate {
-  0% { text-shadow: 0 0 5px rgba(79, 195, 247, 0.5); }
-  100% { text-shadow: 0 0 15px rgba(79, 195, 247, 0.9); }
+  0% {
+    text-shadow: 0 0 5px rgba(79, 195, 247, 0.5);
+  }
+  100% {
+    text-shadow: 0 0 15px rgba(79, 195, 247, 0.9);
+  }
 }
 
 .login-link:hover {
   color: #00e5ff;
   text-shadow: 0 0 15px rgba(0, 229, 255, 0.8);
   transform: scale(1.1);
+}
+
+.register-logo {
+  width: 40px !important;
+  height: 40px !important;
 }
 
 @media (max-width: 768px) {
