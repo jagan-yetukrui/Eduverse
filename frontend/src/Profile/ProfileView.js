@@ -368,7 +368,7 @@ const ProfileView = () => {
         }
 
         const response = await axios.get(
-          `http://edu-verse.in/api/profiles/me/`,
+          `https://edu-verse.in/api/profiles/me/`,
           {
             headers: { Authorization: `Bearer ${token}` },
             signal: controller.signal,

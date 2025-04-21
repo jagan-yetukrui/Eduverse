@@ -38,7 +38,7 @@ const Home = () => {
 
   const fetchProfileSuggestions = async () => {
     try {
-      const response = await fetch("http://edu-verse.in/api/profiles/");
+      const response = await fetch("https://edu-verse.in/api/profiles/");
       const data = await response.json();
       setProfileSuggestions(data);
       setHasConnections(data.length > 0);
@@ -49,7 +49,7 @@ const Home = () => {
 
   const fetchTrendingProjects = async () => {
     try {
-      const response = await fetch("/api/projects/trending");
+      const response = await fetch("https://edu-verse.in/api/projects/trending");
       const data = await response.json();
       setTrendingProjects(data);
     } catch (error) {
@@ -60,7 +60,7 @@ const Home = () => {
 
   const fetchUpcomingEvents = async () => {
     try {
-      const response = await fetch("/api/events/upcoming");
+      const response = await fetch("https://edu-verse.in/api/events/upcoming");
       const data = await response.json();
       setUpcomingEvents(data);
     } catch (error) {

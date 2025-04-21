@@ -19,7 +19,7 @@ const ProjectsList = ({ userId }) => {
       try {
         const token = localStorage.getItem('access_token');
         const response = await axios.get(
-          `http://edu-verse.in/api/projects/user/${userId}?sort=${sortBy}`,
+          `https://edu-verse.in/api/projects/user/${userId}?sort=${sortBy}`,
           {
             headers: { Authorization: `Bearer ${token}` }
           }
