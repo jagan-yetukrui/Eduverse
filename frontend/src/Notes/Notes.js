@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Notes.css";
 // eslint-disable-next-line no-unused-vars
@@ -11,14 +11,58 @@ const Notes = () => {
   const [messages, setMessages] = useState([
     {
       id: 0,
-      text: "🌟 Welcome to the Enchanted Portal! I'm your magical assistant, ready to help you on your coding journey. What mysteries shall we unravel today? 🌟",
+      text: "💡 Hey Dreamer,\nWelcome to Edura – your personal AI guide in the EduVerse.\nAsk anything. Build everything. Let's unlock your journey together. ✨",
       sender: "ai",
+      isWelcome: true,
     },
   ]);
   const [inputText, setInputText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
-  const chatContainerRef = useRef(null);
+  const [showSuggestions, setShowSuggestions] = useState(true);
   const avatarRef = useRef(null);
+  const messageEndRef = useRef(null);
+  const sendButtonRef = useRef(null);
+
+  const suggestions = [
+    "Suggest a trending project",
+    "How do I build a portfolio?",
+    "Analyze my progress"
+  ];
+
+  useEffect(() => {
+    if (messageEndRef.current) {
+      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages, isTyping]);
+
+  // Background stars effect
+  useEffect(() => {
+    const createStars = () => {
+      const starsContainer = document.createElement('div');
+      starsContainer.className = 'stars-background';
+      
+      for (let i = 0; i < 100; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        star.style.top = `${Math.random() * 100}%`;
+        star.style.left = `${Math.random() * 100}%`;
+        star.style.animationDelay = `${Math.random() * 5}s`;
+        star.style.animationDuration = `${2 + Math.random() * 3}s`;
+        starsContainer.appendChild(star);
+      }
+      
+      document.querySelector('.notes-page').appendChild(starsContainer);
+    };
+    
+    createStars();
+    
+    return () => {
+      const starsContainer = document.querySelector('.stars-background');
+      if (starsContainer) {
+        starsContainer.remove();
+      }
+    };
+  }, []);
 
   const handleSendMessage = async () => {
     if (!inputText.trim()) return;
@@ -31,9 +75,17 @@ const Notes = () => {
     setMessages((prev) => [...prev, userMessage]);
     setInputText("");
     setIsTyping(true);
+    setShowSuggestions(false);
 
     if (avatarRef.current) {
       avatarRef.current.classList.add("casting-spell");
+    }
+    
+    if (sendButtonRef.current) {
+      sendButtonRef.current.classList.add("sending");
+      setTimeout(() => {
+        sendButtonRef.current.classList.remove("sending");
+      }, 1000);
     }
 
     try {
@@ -49,7 +101,7 @@ const Notes = () => {
           user_id: localStorage.getItem("user_id"),
           channel: {
             id: "web_chat",
-            name: "Magic Portal Interface",
+            name: "Edura Interface",
           },
           locale: "en-US",
           timestamp: new Date().toISOString(),
@@ -57,13 +109,13 @@ const Notes = () => {
       });
 
       if (!response.ok) {
-        throw new Error(`Quest failed! Status: ${response.status}`);
+        throw new Error(`Request failed! Status: ${response.status}`);
       }
 
       const data = await response.json();
 
       if (!data.response) {
-        throw new Error("The magic scroll returned empty!");
+        throw new Error("No response received from the server");
       }
 
       const aiMessage = {
@@ -77,7 +129,7 @@ const Notes = () => {
           id: messages.length + 3,
           text: data.suggestions.join("\n"),
           sender: "ai",
-          type: "magical-scroll",
+          type: "suggestion-scroll",
         };
         setMessages((prev) => [...prev, aiMessage, suggestionMessage]);
       } else {
@@ -88,7 +140,7 @@ const Notes = () => {
         console.error("Connection failed:", error);
         const errorMessage = {
           id: messages.length + 2,
-          text: "🌋 The mystical connection was lost! Let's try again, brave adventurer.",
+          text: "Connection lost. Please try again later.",
           sender: "ai",
         };
         setMessages((prev) => [...prev, errorMessage]);
@@ -105,54 +157,70 @@ const Notes = () => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
+      
     }
+  };
+
+  const handleSuggestionClick = (suggestion) => {
+    setInputText(suggestion);
+    setShowSuggestions(false);
   };
 
   return (
     <div className="notes-page">
-      <div className="notes-container" ref={chatContainerRef}>
-        <div className="notes-header">
-          <div className="avatar-crystal" ref={avatarRef}>
-            <div className="magical-aura"></div>
-            <div className="crystal-core"></div>
-          </div>
+      <div className="notes-container">
+        {/* Top Section (Fixed) */}
+        <div className="quest-board">
+          <button
+            className="quest-btn"
+            onClick={() => navigate("/project-suggestions")}
+            title="Explore coding projects and challenges"
+          >
+            <span className="quest-icon">🧭</span>
+            <span>Explore Projects</span>
+          </button>
 
-          <div className="quest-board">
-            <button
-              className="quest-btn glow-effect"
-              onClick={() => navigate("/project-suggestions")}
-            >
-              <span className="quest-icon bounce">🎯</span>
-              <span>Quests</span>
-            </button>
+          <button
+            className="quest-btn"
+            onClick={() => navigate("/career-guidance")}
+            title="Track your learning progress and growth"
+          >
+            <span className="quest-icon">📊</span>
+            <span>My Progress</span>
+          </button>
 
-            <button
-              className="quest-btn glow-effect"
-              onClick={() => navigate("/career-guidance")}
-            >
-              <span className="quest-icon swing">⚔️</span>
-              <span>Journey</span>
-            </button>
-
-            <button className="quest-btn glow-effect">
-              <span className="quest-icon pulse">🔮</span>
-              <span>Spells</span>
-            </button>
-          </div>
+          <button
+            className="quest-btn"
+            title="Coming soon: Create projects with AI assistance"
+            disabled
+          >
+            <span className="quest-icon">🪄</span>
+            <span>AI Create Lab (soon)</span>
+          </button>
         </div>
 
-        <div className="notes-divider" />
+        {/* Welcome Message (Fixed) */}
+        <div className="notes-header fade-in">
+          <div className="avatar-orb" ref={avatarRef}>
+            <div className="orb-aura"></div>
+            <div className="orb-core"></div>
+          </div>
+          <h2>
+            🚀 Ask questions. Get suggestions. Level up with Edura!
+          </h2>
+        </div>
 
-        <div className="notes-list custom-scrollbar">
+        {/* Chat Feed (Scrollable) */}
+        <div className="messages-container">
           {messages.map((message) => (
             <div
               key={message.id}
-              className={`note-item fade-in ${
-                message.sender === "user" ? "note-right" : "note-left"
-              }`}
+              className={`message-item fade-in ${
+                message.sender === "user" ? "user-message" : "ai-message"
+              } ${message.isWelcome ? "welcome-message" : ""}`}
             >
               <div
-                className={`message ${message.sender} ${message.type || ""}`}
+                className={`message-bubble ${message.sender} ${message.type || ""}`}
               >
                 {message.text.split("\n").map((line, i) => (
                   <div key={i} className="message-line">
@@ -163,33 +231,53 @@ const Notes = () => {
             </div>
           ))}
           {isTyping && (
-            <div className="note-item typing fade-in">
-              <div className="casting-indicator">
-                <span className="sparkle">🌟</span>
-                <span className="sparkle delay-1">💫</span>
-                <span className="sparkle delay-2">⭐</span>
+            <div className="message-item typing fade-in">
+              <div className="typing-indicator">
+                <span className="dot"></span>
+                <span className="dot"></span>
+                <span className="dot"></span>
               </div>
             </div>
           )}
+          <div ref={messageEndRef} />
         </div>
 
-        <div className="note-input floating">
-          <textarea
-            className="note-textarea custom-scrollbar"
-            value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder="✨ Whisper your thoughts into the magical realm..."
-            rows="2"
-          />
-          <button
-            className="add-note-btn pulse-effect"
-            onClick={handleSendMessage}
-            disabled={!inputText.trim() || isTyping}
-          >
-            <span className="btn-text">Cast</span>
-            <span className="btn-icon">🌠</span>
-          </button>
+        {/* Bottom Section */}
+        <div className="note-input">
+          {/* Suggestions */}
+          {showSuggestions && (
+            <div className="suggestions-bar">
+              {suggestions.map((suggestion, index) => (
+                <div
+                  key={index}
+                  className="suggestion-pill"
+                  onClick={() => handleSuggestionClick(suggestion)}
+                >
+                  {suggestion}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Input Area */}
+          <div className="input-area">
+            <textarea
+              className="note-textarea"
+              placeholder="Ask Edura anything..."
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              onKeyPress={handleKeyPress}
+              rows={1}
+            />
+            <button
+              ref={sendButtonRef}
+              className="send-btn"
+              onClick={handleSendMessage}
+              disabled={!inputText.trim()}
+            >
+              Send
+            </button>
+          </div>
         </div>
       </div>
     </div>

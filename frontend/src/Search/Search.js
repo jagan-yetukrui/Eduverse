@@ -8,6 +8,7 @@ const Search = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(false);
   const [showResults, setShowResults] = useState(false);
+  const [showLoginPopup, setShowLoginPopup] = useState(false);
   const searchContainerRef = useRef(null);
   const searchBarRef = useRef(null);
 
@@ -45,6 +46,7 @@ const Search = () => {
         setCurrentUser(data);
       } catch (error) {
         console.error('Error fetching current user:', error);
+        setCurrentUser(null);
       }
     };
     fetchCurrentUser();
@@ -54,6 +56,11 @@ const Search = () => {
   useEffect(() => {
     const fetchSuggestions = async () => {
       if (query.length > 0) {
+        if (!currentUser) {
+          setShowLoginPopup(true);
+          return;
+        }
+        
         setLoading(true);
         try {
           const response = await fetch(`/api/users/search?query=${encodeURIComponent(query)}`);
@@ -84,7 +91,7 @@ const Search = () => {
 
     const debounceTimer = setTimeout(fetchSuggestions, 300);
     return () => clearTimeout(debounceTimer);
-  }, [query]);
+  }, [query, currentUser]);
 
   const animateParticle = (particle) => {
     const animation = particle.animate([
@@ -117,6 +124,11 @@ const Search = () => {
 
   const handleSearch = async (e) => {
     e.preventDefault();
+    if (!currentUser) {
+      setShowLoginPopup(true);
+      return;
+    }
+    
     if (query) {
       setLoading(true);
       setShowResults(false);
@@ -139,6 +151,11 @@ const Search = () => {
   };
 
   const handleSuggestionClick = async (userId) => {
+    if (!currentUser) {
+      setShowLoginPopup(true);
+      return;
+    }
+    
     try {
       const response = await fetch(`/api/users/${userId}`);
       const userData = await response.json();
@@ -148,6 +165,10 @@ const Search = () => {
     } catch (error) {
       console.error('Error fetching user details:', error);
     }
+  };
+
+  const closeLoginPopup = () => {
+    setShowLoginPopup(false);
   };
 
   return (
@@ -168,6 +189,19 @@ const Search = () => {
       </form>
 
       {loading && <div className="loading-spinner">Loading...</div>}
+
+      {showLoginPopup && (
+        <div className="login-popup">
+          <div className="login-popup-content">
+            <h3>Login Required</h3>
+            <p>You need to be logged in to search for users.</p>
+            <div className="login-popup-buttons">
+              <button onClick={closeLoginPopup}>Close</button>
+              <a href="/login" className="login-button">Login</a>
+            </div>
+          </div>
+        </div>
+      )}
 
       {suggestions.length > 0 && (
         <ul className="suggestions-list">

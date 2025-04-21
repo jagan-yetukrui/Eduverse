@@ -27,6 +27,8 @@ SECRET_KEY = 'django-insecure-vd(nyu_b$gekaow9#@gyv&@9wuj(mb_v+b7z!%3xe+a%4nhm)u
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+ALLOWED_HOSTS = ['edu-verse.in', 'www.edu-verse.in', '3.12.162.79']
+
 #  = [
 #     "127.0.0.1",
 #     "localhost",
@@ -53,7 +55,9 @@ INSTALLED_APPS = [
     'projects',
     'ai',
     'scraper',
-    'search'
+    'search',
+    'trending',
+    'events',
 ]
 
 MIDDLEWARE = [

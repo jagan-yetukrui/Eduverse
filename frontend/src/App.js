@@ -3,11 +3,17 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './Navbar/Navbar';
 import ErrorBoundary from './ErrorBoundary/ErrorBoundary';
 import './App.css';
+// eslint-disable-next-line no-unused-vars
 import { UserProvider } from './Accounts/UserContext';
+// eslint-disable-next-line no-unused-vars
 import { ProfileProvider } from './Profile/ProfileContext';
 
 // Lazy load components to improve performance
 const Home = lazy(() => import('./Home/Home'));
+const About = lazy(() => import('./Home/About'));
+const Terms = lazy(() => import('./Home/Terms'));
+const Privacy = lazy(() => import('./Home/Privacy'));
+const Contact = lazy(() => import('./Home/Contact'));
 const Login = lazy(() => import('./enter/login/Login'));
 const Register = lazy(() => import('./enter/registration/Register'));
 const ProfileView = lazy(() => import('./Profile/ProfileView'));
@@ -23,6 +29,7 @@ const ProjectSuggestions = lazy(() => import('./Notes/ProjectSuggestions'));
 const CareerGuidance = lazy(() => import('./Notes/CareerGuidance'));
 const ProjectDetails = lazy(() => import('./Notes/ProjectsData')); // Fixed import path and component name
 const Steps = lazy(() => import('./Notes/Steps'));
+const ProjectsPage = lazy(() => import('./Notes/ProjectsPage'));
 
 // Settings subpages
 const ProfilePrivacy = lazy(() => import('./Settings/ProfilePrivacy'));
@@ -56,6 +63,10 @@ function App() {
               <Suspense fallback={<div>Loading...</div>}>
                 <Routes>
                   <Route path="/" element={<Home />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/terms" element={<Terms />} />
+                  <Route path="/privacy" element={<Privacy />} />
+                  <Route path="/contact" element={<Contact />} />
                   <Route path="/login" element={<Login />} />
                   <Route path="/register" element={<Register />} />
                   <Route path="/profile" element={<ProfileView />} />
@@ -70,6 +81,8 @@ function App() {
                   <Route path="/notes" element={<Notes />} />
                   <Route path="/project-suggestions" element={<ProjectSuggestions />} />
                   <Route path="/career-guidance" element={<CareerGuidance />} />
+                  <Route path="/projects/:skill" element={<ProjectsPage />} />
+                  <Route path="/projects/details" element={<ProjectsPage />} />
                   <Route path="/projects/:projectId" element={<ProjectDetails />} />
                   <Route path="/projects/:projectId/steps" element={<Steps />} />
                   <Route path="/posts" element={<PostList />} />

@@ -22,6 +22,7 @@ const Navbar = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const isProjectPage = location.pathname.startsWith('/projects');
 
   const handleResize = () => {
     setIsMobile(window.innerWidth <= 768);
@@ -52,7 +53,7 @@ const Navbar = () => {
   }, [location]);
 
   return (
-    <nav className={`navbar ${isMobile ? "mobile" : ""}`} aria-label="Main Navigation">
+    <nav className={`navbar ${isMobile ? "mobile" : ""} ${isProjectPage ? "alt-navbar" : ""}`} aria-label="Main Navigation">
       <div className="nav-item-container">
         <div className="logo-container-nav" onClick={() => handleNavigation("/")}>
           <img src={FirstLogo} alt="EduVerse" className="nav-logo" />

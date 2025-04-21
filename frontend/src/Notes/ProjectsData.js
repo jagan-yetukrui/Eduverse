@@ -20,7 +20,7 @@ export const pythonProjects = pythonProjectsData.projects.map(project => ({
     task_id: task.task_id,
     task_name: task.task_name,
     description: task.description,
-    isUnlocked: task.task_id === project.tasks[0].task_id, // First task is unlocked
+    isUnlocked: true, // All tasks are unlocked
     isCompleted: false,
     reward: Math.floor(Math.random() * 50) + 50,
     steps: task.steps.map(step => ({
@@ -29,7 +29,7 @@ export const pythonProjects = pythonProjectsData.projects.map(project => ({
       description: step.description,
       guidelines: step.guidelines,
       isCompleted: false,
-      isUnlocked: false,
+      isUnlocked: true, // All steps are unlocked
       xpValue: Math.floor(Math.random() * 20) + 10,
       starterCode: `# 🎮 ${step.step_name}
 # 📝 Follow the guidelines to complete this step
@@ -56,7 +56,7 @@ export const javaProjects = javaProjectsData.projects.map(project => ({
     task_id: task.task_id,
     task_name: task.task_name,
     description: task.description,
-    isUnlocked: task.task_id === project.tasks[0].task_id, // First task is unlocked
+    isUnlocked: true, // All tasks are unlocked
     isCompleted: false,
     reward: Math.floor(Math.random() * 50) + 50,
     steps: task.steps.map(step => ({
@@ -65,7 +65,7 @@ export const javaProjects = javaProjectsData.projects.map(project => ({
       description: step.description,
       guidelines: step.guidelines,
       isCompleted: false,
-      isUnlocked: false,
+      isUnlocked: true, // All steps are unlocked
       xpValue: Math.floor(Math.random() * 20) + 10,
       starterCode: `// 🎮 ${step.step_name}
 // 📝 Follow the guidelines to complete this step
@@ -91,7 +91,7 @@ export const awsProjects = awsProjectsData.projects.map(project => ({
     task_id: task.task_id,
     task_name: task.task_name,
     description: task.description,
-    isUnlocked: task.task_id === project.tasks[0].task_id, // First task is unlocked
+    isUnlocked: true, // All tasks are unlocked
     isCompleted: false,
     reward: Math.floor(Math.random() * 50) + 50,
     steps: task.steps.map(step => ({
@@ -100,7 +100,7 @@ export const awsProjects = awsProjectsData.projects.map(project => ({
       description: step.description,
       guidelines: step.guidelines,
       isCompleted: false,
-      isUnlocked: false,
+      isUnlocked: true, // All steps are unlocked
       xpValue: Math.floor(Math.random() * 20) + 10,
       starterCode: `# 🎮 ${step.step_name}
 # 📝 Follow the guidelines to complete this step
@@ -123,7 +123,7 @@ export const sqlProjects = sqlProjectsData.projects.map(project => ({
     task_id: task.task_id,
     task_name: task.task_name,
     description: task.description,
-    isUnlocked: task.task_id === project.tasks[0].task_id, // First task is unlocked
+    isUnlocked: true, // All tasks are unlocked
     isCompleted: false,
     reward: Math.floor(Math.random() * 50) + 50,
     steps: task.steps.map(step => ({
@@ -132,7 +132,7 @@ export const sqlProjects = sqlProjectsData.projects.map(project => ({
       description: step.description,
       guidelines: step.guidelines,
       isCompleted: false,
-      isUnlocked: false,
+      isUnlocked: true, // All steps are unlocked
       xpValue: Math.floor(Math.random() * 20) + 10,
       starterCode: `-- 🎮 ${step.step_name}
 -- 📝 Follow the guidelines to complete this step
@@ -155,7 +155,7 @@ export const nodeProjects = nodeProjectsData.projects.map(project => ({
     task_id: task.task_id,
     task_name: task.task_name,
     description: task.description,
-    isUnlocked: task.task_id === project.tasks[0].task_id, // First task is unlocked
+    isUnlocked: true, // All tasks are unlocked
     isCompleted: false,
     reward: Math.floor(Math.random() * 50) + 50,
     steps: task.steps.map(step => ({
@@ -164,7 +164,7 @@ export const nodeProjects = nodeProjectsData.projects.map(project => ({
       description: step.description,
       guidelines: step.guidelines,
       isCompleted: false,
-      isUnlocked: false,
+      isUnlocked: true, // All steps are unlocked
       xpValue: Math.floor(Math.random() * 20) + 10,
       starterCode: `// 🎮 ${step.step_name}
 // 📝 Follow the guidelines to complete this step
@@ -191,7 +191,7 @@ export const reactProjects = reactProjectsData.projects.map(project => ({
     task_id: task.task_id,
     task_name: task.task_name,
     description: task.description,
-    isUnlocked: task.task_id === project.tasks[0].task_id, // First task is unlocked
+    isUnlocked: true, // All tasks are unlocked
     isCompleted: false,
     reward: Math.floor(Math.random() * 50) + 50,
     steps: task.steps.map(step => ({
@@ -200,7 +200,7 @@ export const reactProjects = reactProjectsData.projects.map(project => ({
       description: step.description,
       guidelines: step.guidelines,
       isCompleted: false,
-      isUnlocked: false,
+      isUnlocked: true, // All steps are unlocked
       xpValue: Math.floor(Math.random() * 20) + 10,
       starterCode: `// 🎮 ${step.step_name}
 // 📝 Follow the guidelines to complete this step

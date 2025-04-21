@@ -180,3 +180,32 @@
     margin-bottom: 0.5rem;
   }
 }
+
+/* For project page navbar theme */
+.navbar.alt-navbar {
+  background: linear-gradient(to right, #e0e7ff, #f3f4f6);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.navbar.alt-navbar .nav-link {
+  color: #1f2937;
+  font-weight: 500;
+}
+
+.navbar.alt-navbar .nav-link:hover {
+  color: #4f46e5;
+}
+
+.navbar.alt-navbar .logo-container-nav p {
+  color: #1f2937;
+}
+
+.navbar.alt-navbar .nav-item p {
+  color: #4b5563;
+}
+
+.navbar.alt-navbar .nav-item p:hover {
+  color: #4f46e5;
+  background: rgba(79, 70, 229, 0.1);
+}
