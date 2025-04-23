@@ -1,0 +1,52 @@
+[
+  {
+    "id": 1,
+    "eventName": "Global Hackathon 2025",
+    "date": "2025-03-15",
+    "time": "10:00 AM - 6:00 PM", 
+    "location": "Online",
+    "description": "Join a 24-hour hackathon where students and professionals collaborate to build innovative solutions to real-world problems.",
+    "tags": ["Hackathon", "Innovation", "Collaboration"],
+    "registrationLink": "https://globalhackathon2025.com"
+  },
+  {
+    "id": 2,
+    "eventName": "Green Future Summit",
+    "date": "2025-04-05",
+    "time": "9:00 AM - 4:00 PM",
+    "location": "San Francisco, CA",
+    "description": "Join industry leaders and innovators to explore sustainable solutions and shape a greener tomorrow.",
+    "tags": ["Sustainability", "Innovation", "Technology"],
+    "registrationLink": "https://greenfuturesummit.com"
+  },
+  {
+    "id": 3, 
+    "eventName": "AI in Education Summit",
+    "date": "2025-02-28",
+    "time": "5:00 PM - 6:30 PM",
+    "location": "Online",
+    "description": "Learn how artificial intelligence is revolutionizing education from leading experts in edtech.",
+    "tags": ["AI", "Education", "Technology"],
+    "registrationLink": "https://aiedusummit.com"
+  },
+  {
+    "id": 4,
+    "eventName": "Startup Pitch Night",
+    "date": "2025-03-10", 
+    "time": "6:00 PM - 9:00 PM",
+    "location": "Austin, TX",
+    "description": "Watch innovative startups pitch their ideas to top investors and receive expert feedback.",
+    "tags": ["Startups", "Pitching", "Investment"],
+    "registrationLink": "https://startuppitch.com"
+  },
+  {
+    "id": 5,
+    "eventName": "Tech Career Fair 2025",
+    "date": "2025-03-20",
+    "time": "11:00 AM - 4:00 PM",
+    "location": "New York, NY", 
+    "description": "Connect with leading tech companies offering exciting career opportunities and internships.",
+    "tags": ["Careers", "Technology", "Networking"],
+    "registrationLink": "https://techcareerfair.com"
+  }
+]

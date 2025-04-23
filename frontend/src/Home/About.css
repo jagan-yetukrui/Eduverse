@@ -1,0 +1,98 @@
+/* About.css */
+
+.max-w-4xl {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 70px 25px;
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.text-4xl {
+  font-size: 3.2rem;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 3.5rem;
+  background: linear-gradient(135deg, #4f46e5, #0ea5e9);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.bg-white {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(229, 231, 235, 0.5);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  padding: 32px 36px;
+  margin-bottom: 28px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.bg-white:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+}
+
+.text-xl {
+  font-size: 1.65rem;
+  color: #1e293b;
+  font-weight: 700;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.text-blue-600 {
+  font-size: 2rem;
+  color: #4f46e5;
+  display: inline-flex;
+}
+
+.text-gray-700 {
+  color: #334155;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+}
+
+/* Responsive styles */
+@media screen and (max-width: 768px) {
+  .max-w-4xl {
+    padding: 50px 20px;
+  }
+  
+  .text-4xl {
+    font-size: 2.2rem;
+    margin-bottom: 2.5rem;
+  }
+  
+  .bg-white {
+    padding: 24px;
+    border-radius: 14px;
+  }
+  
+  .text-xl {
+    font-size: 1.4rem;
+  }
+  
+  .text-blue-600 {
+    font-size: 1.6rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .text-4xl {
+    font-size: 1.8rem;
+  }
+  
+  .bg-white {
+    padding: 20px;
+  }
+  
+  .text-xl {
+    font-size: 1.25rem;
+  }
+}
