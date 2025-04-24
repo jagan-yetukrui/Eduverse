@@ -17,6 +17,7 @@ const Navbar = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const isProjectPage = location.pathname.startsWith('/projects');
 
   const handleLogout = async (e) => {
     e.preventDefault();
@@ -53,7 +54,11 @@ const Navbar = () => {
   }, [location]);
 
   return (
+<<<<<<< HEAD
     <nav className={`navbar ${isMobile ? "mobile" : ""}`}>
+=======
+    <nav className={`navbar ${isMobile ? "mobile" : ""} ${isProjectPage ? "alt-navbar" : ""}`} aria-label="Main Navigation">
+>>>>>>> origin/MVP
       <div className="nav-item-container">
         <div className="logo-container-nav" onClick={refreshHomePage}>
           <img src={FirstLogo} alt="EduVerse" className="nav-logo" />

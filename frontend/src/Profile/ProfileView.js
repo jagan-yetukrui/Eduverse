@@ -438,8 +438,26 @@ const ProfilePage = () => {
           return;
         }
 
+<<<<<<< HEAD
         const response = await axios.get("http://127.0.0.1:8000/api/profile/", {
           headers: { Authorization: `Bearer ${token}` },
+=======
+        const response = await axios.get(
+          `https://edu-verse.in/api/profiles/me/`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            signal: controller.signal,
+          }
+        );
+        setUser(response.data);
+        {
+          console.log(response.data);
+        }
+        setStats({
+          followers: response.data.followers_count,
+          following: response.data.following_count,
+          // posts: response.data.posts_count,
+>>>>>>> origin/MVP
         });
         setProfile(response.data);
         setLoading(false);

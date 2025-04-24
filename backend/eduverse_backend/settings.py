@@ -27,7 +27,16 @@ SECRET_KEY = 'django-insecure-vd(nyu_b$gekaow9#@gyv&@9wuj(mb_v+b7z!%3xe+a%4nhm)u
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+<<<<<<< HEAD
 ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+=======
+ALLOWED_HOSTS = ['edu-verse.in', 'www.edu-verse.in', '3.12.162.79']
+
+#  = [
+#     "127.0.0.1",
+#     "localhost",
+# ]
+>>>>>>> origin/MVP
 
 
 # Application definition
@@ -49,8 +58,14 @@ INSTALLED_APPS = [
     'projects',
     'ai',
     'scraper',
+<<<<<<< HEAD
     'search'
     #'rest_framework_simplejwt.token_blacklist',  # ✅ Enables token blacklisting
+=======
+    'search',
+    'trending',
+    'events',
+>>>>>>> origin/MVP
 ]
 
 MIDDLEWARE = [
@@ -99,6 +114,7 @@ WSGI_APPLICATION = 'eduverse_backend.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
+<<<<<<< HEAD
   'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'postgres',
@@ -110,6 +126,15 @@ DATABASES = {
            
             'options': '-c search_path=public'
         }
+=======
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'Jagan',
+        'PASSWORD': 'Jagan%579',
+        'HOST': 'eduverse-db.crgqasis8mt9.us-east-2.rds.amazonaws.com',
+        'PORT': '5432',
+>>>>>>> origin/MVP
     }
 }
 

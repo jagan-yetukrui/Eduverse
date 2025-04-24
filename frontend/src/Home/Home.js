@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from "react";
+<<<<<<< HEAD
 import { useNavigate, useLocation } from "react-router-dom";
+=======
+import { useNavigate, Link } from "react-router-dom";
+>>>>>>> origin/MVP
 import "./Home.css";
 import ProfileCardHome from "./ProfileCardHome";
+import Terms from "./Terms";
+import Privacy from "./Privacy";
+import Contact from "./Contact";
 
 import mockTrendingProjects from "../mockdata/trending_projects.json";
 import mockUpcomingEvents from "../mockdata/upcoming_events.json";
@@ -28,7 +35,7 @@ const Home = () => {
 
   const fetchProfileSuggestions = async () => {
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/profiles/");
+      const response = await fetch("https://edu-verse.in/api/profiles/");
       const data = await response.json();
       setProfileSuggestions(data);
     } catch (error) {
@@ -38,7 +45,7 @@ const Home = () => {
 
   const fetchTrendingProjects = async () => {
     try {
-      const response = await fetch("/api/projects/trending");
+      const response = await fetch("https://edu-verse.in/api/projects/trending");
       const data = await response.json();
       setTrendingProjects(data);
     } catch (error) {
@@ -48,7 +55,7 @@ const Home = () => {
 
   const fetchUpcomingEvents = async () => {
     try {
-      const response = await fetch("/api/events/upcoming");
+      const response = await fetch("https://edu-verse.in/api/events/upcoming");
       const data = await response.json();
       setUpcomingEvents(data);
     } catch (error) {
@@ -168,13 +175,13 @@ const Home = () => {
 
       <footer className="footer-container">
         <div className="footer-links">
-          <a href="/about">About</a>
+          <Link to="/about">About</Link>
           <div className="divider-vertical"></div>
-          <a href="/privacy">Privacy</a>
+          <Link to="/privacy">Privacy</Link>
           <div className="divider-vertical"></div>
-          <a href="/terms">Terms</a>
+          <Link to="/terms">Terms</Link>
           <div className="divider-vertical"></div>
-          <a href="/contact">Contact</a>
+          <Link to="/contact">Contact</Link>
         </div>
         <p className="copyright">© 2024 EduVerse. All rights reserved.</p>
       </footer>

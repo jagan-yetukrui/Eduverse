@@ -19,7 +19,7 @@ const SavedItems = () => {
       try {
         const token = localStorage.getItem('access_token');
         const response = await axios.get(
-          'http://127.0.0.1:8000/api/saved-items',
+          'https://edu-verse.in/api/saved-items',
           {
             headers: { Authorization: `Bearer ${token}` }
           }
@@ -40,7 +40,7 @@ const SavedItems = () => {
     try {
       const token = localStorage.getItem('access_token');
       await axios.delete(
-        `http://127.0.0.1:8000/api/saved-items/${itemId}`,
+        `https://edu-verse.in/api/saved-items/${itemId}`,
         {
           headers: { Authorization: `Bearer ${token}` }
         }

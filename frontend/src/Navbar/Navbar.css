@@ -118,6 +118,7 @@
   border-radius: 7px;
 }
 
+<<<<<<< HEAD
 .logout p:hover {
   color: var(--secondary-color);
   /* background-color: var(--secondary-color); */
@@ -125,3 +126,74 @@
   cursor: pointer;
   transition: all 0.2s ease;
 }
+=======
+.nav-logout p:hover {
+  transform: scale(1.1);
+  background: linear-gradient(45deg, rgba(255, 74, 74, 0.3), rgba(255, 74, 74, 0.5)); /* Gradient background on hover */
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2); /* Enhanced shadow */
+}
+
+/* Active navigation item styling */
+.nav-item.active p {
+  background: #e0e0e0;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15); /* Enhanced shadow */
+  border: 1px solid #d0d0d0;
+  color: #222222; /* Darker text for active items */
+}
+
+.nav-item.active p:hover {
+  background: linear-gradient(45deg, rgba(99, 102, 241, 0.3), rgba(192, 132, 252, 0.3));
+  color: #ffffff;
+  border: 1px solid transparent;
+}
+
+/* Media query for responsive design */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    padding: 0.8rem 0.4rem;
+  }
+  
+  .nav-item-container {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin-right: 0;
+    margin-top: 1rem;
+  }
+  
+  .logo-container-nav {
+    margin-right: 0;
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* For project page navbar theme */
+.navbar.alt-navbar {
+  background: linear-gradient(to right, #e0e7ff, #f3f4f6);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.navbar.alt-navbar .nav-link {
+  color: #1f2937;
+  font-weight: 500;
+}
+
+.navbar.alt-navbar .nav-link:hover {
+  color: #4f46e5;
+}
+
+.navbar.alt-navbar .logo-container-nav p {
+  color: #1f2937;
+}
+
+.navbar.alt-navbar .nav-item p {
+  color: #4b5563;
+}
+
+.navbar.alt-navbar .nav-item p:hover {
+  color: #4f46e5;
+  background: rgba(79, 70, 229, 0.1);
+}
+>>>>>>> origin/MVP

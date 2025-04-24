@@ -7,9 +7,42 @@ import ParticlesBg from "particles-bg";
 
 // Create axios instance with base URL
 const apiClient = axios.create({
-  baseURL: "http://127.0.0.1:8000/",
+  baseURL: "https://edu-verse.in/",
 });
 
+<<<<<<< HEAD
+=======
+// Add response interceptor
+apiClient.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    if (error.response?.status === 401) {
+      const refreshToken = localStorage.getItem("refresh_token");
+      if (refreshToken) {
+        try {
+          const response = await axios.post(
+            "https://edu-verse.in/api/token/refresh/",
+            {
+              refresh: refreshToken,
+            }
+          );
+          const newAccessToken = response.data.access;
+          localStorage.setItem("access_token", newAccessToken);
+
+          // Retry original request with new token
+          error.config.headers["Authorization"] = `Bearer ${newAccessToken}`;
+          return apiClient.request(error.config);
+        } catch (refreshError) {
+          console.error("Failed to refresh token:", refreshError);
+          window.location.href = "/login";
+        }
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
+>>>>>>> origin/MVP
 const Login = () => {
   const [formData, setFormData] = useState({
     username: "",

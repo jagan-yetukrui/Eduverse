@@ -102,9 +102,12 @@
       "last 1 safari version"
     ]
   },
+<<<<<<< HEAD
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
   },
+=======
+>>>>>>> origin/MVP
   "jest": {
     "roots": [
       "<rootDir>/src"

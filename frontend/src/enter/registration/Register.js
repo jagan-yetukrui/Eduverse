@@ -113,6 +113,7 @@ const Register = () => {
 
     setIsLoading(true);
     try {
+<<<<<<< HEAD
       const response = await axios.post("http://127.0.0.1:8000/api/register/", {
         username: formData.username,
         email: formData.email,
@@ -120,6 +121,19 @@ const Register = () => {
         password2: formData.password2,
         agreeToTerms: formData.agreeToTerms,
       });
+=======
+      // Removed the unused 'response' variable
+      await axios.post(
+        "https://edu-verse.in/api/accounts/register/",
+        {
+          username: formData.username,
+          email: formData.email,
+          password: formData.password,
+          password2: formData.password2,
+          agreeToTerms: formData.agreeToTerms,
+        }
+      );
+>>>>>>> origin/MVP
 
       setIsSuccess(true);
       setErrorMessage("");

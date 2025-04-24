@@ -1,289 +1,88 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { pythonProjects, javaProjects } from './ProjectsData';
-import awsProjectsData from './aws_projects_complete.json';
-import sqlProjectsData from './sql_projects_complete.json';
-import nodeProjectsData from './node_projects_complete.json';
-import reactProjectsData from './react_projects_complete.json';
 import './ProjectSuggestions.css';
 
 const ProjectSuggestions = () => {
   const navigate = useNavigate();
-  const [selectedSkill, setSelectedSkill] = useState('');
 
-  // Transform AWS projects data
-  const awsProjects = awsProjectsData.projects.map(project => ({
-    id: project.project_id,
-    name: project.project_name,
-    difficulty: project.difficulty || "Beginner",
-    description: project.description,
-    questProgress: 0,
-    xpGained: 0,
-    tasks: project.tasks.map(task => ({
-      task_id: task.task_id,
-      task_name: task.task_name,
-      description: task.description,
-      isUnlocked: task.task_id === project.tasks[0].task_id, // First task is unlocked
-      isCompleted: false,
-      reward: Math.floor(Math.random() * 50) + 50,
-      steps: task.steps.map(step => ({
-        step_id: step.step_id,
-        step_name: step.step_name,
-        description: step.description,
-        guidelines: step.guidelines,
-        isCompleted: false,
-        isUnlocked: false,
-        xpValue: Math.floor(Math.random() * 20) + 10,
-        starterCode: `# 🎮 ${step.step_name}
-# 📝 Follow the guidelines to complete this step
-
-# AWS CLI or CloudFormation snippet
-# TODO: Implement your AWS solution here`
-      }))
-    }))
-  }));
-
-  // Transform SQL projects data
-  const sqlProjects = sqlProjectsData.projects.map(project => ({
-    id: project.project_id,
-    name: project.project_name,
-    difficulty: project.difficulty || "Beginner",
-    description: project.description,
-    questProgress: 0,
-    xpGained: 0,
-    tasks: project.tasks.map(task => ({
-      task_id: task.task_id,
-      task_name: task.task_name,
-      description: task.description,
-      isUnlocked: task.task_id === project.tasks[0].task_id,
-      isCompleted: false,
-      reward: Math.floor(Math.random() * 50) + 50,
-      steps: task.steps.map(step => ({
-        step_id: step.step_id,
-        step_name: step.step_name,
-        description: step.description,
-        guidelines: step.guidelines,
-        isCompleted: false,
-        isUnlocked: false,
-        xpValue: Math.floor(Math.random() * 20) + 10,
-        starterCode: `-- 🎮 ${step.step_name}
--- 📝 Follow the guidelines to complete this step
-
--- TODO: Write your SQL query here`
-      }))
-    }))
-  }));
-
-  // Transform Node.js projects data
-  const nodeProjects = nodeProjectsData.projects.map(project => ({
-    id: project.project_id,
-    name: project.project_name,
-    difficulty: project.difficulty || "Beginner",
-    description: project.description,
-    questProgress: 0,
-    xpGained: 0,
-    tasks: project.tasks.map(task => ({
-      task_id: task.task_id,
-      task_name: task.task_name,
-      description: task.description,
-      isUnlocked: task.task_id === project.tasks[0].task_id,
-      isCompleted: false,
-      reward: Math.floor(Math.random() * 50) + 50,
-      steps: task.steps.map(step => ({
-        step_id: step.step_id,
-        step_name: step.step_name,
-        description: step.description,
-        guidelines: step.guidelines,
-        isCompleted: false,
-        isUnlocked: false,
-        xpValue: Math.floor(Math.random() * 20) + 10,
-        starterCode: `// 🎮 ${step.step_name}
-// 📝 Follow the guidelines to complete this step
-
-const express = require('express');
-// TODO: Implement your Node.js solution here`
-      }))
-    }))
-  }));
-
-  // Transform React projects data
-  const reactProjects = reactProjectsData.projects.map(project => ({
-    id: project.project_id,
-    name: project.project_name,
-    difficulty: project.difficulty || "Beginner",
-    description: project.description,
-    questProgress: 0,
-    xpGained: 0,
-    tasks: project.tasks.map(task => ({
-      task_id: task.task_id,
-      task_name: task.task_name,
-      description: task.description,
-      isUnlocked: task.task_id === project.tasks[0].task_id,
-      isCompleted: false,
-      reward: Math.floor(Math.random() * 50) + 50,
-      steps: task.steps.map(step => ({
-        step_id: step.step_id,
-        step_name: step.step_name,
-        description: step.description,
-        guidelines: step.guidelines,
-        isCompleted: false,
-        isUnlocked: false,
-        xpValue: Math.floor(Math.random() * 20) + 10,
-        starterCode: `// 🎮 ${step.step_name}
-// 📝 Follow the guidelines to complete this step
-
-import React from 'react';
-
-function MyComponent() {
-  // TODO: Implement your React component here
-  return (
-    <div>
-      <h1>Hello React World!</h1>
-    </div>
-  );
-}
-
-export default MyComponent;`
-      }))
-    }))
-  }));
-
-  const projectsBySkill = {
-    python: pythonProjects,
-    java: javaProjects,
-    javascript: [
-      // Keeping existing JavaScript projects...
-    ],
-    react: reactProjects,
-    node: nodeProjects,
-    sql: sqlProjects,
-    cpp: [
-      // C++ projects...
-    ],
-    golang: [
-      // Go projects...
-    ],
-    rust: [
-      // Rust projects...
-    ],
-    typescript: [
-      // TypeScript projects...
-    ],
-    html: [
-      // HTML/CSS projects...
-    ],
-    docker: [
-      // Docker projects...
-    ],
-    aws: awsProjects
-  };
-
-  const skillEmojis = {
-    python: '🐍',
-    javascript: '⚡',
-    react: '⚛️',
-    node: '🟢',
-    sql: '🗄️',
-    java: '☕',
-    cpp: '⚙️',
-    golang: '🐹',
-    rust: '🦀',
-    typescript: '📘',
-    html: '🎨',
-    docker: '🐳',
-    aws: '☁️'
-  };
-
-  const handleSkillSelect = (skill) => {
-    setSelectedSkill(skill);
-  };
-
-  const handleProjectSelect = (project) => {
-    // Find the selected project from the appropriate dataset
-    let selectedProject = null;
-    
-    // Get the project from the corresponding dataset based on selected skill
-    if (projectsBySkill[selectedSkill]) {
-      selectedProject = projectsBySkill[selectedSkill].find(p => p.id === project.id);
+  const categories = [
+    {
+      name: 'Python',
+      image: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg',
+      projectsCount: '10',
+      level: 'All Levels'
+    },
+    {
+      name: 'Java',
+      image: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg',
+      projectsCount: '8',
+      level: 'All Levels'
+    },
+    {
+      name: 'React',
+      image: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg',
+      projectsCount: '12',
+      level: 'All Levels'
+    },
+    {
+      name: 'Node.js',
+      image: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg',
+      projectsCount: '9',
+      level: 'All Levels'
+    },
+    {
+      name: 'SQL',
+      image: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg',
+      projectsCount: '7',
+      level: 'All Levels'
+    },
+    {
+      name: 'AWS',
+      image: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImF3c0dyYWQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNGRjk5MDAiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNGRkM3MDAiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cGF0aCBmaWxsPSJ1cmwoI2F3c0dyYWQpIiBkPSJNMjUgMzBMNTAgMTVMNzUgMzBMNzUgNzBMNTAgODVMMjUgNzBMMjUgMzBaIi8+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTM1IDQwTDUwIDMwTDY1IDQwTDY1IDYwTDUwIDcwTDM1IDYwTDM1IDQwWiIvPjxwYXRoIGZpbGw9InVybCgjYXdzR3JhZCkiIGQ9Ik00MCA0NUw1MCA0MEw2MCA0NUw2MCA1NUw1MCA2MEw0MCA1NUw0MCA0NVoiLz48cGF0aCBmaWxsPSIjMjMyRjNFIiBkPSJNMTUgNTBMMjUgNDVMMjUgNTVMMTUgNTBNODUgNTBMNzUgNDVMNzUgNTVMODUgNTBNNTAgMTBMNDAgMTVMNjAgMTVMNTAgMTBNNTAgOTBMNDAgODVMNjAgODVMNTAgOTAiLz48L3N2Zz4=',
+      projectsCount: '6',
+      level: 'All Levels'
     }
-          
-    if (selectedProject) {
-      // Unlock the first task and step
-      if (selectedProject.tasks.length > 0) {
-        selectedProject.tasks[0].isUnlocked = true;
-        if (selectedProject.tasks[0].steps.length > 0) {
-          selectedProject.tasks[0].steps[0].isUnlocked = true;
-        }
-      }
-      // Navigate to the project steps page with the selected project data
-      navigate(`/projects/${selectedProject.id}/steps`, {
-        state: { 
-          project: selectedProject,
-          activeTask: selectedProject.tasks[0],
-          activeStep: selectedProject.tasks[0]?.steps[0]
-        }
-      });
-    }
+  ];
+
+  const handleProjectSelect = (category) => {
+    navigate(`/projects/${category.name.toLowerCase()}`);
   };
 
   return (
-    <div className="project-suggestions">
+    <div className="projects-page">
       <button 
         className="back-button"
-        onClick={() => navigate(-1)}
+        onClick={() => navigate('/notes')}
       >
-        <span>←</span> Back
+        ← Back to Edura
       </button>
       
-      <h2>🎮 Epic Code Quest: Choose Your Adventure!</h2>
+      <div className="header-section">
+        <h1 className="page-heading">🚀 Pick Your Coding Realm</h1>
+        <p className="page-subheading">
+          Let Edura guide you through magical, real-world projects tailored to your journey.
+        </p>
+      </div>
       
-      <div className="skill-selector">
-        <h3>🌟 Select Your Magical Coding Path 🌟</h3>
-        <div className="skill-buttons">
-          {Object.keys(projectsBySkill).map((skill) => (
-            <button
-              key={skill}
-              className={`skill-button ${selectedSkill === skill ? 'active' : ''}`}
-              onClick={() => handleSkillSelect(skill)}
+      <div className="category-section">
+        <h2 className="section-heading">💬 Choose Your Domain</h2>
+        <div className="category-grid">
+          {categories.map((category) => (
+            <div 
+              key={category.name}
+              className="category-card"
+              onClick={() => handleProjectSelect(category)}
             >
-              <div className="skill-icon">{skillEmojis[skill]}</div>
-              <div className="skill-name">{skill.toUpperCase()}</div>
-              <div className="skill-sparkle">✨</div>
-            </button>
+              <img src={category.image} alt={category.name} />
+              <h3>{category.name}</h3>
+              <p>{category.projectsCount} Projects · {category.level}</p>
+              <button>
+                ✨ Explore
+              </button>
+            </div>
           ))}
         </div>
       </div>
-
-      {selectedSkill && (
-        <div className="projects-container">
-          <div className="projects-list">
-            <h3>🏰 Available Quests 🏰</h3>
-            <div className="project-cards">
-              {projectsBySkill[selectedSkill] && projectsBySkill[selectedSkill].map((project) => (
-                <div 
-                  key={project.id}
-                  className="project-card"
-                  onClick={() => handleProjectSelect(project)}
-                >
-                  <div className="project-card-header">
-                    <h4>{project.name}</h4>
-                    <div className={`difficulty-badge ${project.difficulty.toLowerCase()}`}>
-                      {project.difficulty === 'Beginner' && '🌱'}
-                      {project.difficulty === 'Intermediate' && '⚔️'}
-                      {project.difficulty === 'Advanced' && '🔥'}
-                      {project.difficulty}
-                    </div>
-                  </div>
-                  <p className="project-description">{project.description}</p>
-                  <div className="project-tasks-preview">
-                    {project.tasks && `🎯 ${project.tasks.length} Epic Tasks Await!`}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
