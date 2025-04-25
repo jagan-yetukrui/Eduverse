@@ -1,15 +1,10 @@
-import React, { useEffect, lazy, Suspense } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from './Navbar/Navbar';
-import ErrorBoundary from './ErrorBoundary/ErrorBoundary';
+import React, { lazy, Suspense, useEffect } from 'react';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import './App.css';
-<<<<<<< HEAD
-=======
+import ErrorBoundary from './ErrorBoundary/ErrorBoundary';
+import Navbar from './Navbar/Navbar';
 // eslint-disable-next-line no-unused-vars
-import { UserProvider } from './Accounts/UserContext';
 // eslint-disable-next-line no-unused-vars
-import { ProfileProvider } from './Profile/ProfileContext';
->>>>>>> origin/MVP
 
 // Lazy load components to improve performance
 const Home = lazy(() => import('./Home/Home'));
@@ -28,14 +23,11 @@ const PostList = lazy(() => import('./Posts/PostList'));
 const Search = lazy(() => import('./Search/Searchpage'));
 const Settings = lazy(() => import('./Settings/Settings'));
 const TinyMCEDemo = lazy(() => import('./TinyMCEDemo'));
-<<<<<<< HEAD
-=======
 const ProjectSuggestions = lazy(() => import('./Notes/ProjectSuggestions'));
 const CareerGuidance = lazy(() => import('./Notes/CareerGuidance'));
 const ProjectDetails = lazy(() => import('./Notes/ProjectsData')); // Fixed import path and component name
 const Steps = lazy(() => import('./Notes/Steps'));
 const ProjectsPage = lazy(() => import('./Notes/ProjectsPage'));
->>>>>>> origin/MVP
 
 // Settings subpages
 const ProfilePrivacy = lazy(() => import('./Settings/ProfilePrivacy'));
@@ -85,15 +77,12 @@ function App() {
                   </Route>
                   <Route path="/messages" element={<Messages />} />
                   <Route path="/notes" element={<Notes />} />
-<<<<<<< HEAD
-=======
                   <Route path="/project-suggestions" element={<ProjectSuggestions />} />
                   <Route path="/career-guidance" element={<CareerGuidance />} />
                   <Route path="/projects/:skill" element={<ProjectsPage />} />
                   <Route path="/projects/details" element={<ProjectsPage />} />
                   <Route path="/projects/:projectId" element={<ProjectDetails />} />
                   <Route path="/projects/:projectId/steps" element={<Steps />} />
->>>>>>> origin/MVP
                   <Route path="/posts" element={<PostList />} />
                   <Route path="/newpost" element={<NewPost />} />
                   <Route path="/search" element={<Search />} />
@@ -123,9 +112,5 @@ function App() {
     </React.StrictMode>
   );
 }
-<<<<<<< HEAD
-export default App;
-=======
 
 export default App;
->>>>>>> origin/MVP

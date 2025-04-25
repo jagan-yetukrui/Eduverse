@@ -1,17 +1,15 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import "./Login.css";
-import { FaEye, FaEyeSlash, FaTimesCircle } from "react-icons/fa";
 import axios from "axios";
 import ParticlesBg from "particles-bg";
+import React, { useEffect, useState } from "react";
+import { FaEye, FaEyeSlash, FaTimesCircle } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import "./Login.css";
 
 // Create axios instance with base URL
 const apiClient = axios.create({
   baseURL: "https://edu-verse.in/",
 });
 
-<<<<<<< HEAD
-=======
 // Add response interceptor
 apiClient.interceptors.response.use(
   (response) => response,
@@ -42,7 +40,6 @@ apiClient.interceptors.response.use(
   }
 );
 
->>>>>>> origin/MVP
 const Login = () => {
   const [formData, setFormData] = useState({
     username: "",

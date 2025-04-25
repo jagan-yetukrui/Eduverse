@@ -1,14 +1,7 @@
 import React, { useEffect, useState } from "react";
-<<<<<<< HEAD
-import { useNavigate, useLocation } from "react-router-dom";
-=======
-import { useNavigate, Link } from "react-router-dom";
->>>>>>> origin/MVP
+import { Link, useNavigate } from "react-router-dom";
 import "./Home.css";
 import ProfileCardHome from "./ProfileCardHome";
-import Terms from "./Terms";
-import Privacy from "./Privacy";
-import Contact from "./Contact";
 
 import mockTrendingProjects from "../mockdata/trending_projects.json";
 import mockUpcomingEvents from "../mockdata/upcoming_events.json";

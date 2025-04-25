@@ -1,15 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import "./Navbar.css";
-import FirstLogo from "../First_logo.png";
+import React, { useEffect, useState } from "react";
 import {
-  AiFillHome,
-  AiOutlineSearch,
-  AiFillMessage,
-  AiOutlineGlobal,
-  AiFillPlusSquare,
-  AiOutlineUser,
+  AiOutlineUser
 } from "react-icons/ai";
+import { useLocation, useNavigate } from "react-router-dom";
+import FirstLogo from "../First_logo.png";
+import "./Navbar.css";
 
 const Navbar = () => {
   const location = useLocation();
@@ -54,11 +49,7 @@ const Navbar = () => {
   }, [location]);
 
   return (
-<<<<<<< HEAD
-    <nav className={`navbar ${isMobile ? "mobile" : ""}`}>
-=======
     <nav className={`navbar ${isMobile ? "mobile" : ""} ${isProjectPage ? "alt-navbar" : ""}`} aria-label="Main Navigation">
->>>>>>> origin/MVP
       <div className="nav-item-container">
         <div className="logo-container-nav" onClick={refreshHomePage}>
           <img src={FirstLogo} alt="EduVerse" className="nav-logo" />

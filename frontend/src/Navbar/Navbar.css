@@ -118,15 +118,6 @@
   border-radius: 7px;
 }
 
-<<<<<<< HEAD
-.logout p:hover {
-  color: var(--secondary-color);
-  /* background-color: var(--secondary-color); */
-  background: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-=======
 .nav-logout p:hover {
   transform: scale(1.1);
   background: linear-gradient(45deg, rgba(255, 74, 74, 0.3), rgba(255, 74, 74, 0.5)); /* Gradient background on hover */
@@ -196,4 +187,3 @@
   color: #4f46e5;
   background: rgba(79, 70, 229, 0.1);
 }
->>>>>>> origin/MVP

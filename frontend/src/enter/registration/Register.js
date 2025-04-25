@@ -1,18 +1,17 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./Register.css";
+import ParticlesBg from "particles-bg";
+import React, { useState } from "react";
 import {
-  FaRocket,
   FaEye,
   FaEyeSlash,
-  FaCheckCircle,
-  FaTimesCircle,
   FaGoogle,
   FaLinkedin,
+  FaRocket,
+  FaTimesCircle
 } from "react-icons/fa";
-import ParticlesBg from "particles-bg";
+import { useNavigate } from "react-router-dom";
 import FirstLogo from "../../First_logo.png";
+import "./Register.css";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -113,15 +112,6 @@ const Register = () => {
 
     setIsLoading(true);
     try {
-<<<<<<< HEAD
-      const response = await axios.post("http://127.0.0.1:8000/api/register/", {
-        username: formData.username,
-        email: formData.email,
-        password: formData.password,
-        password2: formData.password2,
-        agreeToTerms: formData.agreeToTerms,
-      });
-=======
       // Removed the unused 'response' variable
       await axios.post(
         "https://edu-verse.in/api/accounts/register/",
@@ -133,7 +123,6 @@ const Register = () => {
           agreeToTerms: formData.agreeToTerms,
         }
       );
->>>>>>> origin/MVP
 
       setIsSuccess(true);
       setErrorMessage("");

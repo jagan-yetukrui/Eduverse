@@ -1,37 +1,27 @@
-<<<<<<< HEAD
-import React, { useState, useEffect, useRef } from "react";
-=======
-import React, { useState, useRef, useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
->>>>>>> origin/MVP
+
 import "./Notes.css";
 
 const Notes = () => {
   const [messages, setMessages] = useState([
     {
-<<<<<<< HEAD
-      id: 1,
-      text: "Welcome to EduVerse! I'm Edura, your AI mentor. How can I assist you today?",
-=======
       id: 0,
       text: "💡 Hey Dreamer,\nWelcome to Edura – your personal AI guide in the EduVerse.\nAsk anything. Build everything. Let's unlock your journey together. ✨",
->>>>>>> origin/MVP
       sender: "ai",
       isWelcome: true,
     },
   ]);
   const [inputText, setInputText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
-<<<<<<< HEAD
-  const [isListening, setIsListening] = useState(false);
-  const [suggestions, setSuggestions] = useState([]);
-  const chatContainerRef = useRef(null);
-=======
   const [showSuggestions, setShowSuggestions] = useState(true);
->>>>>>> origin/MVP
+  const [isListening, setIsListening] = useState(false);
+
   const avatarRef = useRef(null);
   const messageEndRef = useRef(null);
   const sendButtonRef = useRef(null);
+  const navigate = useNavigate();
+
 
   const suggestions = [
     "Suggest a trending project",
@@ -100,12 +90,6 @@ const Notes = () => {
     }
 
     try {
-<<<<<<< HEAD
-      setTimeout(() => {
-        const aiMessage = {
-          id: messages.length + 2,
-          text: "I understand you're interested in learning. Let me analyze your query and provide personalized recommendations.",
-=======
       const response = await fetch("https://edu-verse.in/ai/chat/", {
         method: "POST",
         headers: {
@@ -153,26 +137,19 @@ const Notes = () => {
         setMessages((prev) => [...prev, aiMessage]);
       }
     } catch (error) {
-      if (error) {
-        console.error("Connection failed:", error);
-        const errorMessage = {
-          id: messages.length + 2,
-          text: "Connection lost. Please try again later.",
->>>>>>> origin/MVP
-          sender: "ai",
-        };
-        setMessages((prev) => [...prev, aiMessage]);
+      console.error("Connection failed:", error);
+      const errorMessage = {
+        id: messages.length + 2,
+        text: "Connection lost. Please try again later.",
+        sender: "ai",
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+      setTimeout(() => {
         setIsTyping(false);
         if (avatarRef.current) {
           avatarRef.current.classList.remove("processing");
         }
       }, 1500);
-    } catch (error) {
-      console.error("Error getting AI response:", error);
-      setIsTyping(false);
-      if (avatarRef.current) {
-        avatarRef.current.classList.remove("processing");
-      }
     }
   };
 
@@ -196,46 +173,6 @@ const Notes = () => {
   };
 
   return (
-<<<<<<< HEAD
-    <div className="edura-page">
-      <div className="edura-container" ref={chatContainerRef}>
-        <div>
-          <div className="edura-header">
-            <div className="avatar-container" ref={avatarRef}>
-              <div className="hologram-effect"></div>
-              <div className="avatar-core"></div>
-            </div>
-            <div>
-              <h2 className="edura-title">Edura</h2>
-              <p className="edura-tagline">Your Personalized AI Mentor</p>
-            </div>
-          </div>
-
-          <div className="quick-actions">
-            {/* <h3>Suggested Actions</h3> */}
-            <div className="action-buttons">
-              <button className="action-btn">Complete Profile</button>
-              <button className="action-btn">Explore Courses</button>
-              <button className="action-btn">Find Collaborators</button>
-            </div>
-          </div>
-        </div>
-
-        <div className="chat-interface">
-          <div className="chat-messages glassmorphism">
-            {messages.map((message) => (
-              <div key={message.id} className={`message ${message.sender}`}>
-                <div className="message-bubble">{message.text}</div>
-              </div>
-            ))}
-            {isTyping && (
-              <div className="message ai">
-                <div className="message-bubble typing">
-                  <div className="typing-indicator">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-=======
     <div className="notes-page">
       <div className="notes-container">
         {/* Top Section (Fixed) */}
@@ -283,46 +220,22 @@ const Notes = () => {
         <div className="messages-container">
           {messages.map((message) => (
             <div
-              key={message.id}
-              className={`message-item fade-in ${
-                message.sender === "user" ? "user-message" : "ai-message"
-              } ${message.isWelcome ? "welcome-message" : ""}`}
-            >
-              <div
-                className={`message-bubble ${message.sender} ${message.type || ""}`}
-              >
-                {message.text.split("\n").map((line, i) => (
-                  <div key={i} className="message-line">
-                    {line}
->>>>>>> origin/MVP
-                  </div>
-                </div>
-              </div>
-<<<<<<< HEAD
-            )}
-          </div>
-
-          <div className="input-section glassmorphism">
-            <textarea
-              className="chat-input"
-              value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
-              onKeyPress={handleKeyPress}
-              placeholder="Ask me anything..."
-              rows="2"
-            />
-            {/* <button
-            className={`voice-input ${isListening ? "listening" : ""}`}
-            onClick={handleVoiceInput}
+            key={message.id}
+            className={`message-item fade-in ${
+              message.sender === "user" ? "user-message" : "ai-message"
+            } ${message.isWelcome ? "welcome-message" : ""}`}
           >
-            <span className="microphone-icon"></span>
-          </button> */}
-            <button
-              className="send-button"
-              onClick={handleSendMessage}
-              disabled={!inputText.trim() || isTyping}
-=======
+            <div
+              className={`message-bubble ${message.sender} ${message.type || ""}`}
+            >
+              {message.text.split("\n").map((line, i) => (
+                <div key={i} className="message-line">
+                  {line}
+                </div>
+              ))}
             </div>
+          </div>
+          
           ))}
           {isTyping && (
             <div className="message-item typing fade-in">
@@ -368,7 +281,6 @@ const Notes = () => {
               className="send-btn"
               onClick={handleSendMessage}
               disabled={!inputText.trim()}
->>>>>>> origin/MVP
             >
               Send
             </button>

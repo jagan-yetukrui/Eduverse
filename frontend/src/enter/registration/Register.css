@@ -7,12 +7,7 @@
 }
 
 .register-container {
-<<<<<<< HEAD
-  /* width: 100vw; */
-  height: max(100%, calc(100vh - 4rem - 150px));
-=======
   min-height: 100vh;
->>>>>>> origin/MVP
   display: flex;
   justify-content: center;
   align-items: center;
@@ -26,12 +21,6 @@
   /* padding: 20px; */
 }
 
-<<<<<<< HEAD
-.holographic-panel {
-  padding: 40px;
-  border-radius: 7px;
-  width: min(90%, 450px);
-=======
 /* Animated background effect */
 @keyframes backgroundShift {
   0% {
@@ -52,7 +41,6 @@
   width: 100%;
   max-width: 500px;
   margin: 20px 0;
->>>>>>> origin/MVP
   border: 1px solid rgba(79, 195, 247, 0.3);
   box-shadow: 0 0 20px rgba(56, 53, 82, 0.5);
   transition: all 0.1s ease;
@@ -68,15 +56,6 @@
   transition: transform 0.2s ease;
 } */
 
-<<<<<<< HEAD
-/* .logo-image:hover {
-  transform: scale(1.05);
-} */
-
-.register-logo {
-  width: 50px;
-  height: 50px;
-=======
 @keyframes floatingPanel {
   0%,
   100% {
@@ -85,7 +64,6 @@
   50% {
     transform: translateY(-10px);
   }
->>>>>>> origin/MVP
 }
 
 .register-title {
@@ -98,13 +76,6 @@
 
 }
 
-<<<<<<< HEAD
-.register-title p{
-  margin: 0 0;
-  padding: 1rem;
-  font-size: 1rem;
-  color: white;
-=======
 .register-title p {
   margin: 0;
   padding: 0.5rem;
@@ -113,30 +84,11 @@
   color: #4fc3f7;
   text-shadow: 0 0 10px rgba(79, 195, 247, 0.5);
   letter-spacing: 1px;
->>>>>>> origin/MVP
 }
 
 .register-form {
   display: flex;
   flex-direction: column;
-<<<<<<< HEAD
-  justify-content: center;
-  /* align-items: center; */
-  /* gap: 20px; */
-  gap: 1rem;
-}
-
-.neon-input {
-  /* width: 100%; */
-  width: calc(100% - 2rem);
-  padding: 1rem;
-  background: var(--secondary-color);
-  border: 1px solid rgba(79, 195, 247, 0.3);
-  border-radius: 10px;
-  color: #fff;
-  font-size: 16px;
-  transition: all 0.2s ease;
-=======
   gap: 1rem;
 }
 
@@ -159,7 +111,6 @@
   font-family: "Orbitron", sans-serif;
   transition: all 0.3s ease;
   box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
->>>>>>> origin/MVP
 }
 
 .neon-input::placeholder {
@@ -169,13 +120,9 @@
 .neon-input:focus {
   outline: none;
   border-color: #4fc3f7;
-<<<<<<< HEAD
-  box-shadow: 0 0 15px rgba(79, 195, 247, 0.5);
-=======
   box-shadow: 0 0 20px rgba(79, 195, 247, 0.5),
     inset 0 2px 10px rgba(0, 0, 0, 0.3);
   transform: scale(1.02);
->>>>>>> origin/MVP
 }
 
 .input-group {
@@ -200,18 +147,6 @@
   box-shadow: 0 0 15px rgba(79, 195, 247, 0.5);
 }
 
-<<<<<<< HEAD
-.input-label {
-  position: absolute;
-  left: 12px;
-  top: 50%;
-  /* transform: translateY(-50%); */
-  color: rgba(255, 255, 255, 0.9);
-  transition: all 0.2s ease;
-  pointer-events: none;
-  font-size: 14px;
-  animation: labelFade 0.2s ease-out;
-=======
 @keyframes errorPulse {
   0%,
   100% {
@@ -237,7 +172,6 @@
   cursor: pointer;
   transition: all 0.3s ease;
   border-radius: 6px;
->>>>>>> origin/MVP
 }
 
 .input-field:focus + .input-label,
@@ -250,17 +184,6 @@
 
 .submit-button {
   width: 100%;
-<<<<<<< HEAD
-  /* padding: 12px; */
-  padding: 1rem;
-  /* background: linear-gradient(45deg, #4fc3f7, #2196f3); */
-  background-color: var(--secondary-color);
-  color: white;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 16px;
-=======
   padding: 0.8rem;
   background: linear-gradient(45deg, #0f0c29, #302b63, #24243e);
   color: white;
@@ -270,7 +193,6 @@
   font-size: 16px;
   font-weight: bold;
   font-family: "Orbitron", sans-serif;
->>>>>>> origin/MVP
   text-transform: uppercase;
   letter-spacing: 1px;
   position: relative;
@@ -298,10 +220,6 @@
 .error-text {
   display: flex;
   align-items: center;
-<<<<<<< HEAD
-  gap: 5px;
-  margin: .3rem;
-=======
   justify-content: center;
   gap: 8px;
   margin: 0.3rem;
@@ -321,7 +239,6 @@
   80% {
     transform: translateX(5px);
   }
->>>>>>> origin/MVP
 }
 
 .validation-icon {
@@ -338,28 +255,18 @@
 
 .strength-meter {
   display: flex;
-<<<<<<< HEAD
-  gap: 5px;
-  margin-top: 8px;
-=======
   gap: 4px;
   margin-top: 8px;
   width: 80%;
   justify-content: center;
->>>>>>> origin/MVP
 }
 
 .strength-segment {
   height: 4px;
   flex: 1;
   background: rgba(79, 195, 247, 0.2);
-<<<<<<< HEAD
-  border-radius: 10px;
-  transition: all 0.2s ease;
-=======
   border-radius: 8px;
   transition: all 0.3s ease;
->>>>>>> origin/MVP
 }
 
 .strength-segment.active {
@@ -370,11 +277,6 @@
 .terms-label {
   display: flex;
   align-items: center;
-<<<<<<< HEAD
-  gap: 5px;
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 14px;
-=======
   gap: 8px;
   color: rgba(255, 255, 255, 0.9);
   font-size: 12px;
@@ -386,26 +288,12 @@
 
 .terms-label:hover {
   background: rgba(79, 195, 247, 0.1);
->>>>>>> origin/MVP
 }
 
 .social-signup {
   display: flex;
   gap: 10px;
   justify-content: center;
-<<<<<<< HEAD
-  margin-bottom: 2rem;
-}
-
-.social-button {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(79, 195, 247, 0.3);
-  padding: 10px;
-  /* border-radius: 50%; */
-  border-radius: 10px;
-  color: white;
-  transition: all 0.2s ease;
-=======
   margin-bottom: 15px;
 }
 
@@ -419,7 +307,6 @@
   font-family: "Orbitron", sans-serif;
   font-size: 14px;
   transition: all 0.3s ease;
->>>>>>> origin/MVP
   display: flex;
   align-items: center;
   justify-content: center;
@@ -463,21 +350,12 @@
 }
 
 .login-link {
-<<<<<<< HEAD
-  margin-top: 20px;
-=======
   margin-top: 15px;
->>>>>>> origin/MVP
   background: none;
   border: none;
   color: var(--quaternary-color);
   cursor: pointer;
   font-size: 0.9em;
-<<<<<<< HEAD
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  transition: all 0.2s ease;
-=======
   font-family: "Orbitron", sans-serif;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -492,7 +370,6 @@
   100% {
     text-shadow: 0 0 15px rgba(79, 195, 247, 0.9);
   }
->>>>>>> origin/MVP
 }
 
 .login-link:hover {

@@ -413,8 +413,8 @@
 
 // export default UserProfile;
 
-import React, { useEffect, useState } from "react";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import "./ProfileView.css";
@@ -424,6 +424,9 @@ const ProfilePage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+const [stats, setStats] = useState({ followers: 0, following: 0 });
+
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -438,10 +441,6 @@ const ProfilePage = () => {
           return;
         }
 
-<<<<<<< HEAD
-        const response = await axios.get("http://127.0.0.1:8000/api/profile/", {
-          headers: { Authorization: `Bearer ${token}` },
-=======
         const response = await axios.get(
           `https://edu-verse.in/api/profiles/me/`,
           {
@@ -457,7 +456,6 @@ const ProfilePage = () => {
           followers: response.data.followers_count,
           following: response.data.following_count,
           // posts: response.data.posts_count,
->>>>>>> origin/MVP
         });
         setProfile(response.data);
         setLoading(false);
@@ -467,8 +465,11 @@ const ProfilePage = () => {
         navigate("/login");
       }
     };
+    const controller = new AbortController();
+
 
     fetchProfile();
+    return () => controller.abort(); // Cleanup function to abort the fetch request if the component unmounts
   }, []);
 
   if (loading) return <div>Loading...</div>;
