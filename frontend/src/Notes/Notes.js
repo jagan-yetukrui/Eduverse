@@ -89,60 +89,42 @@ const Notes = () => {
     }
 
     try {
-      const response = await fetch("https://edu-verse.in/ai/chat/", {
+      const response = await fetch("http://localhost:8000/chat/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
-        credentials: "include",
-        body: JSON.stringify({
+        body: JSON.stringify({ 
           message: inputText,
-          user_id: localStorage.getItem("user_id"),
-          channel: {
-            id: "web_chat",
-            name: "Edura Interface",
-          },
-          locale: "en-US",
-          timestamp: new Date().toISOString(),
+          user_id: "test"
         }),
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(
-          errorData.detail || `Request failed! Status: ${response.status}`
-        );
+        throw new Error(`Server error: ${response.status}`);
       }
 
       const data = await response.json();
-
-      if (!data.response) {
-        throw new Error("No response received from the server");
+      
+      if (data.error) {
+        throw new Error(data.error);
       }
-
+      
       const aiMessage = {
         id: messages.length + 2,
-        text: data.response,
+        text: data.response || data.message || "I'm here to help! What would you like to know?",
         sender: "ai",
       };
-
-      if (data.suggestions?.length > 0) {
-        const suggestionMessage = {
-          id: messages.length + 3,
-          text: data.suggestions.join("\n"),
-          sender: "ai",
-          type: "suggestion-scroll",
-        };
-        setMessages((prev) => [...prev, aiMessage, suggestionMessage]);
-      } else {
-        setMessages((prev) => [...prev, aiMessage]);
-      }
+      
+      setMessages(prevMessages => [...prevMessages, aiMessage]);
+      
     } catch (error) {
       console.error("Error:", error);
       const errorMessage = {
         id: messages.length + 2,
-        text: error.message || "Connection lost. Please try again later.",
+        text: error.message.includes("Server error") 
+          ? "Sorry! Something went wrong with the server. Please try again later."
+          : error.message || "Sorry! Something went wrong. Please try again.",
         sender: "ai",
       };
       setMessages((prev) => [...prev, errorMessage]);

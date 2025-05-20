@@ -66,7 +66,7 @@ const StepCard = ({ step, isSelected, onSelect, onComplete, currentStatus, onRet
   
   return (
     <li 
-      className={`step-card game-step-card ${isSelected ? 'selected' : ''} 
+      className={`step-card ${isSelected ? 'selected' : ''} 
                  ${step.isCompleted ? 'completed' : ''} 
                  ${currentStatus === 'processing' ? 'processing' : ''}
                  ${currentStatus === 'failed' ? 'failed' : ''}`}
@@ -82,43 +82,35 @@ const StepCard = ({ step, isSelected, onSelect, onComplete, currentStatus, onRet
         {step.isCompleted && <span className="step-xp">+{step.xpValue || 10} XP</span>}
       </div>
       
-      <div className="step-progress-bar">
-        <div 
-          className="step-progress-fill" 
-          style={{ width: `${stepProgress}%` }}
-        ></div>
-      </div>
-      
       {isSelected && (
         <div className="step-card-details">
-          <div className="step-description futuristic-description">{step.description}</div>
+          <div className="step-description">{step.description}</div>
           
           {step.guidelines && (
-            <div className="step-instructions game-instructions">
-              <h4 className="instructions-title" style={{ color: 'white' }}>Mission Briefing:</h4>
+            <div className="step-instructions">
+              <h4 className="instructions-title">Mission Briefing:</h4>
               <ul className="guidelines-list">
                 {Array.isArray(step.guidelines) ? 
                   step.guidelines.map((guideline, index) => (
-                    <li key={index} className="guideline-item" style={{ color: 'white' }}>
+                    <li key={index} className="guideline-item">
                       <span className="guideline-bullet">•</span> {guideline}
                     </li>
                   )) : 
-                  <div className="instruction-content futuristic-description" style={{ color: 'white' }}>{step.guidelines}</div>
+                  <div className="instruction-content">{step.guidelines}</div>
                 }
               </ul>
             </div>
           )}
           
-          <div className="step-actions game-actions">
+          <div className="step-actions">
             {currentStatus === 'failed' && (
-              <button className="retry-button neon-button game-button" onClick={onRetry}>
+              <button className="complete-button" onClick={onRetry}>
                 Retry Mission
               </button>
             )}
             
             <button 
-              className={`complete-button neon-button game-button 
-                        ${step.isCompleted ? 'completed' : ''} 
+              className={`complete-button ${step.isCompleted ? 'completed' : ''} 
                         ${currentStatus === 'processing' ? 'processing' : ''}`}
               onClick={onComplete}
               disabled={step.isCompleted || currentStatus === 'processing'}
@@ -595,7 +587,7 @@ const Steps = () => {
 
   if (loading) {
     return (
-      <div className="loading-screen fullscreen-game">
+      <div className="loading-screen">
         <div className="loading-spinner"></div>
         <h2>Loading your coding adventure...</h2>
         <p>Preparing your quest, please wait...</p>
@@ -605,16 +597,16 @@ const Steps = () => {
 
   if (!project) {
     return (
-      <div className="error-screen fullscreen-game">
+      <div className="error-screen">
         <h2>Quest not found!</h2>
         <p>The coding adventure you're looking for seems to be missing.</p>
-        <button className="futuristic-button" onClick={handleBackClick}>Return to Quests</button>
+        <button className="back-button" onClick={handleBackClick}>Return to Quests</button>
       </div>
     );
   }
 
   return (
-    <div className="steps-container futuristic-theme fullscreen-game">
+    <div className="steps-container">
       {showConfetti && (
         <div className="confetti-container">
           <div className="confetti"></div>
@@ -644,60 +636,65 @@ const Steps = () => {
         </div>
       )}
       
-      <div className="project-header game-header">
-        <button className="back-button neon-button" onClick={handleBackClick}>← Return to Quest Hub</button>
-        <h1 className="project-title game-title">{project.name}</h1>
-        <div className="project-progress game-progress">
-          <div className="progress-bar" style={{ backgroundColor: 'white' }}>
+      <div className="project-header">
+        <div className="header-left">
+          <button className="back-button" onClick={handleBackClick}>← Back</button>
+          <h1 className="project-title">{project.name}</h1>
+        </div>
+
+        <div className="header-right">
+          <div className="progress-bar">
             <div 
               className="progress-fill" 
-              style={{ width: `${project.questProgress}%`, backgroundColor: 'white' }}
+              style={{ width: `${project.questProgress}%` }}
             ></div>
           </div>
-          <span className="progress-text" style={{ color: 'white' }}>{project.questProgress}% Quest Completion</span>
-          <div className="xp-badge game-badge">
-            <span className="xp-icon" style={{ color: 'white' }}>⭐</span>
-            <span style={{ color: 'white' }}>XP: {project.xpGained}</span>
-          </div>
-          <div className="streak-counter game-counter">
-            <span className="streak-icon" style={{ color: 'white' }}>🔥</span>
-            <span style={{ color: 'white' }}>Streak: {streakCount}</span>
+          <div className="xp-streak">
+            <div className="xp-badge">
+              <span className="xp-icon">⭐</span>
+              <span>XP: {project.xpGained}</span>
+            </div>
+            <div className="streak-counter">
+              <span className="streak-icon">🔥</span>
+              <span>Streak: {streakCount}</span>
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="content-area game-content" style={{ maxHeight: "60vh", overflowY: "auto" }}>
-        <div className="tasks-sidebar game-sidebar">
+      <div className="content-area">
+        <div className="tasks-sidebar">
           <h2 className="sidebar-title">Quest Tasks</h2>
           <ul className="tasks-list">
             {project.tasks.map((task) => (
               <li 
                 key={task.task_id}
-                className={`task-item game-task ${task.isUnlocked ? 'unlocked' : 'locked'} ${selectedTask && task.task_id === selectedTask.task_id ? 'selected' : ''} ${task.isCompleted ? 'completed' : ''}`}
+                className={`task-item ${task.isUnlocked ? 'unlocked' : 'locked'} 
+                           ${selectedTask && task.task_id === selectedTask.task_id ? 'selected' : ''} 
+                           ${task.isCompleted ? 'completed' : ''}`}
                 onClick={() => handleTaskSelect(task)}
               >
                 <div className="task-title">
                   {task.isCompleted ? '✓ ' : task.isUnlocked ? '⚔️ ' : '🔒 '}{task.task_name}
                 </div>
-                {task.isCompleted && <span className="task-badge game-badge">Completed</span>}
-                {!task.isUnlocked && <span className="locked-icon">🔒</span>}
+                {task.isCompleted && <span className="task-badge">Completed</span>}
               </li>
             ))}
           </ul>
         </div>
 
-        <div className="steps-content game-main-content">
+        <div className="steps-content">
           {selectedTask && (
             <>
-              <div className="task-details game-details">
-                <h2 className="task-title game-subtitle">{selectedTask.task_name}</h2>
-                <p className="quest-description futuristic-description">{selectedTask.description}</p>
+              <div className="task-details">
+                <h2 className="task-title">{selectedTask.task_name}</h2>
+                <p className="quest-description">{selectedTask.description}</p>
                 {selectedTask.objectives && (
-                  <div className="task-objectives game-objectives">
+                  <div className="task-objectives">
                     <h4 className="objectives-title">Mission Objectives:</h4>
                     <ul className="objectives-list">
                       {selectedTask.objectives.map((objective, index) => (
-                        <li key={index} className="objective-item game-objective">
+                        <li key={index} className="objective-item">
                           <span className="objective-icon">🎯</span> {objective}
                         </li>
                       ))}
@@ -706,54 +703,19 @@ const Steps = () => {
                 )}
               </div>
 
-              <div className="steps-list game-steps">
+              <div className="steps-list">
                 <h3 className="steps-title">Mission Steps</h3>
                 <ul className="step-cards">
                   {selectedTask.steps.map((step) => (
-                    <li 
+                    <StepCard
                       key={step.step_id}
-                      className={`step-card game-step-card ${selectedStep && step.step_id === selectedStep.step_id ? 'selected' : ''} ${step.isCompleted ? 'completed' : ''}`}
-                      onClick={() => handleStepSelect(step)}
-                    >
-                      <div className="step-header">
-                        <div className="step-title">
-                          {step.isCompleted ? '✓ ' : '⚡ '}{step.step_name}
-                        </div>
-                        {step.isCompleted && <span className="step-xp">+{step.xpValue || 10} XP</span>}
-                      </div>
-                      
-                      {selectedStep && step.step_id === selectedStep.step_id && (
-                        <div className="step-card-details">
-                          <div className="step-description futuristic-description">{step.description}</div>
-                          
-                          {step.guidelines && (
-                            <div className="step-instructions game-instructions">
-                              <h4 className="instructions-title" style={{ color: 'white' }}>Mission Briefing:</h4>
-                              <ul className="guidelines-list">
-                                {Array.isArray(step.guidelines) ? 
-                                  step.guidelines.map((guideline, index) => (
-                                    <li key={index} className="guideline-item" style={{ color: 'white' }}>
-                                      <span className="guideline-bullet">•</span> {guideline}
-                                    </li>
-                                  )) : 
-                                  <div className="instruction-content futuristic-description" style={{ color: 'white' }}>{step.guidelines}</div>
-                                }
-                              </ul>
-                            </div>
-                          )}
-                          
-                          <div className="step-actions game-actions">
-                            <button 
-                              className={`complete-button neon-button game-button ${step.isCompleted ? 'completed' : ''}`}
-                              onClick={handleStepComplete}
-                              disabled={step.isCompleted}
-                            >
-                              {step.isCompleted ? '✓ Mission Accomplished' : `Complete Mission (+${step.xpValue || 10} XP)`}
-                            </button>
-                          </div>
-                        </div>
-                      )}
-                    </li>
+                      step={step}
+                      isSelected={selectedStep && step.step_id === selectedStep.step_id}
+                      onSelect={handleStepSelect}
+                      onComplete={handleStepComplete}
+                      currentStatus={step.status}
+                      onRetry={() => handleStepComplete(step)}
+                    />
                   ))}
                 </ul>
               </div>
@@ -761,14 +723,6 @@ const Steps = () => {
           )}
         </div>
       </div>
-      
-      <button 
-        className="back-to-top-button neon-button" 
-        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        style={{ position: 'fixed', bottom: '20px', right: '20px', zIndex: 1000 }}
-      >
-        ↑ Back to Top
-      </button>
     </div>
   );
 };

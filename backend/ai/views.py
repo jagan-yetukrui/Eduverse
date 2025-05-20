@@ -1,41 +1,65 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
+import asyncio
+import os
+from .eduverse_bot import EduVerseBot
+import traceback
+
+# Create a single instance of the bot
+bot = EduVerseBot()
 
 @csrf_exempt
 def bot_endpoint(request):
     if request.method == "POST":
         try:
+            # Parse the incoming JSON message
             data = json.loads(request.body)
             message = data.get('message', '')
             user_id = data.get('user_id', 'default_user')
             
             print(f"Received message: {message} from user: {user_id}")
             
-            # Simple response logic
-            if "hello" in message.lower():
-                response_text = "Hello! I'm Edura, your AI educational mentor. How can I help you today?"
-            elif "project" in message.lower():
-                response_text = "I can help you with project suggestions! What kind of project are you interested in?"
-            elif "help" in message.lower():
-                response_text = "I can help you with:\n- Project suggestions\n- Career guidance\n- Course recommendations\n- Code review\n- General educational questions\nWhat would you like to know?"
-            else:
-                response_text = "I'm here to help you with your educational journey! You can ask me about projects, career guidance, or any educational topics."
+            # Create a simple context object that mimics TurnContext
+            class SimpleTurnContext:
+                def __init__(self, message, user_id):
+                    self.activity = type('obj', (object,), {
+                        'text': message,
+                        'from_property': type('obj', (object,), {'id': user_id})
+                    })
+                    self.responses = []
+                
+                async def send_activity(self, text):
+                    self.responses.append(text)
+            
+            # Create context and process message
+            context = SimpleTurnContext(message, user_id)
+            
+            # Run the bot's message handler
+            asyncio.run(bot.on_message_activity(context))
+            
+            # Get the response from the bot
+            bot_response = context.responses[0] if context.responses else "No response generated"
+            print(f"Bot response: {bot_response[:50]}...")  # Log first 50 chars
+
+            print(f"Bot response: {bot_response}")
             
             response = {
-                "response": response_text,
+                "response": bot_response,
                 "sender": "ai",
-                "suggestions": [
-                    "Suggest a trending project",
-                    "How do I build a portfolio?",
-                    "Analyze my progress"
-                ]
+                "suggestions": []
             }
             
             return JsonResponse(response)
             
         except Exception as e:
-            print(f"Error processing message: {str(e)}")
-            return JsonResponse({"error": "Failed to process message"}, status=500)
-    
-    return JsonResponse({"error": "Method not allowed"}, status=405)
+            print(f"Error in bot_endpoint: {str(e)}")
+            traceback.print_exc()
+            return JsonResponse({
+                "response": "🌋 The mystical connection was lost! Let's try again, brave adventurer.",
+                "error": str(e),
+                "sender": "ai",
+                "suggestions": []
+            }, status=500)
+            
+    return JsonResponse({"error": "Only POST requests are allowed."}, status=405)

@@ -1,52 +1,156 @@
 [
   {
-    "id": 1,
-    "eventName": "Global Hackathon 2025",
-    "date": "2025-03-15",
-    "time": "10:00 AM - 6:00 PM", 
-    "location": "Online",
-    "description": "Join a 24-hour hackathon where students and professionals collaborate to build innovative solutions to real-world problems.",
-    "tags": ["Hackathon", "Innovation", "Collaboration"],
-    "registrationLink": "https://globalhackathon2025.com"
+    "id": 6,
+    "eventName": "Global AI Hackathon 2025",
+    "date": "2025-07-16",
+    "time": "All Day",
+    "location": "Cambridge, MA",
+    "description": "Winners will present their projects at the MIT AI & Education Summit.",
+    "tags": [
+      "AI",
+      "Education",
+      "Innovation"
+    ],
+    "registrationLink": "https://raise.mit.edu/events/global-ai-hackathon-2025/"
   },
   {
-    "id": 2,
-    "eventName": "Green Future Summit",
-    "date": "2025-04-05",
-    "time": "9:00 AM - 4:00 PM",
-    "location": "San Francisco, CA",
-    "description": "Join industry leaders and innovators to explore sustainable solutions and shape a greener tomorrow.",
-    "tags": ["Sustainability", "Innovation", "Technology"],
-    "registrationLink": "https://greenfuturesummit.com"
+    "id": 7,
+    "eventName": "DevNetwork AI + ML Hackathon",
+    "date": "2025-05-12",
+    "time": "All Day",
+    "location": "Hybrid (Online & In-Person)",
+    "description": "Large-scale hackathon co-located with AI DevSummit 2025.",
+    "tags": [
+      "AI",
+      "Machine Learning",
+      "Development"
+    ],
+    "registrationLink": "https://aidevsummit.co/events/"
   },
   {
-    "id": 3, 
-    "eventName": "AI in Education Summit",
-    "date": "2025-02-28",
-    "time": "5:00 PM - 6:30 PM",
-    "location": "Online",
-    "description": "Learn how artificial intelligence is revolutionizing education from leading experts in edtech.",
-    "tags": ["AI", "Education", "Technology"],
-    "registrationLink": "https://aiedusummit.com"
+    "id": 8,
+    "eventName": "BisonBytes 2025 Hackathon",
+    "date": "2025-03-22",
+    "time": "All Day",
+    "location": "Howard University, Washington, D.C.",
+    "description": "A 24-hour hackathon hosted by Howard University's College of Engineering and Architecture.",
+    "tags": [
+      "Hackathon",
+      "Innovation",
+      "Student"
+    ],
+    "registrationLink": "https://events.howard.edu/event/bisonbytes-2025-hackathon"
   },
   {
-    "id": 4,
-    "eventName": "Startup Pitch Night",
-    "date": "2025-03-10", 
-    "time": "6:00 PM - 9:00 PM",
+    "id": 9,
+    "eventName": "THOTCON 0xD",
+    "date": "2025-05-30",
+    "time": "All Day",
+    "location": "Chicago, IL",
+    "description": "Nonprofit hacker conference on information security and hacking topics.",
+    "tags": [
+      "Cybersecurity",
+      "Hacking",
+      "Conference"
+    ],
+    "registrationLink": "https://en.wikipedia.org/wiki/THOTCON"
+  },
+  {
+    "id": 10,
+    "eventName": "TCEA 2025 Convention & Exposition",
+    "date": "2025-02-01",
+    "time": "All Day",
     "location": "Austin, TX",
-    "description": "Watch innovative startups pitch their ideas to top investors and receive expert feedback.",
-    "tags": ["Startups", "Pitching", "Investment"],
-    "registrationLink": "https://startuppitch.com"
+    "description": "Large edtech gathering emphasizing innovation and technology in the classroom.",
+    "tags": [
+      "Education",
+      "Technology",
+      "Innovation"
+    ],
+    "registrationLink": "https://www.gettingsmart.com/2024/11/25/cant-miss-education-conferences-in-2025/"
   },
   {
-    "id": 5,
-    "eventName": "Tech Career Fair 2025",
-    "date": "2025-03-20",
-    "time": "11:00 AM - 4:00 PM",
-    "location": "New York, NY", 
-    "description": "Connect with leading tech companies offering exciting career opportunities and internships.",
-    "tags": ["Careers", "Technology", "Networking"],
-    "registrationLink": "https://techcareerfair.com"
+    "id": 11,
+    "eventName": "ISTELive 25",
+    "date": "2025-06-29",
+    "time": "All Day",
+    "location": "San Antonio, TX",
+    "description": "Edtech event with over 1,000 learning experiences for innovative teaching.",
+    "tags": [
+      "Education",
+      "Technology",
+      "Innovation"
+    ],
+    "registrationLink": "https://conference.iste.org/"
+  },
+  {
+    "id": 12,
+    "eventName": "EDUCAUSE Annual Conference 2025",
+    "date": "2025-10-27",
+    "time": "All Day",
+    "location": "Nashville, TN & Online",
+    "description": "Conference focusing on higher education IT, strategic insights and practical solutions.",
+    "tags": [
+      "Higher Education",
+      "IT",
+      "Leadership"
+    ],
+    "registrationLink": "https://events.educause.edu/annual-conference"
+  },
+  {
+    "id": 13,
+    "eventName": "Maryland Higher Education IT Leadership Summit 2025",
+    "date": "2025-06-03",
+    "time": "All Day",
+    "location": "Baltimore, MD",
+    "description": "Summit for senior tech and institutional leaders for strategic exchange and peer learning.",
+    "tags": [
+      "Higher Education",
+      "IT",
+      "Leadership"
+    ],
+    "registrationLink": "https://events.govtech.com/Maryland-Higher-Education-IT-Leadership-Summit"
+  },
+  {
+    "id": 14,
+    "eventName": "HackSummit 2025",
+    "date": "2025-09-15",
+    "time": "TBA",
+    "location": "TBA",
+    "description": "Summit for bold founders and operators developing tech to tackle the climate crisis.",
+    "tags": [
+      "Climate Tech",
+      "Innovation",
+      "Startups"
+    ],
+    "registrationLink": "https://www.hacksummit.co/"
+  },
+  {
+    "id": 15,
+    "eventName": "InCyber Forum USA 2025",
+    "date": "2025-06-17",
+    "time": "All Day",
+    "location": "San Antonio, TX",
+    "description": "Cybersecurity forum gathering policymakers, business executives, and security researchers.",
+    "tags": [
+      "Cybersecurity",
+      "Policy",
+      "Innovation"
+    ],
+    "registrationLink": "https://www.axios.com/2024/03/28/incyber-forum-usa-2025-san-antonio"
+  },
+  {
+    "id": 16,
+    "eventName": "ETCIO Annual Conclave 2025",
+    "date": "2025-05-29",
+    "time": "All Day",
+    "location": "Goa, India",
+    "description": "Conclave exploring the evolving responsibilities of Chief Information Officers.",
+    "tags": [
+      "CIO",
+      "Innovation",
+      "Leadership"
+    ],
+    "registrationLink": "https://timesofindia.indiatimes.com/business/india-business/etcio-annual-conclave-2025"
   }
 ]

@@ -9,8 +9,16 @@ const Search = () => {
   const [loading, setLoading] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [showLoginPopup, setShowLoginPopup] = useState(false);
+  const [searchTags] = useState([
+    { id: 1, label: 'AI Projects', icon: '🤖' },
+    { id: 2, label: 'Mentors', icon: '👨‍🏫' },
+    { id: 3, label: 'Hackathons', icon: '💻' },
+    { id: 4, label: 'Research', icon: '🔬' },
+    { id: 5, label: 'Startups', icon: '🚀' }
+  ]);
   const searchContainerRef = useRef(null);
   const searchBarRef = useRef(null);
+  const aiOrbRef = useRef(null);
 
   // Initialize page load animations
   useEffect(() => {
@@ -31,6 +39,11 @@ const Search = () => {
 
     // Slide in search bar
     searchBarRef.current.classList.add('slide-in');
+
+    // Animate AI orb
+    if (aiOrbRef.current) {
+      animateAIOrb();
+    }
 
     return () => {
       particles.forEach(particle => particle.remove());
@@ -110,6 +123,21 @@ const Search = () => {
     return animation;
   };
 
+  const animateAIOrb = () => {
+    const orb = aiOrbRef.current;
+    if (!orb) return;
+
+    const animation = orb.animate([
+      { transform: 'translateY(0) scale(1)', opacity: 0.8 },
+      { transform: 'translateY(-10px) scale(1.1)', opacity: 1 },
+      { transform: 'translateY(0) scale(1)', opacity: 0.8 }
+    ], {
+      duration: 2000,
+      iterations: Infinity,
+      easing: 'ease-in-out'
+    });
+  };
+
   const triggerSearchAnimation = () => {
     const container = searchContainerRef.current;
     const rocket = document.createElement('div');
@@ -138,7 +166,6 @@ const Search = () => {
         const response = await fetch(`/api/users/search?query=${encodeURIComponent(query)}&detailed=true`);
         const results = await response.json();
         
-        // Delay results to sync with animation
         setTimeout(() => {
           setSearchResults(results);
           setLoading(false);
@@ -167,28 +194,63 @@ const Search = () => {
     }
   };
 
+  const handleTagClick = (tag) => {
+    setQuery(tag.label);
+    handleSearch({ preventDefault: () => {} });
+  };
+
   const closeLoginPopup = () => {
     setShowLoginPopup(false);
   };
 
   return (
     <div className="search-container" ref={searchContainerRef}>
-      <form onSubmit={handleSearch} className="search-bar" ref={searchBarRef}>
-        <input
-          type="text"
-          placeholder="Search for people..."
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          onFocus={(e) => e.target.classList.add('focused')}
-          onBlur={(e) => e.target.classList.remove('focused')}
-          autoComplete="off"
-        />
-        <button type="submit" disabled={loading}>
-          {loading ? 'Searching...' : 'Search'}
-        </button>
-      </form>
+      <div className="search-hero">
+        <h1>Discover Minds. Explore Projects.</h1>
+        <p>Search across EduVerse to find users, AI projects, open roles, and more.</p>
+        
+        <div className="search-bar-container" ref={searchBarRef}>
+          <div className="ai-orb" ref={aiOrbRef}>
+            <span className="orb-icon">🤖</span>
+            <div className="orb-ring"></div>
+          </div>
+          
+          <form onSubmit={handleSearch} className="search-bar">
+            <input
+              type="text"
+              placeholder="Search for users, posts, and more..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onFocus={(e) => e.target.classList.add('focused')}
+              onBlur={(e) => e.target.classList.remove('focused')}
+              autoComplete="off"
+            />
+            <button type="submit" disabled={loading}>
+              {loading ? 'Searching...' : '🔍'}
+            </button>
+          </form>
+        </div>
 
-      {loading && <div className="loading-spinner">Loading...</div>}
+        <div className="search-tags">
+          {searchTags.map(tag => (
+            <button
+              key={tag.id}
+              className="search-tag"
+              onClick={() => handleTagClick(tag)}
+            >
+              <span className="tag-icon">{tag.icon}</span>
+              {tag.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {loading && (
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p>Edura is searching...</p>
+        </div>
+      )}
 
       {showLoginPopup && (
         <div className="login-popup">
@@ -232,11 +294,11 @@ const Search = () => {
       {showResults && searchResults.length > 0 && (
         <div className="search-results">
           <h3>Search Results</h3>
-          <ul>
+          <div className="results-grid">
             {searchResults.map((user, index) => (
-              <li 
+              <div 
                 key={user.id} 
-                className="result-item"
+                className="result-card"
                 style={{animationDelay: `${index * 0.1}s`}}
                 onClick={() => {
                   const card = document.querySelector(`[data-user-id="${user.id}"]`);
@@ -244,6 +306,7 @@ const Search = () => {
                 }}
                 data-user-id={user.id}
               >
+                <div className="card-glow"></div>
                 <img src={user.profileImage} alt={user.name} className="user-avatar" />
                 <div className="user-info">
                   <h4>{user.name}</h4>
@@ -260,9 +323,9 @@ const Search = () => {
                     </div>
                   )}
                 </div>
-              </li>
+              </div>
             ))}
-          </ul>
+          </div>
         </div>
       )}
     </div>

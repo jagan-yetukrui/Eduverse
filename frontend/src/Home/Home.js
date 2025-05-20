@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Home.css";
 import ProfileCardHome from "./ProfileCardHome";
-import Terms from "./Terms";
-import Privacy from "./Privacy";
-import Contact from "./Contact";
 
 import mockTrendingProjects from "../mockdata/trending_projects.json";
 import mockUpcomingEvents from "../mockdata/upcoming_events.json";
@@ -13,13 +10,10 @@ const Home = () => {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [profileSuggestions, setProfileSuggestions] = useState([]);
-  const [trendingProjects, setTrendingProjects] = useState([]);
-  const [upcomingEvents, setUpcomingEvents] = useState([]);
   const [activeSection, setActiveSection] = useState(() => {
     return localStorage.getItem('activeSection') || 'home';
   });
   const [searchTerm, setSearchTerm] = useState('');
-  const [hasConnections, setHasConnections] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("access_token");
@@ -28,8 +22,6 @@ const Home = () => {
 
   useEffect(() => {
     fetchProfileSuggestions();
-    fetchTrendingProjects();
-    fetchUpcomingEvents();
   }, []);
 
   useEffect(() => {
@@ -41,31 +33,8 @@ const Home = () => {
       const response = await fetch("https://edu-verse.in/api/profiles/");
       const data = await response.json();
       setProfileSuggestions(data);
-      setHasConnections(data.length > 0);
     } catch (error) {
       console.error("Error fetching profile suggestions:", error);
-    }
-  };
-
-  const fetchTrendingProjects = async () => {
-    try {
-      const response = await fetch("https://edu-verse.in/api/projects/trending");
-      const data = await response.json();
-      setTrendingProjects(data);
-    } catch (error) {
-      console.error("Error fetching trending projects:", error);
-      setTrendingProjects(mockTrendingProjects);
-    }
-  };
-
-  const fetchUpcomingEvents = async () => {
-    try {
-      const response = await fetch("https://edu-verse.in/api/events/upcoming");
-      const data = await response.json();
-      setUpcomingEvents(data);
-    } catch (error) {
-      console.error("Error fetching upcoming events:", error);
-      setUpcomingEvents(mockUpcomingEvents);
     }
   };
 
@@ -73,13 +42,46 @@ const Home = () => {
     console.log(`Follow user with ID: ${userId}`);
   };
 
+  const handleExploreProjects = () => {
+    navigate('/project-suggestions');
+  };
+
   const renderContent = () => {
     if (activeSection === 'home') {
       return (
-        <div className="content-section welcome-message animate-slide">
-          <h2>Welcome to EduVerse!</h2>
-          <p>Your gateway to collaborative learning and professional development.</p>
-          <p>Connect with experts, join exciting projects, and grow your skills in a vibrant community.</p>
+        <div className={isAuthenticated ? "content-section" : "full-screen-landing"}>
+          {!isAuthenticated ? (
+            <div className="landing-page">
+              <section className="hero-section">
+                <h1>Welcome to <span>EduVerse</span></h1>
+                <p>Your AI-powered space to learn, connect, and build your future.</p>
+                <div className="hero-buttons">
+                  <button onClick={handleExploreProjects}>Explore Projects</button>
+                  <button onClick={() => navigate('/newpost')}>Create Something</button>
+                </div>
+              </section>
+
+              <section className="ai-status-section">
+                <div className="edura-avatar">
+                  <div className="avatar-wave"></div>
+                </div>
+                <p>Edura is ready to help you today.</p>
+              </section>
+            </div>
+          ) : (
+            <div className="feed-teaser-section">
+              <h1 className="glow-title">Your Feed is Almost Here</h1>
+              <p className="teaser-subtext">
+                Get ready for a personalized learning experience curated by <strong>Edura</strong>.  
+                Projects, opportunities, and mentors — all in one dynamic space.
+              </p>
+              <div className="launch-info">
+                <span>🔄 Launching Soon...</span>
+                <span className="countdown">Q3 2025</span>
+              </div>
+              <button className="notify-btn">Notify Me</button>
+            </div>
+          )}
         </div>
       );
     }
@@ -166,17 +168,7 @@ const Home = () => {
 
   return (
     <div className="home-container">
-      {!isAuthenticated ? (
-        <div className="welcome-section">
-          <div className="welcome-title">
-            <h3>Welcome to</h3>
-            <h1>EduVerse</h1>
-          </div>
-          <p className="welcome-subtitle">
-            Your premium platform for collaborative learning and professional growth
-          </p>
-        </div>
-      ) : (
+      {isAuthenticated && (
         <div className="main-content">
           <nav className="side-nav" style={{right: 0, width: '200px', borderRadius: '12px', margin: '1rem', height: 'auto'}}>
             <button 
@@ -210,6 +202,8 @@ const Home = () => {
           </div>
         </div>
       )}
+
+      {!isAuthenticated && renderContent()}
 
       <footer className="footer-container">
         <div className="footer-links">

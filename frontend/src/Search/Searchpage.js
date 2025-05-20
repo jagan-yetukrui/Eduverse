@@ -5,12 +5,80 @@ const Search = () => {
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
-  // eslint-disable-next-line no-unused-vars
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(false);
   const [showResults, setShowResults] = useState(false);
+  const [searchTags] = useState([
+    { id: 1, label: 'AI Projects', icon: '🤖' },
+    { id: 2, label: 'Mentors', icon: '👨‍🏫' },
+    { id: 3, label: 'Hackathons', icon: '💻' },
+    { id: 4, label: 'Research', icon: '🔬' },
+    { id: 5, label: 'Startups', icon: '🚀' }
+  ]);
   const searchContainerRef = useRef(null);
   const searchBarRef = useRef(null);
+  const aiOrbRef = useRef(null);
+
+  // Initialize page load animations
+  useEffect(() => {
+    const container = searchContainerRef.current;
+    container.classList.add('fade-in');
+    
+    // Initialize particle effects
+    const particles = Array.from({ length: 50 }, () => {
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+      container.appendChild(particle);
+      return particle;
+    });
+
+    particles.forEach(particle => {
+      animateParticle(particle);
+    });
+
+    // Slide in search bar
+    searchBarRef.current.classList.add('slide-in');
+
+    // Animate AI orb
+    if (aiOrbRef.current) {
+      animateAIOrb();
+    }
+
+    return () => {
+      particles.forEach(particle => particle.remove());
+    };
+  }, []);
+
+  const animateParticle = (particle) => {
+    particle.animate([
+      { 
+        transform: `translate(${Math.random() * 100}vw, ${Math.random() * 100}vh)`,
+        opacity: 0
+      },
+      {
+        transform: `translate(${Math.random() * 100}vw, ${Math.random() * 100}vh)`,
+        opacity: 0.5
+      }
+    ], {
+      duration: 3000 + Math.random() * 2000,
+      iterations: Infinity
+    });
+  };
+
+  const animateAIOrb = () => {
+    const orb = aiOrbRef.current;
+    if (!orb) return;
+
+    orb.animate([
+      { transform: 'translateY(0) scale(1)', opacity: 0.8 },
+      { transform: 'translateY(-10px) scale(1.1)', opacity: 1 },
+      { transform: 'translateY(0) scale(1)', opacity: 0.8 }
+    ], {
+      duration: 2000,
+      iterations: Infinity,
+      easing: 'ease-in-out'
+    });
+  };
 
   // Fetch current user data on mount
   useEffect(() => {
@@ -67,15 +135,12 @@ const Search = () => {
   }, [query]);
 
   const triggerSearchAnimation = () => {
-    const container = searchContainerRef.current;
-    const rocket = document.createElement("div");
-    rocket.className = "rocket";
-    container.appendChild(rocket);
-
-    setTimeout(() => {
-      rocket.remove();
-      setShowResults(true);
-    }, 2000);
+    const resultsContainer = document.querySelector('.search-results-container');
+    if (resultsContainer) {
+      resultsContainer.classList.remove('fade-in');
+      void resultsContainer.offsetWidth; // reflow
+      resultsContainer.classList.add('fade-in');
+    }
   };
 
   const handleSearch = async (e) => {
@@ -98,12 +163,18 @@ const Search = () => {
         setTimeout(() => {
           setSearchResults(results);
           setLoading(false);
+          setShowResults(true);
         }, 2000);
       } catch (error) {
         console.error("Error performing search:", error);
         setLoading(false);
       }
     }
+  };
+
+  const handleTagClick = (tag) => {
+    setQuery(tag.label);
+    handleSearch({ preventDefault: () => {} });
   };
 
   const handleSuggestionClick = async (userId) => {
@@ -120,35 +191,62 @@ const Search = () => {
 
   return (
     <div className="search-container" ref={searchContainerRef}>
-      <form onSubmit={handleSearch} className="search-bar" ref={searchBarRef}>
-        <input
-          type="text"
-          placeholder="Search for users, posts, and more..."
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          onFocus={(e) => e.target.classList.add("focused")}
-          onBlur={(e) => e.target.classList.remove("focused")}
-          autoComplete="off"
-          className="search-input"
-        />
-        <button type="submit" disabled={loading} className="search-button">
-          {loading ? (
-            <div className="loading-spinner-small"></div>
-          ) : (
-            <i className="fas fa-search"></i>
-          )}
-        </button>
-      </form>
+      <div className="search-hero">
+        <h1>Discover Minds. Explore Projects.</h1>
+        <p>Search across EduVerse to find users, AI projects, open roles, and more.</p>
+        
+        <div className="search-bar-container" ref={searchBarRef}>
+          <div className="ai-orb" ref={aiOrbRef}>
+            <span className="orb-icon">🤖</span>
+            <div className="orb-ring"></div>
+          </div>
+          
+          <form onSubmit={handleSearch} className="search-bar">
+            <input
+              type="text"
+              placeholder="Search for users, posts, and more..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onFocus={(e) => e.target.classList.add("focused")}
+              onBlur={(e) => e.target.classList.remove("focused")}
+              autoComplete="off"
+              className="search-input"
+            />
+            <button type="submit" disabled={loading} className="search-button">
+              {loading ? (
+                <div className="loading-spinner-small"></div>
+              ) : (
+                <i className="fas fa-search"></i>
+              )}
+            </button>
+          </form>
+        </div>
+
+        <p className="search-tip">💡 Edura Tip: Try "AI Project Python" or "Open Role Data Analyst"</p>
+
+        <div className="search-tags">
+          {searchTags.map(tag => (
+            <button
+              key={tag.id}
+              className="search-tag"
+              onClick={() => handleTagClick(tag)}
+            >
+              <span className="tag-icon">{tag.icon}</span>
+              {tag.label}
+            </button>
+          ))}
+        </div>
+      </div>
 
       {loading && (
         <div className="loading-container">
           <div className="loading-spinner"></div>
-          <p>Searching the universe...</p>
+          <p>Edura is searching...</p>
         </div>
       )}
 
-      {suggestions.length > 0 && (
-        <div className="suggestions-container">
+      {query && suggestions.length > 0 && (
+        <div className="suggestions-container fade-in">
           <ul className="suggestions-list">
             {suggestions.map((user) => (
               <li
@@ -188,6 +286,7 @@ const Search = () => {
                 <div className="results-grid">
                   {searchResults.users.map((user) => (
                     <div key={user.username} className="user-card">
+                      <div className="card-glow"></div>
                       <div className="user-card-header">
                         <img
                           src={user.profile_picture || "/default-avatar.jpg"}
@@ -222,6 +321,7 @@ const Search = () => {
                 <div className="posts-grid">
                   {searchResults.posts.map((post) => (
                     <div key={post.id} className="post-card">
+                      <div className="card-glow"></div>
                       <div className="post-card-header">
                         <h3>{post.title}</h3>
                         <span className="post-type">{post.post_type}</span>

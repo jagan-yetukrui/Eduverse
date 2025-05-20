@@ -52,6 +52,11 @@ const Navbar = () => {
     setIsAuthenticated(Boolean(token));
   }, [location]);
 
+  // Hide navbar on /jagan-yetukuri path
+  if (location.pathname === '/jagan-yetukuri') {
+    return null;
+  }
+
   return (
     <nav className={`navbar ${isMobile ? "mobile" : ""} ${isProjectPage ? "alt-navbar" : ""}`} aria-label="Main Navigation">
       <div className="nav-item-container">

@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.http import HttpResponse
 from django.urls import path, include
 from django.urls import path
-
+from ai.views import bot_endpoint
 
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -23,6 +23,7 @@ urlpatterns = [
     path('ai/', include('ai.urls')),# has the chatbot   
     path("api/projects/", include("trending.urls")),
     path("api/events/", include("events.urls")),
+    path('chat/', bot_endpoint),  # Direct chat endpoint
 ]
 
 # Serve media files during development

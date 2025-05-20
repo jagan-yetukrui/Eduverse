@@ -1,360 +1,162 @@
-import axios from "axios";
-import { format, isValid } from "date-fns";
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { useNavigate, useParams, Link } from 'react-router-dom';
+import axios from 'axios';
 import {
-  FaChevronDown,
   FaCog,
   FaEdit,
-  FaEnvelope,
   FaGithub,
-  FaLinkedin,
-  FaShare,
-  FaUserPlus,
-  FaUserMinus,
-  FaBan,
+  FaExternalLinkAlt,
+  FaCheck,
+  FaCopy,
 } from "react-icons/fa";
-import { useNavigate, useParams } from "react-router-dom";
-import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
-import "react-tabs/style/react-tabs.css";
+import { motion } from "framer-motion";
 import ErrorMessage from "../components/ErrorMessage";
 import LoadingSpinner from "../components/LoadingSpinner";
+import PostCard from '../Posts/PostCard';
 import "./ProfileView.css";
 import { useUser } from '../Accounts/UserContext';
 import { useProfile } from './ProfileContext';
 
 import placeholder from "../images/placeholder.png";
 
-// Profile Header Component
-const ProfileHeader = ({
-  user,
-  stats,
-  isEditing,
-  handleEditChange,
-  handleSaveEdit,
-}) => (
-  <div className="profile-header-container">
-    {isEditing ? (
-      <div className="edit-profile-form">
-        <input
-          type="text"
-          name="name"
-          value={user.name}
-          onChange={handleEditChange}
-          placeholder="Name"
-        />
-        <input
-          type="text"
-          name="username"
-          value={user.username}
-          onChange={handleEditChange}
-          placeholder="Username"
-        />
-        <textarea
-          name="bio"
-          value={user.bio}
-          onChange={handleEditChange}
-          placeholder="Bio"
-        />
-        <button onClick={handleSaveEdit}>Save Changes</button>
+// Project Card Component
+const ProjectCard = ({ project }) => (
+  <motion.div
+    className="project-card"
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    whileHover={{ scale: 1.02, boxShadow: "0 8px 25px rgba(0, 0, 0, 0.12)" }}
+    transition={{ duration: 0.3 }}
+  >
+    <img 
+      src={project.image || placeholder} 
+      alt={project.title} 
+      className="project-image"
+    />
+    <div className="project-overlay">
+      <div className="project-links">
+        {project.github && (
+          <motion.a
+            href={project.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+          >
+            <FaGithub />
+          </motion.a>
+        )}
+        {project.liveUrl && (
+          <motion.a
+            href={project.liveUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+          >
+            <FaExternalLinkAlt />
+          </motion.a>
+        )}
       </div>
-    ) : (
-      <>
-        <div className="profile-stats">
-          <img
-            className="profile-avatar"
-            // src={user.avatarUrl || "/default-avatar.jpg"}
-            src={placeholder}
-            alt={placeholder}
-          />
-          <div style={{ display: "flex", gap: "1rem" }}>
-            {Object.entries(stats).map(([key, value]) => (
-              <div key={key} className="stat-item">
-                <span className="stat-value">{value}</span>
-                <span className="stat-label">{key}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="profile-content">
-          <h1 className="profile-name">{user.username}</h1>
-          <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-            <p className="profile-username">@ {user.username}</p>
-            <p className="profile-join-date">
-              Joined
-              {user.joinedDate && isValid(new Date(user.joinedDate))
-                ? format(new Date(user.joinedDate), "MMMM yyyy")
-                : " Unknown"}
-            </p>
-            <p className="profile-bio">{user.bio || "No bio provided"}</p>
-          </div>
-        </div>
-      </>
-    )}
-  </div>
+    </div>
+    <div className="project-content">
+      <h3 className="project-title">{project.title}</h3>
+      <p className="project-description">{project.description}</p>
+      <div className="project-tags">
+        {project.tags?.map((tag, index) => (
+          <motion.span 
+            key={index} 
+            className="project-tag"
+            whileHover={{ scale: 1.05 }}
+          >
+            {tag}
+          </motion.span>
+        ))}
+      </div>
+    </div>
+  </motion.div>
 );
 
-// Profile Actions Component
-const ProfileActions = ({
-  isOwnProfile,
-  handleEdit,
-  handleSettings,
-  handleFollowToggle,
-  handleMessage,
-  handleShare,
-  isFollowing,
-  isBlocked,
-}) => (
-  <div className="profile-actions">
-    {isOwnProfile ? (
-      <>
-        <button className="action-btn edit-btn" onClick={handleEdit}>
-          <FaEdit /> Edit Profile
-        </button>
-        <button className="action-btn settings-btn" onClick={handleSettings}>
-          <FaCog /> Settings
-        </button>
-      </>
-    ) : (
-      <>
-        <button
-          className={`follow-btn ${isFollowing ? "following" : ""} ${isBlocked ? "blocked" : ""}`}
-          onClick={handleFollowToggle}
-          disabled={isBlocked}
-        >
-          {isFollowing ? <><FaUserMinus /> Unfollow</> : <><FaUserPlus /> Follow</>}
-        </button>
-        <button
-          className={`block-btn ${isBlocked ? "blocked" : ""}`}
-          onClick={handleFollowToggle}
-        >
-          <FaBan /> {isBlocked ? "Unblock" : "Block"}
-        </button>
-        <button className="message-btn" onClick={handleMessage}>
-          Message
-        </button>
-      </>
-    )}
-    <button className="action-btn share-btn" onClick={handleShare}>
-      <FaShare /> Share
-    </button>
-  </div>
+// Experience Item Component
+const ExperienceItem = ({ experience }) => (
+  <motion.div 
+    className="experience-item"
+    initial={{ opacity: 0, x: -20 }}
+    animate={{ opacity: 1, x: 0 }}
+    whileHover={{ x: 10 }}
+    transition={{ duration: 0.3 }}
+  >
+    <div className="experience-logo">
+      <img src={experience.companyLogo || placeholder} alt={experience.company} />
+    </div>
+    <div className="experience-content">
+      <h4 className="experience-company">{experience.company}</h4>
+      <p className="experience-position">{experience.position}</p>
+      <p className="experience-duration">{experience.duration}</p>
+      <p className="experience-description">{experience.description}</p>
+    </div>
+  </motion.div>
 );
 
-// Profile Details Component with Edit Mode
-const ProfileDetails = ({
-  user,
-  isEditing,
-  handleEditChange,
-  handleSaveEdit,
-}) => (
-  <div className="profile-details-container">
-    <section className="education-section">
-      <h3>Education</h3>
-      {isEditing ? (
-        <div className="edit-education">
-          {user.education?.map((edu, index) => (
-            <div key={index} className="edit-education-item">
-              <input
-                type="text"
-                name={`education[${index}].school`}
-                value={edu.school}
-                onChange={handleEditChange}
-                placeholder="School"
-              />
-              <input
-                type="text"
-                name={`education[${index}].degree`}
-                value={edu.degree}
-                onChange={handleEditChange}
-                placeholder="Degree"
-              />
-              <input
-                type="text"
-                name={`education[${index}].year`}
-                value={edu.year}
-                onChange={handleEditChange}
-                placeholder="Year"
-              />
-            </div>
-          ))}
-          <button onClick={() => handleEditChange({ type: "ADD_EDUCATION" })}>
-            Add Education
-          </button>
-        </div>
-      ) : user.education?.length > 0 ? (
-        user.education.map((edu, index) => (
-          <div key={index} className="education-item">
-            <h4>{edu.school}</h4>
-            <p>{edu.degree}</p>
-            <p>{edu.year}</p>
-          </div>
-        ))
-      ) : (
-        <p className="empty-section">No education information provided</p>
-      )}
-    </section>
-
-    <section className="experience-section">
-      <h3>Experience</h3>
-      {isEditing ? (
-        <div className="edit-experience">
-          {user.experience?.map((exp, index) => (
-            <div key={index} className="edit-experience-item">
-              <input
-                type="text"
-                name={`experience[${index}].company`}
-                value={exp.company}
-                onChange={handleEditChange}
-                placeholder="Company"
-              />
-              <input
-                type="text"
-                name={`experience[${index}].position`}
-                value={exp.position}
-                onChange={handleEditChange}
-                placeholder="Position"
-              />
-              <input
-                type="text"
-                name={`experience[${index}].duration`}
-                value={exp.duration}
-                onChange={handleEditChange}
-                placeholder="Duration"
-              />
-            </div>
-          ))}
-          <button onClick={() => handleEditChange({ type: "ADD_EXPERIENCE" })}>
-            Add Experience
-          </button>
-        </div>
-      ) : user.experience?.length > 0 ? (
-        user.experience.map((exp, index) => (
-          <div key={index} className="experience-item">
-            <h4>{exp.company}</h4>
-            <p>{exp.position}</p>
-            <p>{exp.duration}</p>
-          </div>
-        ))
-      ) : (
-        <p className="empty-section">No experience information provided</p>
-      )}
-    </section>
-
-    <section className="skills-section">
-      <h3>Skills</h3>
-      {isEditing ? (
-        <div className="edit-skills">
-          <input
-            type="text"
-            name="newSkill"
-            placeholder="Add new skill"
-            onKeyPress={(e) => {
-              if (e.key === "Enter") {
-                handleEditChange({
-                  type: "ADD_SKILL",
-                  payload: e.target.value,
-                });
-                e.target.value = "";
-              }
-            }}
-          />
-          <div className="skills-container">
-            {user.skills?.map((skill, index) => (
-              <span key={index} className="skill-tag">
-                {skill}
-                <button
-                  onClick={() =>
-                    handleEditChange({
-                      type: "REMOVE_SKILL",
-                      payload: index,
-                    })
-                  }
-                >
-                  ×
-                </button>
-              </span>
-            ))}
-          </div>
-        </div>
-      ) : user.skills?.length > 0 ? (
-        <div className="skills-container">
-          {user.skills.map((skill, index) => (
-            <span key={index} className="skill-tag">
-              {skill}
-            </span>
-          ))}
-        </div>
-      ) : (
-        <p className="empty-section">No skills listed</p>
-      )}
-    </section>
-  </div>
+// Skill Item Component
+const SkillItem = ({ skill }) => (
+  <motion.div 
+    className="skill-item"
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    whileHover={{ y: -5 }}
+    transition={{ duration: 0.3 }}
+  >
+    <div className="skill-header">
+      <h4 className="skill-name">{skill.name}</h4>
+      <span className="skill-level">{skill.level}%</span>
+    </div>
+    <div className="skill-bar">
+      <motion.div 
+        className="skill-progress" 
+        initial={{ width: 0 }}
+        animate={{ width: `${skill.level}%` }}
+        transition={{ duration: 1, ease: "easeOut" }}
+        title={`${skill.level}% proficiency`}
+      />
+    </div>
+  </motion.div>
 );
 
 const ProfileView = () => {
-  const { user, setUser } = useUser();
-  const { profile } = useProfile();
+  const userContext = useUser();
+  const profileContext = useProfile();
+  
+  const setUser = useMemo(() => userContext?.setUser || (() => {}), [userContext?.setUser]);
+  const user = useMemo(() => userContext?.user || {}, [userContext?.user]);
+  const profile = useMemo(() => profileContext?.profile || {}, [profileContext?.profile]);
+  
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isEditing, setIsEditing] = useState(false);
-  const [activeTab, setActiveTab] = useState(0);
   const [stats, setStats] = useState({
     followers: 0,
     following: 0,
-    posts: 0,
+    projects: 0,
   });
-  const [isFollowing, setIsFollowing] = useState(false);
-  const [showSettings, setShowSettings] = useState(false);
-  const [isBlocked, setIsBlocked] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const navigate = useNavigate();
   const { userId } = useParams();
 
-  const handleEditChange = (e) => {
-    const { name, value } = e.target;
-    setUser((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleSaveEdit = async () => {
+  const handleCopyUsername = useCallback(() => {
     try {
-      await axios.put(`/api/users/${user.id}`, user);
-      setIsEditing(false);
+      const profileLink = `https://eduverse.in/user/${user.username}`;
+      navigator.clipboard.writeText(profileLink);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      setError("Failed to save changes");
+      setError("Failed to copy username to clipboard");
     }
-  };
+  }, [user.username]);
 
-  const handleFollowToggle = async () => {
-    try {
-      if (isFollowing) {
-        await axios.delete(`/api/users/${userId}/unfollow`);
-      } else {
-        await axios.post(`/api/users/${userId}/follow`);
-      }
-      setIsFollowing(!isFollowing);
-    } catch (err) {
-      setError("Failed to update follow status");
-    }
-  };
-
-  const handleMessage = () => {
-    navigate(`/messages/new/${userId}`);
-  };
-
-  const handleShare = () => {
-    navigator.clipboard.writeText(window.location.href);
-    // Add toast notification here
-  };
-
-  const scrollToContent = () => {
-    document.querySelector(".profile-details-container")?.scrollIntoView({
-      behavior: "smooth",
-    });
-  };
+  const handleEditProfile = useCallback(() => {
+    navigate('/profile/edit');
+  }, [navigate]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -374,256 +176,219 @@ const ProfileView = () => {
             signal: controller.signal,
           }
         );
-        setUser(response.data);
-        {
-          console.log(response.data);
+
+        if (!response.data) {
+          throw new Error("No data received from server");
         }
+
+        setUser(response.data);
         setStats({
-          followers: response.data.followers_count,
-          following: response.data.following_count,
-          // posts: response.data.posts_count,
+          followers: response.data.followers_count || 0,
+          following: response.data.following_count || 0,
+          projects: response.data.projects?.length || 0,
         });
-        setIsFollowing(response.data.is_following);
-        setIsBlocked(response.data.is_blocked);
         setLoading(false);
       } catch (err) {
         if (axios.isCancel(err)) {
           console.log("Fetch cancelled");
-        } else if (err.response && err.response.status === 401) {
+        } else if (err.response?.status === 401) {
           setError("Unauthorized. Please log in again.");
-          localStorage.removeItem("access_token"); // Clear invalid token
-          window.location.href = "/login"; // Redirect to login
+          localStorage.removeItem("access_token");
+          navigate("/login");
         } else {
-          setError("Failed to fetch user data");
+          setError(err.response?.data?.message || "Failed to fetch user data");
         }
         setLoading(false);
       }
     };
 
     fetchUserData();
-
-    return () => controller.abort(); // Cleanup on unmount
-  }, []);
+    return () => controller.abort();
+  }, [setUser, navigate]);
 
   if (loading) return <LoadingSpinner />;
   if (error) return <ErrorMessage message={error} />;
   if (!user) return <ErrorMessage message="No user data available." />;
 
   return (
-    <div className="profile-page">
+    <motion.div 
+      className="profile-page"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
       <div className="profile-view-container">
-        <div
-          className="profile-banner"
-          style={{
-            backgroundImage: `url(${user.bannerUrl || "/default-banner.jpg"})`,
-          }}
-        >
-          {/* <div className="holographic-overlay"></div> */}
+        {/* Left Sidebar */}
+        <div className="profile-sidebar">
+          <div className="profile-header-container">
+            <motion.img
+              className="profile-avatar"
+              src={user.avatarUrl || placeholder}
+              alt={user.name || "Profile"}
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.2 }}
+            />
+            <div className="profile-content">
+              <h1 className="profile-name">{user.name || user.username}</h1>
+              <p 
+                className={`profile-username ${copied ? 'copied' : ''}`}
+                onClick={handleCopyUsername}
+                title="Click to copy profile link"
+              >
+                @{user.username}
+                {copied ? <FaCheck className="copy-icon" /> : <FaCopy className="copy-icon" />}
+              </p>
+              
+              <div className="profile-stats">
+                <div className="stat-item">
+                  <span className="stat-value">{stats.followers}</span>
+                  <span className="stat-label">Followers</span>
+                </div>
+                <div className="stat-item">
+                  <span className="stat-value">{stats.following}</span>
+                  <span className="stat-label">Following</span>
+                </div>
+                <div className="stat-item">
+                  <span className="stat-value">{stats.projects}</span>
+                  <span className="stat-label">Projects</span>
+                </div>
+              </div>
+
+              <div className="profile-actions">
+                <motion.button 
+                  className="action-btn edit-btn" 
+                  onClick={handleEditProfile}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <FaEdit />
+                  <span>Edit Profile</span>
+                </motion.button>
+                <motion.button 
+                  className="action-btn settings-btn" 
+                  onClick={() => navigate('/settings')}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <FaCog />
+                  <span>Settings</span>
+                </motion.button>
+              </div>
+
+              <p className="profile-bio">{user.bio || "No bio provided"}</p>
+
+              {/* Skills Section in Sidebar */}
+              <section className="skills-section">
+                <h3>Skills</h3>
+                <div className="skills-grid">
+                  {user.skills?.length > 0 ? (
+                    user.skills.map((skill, index) => (
+                      <SkillItem 
+                        key={index} 
+                        skill={{ 
+                          name: skill.name || skill, 
+                          level: skill.level || Math.floor(Math.random() * 30) + 70 
+                        }} 
+                      />
+                    ))
+                  ) : (
+                    <p>No skills listed</p>
+                  )}
+                </div>
+              </section>
+            </div>
+          </div>
         </div>
 
-        <ProfileHeader
-          user={user}
-          stats={stats}
-          isEditing={isEditing}
-          handleEditChange={handleEditChange}
-          handleSaveEdit={handleSaveEdit}
-        />
+        {/* Right Content Area */}
+        <div className="profile-content-area">
+          {/* Posts Section */}
+          <section className="section">
+            <div className="section-header">
+              <h2>Posts</h2>
+            </div>
+            {user.posts?.length > 0 ? (
+              <div className="posts-grid">
+                {user.posts.map((post, idx) => (
+                  <PostCard key={idx} post={post} />
+                ))}
+              </div>
+            ) : (
+              <div className="empty-card">
+                <p>No posts yet.<br />
+                  <Link to="/new-post" className="cta-link">Start Posting</Link>
+                </p>
+              </div>
+            )}
+          </section>
 
-        <div className="profile-social-links">
-          {user.email && (
-            <a href={`mailto:${user.email}`} aria-label="Email">
-              <FaEnvelope className="social-icon" />
-            </a>
-          )}
-          {user.linkedin && (
-            <a
-              href={user.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="LinkedIn"
-            >
-              <FaLinkedin className="social-icon" />
-            </a>
-          )}
-          {user.github && (
-            <a
-              href={user.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="GitHub"
-            >
-              <FaGithub className="social-icon" />
-            </a>
-          )}
-        </div>
-
-        <ProfileActions
-          isOwnProfile={!userId}
-          handleEdit={() => setIsEditing(!isEditing)}
-          handleSettings={() => setShowSettings(!showSettings)}
-          handleFollowToggle={handleFollowToggle}
-          handleMessage={handleMessage}
-          handleShare={handleShare}
-          isFollowing={isFollowing}
-          isBlocked={isBlocked}
-        />
-
-        {/* <div className="scroll-prompt" onClick={scrollToContent}>
-          <FaChevronDown /> Scroll for more
-        </div> */}
-
-        <ProfileDetails
-          user={user}
-          isEditing={isEditing}
-          handleEditChange={handleEditChange}
-          handleSaveEdit={handleSaveEdit}
-        />
-
-        <Tabs
-          selectedIndex={activeTab}
-          onSelect={(index) => setActiveTab(index)}
-        >
-          <TabList>
-            <Tab>Posts</Tab>
-            <Tab>Projects</Tab>
-            <Tab>Saved</Tab>
-            {!userId && <Tab>Settings</Tab>}
-          </TabList>
-
-          <TabPanel>
-            <div className="posts-section">
-              {user.posts?.length > 0 ? (
-                user.posts.map((post) => (
-                  <div key={post.id} className="post-card">
-                    <h3>{post.title}</h3>
-                    <p>{post.content}</p>
-                    <span>
-                      {format(new Date(post.created_at), "MMM dd, yyyy")}
-                    </span>
-                  </div>
+          {/* Experience Section */}
+          <section className="section">
+            <div className="section-header">
+              <h2>Experience</h2>
+              <span className="section-meta">
+                {user.experience?.length > 0 ? `${user.experience.length} positions` : 'No experience yet'}
+              </span>
+            </div>
+            <div className="experience-timeline">
+              {user.experience?.length > 0 ? (
+                user.experience.map((exp, index) => (
+                  <ExperienceItem key={index} experience={exp} />
                 ))
               ) : (
-                <p>No posts yet</p>
+                <div className="empty-card">
+                  <p>No experience information provided</p>
+                </div>
               )}
             </div>
-          </TabPanel>
+          </section>
 
-          <TabPanel>
-            <div className="projects-section">
+          {/* Projects Section */}
+          <section className="section">
+            <div className="section-header">
+              <h2>Projects</h2>
+              <span className="section-meta">
+                {user.projects?.length > 0 ? `${user.projects.length} projects` : 'No projects yet'}
+              </span>
+            </div>
+            <div className="projects-grid">
               {user.projects?.length > 0 ? (
                 user.projects.map((project) => (
-                  <div key={project.id} className="project-card">
-                    <h3>{project.title}</h3>
-                    <p>{project.description}</p>
-                    <div className="project-links">
-                      {project.github && (
-                        <a
-                          href={project.github}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <FaGithub /> GitHub
-                        </a>
-                      )}
-                    </div>
-                  </div>
+                  <ProjectCard key={project.id} project={project} />
                 ))
               ) : (
-                <p>No projects yet</p>
+                <div className="empty-card">
+                  <p>No projects yet</p>
+                </div>
               )}
             </div>
-          </TabPanel>
+          </section>
 
-          <TabPanel>
-            <div className="saved-items-section">
-              {user.savedItems?.length > 0 ? (
-                user.savedItems.map((item) => (
-                  <div key={item.id} className="saved-item-card">
-                    <h3>{item.title}</h3>
-                    <p>{item.description}</p>
-                    <span>
-                      {format(new Date(item.saved_at), "MMM dd, yyyy")}
-                    </span>
-                  </div>
-                ))
-              ) : (
-                <p>No saved items</p>
-              )}
+          {/* Education Section */}
+          <section className="section">
+            <div className="section-header">
+              <h2>Education</h2>
+              <span className="section-meta">
+                {user.education?.length > 0 ? `${user.education.length} institutions` : 'No education yet'}
+              </span>
             </div>
-          </TabPanel>
-
-          {!userId && (
-            <TabPanel>
-              <div className="settings-section">
-                <h2>Account Settings</h2>
-                <form className="settings-form">
-                  <div className="setting-group">
-                    <h3>Privacy</h3>
-                    <label>
-                      <input
-                        type="checkbox"
-                        checked={user.settings?.privateProfile}
-                        onChange={(e) =>
-                          handleEditChange({
-                            target: {
-                              name: "settings.privateProfile",
-                              value: e.target.checked,
-                            },
-                          })
-                        }
-                      />
-                      Private Profile
-                    </label>
-                  </div>
-
-                  <div className="setting-group">
-                    <h3>Notifications</h3>
-                    <label>
-                      <input
-                        type="checkbox"
-                        checked={user.settings?.emailNotifications}
-                        onChange={(e) =>
-                          handleEditChange({
-                            target: {
-                              name: "settings.emailNotifications",
-                              value: e.target.checked,
-                            },
-                          })
-                        }
-                      />
-                      Email Notifications
-                    </label>
-                  </div>
-
-                  <div className="setting-group">
-                    <h3>Theme</h3>
-                    <select
-                      value={user.settings?.theme}
-                      onChange={(e) =>
-                        handleEditChange({
-                          target: {
-                            name: "settings.theme",
-                            value: e.target.value,
-                          },
-                        })
-                      }
-                    >
-                      <option value="light">Light</option>
-                      <option value="dark">Dark</option>
-                      <option value="system">System</option>
-                    </select>
-                  </div>
-
-                  <button type="button" onClick={handleSaveEdit}>
-                    Save Settings
-                  </button>
-                </form>
+            {user.education?.length > 0 ? (
+              user.education.map((edu, index) => (
+                <div key={index} className="profile-section-card education-item">
+                  <h4>{edu.school}</h4>
+                  <p>{edu.degree}</p>
+                  <p>{edu.year}</p>
+                </div>
+              ))
+            ) : (
+              <div className="empty-card">
+                <p>No education information provided</p>
               </div>
-            </TabPanel>
-          )}
-        </Tabs>
+            )}
+          </section>
+        </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

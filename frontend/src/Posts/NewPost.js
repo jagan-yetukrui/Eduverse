@@ -1,201 +1,375 @@
-import { useState, useRef } from "react";
-import { Editor } from "@tinymce/tinymce-react";
-import "../Posts/NewPost.css"; 
-
+import React, { useState, useRef, useEffect } from "react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { 
+  faImage, 
+  faHashtag, 
+  faPaperPlane,
+  faSpinner,
+  faTimes,
+  faCamera,
+  faMapMarkerAlt,
+  faUserPlus,
+  faAt,
+  faChevronLeft,
+  faChevronRight
+} from '@fortawesome/free-solid-svg-icons';
+import "../Posts/NewPost.css";
 
 const NewPost = ({ onPostCreated }) => {
-    const [title, setTitle] = useState("");
-    const [content, setContent] = useState("");
-    const [selectedCategory, setSelectedCategory] = useState("");
-    const [files, setFiles] = useState([]);
-    const [isPreview, setIsPreview] = useState(false);
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [errors, setErrors] = useState([]);
-    const fileInputRef = useRef(null);
+  const [caption, setCaption] = useState("");
+  const [tags, setTags] = useState([]);
+  const [collaborators, setCollaborators] = useState([]);
+  const [location, setLocation] = useState("");
+  const [images, setImages] = useState([]);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [tagInput, setTagInput] = useState("");
+  const [collaboratorInput, setCollaboratorInput] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState([]);
+  const fileInputRef = useRef(null);
 
-    const categories = ["Post", "Project", "Research", "Job", "Service"];
-
-    const handleFileChange = (e) => {
-        const selectedFiles = Array.from(e.target.files);
-        setFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
+  // Cleanup preview URLs when component unmounts
+  useEffect(() => {
+    return () => {
+      images.forEach(image => URL.revokeObjectURL(image.preview));
     };
+  }, [images]);
 
-    const removeFile = (index) => {
-        setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
-    };
+  const handleMultipleImageUpload = (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length + images.length > 5) {
+      setErrors(["You can upload a maximum of 5 images"]);
+      return;
+    }
 
-    const validatePost = () => {
-        const newErrors = [];
-        if (!title.trim()) newErrors.push("Title is required");
-        if (!content.trim()) newErrors.push("Post content is required");
-        if (!selectedCategory) newErrors.push("Please select a category");
+    const previews = files.map(file => ({
+      file,
+      preview: URL.createObjectURL(file),
+    }));
 
-        setErrors(newErrors);
-        return newErrors.length === 0;
-    };
+    setImages([...images, ...previews]);
+    setErrors([]);
+  };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        if (!validatePost() || isSubmitting) return;
-    
-        setIsSubmitting(true);
-        try {
-            const token = localStorage.getItem("token");
-            if (!token) throw new Error("Authentication required");
-    
-            const response = await fetch("https://edu-verse.in/api/posts/", {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    title: title.trim(),
-                    content: content.trim(),
-                    post_type: selectedCategory
-                }),
-            });
-    
-            if (response.ok) {
-                setTitle("");
-                setContent("");
-                setSelectedCategory("");
-                onPostCreated();  // ✅ Update post list in frontend
-                alert("Post created successfully!");
-            } else {
-                const errorData = await response.json();
-                throw new Error(errorData.detail || "Failed to create post");
-            }
-        } catch (err) {
-            setErrors([err.message]);
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
+  const removeImage = (index) => {
+    const newImages = [...images];
+    URL.revokeObjectURL(newImages[index].preview);
+    newImages.splice(index, 1);
+    setImages(newImages);
+    if (currentImageIndex >= newImages.length) {
+      setCurrentImageIndex(Math.max(0, newImages.length - 1));
+    }
+  };
 
-    return (
-        <div className="new-post-container">
-           
-            <h2 style={{ color: "#213555" }}>{isPreview ? "Preview Post" : "Create New Post"}</h2>
+  const handleAddTag = (e) => {
+    if ((e.key === 'Enter' || e.key === ',') && tagInput.trim() !== '') {
+      e.preventDefault();
+      const newTag = tagInput.trim().replace(/,$/, '');
+      if (!tags.includes(newTag)) {
+        setTags([...tags, newTag]);
+      }
+      setTagInput('');
+    }
+  };
 
-            {!isPreview ? (
-                <form onSubmit={handleSubmit} className="post-form">
-                    <div className="input-group">
-                        <label>Title</label>
-                        <input
-                            type="text"
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                            placeholder="Enter post title..."
-                            className="title-input"
-                            maxLength={100}
-                            required
-                        />
-                    </div>
+  const handleAddCollaborator = (e) => {
+    if ((e.key === 'Enter' || e.key === ',') && collaboratorInput.trim() !== '') {
+      e.preventDefault();
+      const newCollaborator = collaboratorInput.trim().replace(/,$/, '');
+      if (!collaborators.includes(newCollaborator)) {
+        setCollaborators([...collaborators, newCollaborator]);
+      }
+      setCollaboratorInput('');
+    }
+  };
 
-                    <div className="input-group">
-                        <label>Category</label>
-                        <select
-                            value={selectedCategory}
-                            onChange={(e) => setSelectedCategory(e.target.value)}
-                            className="category-select"
-                            required
-                        >
-                            <option value="">Select Category</option>
-                            {categories.map((category) => (
-                                <option key={category} value={category}>
-                                    {category}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
+  const removeTag = (tagToRemove) => {
+    setTags(tags.filter(tag => tag !== tagToRemove));
+  };
 
-                    <div className="input-group">
-                        <label>Post Content</label>
-                        <Editor
-                            apiKey="vzy136fy9hej20t0rxfpxu19mooxienl5owvp1v3af6w09di"
-                            value={content}
-                            onEditorChange={(newContent) => setContent(newContent)}
-                            init={{
-                                height: 500,  
-                                max_height: 700,
-                                autoresize_bottom_margin: 20,
-                                menubar: false,
-                                plugins: ["lists", "link", "autoresize"],
-                                toolbar: "undo redo | bold italic underline | bullist numlist | link",
-                                content_style: `
-                                    body { 
-                                        font-family: 'Inter', sans-serif; 
-                                        font-size:14px; 
-                                        background: rgba(255,255,255,0.9); 
-                                        color: #4a5568; 
-                                        padding: 10px;
-                                        min-height: 500px;  
-                                    }
-                                `,
-                                skin: "oxide-dark",
-                                content_css: "dark",
-                            }}
-                        />
-                    </div>
+  const removeCollaborator = (collaboratorToRemove) => {
+    setCollaborators(collaborators.filter(collab => collab !== collaboratorToRemove));
+  };
 
-                    <div className="file-upload">
-                        <input
-                            type="file"
-                            ref={fileInputRef}
-                            onChange={handleFileChange}
-                            multiple
-                            accept="image/*"
-                            style={{ display: "none" }}
-                        />
-                        <button
-                            type="button"
-                            onClick={() => fileInputRef.current.click()}
-                        >
-                            Attach Files
-                        </button>
-                        <div className="file-list">
-                            {files.map((file, index) => (
-                                <div key={index} className="file-item">
-                                    <span>{file.name}</span>
-                                    <button type="button" onClick={() => removeFile(index)}>
-                                        Remove
-                                    </button>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
+  const validatePost = () => {
+    const newErrors = [];
+    if (!caption.trim() && images.length === 0) {
+      newErrors.push("Please add a caption or at least one image");
+    }
+    setErrors(newErrors);
+    return newErrors.length === 0;
+  };
 
-                    {errors.length > 0 && (
-                        <div className="error-messages">
-                            {errors.map((error, index) => (
-                                <p key={index} className="error">{error}</p>
-                            ))}
-                        </div>
-                    )}
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validatePost() || isSubmitting) return;
 
-                    <div className="modal-actions d-flex justify-content-between">
-                        
-                        <button className='button-post' type="submit" disabled={isSubmitting}>
-                            {isSubmitting ? "Posting..." : "Post"}
-                        </button>
+    setIsSubmitting(true);
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("Authentication required");
 
-                    </div>
-                    
-                </form>
-            ) : (
-                <div className="preview-content">
-                    <h3>{title}</h3>
-                    <div className="category-tag">{selectedCategory}</div>
-                    <div dangerouslySetInnerHTML={{ __html: content }} />
-                    <button onClick={() => setIsPreview(false)}>Edit</button>
-                    <button onClick={handleSubmit} disabled={isSubmitting}>
-                        {isSubmitting ? "Posting..." : "Publish"}
+      const formData = new FormData();
+      formData.append('content', caption.trim());
+      images.forEach((image, index) => {
+        formData.append(`image_${index}`, image.file);
+      });
+      formData.append('tags', JSON.stringify(tags));
+      formData.append('collaborators', JSON.stringify(collaborators));
+      formData.append('location', location.trim());
+
+      const response = await fetch("https://edu-verse.in/api/posts/", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      if (response.ok) {
+        setCaption("");
+        setTags([]);
+        setCollaborators([]);
+        setLocation("");
+        setImages([]);
+        setCurrentImageIndex(0);
+        onPostCreated();
+        alert("Post created successfully!");
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || "Failed to create post");
+      }
+    } catch (err) {
+      setErrors([err.message]);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const nextImage = () => {
+    setCurrentImageIndex((prev) => (prev + 1) % images.length);
+  };
+
+  const prevImage = () => {
+    setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
+  };
+
+  return (
+    <div className="new-post-container">
+      <div className="post-card">
+        {/* Left Side - Image Section */}
+        <div className="image-section">
+          <div className="image-upload-section">
+            {images.length > 0 ? (
+              <div className="image-preview-container">
+                <img 
+                  src={images[currentImageIndex].preview} 
+                  alt={`Preview ${currentImageIndex + 1}`} 
+                  className="image-preview" 
+                />
+                <button
+                  type="button"
+                  className="remove-image"
+                  onClick={() => removeImage(currentImageIndex)}
+                >
+                  <FontAwesomeIcon icon={faTimes} />
+                </button>
+                {images.length > 1 && (
+                  <>
+                    <button 
+                      className="carousel-nav prev" 
+                      onClick={prevImage}
+                    >
+                      <FontAwesomeIcon icon={faChevronLeft} />
                     </button>
-                </div>
+                    <button 
+                      className="carousel-nav next" 
+                      onClick={nextImage}
+                    >
+                      <FontAwesomeIcon icon={faChevronRight} />
+                    </button>
+                    <div className="image-counter">
+                      {currentImageIndex + 1} / {images.length}
+                    </div>
+                  </>
+                )}
+              </div>
+            ) : (
+              <div 
+                className="upload-placeholder"
+                onClick={() => fileInputRef.current.click()}
+              >
+                <FontAwesomeIcon icon={faCamera} className="icon" />
+                <span className="text">Add Photos</span>
+                <span className="subtext">Drag and drop or click to upload (max 5)</span>
+              </div>
             )}
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleMultipleImageUpload}
+              accept="image/*"
+              multiple
+              style={{ display: "none" }}
+            />
+          </div>
+          {images.length > 0 && (
+            <div className="image-thumbnails">
+              {images.map((image, index) => (
+                <div 
+                  key={index} 
+                  className={`thumbnail ${index === currentImageIndex ? 'active' : ''}`}
+                  onClick={() => setCurrentImageIndex(index)}
+                >
+                  <img src={image.preview} alt={`Thumbnail ${index + 1}`} />
+                </div>
+              ))}
+              {images.length < 5 && (
+                <div 
+                  className="add-more-thumbnail"
+                  onClick={() => fileInputRef.current.click()}
+                >
+                  <FontAwesomeIcon icon={faCamera} />
+                </div>
+              )}
+            </div>
+          )}
         </div>
-    );
+
+        {/* Right Side - Form Section */}
+        <div className="form-section">
+          <h2 className="post-title">Create Post</h2>
+
+          <form onSubmit={handleSubmit} className="post-form">
+            {/* Caption Input */}
+            <div className="caption-section">
+              <div className="section-header">
+                <FontAwesomeIcon icon={faImage} className="section-icon" />
+                <span className="section-label">Caption</span>
+              </div>
+              <textarea
+                value={caption}
+                onChange={(e) => setCaption(e.target.value)}
+                placeholder="Share what you're working on... @mention someone"
+                className="caption-input"
+                rows={4}
+              />
+            </div>
+
+            {/* Location Input */}
+            <div className="input-section">
+              <div className="section-header">
+                <FontAwesomeIcon icon={faMapMarkerAlt} className="section-icon" />
+                <span className="section-label">Location</span>
+              </div>
+              <div className="input-container">
+                <FontAwesomeIcon icon={faMapMarkerAlt} className="input-icon" />
+                <input
+                  type="text"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  placeholder="Add a location"
+                  className="location-input"
+                />
+              </div>
+            </div>
+
+            {/* Collaborators Section */}
+            <div className="collaborators-section">
+              <div className="section-header">
+                <FontAwesomeIcon icon={faUserPlus} className="section-icon" />
+                <span className="section-label">Collaborators</span>
+              </div>
+              <div className="input-container">
+                <FontAwesomeIcon icon={faUserPlus} className="input-icon" />
+                <input
+                  type="text"
+                  value={collaboratorInput}
+                  onChange={(e) => setCollaboratorInput(e.target.value)}
+                  onKeyDown={handleAddCollaborator}
+                  placeholder="Tag collaborators (@username)"
+                  className="collaborator-input"
+                />
+              </div>
+              <div className="collaborator-display">
+                {collaborators.map((collab, index) => (
+                  <span key={index} className="collaborator-chip">
+                    @{collab}
+                    <button
+                      type="button"
+                      onClick={() => removeCollaborator(collab)}
+                      className="remove-collaborator"
+                    >
+                      <FontAwesomeIcon icon={faTimes} />
+                    </button>
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Tags Section */}
+            <div className="tags-section">
+              <div className="section-header">
+                <FontAwesomeIcon icon={faHashtag} className="section-icon" />
+                <span className="section-label">Tags</span>
+              </div>
+              <div className="input-container">
+                <FontAwesomeIcon icon={faHashtag} className="input-icon" />
+                <input
+                  type="text"
+                  value={tagInput}
+                  onChange={(e) => setTagInput(e.target.value)}
+                  onKeyDown={handleAddTag}
+                  placeholder="Add tags (e.g. #ai #startups #dev)"
+                  className="tag-input"
+                />
+              </div>
+              <div className="tag-display">
+                {tags.map((tag, index) => (
+                  <span key={index} className="tag-chip">
+                    #{tag}
+                    <button
+                      type="button"
+                      onClick={() => removeTag(tag)}
+                      className="remove-tag"
+                    >
+                      <FontAwesomeIcon icon={faTimes} />
+                    </button>
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Error Messages */}
+            {errors.length > 0 && (
+              <div className="error-messages">
+                {errors.map((error, index) => (
+                  <p key={index} className="error">{error}</p>
+                ))}
+              </div>
+            )}
+
+            {/* Post Button */}
+            <button 
+              type="submit" 
+              className="post-button"
+              disabled={isSubmitting || (!caption.trim() && images.length === 0)}
+            >
+              {isSubmitting ? (
+                <>
+                  <FontAwesomeIcon icon={faSpinner} spin /> Posting...
+                </>
+              ) : (
+                <>
+                  <FontAwesomeIcon icon={faPaperPlane} /> Post
+                </>
+              )}
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default NewPost;

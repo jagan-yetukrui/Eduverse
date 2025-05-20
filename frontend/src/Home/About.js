@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import "./About.css";
+import KnowYourFounder from "../components/KnowYourFounder";
 
 const Section = ({ title, icon, children }) => (
   <motion.div
@@ -8,56 +9,57 @@ const Section = ({ title, icon, children }) => (
     whileInView={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.6 }}
     viewport={{ once: true }}
-    className="bg-white shadow-lg rounded-2xl p-6 mb-6"
+    className="section-card"
   >
-    <h2 className="text-xl font-bold mb-2 flex items-center gap-2">
-      <span className="text-blue-600 text-2xl">{icon}</span> {title}
+    <h2 className="section-title">
+      <span className="section-icon">{icon}</span>
+      {title}
     </h2>
-    <p className="text-gray-700">{children}</p>
+    <div className="section-content">
+      {children}
+    </div>
   </motion.div>
 );
 
 const About = () => {
   return (
-    <div className="max-w-4xl mx-auto px-6 py-10">
-      <motion.h1
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5 }}
-        className="text-4xl font-extrabold text-center text-blue-700 mb-10"
-      >
-        About EduVerse 🚀
-      </motion.h1>
+    <div className="about-container">
+      <div className="content-max-width">
+        <motion.h1
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+          className="about-title"
+        >
+          About EduVerse
+        </motion.h1>
 
-      <Section title="Our Vision" icon="🔭">
-        EduVerse is a comprehensive educational platform designed to bridge the gap between academic learning and professional requirements. We provide students with the tools, resources, and connections they need to thrive in today's competitive landscape.
-      </Section>
+        <Section title="About EduVerse" icon="🚀">
+          EduVerse is an AI-first platform built to prove you're job-ready — not with resumes, but with real-world projects. 
+          At EduVerse, learning turns into doing, and doing becomes your edge.
+          We empower students to showcase their true skills, guided by an AI mentor named Edura.
+        </Section>
 
-      <Section title="Who We Are" icon="👥">
-        Founded by a group of students frustrated with traditional learning methods, EduVerse emerged from our own struggles and desire to create something better. We experienced firsthand the disconnect between classroom education and real-world skills, so we built this platform to address the challenges we faced and help others like us navigate their educational and professional journeys more effectively.
-      </Section>
+        <Section title="Why We Exist" icon="💡">
+          Today's education system often leaves students with knowledge but no direction. 
+          They graduate with degrees but struggle to apply their skills in the real world.
+          At the same time, employers seek proof — not potential.
+          EduVerse bridges this gap by transforming learning into tangible projects that validate real ability.
+        </Section>
 
-      <Section title="Our Mission" icon="🚀">
-        At EduVerse, our mission is to empower students with practical skills, meaningful projects, and valuable connections that extend beyond traditional classroom learning. We believe in creating an ecosystem where academic knowledge meets real-world application, preparing students not just for jobs, but for impactful careers.
-      </Section>
+        <Section title="What We Do" icon="⚙️">
+          <ul className="feature-list">
+            <li><strong>Assess Skills:</strong> Edura, your AI mentor, understands your strengths and goals.</li>
+            <li><strong>Guide Projects:</strong> We recommend step-by-step projects tailored to your level — from beginner to advanced.</li>
+            <li><strong>Track Growth:</strong> Every task you complete builds a verified portfolio that recruiters and universities can see.</li>
+            <li><strong>Connect Talent:</strong> We match students to teams, mentors, and companies based on skill and interest.</li>
+          </ul>
+        </Section>
 
-      <Section title="What We Offer" icon="🛠️">
-        <ul className="list-disc pl-5 space-y-2">
-          <li>AI-powered project recommendations tailored to your skills and interests</li>
-          <li>Comprehensive profile building tools to showcase your achievements</li>
-          <li>Networking opportunities with peers, mentors, and potential employers</li>
-          <li>Career guidance and personalized learning paths</li>
-          <li>Collaborative spaces for project development and skill enhancement</li>
-        </ul>
-      </Section>
-
-      <Section title="Our Approach" icon="🧠">
-        We combine cutting-edge technology with educational expertise to create a platform that adapts to each student's unique journey. Our AI-driven recommendations, peer-to-peer learning opportunities, and industry connections ensure that every student can find their path to success.
-      </Section>
-
-      <Section title="Join Our Community" icon="🌐">
-        EduVerse is more than a platform—it's a community of learners, creators, and innovators. Whether you're looking to enhance your skills, build your portfolio, or connect with opportunities, EduVerse provides the environment and resources you need to achieve your goals.
-      </Section>
+        <Section title="Meet Our Team" icon="👨‍💻">
+          <KnowYourFounder />
+        </Section>
+      </div>
     </div>
   );
 };
