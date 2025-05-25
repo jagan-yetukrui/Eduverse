@@ -1,10 +1,6 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { pythonProjects, javaProjects } from './ProjectsData';
-import { awsProjects } from './ProjectsData';
-import { sqlProjects } from './ProjectsData';
-import { nodeProjects } from './ProjectsData';
-import { reactProjects } from './ProjectsData';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { awsProjects, javaProjects, nodeProjects, pythonProjects, reactProjects, sqlProjects } from './ProjectsData';
 import './Steps.css';
 
 // Custom hook for managing game progress
@@ -204,13 +200,15 @@ const Steps = () => {
       setProjectsData(jsonData.projects);
       
       // Find the project based on the projectId from URL params
-      const foundProject = projectsArray.find(p => p.id === projectId);
+      const foundProject = projectsArray.find(p => (p.id || p.project_id) === projectId);
+
       
       if (foundProject) {
         setProject(foundProject);
         
         // Get detailed project data if available
-        const detailedProject = jsonData.projects.find(p => p.project_id === projectId);
+        const detailedProject = jsonData.projects.find(p => (p.id || p.project_id) === projectId);
+
         
         // Check if we should resume from a saved state
         const resumeState = localStorage.getItem('resumeState');
