@@ -3016,6 +3016,74 @@
                     ]
                 }
             ]
+            
+        },
+        {
+  "project_id": "P10",
+  "project_name": "Command-Line Chat Application",
+  "description": "A Java-based command-line chat app that enables real-time communication between two users on the same machine using multithreading and sockets.",
+  "difficulty": "Intermediate",
+  "tasks": [
+    {
+      "task_id": "P10_T1",
+      "task_name": "Setup and Architecture",
+      "description": "Initialize the Java project and create sender and receiver classes.",
+      "steps": [
+        {
+          "step_id": "T1_S1",
+          "step_name": "Initialize Java Project",
+          "description": "Create a new folder and add ChatApp.java, Sender.java, and Receiver.java.",
+          "guidelines": [
+            "Use a Java IDE or basic text editor.",
+            "Ensure each class is placed in its own file."
+          ],
+          "why": ["Keeps logic modular and maintainable."],
+          "output": ["Java files with empty class declarations."]
+        },
+        {
+          "step_id": "T1_S2",
+          "step_name": "Define Communication Protocol",
+          "description": "Design the message format and protocol (e.g., plain text).",
+          "guidelines": [
+            "Decide on line-based or delimited messages.",
+            "Use a Scanner and PrintWriter for I/O streams."
+          ],
+          "why": ["Enables consistent and testable message flow."],
+          "output": ["Clear message protocol defined."]
         }
+      ]
+    },
+    {
+      "task_id": "P10_T2",
+      "task_name": "Implement Sender and Receiver",
+      "description": "Implement message sending and receiving logic using sockets and threads.",
+      "steps": [
+        {
+          "step_id": "T2_S1",
+          "step_name": "Sender Class",
+          "description": "Use Socket and PrintWriter to send messages.",
+          "guidelines": [
+            "Use a separate thread for sending.",
+            "Prompt user for input via Scanner."
+          ],
+          "why": ["Keeps UI responsive and avoids blocking."],
+          "output": ["Messages are sent from one terminal to another."]
+        },
+        {
+          "step_id": "T2_S2",
+          "step_name": "Receiver Class",
+          "description": "Use ServerSocket and BufferedReader to receive messages.",
+          "guidelines": [
+            "Listen for messages in a while loop.",
+            "Display messages to console immediately."
+          ],
+          "why": ["Allows asynchronous message reception."],
+          "output": ["Messages appear as they are received."]
+        }
+      ]
+    }
+  ]
+}
+
     ]
 }
