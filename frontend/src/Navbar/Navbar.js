@@ -73,13 +73,6 @@ const Navbar = () => {
         />
 
         <NavbarButton
-          path="/messages"
-          label="MESSAGES"
-          onClick={() => handleNavigation("/messages")}
-          isActive={isActive("/messages", location.pathname)}
-        />
-
-        <NavbarButton
           path="/notes"
           label="EDURA"
           onClick={() => handleNavigation("/notes")}
@@ -87,10 +80,10 @@ const Navbar = () => {
         />
 
         <NavbarButton
-          path="/newpost"
-          label="NEW POST"
-          onClick={() => handleNavigation("/newpost")}
-          isActive={isActive("/newpost", location.pathname)}
+          path="/project-suggestions"
+          label="BUILDZONE"
+          onClick={() => handleNavigation("/project-suggestions")}
+          isActive={isActive("/project-suggestions", location.pathname)}
         />
       </div>
 

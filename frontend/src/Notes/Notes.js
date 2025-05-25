@@ -151,36 +151,6 @@ const Notes = () => {
   return (
     <div className="notes-page">
       <div className="notes-container">
-        {/* Top Section (Fixed) */}
-        <div className="quest-board">
-          <button
-            className="quest-btn"
-            onClick={() => navigate("/project-suggestions")}
-            title="Explore coding projects and challenges"
-          >
-            <span className="quest-icon">🧭</span>
-            <span>Explore Projects</span>
-          </button>
-
-          <button
-            className="quest-btn"
-            onClick={() => navigate("/career-guidance")}
-            title="Track your learning progress and growth"
-          >
-            <span className="quest-icon">📊</span>
-            <span>My Progress</span>
-          </button>
-
-          <button
-            className="quest-btn"
-            title="Coming soon: Create projects with AI assistance"
-            disabled
-          >
-            <span className="quest-icon">🪄</span>
-            <span>AI Create Lab (soon)</span>
-          </button>
-        </div>
-
         {/* Welcome Message (Fixed) */}
         <div className="notes-header fade-in">
           <div className="avatar-orb" ref={avatarRef}>

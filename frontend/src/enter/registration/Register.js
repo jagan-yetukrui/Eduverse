@@ -13,6 +13,12 @@ import {
   FaLinkedin,
 } from "react-icons/fa";
 import FirstLogo from "../../First_logo.png";
+import { getDeviceFingerprint } from "../../utils/tokenManager";
+
+// Create axios instance with base URL
+const apiClient = axios.create({
+  baseURL: "https://edu-verse.in/",
+});
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -113,17 +119,15 @@ const Register = () => {
 
     setIsLoading(true);
     try {
-      // Removed the unused 'response' variable
-      await axios.post(
-        "https://edu-verse.in/api/accounts/register/",
-        {
-          username: formData.username,
-          email: formData.email,
-          password: formData.password,
-          password2: formData.password2,
-          agreeToTerms: formData.agreeToTerms,
-        }
-      );
+      const deviceFingerprint = await getDeviceFingerprint();
+      await apiClient.post("api/accounts/register/", {
+        username: formData.username,
+        email: formData.email,
+        password: formData.password,
+        password2: formData.password2,
+        agreeToTerms: formData.agreeToTerms,
+        device_fingerprint: deviceFingerprint
+      });
 
       setIsSuccess(true);
       setErrorMessage("");

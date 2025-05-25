@@ -36,7 +36,7 @@ const Blocked = () => {
       }
     };
     fetchBlockedUsers();
-  }, [navigate]);
+  }, [handleError]);
 
   // Handle errors
   const handleError = (error) => {

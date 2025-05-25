@@ -8,11 +8,13 @@ import {
   FaExternalLinkAlt,
   FaCheck,
   FaCopy,
+  FaTimes,
 } from "react-icons/fa";
 import { motion } from "framer-motion";
 import ErrorMessage from "../components/ErrorMessage";
 import LoadingSpinner from "../components/LoadingSpinner";
 import PostCard from '../Posts/PostCard';
+import NewPost from '../Posts/NewPost';
 import "./ProfileView.css";
 import { useUser } from '../Accounts/UserContext';
 import { useProfile } from './ProfileContext';
@@ -126,6 +128,7 @@ const SkillItem = ({ skill }) => (
 const ProfileView = () => {
   const userContext = useUser();
   const profileContext = useProfile();
+  const [showNewPostModal, setShowNewPostModal] = useState(false);
   
   const setUser = useMemo(() => userContext?.setUser || (() => {}), [userContext?.setUser]);
   const user = useMemo(() => userContext?.user || {}, [userContext?.user]);
@@ -157,6 +160,11 @@ const ProfileView = () => {
   const handleEditProfile = useCallback(() => {
     navigate('/profile/edit');
   }, [navigate]);
+
+  const handlePostCreated = useCallback(() => {
+    setShowNewPostModal(false);
+    // Refresh posts or handle post creation success
+  }, []);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -316,7 +324,12 @@ const ProfileView = () => {
             ) : (
               <div className="empty-card">
                 <p>No posts yet.<br />
-                  <Link to="/new-post" className="cta-link">Start Posting</Link>
+                  <button 
+                    onClick={() => setShowNewPostModal(true)}
+                    className="cta-link"
+                  >
+                    Start Posting
+                  </button>
                 </p>
               </div>
             )}
@@ -388,6 +401,21 @@ const ProfileView = () => {
           </section>
         </div>
       </div>
+
+      {/* New Post Modal */}
+      {showNewPostModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <button 
+              className="modal-close"
+              onClick={() => setShowNewPostModal(false)}
+            >
+              <FaTimes />
+            </button>
+            <NewPost onPostCreated={handlePostCreated} />
+          </div>
+        </div>
+      )}
     </motion.div>
   );
 };

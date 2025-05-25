@@ -5,34 +5,59 @@ import "./Login.css";
 import { FaRocket, FaEye, FaEyeSlash, FaTimesCircle } from "react-icons/fa";
 import FirstLogo from "../../First_logo.png";
 import axios from "axios";
+import { getDeviceFingerprint, setTokens, isAuthenticated } from "../../utils/tokenManager";
 
 // Create axios instance with base URL
 const apiClient = axios.create({
   baseURL: "https://edu-verse.in/",
 });
 
+// Add request interceptor
+apiClient.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("access_token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
 // Add response interceptor
 apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (error.response?.status === 401) {
+    const originalRequest = error.config;
+    
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
       const refreshToken = localStorage.getItem("refresh_token");
+      
       if (refreshToken) {
         try {
+          const deviceFingerprint = await getDeviceFingerprint();
           const response = await axios.post(
             "https://edu-verse.in/api/token/refresh/",
             {
               refresh: refreshToken,
+              device_fingerprint: deviceFingerprint
             }
           );
-          const newAccessToken = response.data.access;
-          localStorage.setItem("access_token", newAccessToken);
-
+          
+          const { access, refresh } = response.data;
+          setTokens(access, refresh);
+          
           // Retry original request with new token
-          error.config.headers["Authorization"] = `Bearer ${newAccessToken}`;
-          return apiClient.request(error.config);
+          originalRequest.headers["Authorization"] = `Bearer ${access}`;
+          return apiClient(originalRequest);
         } catch (refreshError) {
           console.error("Failed to refresh token:", refreshError);
+          // Clear tokens and redirect to login
+          localStorage.removeItem("access_token");
+          localStorage.removeItem("refresh_token");
           window.location.href = "/login";
         }
       }
@@ -43,7 +68,7 @@ apiClient.interceptors.response.use(
 
 const Login = () => {
   const [formData, setFormData] = useState({
-    username: "", // This will store either username or email
+    username: "",
     password: "",
   });
   const [errors, setErrors] = useState({});
@@ -56,8 +81,7 @@ const Login = () => {
 
   useEffect(() => {
     // Check if user is already logged in
-    const token = localStorage.getItem("access_token");
-    if (token) {
+    if (isAuthenticated()) {
       navigate("/");
     }
   }, [navigate]);
@@ -102,22 +126,21 @@ const Login = () => {
       setErrorMessage("");
 
       try {
-        const response = await apiClient.post("api/accounts/login/", formData, {
-          headers: {
-            "Content-Type": "application/json",
-            // Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-          },
+        const deviceFingerprint = await getDeviceFingerprint();
+        const response = await apiClient.post("api/token/", {
+          ...formData,
+          device_fingerprint: deviceFingerprint
         });
 
-        localStorage.setItem("access_token", response.data.access);
-        localStorage.setItem("refresh_token", response.data.refresh);
+        const { access, refresh } = response.data;
+        setTokens(access, refresh);
         setIsSuccess(true);
 
         setTimeout(() => {
           navigate("/");
         }, 2000);
       } catch (error) {
-        if (error.response && error.response.data) {
+        if (error.response?.data) {
           const errorData = error.response.data;
           if (typeof errorData === "object") {
             const errorMessage = Object.values(errorData)[0];
