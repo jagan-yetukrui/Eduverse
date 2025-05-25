@@ -20,6 +20,8 @@
     "@testing-library/user-event": "^13.5.0",
     "@tinymce/tinymce-react": "^5.1.1",
     "@uploadcare/blocks": "^0.50.4",
+    "ajv": "^8.17.1",
+    "ajv-keywords": "^5.1.0",
     "axios": "^1.7.9",
     "babel-jest": "^27.4.2",
     "babel-loader": "^8.2.3",
