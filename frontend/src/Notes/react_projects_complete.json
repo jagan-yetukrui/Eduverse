@@ -6646,7 +6646,82 @@
                         }
                     ]
                 }
+                
             ]
+        },
+        {
+  "project_id": "R4",
+  "project_name": "Habit Tracker App",
+  "description": "A React app that allows users to track daily or weekly habits, mark them as complete, and view their progress over time with streaks and summaries.",
+  "difficulty": "Intermediate",
+  "tasks": [
+    {
+      "task_id": "R4_T1",
+      "task_name": "Project Setup",
+      "description": "Create a new React app and structure the initial components.",
+      "steps": [
+        {
+          "step_id": "T1_S1",
+          "step_name": "Create App Structure",
+          "description": "Use create-react-app and create folders for components, pages, and styles.",
+          "guidelines": [
+            "Run `npx create-react-app habit-tracker-app`",
+            "Create folders: /components, /pages, /styles"
+          ],
+          "why": ["Sets up a clean and scalable structure."],
+          "output": ["Initial app with organized file structure."]
         }
+      ]
+    },
+    {
+      "task_id": "R4_T2",
+      "task_name": "Build Habit UI",
+      "description": "Create the UI to view, add, and complete habits.",
+      "steps": [
+        {
+          "step_id": "T2_S1",
+          "step_name": "HabitList Component",
+          "description": "Display a list of user's habits for the day/week.",
+          "guidelines": [
+            "Use map to render habits from state.",
+            "Show checkboxes or toggle buttons to mark as done."
+          ],
+          "why": ["Allows users to track progress visually."],
+          "output": ["Habits are listed and can be marked complete."]
+        },
+        {
+          "step_id": "T2_S2",
+          "step_name": "AddHabit Component",
+          "description": "Let users add new habits with frequency (daily or weekly).",
+          "guidelines": [
+            "Use useState for form handling.",
+            "Include validation and frequency selector (radio or dropdown)."
+          ],
+          "why": ["Users can customize their habit tracking."],
+          "output": ["New habit appears in the list upon submission."]
+        }
+      ]
+    },
+    {
+      "task_id": "R4_T3",
+      "task_name": "Track Streaks",
+      "description": "Implement streak tracking for daily habits.",
+      "steps": [
+        {
+          "step_id": "T3_S1",
+          "step_name": "Streak Logic",
+          "description": "Calculate and store streaks based on user check-ins.",
+          "guidelines": [
+            "Use localStorage or simple state to track habit dates.",
+            "Reset streak if habit is missed."
+          ],
+          "why": ["Adds motivation and gamification."],
+          "output": ["Streak counter updates based on habit completion."]
+        }
+      ]
+    }
+  ]
+}
+
     ]
 }
