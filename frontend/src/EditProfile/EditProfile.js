@@ -104,7 +104,7 @@ const EditProfile = () => {
     const fetchProfileData = async () => {
       try {
         setIsLoading(true);
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('access_token');
         if (!token) {
           throw new Error('No authentication token found');
         }
@@ -188,7 +188,7 @@ const EditProfile = () => {
     e.preventDefault();
     setStatus('Saving...');
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('access_token');
       if (!token) {
         throw new Error('No authentication token found');
       }
@@ -232,7 +232,7 @@ const EditProfile = () => {
    */
   const handleSectionUpdate = async (section, data) => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('access_token');
       const endpoint = `/api/profiles/me/${section}/`;
       
       // Make API call to update section

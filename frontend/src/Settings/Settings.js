@@ -34,7 +34,7 @@ const Settings = () => {
     const fetchSettings = async () => {
       setLoading(true);
       try {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('access_token');
         if (!token) {
           throw new Error('No authentication token found');
         }
@@ -93,7 +93,7 @@ const Settings = () => {
   const handleSaveChanges = async () => {
     setLoading(true);
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('access_token');
       if (!token) throw new Error('No authentication token found');
 
       // Update different settings in parallel
@@ -131,7 +131,7 @@ const Settings = () => {
 
   const handleLogout = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('access_token');
       if (token) {
         await axios.post('/api/profiles/logout/', null, {
           headers: { Authorization: `Bearer ${token}` }
@@ -140,7 +140,7 @@ const Settings = () => {
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
-      localStorage.removeItem('token');
+      localStorage.removeItem('access_token');
       setFeedback({
         message: 'You have been successfully logged out',
         type: 'success'
