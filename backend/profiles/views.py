@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.decorators import action
 from rest_framework import status, viewsets, permissions, filters
 from django.shortcuts import get_object_or_404
@@ -19,32 +19,49 @@ class ProfileViewSet(viewsets.ModelViewSet):
     """
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     filter_backends = [filters.SearchFilter]
     search_fields = ['username', 'display_name']
+    lookup_field = 'user__username'
 
     def get_queryset(self):
-        """
-        Get and filter queryset based on search parameters and endpoint
-        """
         queryset = Profile.objects.all()
-        
-        # Handle search
-        search_query = self.request.query_params.get('search', None)
-        if search_query:
-            queryset = queryset.filter(
-                Q(username__icontains=search_query) |
-                Q(display_name__icontains=search_query)
-            )
-            
-        # Handle /profiles/me endpoint
-        if self.action == 'me':
-            return Profile.objects.filter(user=self.request.user)
-            
+        if self.action == 'list':
+            # For list view, only return public profiles
+            queryset = queryset.filter(privacy_settings__profile_visibility='public')
         return queryset
 
+    def get_user_by_username(self, request, username=None):
+        """
+        Retrieve a user profile by username.
+        """
+        try:
+            profile = Profile.objects.get(user__username=username)
+            serializer = self.get_serializer(profile)
+            data = serializer.data
+
+            # Add following status for authenticated users
+            if request.user.is_authenticated:
+                data['is_following'] = request.user.profile.following.filter(id=profile.id).exists()
+            else:
+                data['is_following'] = False
+
+            return Response(data)
+        except Profile.DoesNotExist:
+            return Response(
+                {"detail": "User not found"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        except Exception as e:
+            return Response(
+                {"detail": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
     def perform_create(self, serializer):
-        """Create a new profile linked to the authenticated user"""
+        serializer.save(user=self.request.user)
+
+    def perform_update(self, serializer):
         serializer.save(user=self.request.user)
 
     @action(detail=False, methods=['get'])
@@ -126,17 +143,25 @@ class ProfileViewSet(viewsets.ModelViewSet):
         profile_to_follow = self.get_object()
         user_profile = request.user.profile
         
+        # Check if user is trying to follow themselves
         if profile_to_follow == user_profile:
             return Response(
                 {'error': 'You cannot follow yourself'}, 
                 status=status.HTTP_400_BAD_REQUEST
             )
             
+        # Check if already following
+        if user_profile.following.filter(id=profile_to_follow.id).exists():
+            return Response(
+                {'detail': 'Already following this user'},
+                status=status.HTTP_200_OK
+            )
+            
         user_profile.following.add(profile_to_follow)
         return Response({
             'status': 'following',
             'followers_count': profile_to_follow.followers.count()
-        }, status=status.HTTP_200_OK)
+        }, status=status.HTTP_201_CREATED)
 
     @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
     def unfollow(self, request, pk=None):
@@ -144,17 +169,22 @@ class ProfileViewSet(viewsets.ModelViewSet):
         profile_to_unfollow = self.get_object()
         user_profile = request.user.profile
         
+        # Check if user is trying to unfollow themselves
         if profile_to_unfollow == user_profile:
             return Response(
                 {'error': 'You cannot unfollow yourself'},
                 status=status.HTTP_400_BAD_REQUEST
             )
             
+        # Check if not following
+        if not user_profile.following.filter(id=profile_to_unfollow.id).exists():
+            return Response(
+                {'detail': 'Not following this user'},
+                status=status.HTTP_200_OK
+            )
+            
         user_profile.following.remove(profile_to_unfollow)
-        return Response({
-            'status': 'unfollowed',
-            'followers_count': profile_to_unfollow.followers.count()
-        }, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(detail=True, methods=['get'])
     def following_status(self, request, pk=None):
@@ -456,3 +486,19 @@ class ProfileViewSet(viewsets.ModelViewSet):
             'status': 'Support request submitted successfully',
             'ticket_id': '12345'  # Generate actual ticket ID in production
         })
+
+    @action(detail=True, methods=['get'])
+    def followers(self, request, pk=None):
+        """Get list of followers for a profile"""
+        profile = self.get_object()
+        followers = profile.followers.all()
+        serializer = ProfileSerializer(followers, many=True)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['get'])
+    def following(self, request, pk=None):
+        """Get list of users being followed by a profile"""
+        profile = self.get_object()
+        following = profile.following.all()
+        serializer = ProfileSerializer(following, many=True)
+        return Response(serializer.data)

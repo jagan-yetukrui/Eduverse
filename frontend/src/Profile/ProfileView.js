@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { useNavigate, useParams, Link } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import {
   FaCog,
@@ -18,6 +18,8 @@ import NewPost from '../Posts/NewPost';
 import "./ProfileView.css";
 import { useUser } from '../Accounts/UserContext';
 import { useProfile } from './ProfileContext';
+import FollowersList from './FollowersList';
+import { toast } from 'react-toastify';
 
 import placeholder from "../images/placeholder.png";
 
@@ -142,13 +144,15 @@ const ProfileView = () => {
     projects: 0,
   });
   const [copied, setCopied] = useState(false);
+  const [activeTab, setActiveTab] = useState('posts');
+  const [followLoading, setFollowLoading] = useState(false);
 
   const navigate = useNavigate();
-  const { userId } = useParams();
+  const { username } = useParams();
 
   const handleCopyUsername = useCallback(() => {
     try {
-      const profileLink = `https://eduverse.in/user/${user.username}`;
+      const profileLink = `https://edu-verse.in/user/${user.username}`;
       navigator.clipboard.writeText(profileLink);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
@@ -157,22 +161,16 @@ const ProfileView = () => {
     }
   }, [user.username]);
 
-  const handleEditProfile = useCallback(() => {
-    navigate('/profile/edit');
-  }, [navigate]);
-
   const handlePostCreated = useCallback(() => {
     setShowNewPostModal(false);
     // Refresh posts or handle post creation success
   }, []);
 
-  useEffect(() => {
-    const controller = new AbortController();
-    const fetchUserData = async () => {
+  const fetchProfile = useCallback(async () => {
       try {
-        const token = localStorage.getItem("access_token");
+      const token = localStorage.getItem('access_token');
         if (!token) {
-          setError("No access token found. Please log in.");
+        setError('No access token found. Please log in.');
           setLoading(false);
           return;
         }
@@ -180,13 +178,12 @@ const ProfileView = () => {
         const response = await axios.get(
           `https://edu-verse.in/api/profiles/me/`,
           {
-            headers: { Authorization: `Bearer ${token}` },
-            signal: controller.signal,
+          headers: { Authorization: `Bearer ${token}` }
           }
         );
 
         if (!response.data) {
-          throw new Error("No data received from server");
+        throw new Error('No data received from server');
         }
 
         setUser(response.data);
@@ -197,22 +194,78 @@ const ProfileView = () => {
         });
         setLoading(false);
       } catch (err) {
-        if (axios.isCancel(err)) {
-          console.log("Fetch cancelled");
-        } else if (err.response?.status === 401) {
-          setError("Unauthorized. Please log in again.");
-          localStorage.removeItem("access_token");
-          navigate("/login");
+      if (err.response?.status === 401) {
+        setError('Unauthorized. Please log in again.');
+        localStorage.removeItem('access_token');
+        navigate('/login');
         } else {
-          setError(err.response?.data?.message || "Failed to fetch user data");
+        const errorMessage = err.response?.data?.message || 'Failed to fetch profile';
+        setError(errorMessage);
+        toast.error(errorMessage);
         }
         setLoading(false);
       }
-    };
-
-    fetchUserData();
-    return () => controller.abort();
   }, [setUser, navigate]);
+
+  useEffect(() => {
+    fetchProfile();
+  }, [fetchProfile]);
+
+  const handleFollowToggle = async () => {
+    if (followLoading) return; // Prevent multiple clicks
+    
+    try {
+      setFollowLoading(true);
+      const token = localStorage.getItem('access_token');
+      const endpoint = profile.is_following ? 'unfollow' : 'follow';
+      
+      const response = await axios.post(
+        `https://edu-verse.in/api/profiles/${profile.id}/${endpoint}/`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      );
+
+      // Update profile state
+      setUser(prev => ({
+        ...prev,
+        is_following: !prev.is_following,
+        followers_count: prev.followers_count + (prev.is_following ? -1 : 1)
+      }));
+
+      // Update stats
+      setStats(prev => ({
+        ...prev,
+        followers: prev.followers + (profile.is_following ? -1 : 1)
+      }));
+
+      // Show success message
+      if (response.status === 201) {
+        toast.success('Successfully followed user');
+      } else if (response.status === 204) {
+        toast.success('Successfully unfollowed user');
+      }
+    } catch (err) {
+      const errorMessage = err.response?.data?.message || 
+        `Failed to ${profile.is_following ? 'unfollow' : 'follow'} user`;
+      toast.error(errorMessage);
+      
+      // Revert optimistic update on error
+      setUser(prev => ({
+        ...prev,
+        is_following: !prev.is_following,
+        followers_count: prev.followers_count + (prev.is_following ? 1 : -1)
+      }));
+      
+      setStats(prev => ({
+        ...prev,
+        followers: prev.followers + (profile.is_following ? 1 : -1)
+      }));
+    } finally {
+      setFollowLoading(false);
+    }
+  };
 
   if (loading) return <LoadingSpinner />;
   if (error) return <ErrorMessage message={error} />;
@@ -248,11 +301,19 @@ const ProfileView = () => {
               </p>
               
               <div className="profile-stats">
-                <div className="stat-item">
+                <div 
+                  className="stat-item"
+                  onClick={() => setActiveTab('followers')}
+                  style={{ cursor: 'pointer' }}
+                >
                   <span className="stat-value">{stats.followers}</span>
                   <span className="stat-label">Followers</span>
                 </div>
-                <div className="stat-item">
+                <div 
+                  className="stat-item"
+                  onClick={() => setActiveTab('following')}
+                  style={{ cursor: 'pointer' }}
+                >
                   <span className="stat-value">{stats.following}</span>
                   <span className="stat-label">Following</span>
                 </div>
@@ -263,24 +324,18 @@ const ProfileView = () => {
               </div>
 
               <div className="profile-actions">
-                <motion.button 
+                <button
                   className="action-btn edit-btn" 
-                  onClick={handleEditProfile}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+                  onClick={() => navigate('/profile/edit')}
                 >
-                  <FaEdit />
-                  <span>Edit Profile</span>
-                </motion.button>
-                <motion.button 
+                  Edit Profile
+                </button>
+                <button
                   className="action-btn settings-btn" 
                   onClick={() => navigate('/settings')}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
                 >
-                  <FaCog />
-                  <span>Settings</span>
-                </motion.button>
+                  Settings
+                </button>
               </div>
 
               <p className="profile-bio">{user.bio || "No bio provided"}</p>
@@ -308,8 +363,32 @@ const ProfileView = () => {
           </div>
         </div>
 
-        {/* Right Content Area */}
-        <div className="profile-content-area">
+        {/* Main Content */}
+        <div className="profile-main-content">
+          <div className="profile-tabs">
+            <button 
+              className={`tab-button ${activeTab === 'posts' ? 'active' : ''}`}
+              onClick={() => setActiveTab('posts')}
+            >
+              Posts
+            </button>
+            <button 
+              className={`tab-button ${activeTab === 'followers' ? 'active' : ''}`}
+              onClick={() => setActiveTab('followers')}
+            >
+              Followers
+            </button>
+            <button 
+              className={`tab-button ${activeTab === 'following' ? 'active' : ''}`}
+              onClick={() => setActiveTab('following')}
+            >
+              Following
+            </button>
+          </div>
+
+          <div className="tab-content">
+            {activeTab === 'posts' && (
+              <div className="posts-section">
           {/* Posts Section */}
           <section className="section">
             <div className="section-header">
@@ -399,6 +478,15 @@ const ProfileView = () => {
               </div>
             )}
           </section>
+              </div>
+            )}
+            {activeTab === 'followers' && (
+              <FollowersList type="followers" username={user.username} />
+            )}
+            {activeTab === 'following' && (
+              <FollowersList type="following" username={user.username} />
+            )}
+          </div>
         </div>
       </div>
 

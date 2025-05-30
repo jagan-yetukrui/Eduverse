@@ -4,10 +4,12 @@ from rest_framework.routers import DefaultRouter
 from .views import ProfileViewSet
 
 router = DefaultRouter()
-router.register(r'', ProfileViewSet, basename='profile')
+router.register(r'profiles', ProfileViewSet, basename='profile')
 
 # Custom profile URLs
 urlpatterns = [
+    # User profile by username
+    path('users/<str:username>/', ProfileViewSet.as_view({'get': 'get_user_by_username'}), name='user-profile'),
     
     # Profile detail and edit
     path('me/', ProfileViewSet.as_view({'get': 'me', 'put': 'me', 'patch': 'me'}), name='profile-me'),

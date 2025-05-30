@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useUser } from '../Accounts/UserContext';
 import "./Navbar.css";
 import FirstLogo from "../First_logo.png";
 import { AiOutlineUser } from "react-icons/ai";
@@ -19,6 +20,7 @@ const NavbarButton = ({ path, label, icon, onClick, isActive }) => (
 const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { user: currentUser } = useUser();
   const [isExpanded, setIsExpanded] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -40,6 +42,14 @@ const Navbar = () => {
     localStorage.removeItem("access_token");
     setIsAuthenticated(false);
     navigate("/login");
+  };
+
+  const handleProfileNavigation = () => {
+    if (currentUser?.username) {
+      navigate('/profile');
+    } else {
+      navigate('/login');
+    }
   };
 
   useEffect(() => {
@@ -93,8 +103,8 @@ const Navbar = () => {
             path="/profile"
             label="PROFILE"
             icon={<AiOutlineUser />}
-            onClick={() => handleNavigation("/profile")}
-            isActive={isActive("/profile", location.pathname)}
+            onClick={handleProfileNavigation}
+            isActive={isActive("/profile", location.pathname) || location.pathname.startsWith('/profile/')}
           />
           <button
             onClick={handleLogout}

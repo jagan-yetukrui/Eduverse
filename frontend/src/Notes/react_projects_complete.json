@@ -9,264 +9,248 @@
               {
                 "task_id": "RP1_T1",
                 "task_name": "Set Up the React App",
-                "description": "Set Up the React App in the Click Counter App project.",
+                "description": "Initialize the project and create a welcoming interface.",
                 "steps": [
                   {
                     "step_id": "RP1_T1_S1",
                     "step_name": "Install Node.js and npm",
-                    "description": "This step covers how to install node.js and npm.",
+                    "description": "Start by installing Node.js and npm on your system.",
                     "guidelines": [
-                      "Understand the goal of this step.",
-                      "Write the code incrementally.",
-                      "Test the behavior before moving to the next."
+                      "Download Node.js from the official website (nodejs.org).",
+                      "Install Node.js which includes npm (Node Package Manager).",
+                      "Verify installation by running 'node --version' and 'npm --version' in terminal."
                     ],
                     "why": [
-                      "This step is important for achieving the 'Install Node.js and npm' functionality."
+                      "Node.js and npm are required to create and run React applications."
                     ],
-                    "starting_code": "// Starting point for: Install Node.js and npm",
-                    "final_code": "// Completed implementation for: Install Node.js and npm"
+                    "Output": []
                   },
                   {
                     "step_id": "RP1_T1_S2",
                     "step_name": "Use Create React App to scaffold project",
-                    "description": "This step covers how to use create react app to scaffold project.",
+                    "description": "Create a new React application using Create React App.",
                     "guidelines": [
-                      "Understand the goal of this step.",
-                      "Write the code incrementally.",
-                      "Test the behavior before moving to the next."
+                      "Open terminal and run 'npx create-react-app click-counter-app'.",
+                      "Wait for the installation to complete.",
+                      "This creates a new folder with all necessary React files and dependencies."
                     ],
                     "why": [
-                      "This step is important for achieving the 'Use Create React App to scaffold project' functionality."
+                      "Create React App provides a pre-configured development environment for React."
                     ],
-                    "starting_code": "// Starting point for: Use Create React App to scaffold project",
-                    "final_code": "// Completed implementation for: Use Create React App to scaffold project"
+                    "Output": []
                   },
                   {
                     "step_id": "RP1_T1_S3",
                     "step_name": "Navigate into project folder and run npm start",
-                    "description": "This step covers how to navigate into project folder and run npm start.",
+                    "description": "Navigate to the project directory and start the development server.",
                     "guidelines": [
-                      "Understand the goal of this step.",
-                      "Write the code incrementally.",
-                      "Test the behavior before moving to the next."
+                      "Change directory to your project: 'cd click-counter-app'.",
+                      "Start the development server: 'npm start'.",
+                      "Your browser should automatically open to http://localhost:3000."
                     ],
                     "why": [
-                      "This step is important for achieving the 'Navigate into project folder and run npm start' functionality."
+                      "This starts the development server and opens your React app in the browser."
                     ],
-                    "starting_code": "// Starting point for: Navigate into project folder and run npm start",
-                    "final_code": "// Completed implementation for: Navigate into project folder and run npm start"
+                    "Output": []
                   }
                 ]
               },
               {
                 "task_id": "RP1_T2",
                 "task_name": "Create the Counter Component",
-                "description": "Create the Counter Component in the Click Counter App project.",
+                "description": "Build the main counter component with state management.",
                 "steps": [
                   {
                     "step_id": "RP1_T2_S1",
                     "step_name": "Create a new file named Counter.js",
-                    "description": "This step covers how to create a new file named counter.js.",
+                    "description": "Create a new component file for the counter functionality.",
                     "guidelines": [
-                      "Understand the goal of this step.",
-                      "Write the code incrementally.",
-                      "Test the behavior before moving to the next."
+                      "In the src folder, create a new file called Counter.js.",
+                      "This file will contain the counter component logic.",
+                      "Use proper naming convention with capital first letter."
                     ],
                     "why": [
-                      "This step is important for achieving the 'Create a new file named Counter.js' functionality."
+                      "Separating components into different files keeps code organized and reusable."
                     ],
-                    "starting_code": "// Starting point for: Create a new file named Counter.js",
-                    "final_code": "// Completed implementation for: Create a new file named Counter.js"
+                    "Output": []
                   },
                   {
                     "step_id": "RP1_T2_S2",
                     "step_name": "Define a functional component called Counter",
-                    "description": "This step covers how to define a functional component called counter.",
+                    "description": "Create a functional React component using modern syntax.",
                     "guidelines": [
-                      "Understand the goal of this step.",
-                      "Write the code incrementally.",
-                      "Test the behavior before moving to the next."
+                      "Import React at the top of the file.",
+                      "Create a functional component using arrow function or function declaration.",
+                      "Export the component as default for easy importing."
                     ],
                     "why": [
-                      "This step is important for achieving the 'Define a functional component called Counter' functionality."
+                      "Functional components are the modern way to create React components."
                     ],
-                    "starting_code": "// Starting point for: Define a functional component called Counter",
-                    "final_code": "// Completed implementation for: Define a functional component called Counter"
+                    "Output": []
                   },
                   {
                     "step_id": "RP1_T2_S3",
                     "step_name": "Import useState and initialize a count variable",
-                    "description": "This step covers how to import usestate and initialize a count variable.",
+                    "description": "Add state management to track the counter value.",
                     "guidelines": [
-                      "Understand the goal of this step.",
-                      "Write the code incrementally.",
-                      "Test the behavior before moving to the next."
+                      "Import useState hook from React.",
+                      "Initialize state with useState(0) to start counter at zero.",
+                      "Destructure the returned array to get count value and setCount function."
                     ],
                     "why": [
-                      "This step is important for achieving the 'Import useState and initialize a count variable' functionality."
+                      "useState hook allows functional components to have state management."
                     ],
-                    "starting_code": "// Starting point for: Import useState and initialize a count variable",
-                    "final_code": "// Completed implementation for: Import useState and initialize a count variable"
+                    "Output": []
                   }
                 ]
               },
               {
                 "task_id": "RP1_T3",
                 "task_name": "Display the Counter and Button",
-                "description": "Display the Counter and Button in the Click Counter App project.",
+                "description": "Create the user interface for the counter application.",
                 "steps": [
                   {
                     "step_id": "RP1_T3_S1",
                     "step_name": "Return JSX with a <p> showing the count",
-                    "description": "This step covers how to return jsx with a <p> showing the count.",
+                    "description": "Display the current count value in the component.",
                     "guidelines": [
-                      "Understand the goal of this step.",
-                      "Write the code incrementally.",
-                      "Test the behavior before moving to the next."
+                      "Return JSX from the component function.",
+                      "Use a paragraph tag to display the count value.",
+                      "Use curly braces to embed the count variable in JSX."
                     ],
                     "why": [
-                      "This step is important for achieving the 'Return JSX with a <p> showing the count' functionality."
+                      "JSX allows you to write HTML-like syntax in JavaScript to create UI elements."
                     ],
-                    "starting_code": "// Starting point for: Return JSX with a <p> showing the count",
-                    "final_code": "// Completed implementation for: Return JSX with a <p> showing the count"
+                    "Output": []
                   },
                   {
                     "step_id": "RP1_T3_S2",
                     "step_name": "Add a <button> labeled 'Click Me'",
-                    "description": "This step covers how to add a <button> labeled 'click me'.",
+                    "description": "Create a button that users can click to increment the counter.",
                     "guidelines": [
-                      "Understand the goal of this step.",
-                      "Write the code incrementally.",
-                      "Test the behavior before moving to the next."
+                      "Add a button element below the paragraph.",
+                      "Set the button text to 'Click Me' or similar.",
+                      "Ensure the button is properly nested within the JSX return."
                     ],
                     "why": [
-                      "This step is important for achieving the 'Add a <button> labeled 'Click Me'' functionality."
+                      "The button provides user interaction to trigger the counter increment."
                     ],
-                    "starting_code": "// Starting point for: Add a <button> labeled 'Click Me'",
-                    "final_code": "// Completed implementation for: Add a <button> labeled 'Click Me'"
+                    "Output": []
                   },
                   {
                     "step_id": "RP1_T3_S3",
                     "step_name": "Handle onClick event to increment count",
-                    "description": "This step covers how to handle onclick event to increment count.",
+                    "description": "Add functionality to increment the counter when button is clicked.",
                     "guidelines": [
-                      "Understand the goal of this step.",
-                      "Write the code incrementally.",
-                      "Test the behavior before moving to the next."
+                      "Add an onClick event handler to the button.",
+                      "Create a function that calls setCount with count + 1.",
+                      "You can use an inline arrow function or separate function."
                     ],
                     "why": [
-                      "This step is important for achieving the 'Handle onClick event to increment count' functionality."
+                      "Event handlers allow components to respond to user interactions."
                     ],
-                    "starting_code": "// Starting point for: Handle onClick event to increment count",
-                    "final_code": "// Completed implementation for: Handle onClick event to increment count"
+                    "Output": []
                   },
                   {
                     "step_id": "RP1_T3_S4",
                     "step_name": "Test the button to ensure count updates",
-                    "description": "This step covers how to test the button to ensure count updates.",
+                    "description": "Verify that the counter works correctly in the browser.",
                     "guidelines": [
-                      "Understand the goal of this step.",
-                      "Write the code incrementally.",
-                      "Test the behavior before moving to the next."
+                      "Save your Counter.js file.",
+                      "Import and use the Counter component in App.js.",
+                      "Test clicking the button to see if the count increases."
                     ],
                     "why": [
-                      "This step is important for achieving the 'Test the button to ensure count updates' functionality."
+                      "Testing ensures your component works as expected before moving forward."
                     ],
-                    "starting_code": "// Starting point for: Test the button to ensure count updates",
-                    "final_code": "// Completed implementation for: Test the button to ensure count updates"
+                    "Output": []
                   }
                 ]
               },
               {
                 "task_id": "RP1_T4",
                 "task_name": "Import and Use the Component",
-                "description": "Import and Use the Component in the Click Counter App project.",
+                "description": "Integrate the counter component into the main application.",
                 "steps": [
                   {
                     "step_id": "RP1_T4_S1",
                     "step_name": "Import Counter component in App.js",
-                    "description": "This step covers how to import counter component in app.js.",
+                    "description": "Add the Counter component to the main App component.",
                     "guidelines": [
-                      "Understand the goal of this step.",
-                      "Write the code incrementally.",
-                      "Test the behavior before moving to the next."
+                      "Open App.js file in the src folder.",
+                      "Add import statement for Counter component at the top.",
+                      "Use relative path: import Counter from './Counter'."
                     ],
                     "why": [
-                      "This step is important for achieving the 'Import Counter component in App.js' functionality."
+                      "Importing allows you to use custom components in other parts of your application."
                     ],
-                    "starting_code": "// Starting point for: Import Counter component in App.js",
-                    "final_code": "// Completed implementation for: Import Counter component in App.js"
+                    "Output": []
                   },
                   {
                     "step_id": "RP1_T4_S2",
                     "step_name": "Render <Counter /> inside App",
-                    "description": "This step covers how to render <counter /> inside app.",
+                    "description": "Display the Counter component in the main App component.",
                     "guidelines": [
-                      "Understand the goal of this step.",
-                      "Write the code incrementally.",
-                      "Test the behavior before moving to the next."
+                      "Replace or add the Counter component in App's return statement.",
+                      "Use self-closing tag syntax: <Counter />.",
+                      "Remove any default content you don't need."
                     ],
                     "why": [
-                      "This step is important for achieving the 'Render <Counter /> inside App' functionality."
+                      "This makes the Counter component visible in your application."
                     ],
-                    "starting_code": "// Starting point for: Render <Counter /> inside App",
-                    "final_code": "// Completed implementation for: Render <Counter /> inside App"
+                    "Output": []
                   }
                 ]
               },
               {
                 "task_id": "RP1_T5",
                 "task_name": "Add Styling (Optional)",
-                "description": "Add Styling (Optional) in the Click Counter App project.",
+                "description": "Enhance the visual appearance of the counter application.",
                 "steps": [
                   {
                     "step_id": "RP1_T5_S1",
                     "step_name": "Add a CSS file or inline styles",
-                    "description": "This step covers how to add a css file or inline styles.",
+                    "description": "Create styling for the counter component.",
                     "guidelines": [
-                      "Understand the goal of this step.",
-                      "Write the code incrementally.",
-                      "Test the behavior before moving to the next."
+                      "Create a Counter.css file or use inline styles.",
+                      "Add styles for the container, text, and button.",
+                      "Import CSS file in Counter.js if using external stylesheet."
                     ],
                     "why": [
-                      "This step is important for achieving the 'Add a CSS file or inline styles' functionality."
+                      "Styling improves the user experience and visual appeal of your application."
                     ],
-                    "starting_code": "// Starting point for: Add a CSS file or inline styles",
-                    "final_code": "// Completed implementation for: Add a CSS file or inline styles"
+                    "Output": []
                   },
                   {
                     "step_id": "RP1_T5_S2",
                     "step_name": "Center the button and text",
-                    "description": "This step covers how to center the button and text.",
+                    "description": "Align the counter elements in the center of the page.",
                     "guidelines": [
-                      "Understand the goal of this step.",
-                      "Write the code incrementally.",
-                      "Test the behavior before moving to the next."
+                      "Use CSS flexbox or text-align to center elements.",
+                      "Apply styles to a container div wrapping your elements.",
+                      "Set appropriate margins and padding for spacing."
                     ],
                     "why": [
-                      "This step is important for achieving the 'Center the button and text' functionality."
+                      "Centered layout creates a more professional and polished appearance."
                     ],
-                    "starting_code": "// Starting point for: Center the button and text",
-                    "final_code": "// Completed implementation for: Center the button and text"
+                    "Output": []
                   },
                   {
                     "step_id": "RP1_T5_S3",
                     "step_name": "Add basic button hover effect",
-                    "description": "This step covers how to add basic button hover effect.",
+                    "description": "Create interactive styling for the button.",
                     "guidelines": [
-                      "Understand the goal of this step.",
-                      "Write the code incrementally.",
-                      "Test the behavior before moving to the next."
+                      "Add :hover pseudo-class to button styles.",
+                      "Change background color, border, or add shadow on hover.",
+                      "Use CSS transitions for smooth hover effects."
                     ],
                     "why": [
-                      "This step is important for achieving the 'Add basic button hover effect' functionality."
+                      "Hover effects provide visual feedback and improve user interaction."
                     ],
-                    "starting_code": "// Starting point for: Add basic button hover effect",
-                    "final_code": "// Completed implementation for: Add basic button hover effect"
-                  
-                        }
-                    ]
-                }
+                    "Output": []
+                  }
+                ]
+              }
             ]
         },
         {
@@ -278,361 +262,339 @@
               {
                 "task_id": "RP2_T1",
                 "task_name": "Set Up the React App",
-                "description": "Set Up the React App in the Task Manager App project.",
+                "description": "Initialize the project and prepare the development environment.",
                 "steps": [
                   {
                     "step_id": "RP2_T1_S1",
                     "step_name": "Install Node.js and create app using CRA",
-                    "description": "This step helps you to install node.js and create app using cra.",
+                    "description": "Set up the development environment and create a new React application.",
                     "guidelines": [
-                      "Use clear variable names.",
-                      "Test each UI element before connecting logic.",
-                      "Use minimal but meaningful CSS for layout and feedback."
+                      "Ensure Node.js is installed on your system.",
+                      "Run 'npx create-react-app task-manager-app' in terminal.",
+                      "Wait for the installation process to complete."
                     ],
                     "why": [
-                      "This is necessary for implementing 'Install Node.js and create app using CRA' effectively."
+                      "This creates the foundation for your React task manager application."
                     ],
-                    "starting_code": "// Begin coding: Install Node.js and create app using CRA",
-                    "final_code": "// Final implementation: Install Node.js and create app using CRA"
+                    "Output": []
                   },
                   {
                     "step_id": "RP2_T1_S2",
                     "step_name": "Start development server and clean starter files",
-                    "description": "This step helps you to start development server and clean starter files.",
+                    "description": "Launch the development server and remove unnecessary default files.",
                     "guidelines": [
-                      "Use clear variable names.",
-                      "Test each UI element before connecting logic.",
-                      "Use minimal but meaningful CSS for layout and feedback."
+                      "Navigate to project directory and run 'npm start'.",
+                      "Remove unnecessary files like logo.svg and App.test.js.",
+                      "Clean up App.js to have a simple starting structure."
                     ],
                     "why": [
-                      "This is necessary for implementing 'Start development server and clean starter files' effectively."
+                      "This provides a clean slate to build your task manager application."
                     ],
-                    "starting_code": "// Begin coding: Start development server and clean starter files",
-                    "final_code": "// Final implementation: Start development server and clean starter files"
+                    "Output": []
                   }
                 ]
               },
               {
                 "task_id": "RP2_T2",
                 "task_name": "Create Task Component",
-                "description": "Create Task Component in the Task Manager App project.",
+                "description": "Build a reusable component to display individual tasks.",
                 "steps": [
                   {
                     "step_id": "RP2_T2_S1",
                     "step_name": "Create a new file Task.js",
-                    "description": "This step helps you to create a new file task.js.",
+                    "description": "Create a component file for individual task items.",
                     "guidelines": [
-                      "Use clear variable names.",
-                      "Test each UI element before connecting logic.",
-                      "Use minimal but meaningful CSS for layout and feedback."
+                      "Create Task.js in the src folder.",
+                      "Set up the basic functional component structure.",
+                      "Import React at the top of the file."
                     ],
                     "why": [
-                      "This is necessary for implementing 'Create a new file Task.js' effectively."
+                      "Separating task logic into its own component promotes reusability and organization."
                     ],
-                    "starting_code": "// Begin coding: Create a new file Task.js",
-                    "final_code": "// Final implementation: Create a new file Task.js"
+                    "Output": []
                   },
                   {
                     "step_id": "RP2_T2_S2",
                     "step_name": "Use props to accept task data",
-                    "description": "This step helps you to use props to accept task data.",
+                    "description": "Configure the component to receive task information via props.",
                     "guidelines": [
-                      "Use clear variable names.",
-                      "Test each UI element before connecting logic.",
-                      "Use minimal but meaningful CSS for layout and feedback."
+                      "Accept props parameter in the Task function.",
+                      "Destructure task properties like id, text, and completed.",
+                      "Display task text and completion status in JSX."
                     ],
                     "why": [
-                      "This is necessary for implementing 'Use props to accept task data' effectively."
+                      "Props allow parent components to pass data to child components."
                     ],
-                    "starting_code": "// Begin coding: Use props to accept task data",
-                    "final_code": "// Final implementation: Use props to accept task data"
+                    "Output": []
                   },
                   {
                     "step_id": "RP2_T2_S3",
                     "step_name": "Style the task item with CSS",
-                    "description": "This step helps you to style the task item with css.",
+                    "description": "Add visual styling to make tasks look appealing.",
                     "guidelines": [
-                      "Use clear variable names.",
-                      "Test each UI element before connecting logic.",
-                      "Use minimal but meaningful CSS for layout and feedback."
+                      "Create Task.css file for component-specific styles.",
+                      "Style the task container, text, and completion indicators.",
+                      "Import the CSS file in Task.js."
                     ],
                     "why": [
-                      "This is necessary for implementing 'Style the task item with CSS' effectively."
+                      "Good styling improves user experience and makes the app more professional."
                     ],
-                    "starting_code": "// Begin coding: Style the task item with CSS",
-                    "final_code": "// Final implementation: Style the task item with CSS"
+                    "Output": []
                   }
                 ]
               },
               {
                 "task_id": "RP2_T3",
                 "task_name": "Build Task List Logic",
-                "description": "Build Task List Logic in the Task Manager App project.",
+                "description": "Implement the core functionality to manage and display multiple tasks.",
                 "steps": [
                   {
                     "step_id": "RP2_T3_S1",
                     "step_name": "Use useState to manage task list",
-                    "description": "This step helps you to use usestate to manage task list.",
+                    "description": "Set up state management for the collection of tasks.",
                     "guidelines": [
-                      "Use clear variable names.",
-                      "Test each UI element before connecting logic.",
-                      "Use minimal but meaningful CSS for layout and feedback."
+                      "Import useState hook in App.js.",
+                      "Initialize state with an empty array or sample tasks.",
+                      "Create state variable and setter function for tasks."
                     ],
                     "why": [
-                      "This is necessary for implementing 'Use useState to manage task list' effectively."
+                      "State management is essential for tracking and updating the task list."
                     ],
-                    "starting_code": "// Begin coding: Use useState to manage task list",
-                    "final_code": "// Final implementation: Use useState to manage task list"
+                    "Output": []
                   },
                   {
                     "step_id": "RP2_T3_S2",
                     "step_name": "Map over tasks and render Task components",
-                    "description": "This step helps you to map over tasks and render task components.",
+                    "description": "Display all tasks by iterating through the task array.",
                     "guidelines": [
-                      "Use clear variable names.",
-                      "Test each UI element before connecting logic.",
-                      "Use minimal but meaningful CSS for layout and feedback."
+                      "Use the map() method to iterate over the tasks array.",
+                      "Return a Task component for each task in the array.",
+                      "Pass task data as props to each Task component."
                     ],
                     "why": [
-                      "This is necessary for implementing 'Map over tasks and render Task components' effectively."
+                      "Mapping allows you to dynamically render components based on data."
                     ],
-                    "starting_code": "// Begin coding: Map over tasks and render Task components",
-                    "final_code": "// Final implementation: Map over tasks and render Task components"
+                    "Output": []
                   },
                   {
                     "step_id": "RP2_T3_S3",
                     "step_name": "Assign unique keys to list items",
-                    "description": "This step helps you to assign unique keys to list items.",
+                    "description": "Add unique identifiers to each rendered task for React optimization.",
                     "guidelines": [
-                      "Use clear variable names.",
-                      "Test each UI element before connecting logic.",
-                      "Use minimal but meaningful CSS for layout and feedback."
+                      "Add a key prop to each Task component in the map function.",
+                      "Use task.id or array index as the key value.",
+                      "Ensure each key is unique within the list."
                     ],
                     "why": [
-                      "This is necessary for implementing 'Assign unique keys to list items' effectively."
+                      "Keys help React efficiently update the DOM when the list changes."
                     ],
-                    "starting_code": "// Begin coding: Assign unique keys to list items",
-                    "final_code": "// Final implementation: Assign unique keys to list items"
+                    "Output": []
                   },
                   {
                     "step_id": "RP2_T3_S4",
                     "step_name": "Test rendering with static data",
-                    "description": "This step helps you to test rendering with static data.",
+                    "description": "Verify that tasks display correctly with sample data.",
                     "guidelines": [
-                      "Use clear variable names.",
-                      "Test each UI element before connecting logic.",
-                      "Use minimal but meaningful CSS for layout and feedback."
+                      "Create an array of sample task objects with id, text, and completed properties.",
+                      "Set this array as the initial state value.",
+                      "Check that all tasks render properly in the browser."
                     ],
                     "why": [
-                      "This is necessary for implementing 'Test rendering with static data' effectively."
+                      "Testing with static data ensures your rendering logic works before adding dynamic features."
                     ],
-                    "starting_code": "// Begin coding: Test rendering with static data",
-                    "final_code": "// Final implementation: Test rendering with static data"
+                    "Output": []
                   }
                 ]
               },
               {
                 "task_id": "RP2_T4",
                 "task_name": "Implement Add Task Feature",
-                "description": "Implement Add Task Feature in the Task Manager App project.",
+                "description": "Create functionality to add new tasks to the list.",
                 "steps": [
                   {
                     "step_id": "RP2_T4_S1",
                     "step_name": "Add input field and button",
-                    "description": "This step helps you to add input field and button.",
+                    "description": "Create UI elements for task input.",
                     "guidelines": [
-                      "Use clear variable names.",
-                      "Test each UI element before connecting logic.",
-                      "Use minimal but meaningful CSS for layout and feedback."
+                      "Add an input field for typing new task text.",
+                      "Add a button to submit the new task.",
+                      "Place these elements above the task list."
                     ],
                     "why": [
-                      "This is necessary for implementing 'Add input field and button' effectively."
+                      "Input elements provide the interface for users to add new tasks."
                     ],
-                    "starting_code": "// Begin coding: Add input field and button",
-                    "final_code": "// Final implementation: Add input field and button"
+                    "Output": []
                   },
                   {
                     "step_id": "RP2_T4_S2",
                     "step_name": "Track input with useState",
-                    "description": "This step helps you to track input with usestate.",
+                    "description": "Manage the input field value with React state.",
                     "guidelines": [
-                      "Use clear variable names.",
-                      "Test each UI element before connecting logic.",
-                      "Use minimal but meaningful CSS for layout and feedback."
+                      "Create state for the input value using useState.",
+                      "Add onChange handler to update state when user types.",
+                      "Set the input's value prop to the state variable."
                     ],
                     "why": [
-                      "This is necessary for implementing 'Track input with useState' effectively."
+                      "Controlled inputs ensure React manages the input value and enables form handling."
                     ],
-                    "starting_code": "// Begin coding: Track input with useState",
-                    "final_code": "// Final implementation: Track input with useState"
+                    "Output": []
                   },
                   {
                     "step_id": "RP2_T4_S3",
                     "step_name": "Update task list on form submit",
-                    "description": "This step helps you to update task list on form submit.",
+                    "description": "Add new tasks to the task array when form is submitted.",
                     "guidelines": [
-                      "Use clear variable names.",
-                      "Test each UI element before connecting logic.",
-                      "Use minimal but meaningful CSS for layout and feedback."
+                      "Create a function to handle form submission.",
+                      "Generate a new task object with unique id, input text, and completed: false.",
+                      "Use the spread operator to add the new task to the existing array."
                     ],
                     "why": [
-                      "This is necessary for implementing 'Update task list on form submit' effectively."
+                      "This functionality allows users to dynamically add tasks to their list."
                     ],
-                    "starting_code": "// Begin coding: Update task list on form submit",
-                    "final_code": "// Final implementation: Update task list on form submit"
+                    "Output": []
                   },
                   {
                     "step_id": "RP2_T4_S4",
                     "step_name": "Reset input after adding",
-                    "description": "This step helps you to reset input after adding.",
+                    "description": "Clear the input field after successfully adding a task.",
                     "guidelines": [
-                      "Use clear variable names.",
-                      "Test each UI element before connecting logic.",
-                      "Use minimal but meaningful CSS for layout and feedback."
+                      "Set the input state back to empty string after adding task.",
+                      "Prevent form submission if input is empty.",
+                      "Consider adding form validation for better user experience."
                     ],
                     "why": [
-                      "This is necessary for implementing 'Reset input after adding' effectively."
+                      "Resetting the input provides clear feedback and prepares for the next task entry."
                     ],
-                    "starting_code": "// Begin coding: Reset input after adding",
-                    "final_code": "// Final implementation: Reset input after adding"
+                    "Output": []
                   }
                 ]
               },
               {
                 "task_id": "RP2_T5",
                 "task_name": "Enable Delete and Complete",
-                "description": "Enable Delete and Complete in the Task Manager App project.",
+                "description": "Add functionality to remove tasks and mark them as completed.",
                 "steps": [
                   {
                     "step_id": "RP2_T5_S1",
                     "step_name": "Add delete button in Task",
-                    "description": "This step helps you to add delete button in task.",
+                    "description": "Include a delete button in each task component.",
                     "guidelines": [
-                      "Use clear variable names.",
-                      "Test each UI element before connecting logic.",
-                      "Use minimal but meaningful CSS for layout and feedback."
+                      "Add a delete button to the Task component JSX.",
+                      "Style the button to be clearly identifiable as a delete action.",
+                      "Accept an onDelete function as a prop from the parent component."
                     ],
                     "why": [
-                      "This is necessary for implementing 'Add delete button in Task' effectively."
+                      "Delete buttons allow users to remove tasks they no longer need."
                     ],
-                    "starting_code": "// Begin coding: Add delete button in Task",
-                    "final_code": "// Final implementation: Add delete button in Task"
+                    "Output": []
                   },
                   {
                     "step_id": "RP2_T5_S2",
                     "step_name": "Use onClick to filter out task",
-                    "description": "This step helps you to use onclick to filter out task.",
+                    "description": "Implement the delete functionality by removing tasks from the array.",
                     "guidelines": [
-                      "Use clear variable names.",
-                      "Test each UI element before connecting logic.",
-                      "Use minimal but meaningful CSS for layout and feedback."
+                      "Create a delete function in the parent component.",
+                      "Use filter() method to remove the task with matching id.",
+                      "Pass this function to Task components as a prop."
                     ],
                     "why": [
-                      "This is necessary for implementing 'Use onClick to filter out task' effectively."
+                      "Filtering creates a new array without the deleted task, updating the UI."
                     ],
-                    "starting_code": "// Begin coding: Use onClick to filter out task",
-                    "final_code": "// Final implementation: Use onClick to filter out task"
+                    "Output": []
                   },
                   {
                     "step_id": "RP2_T5_S3",
                     "step_name": "Add checkbox or toggle for completion",
-                    "description": "This step helps you to add checkbox or toggle for completion.",
+                    "description": "Create UI element to mark tasks as completed.",
                     "guidelines": [
-                      "Use clear variable names.",
-                      "Test each UI element before connecting logic.",
-                      "Use minimal but meaningful CSS for layout and feedback."
+                      "Add a checkbox input to each Task component.",
+                      "Set the checked property based on task.completed.",
+                      "Create an onChange handler to toggle completion status."
                     ],
                     "why": [
-                      "This is necessary for implementing 'Add checkbox or toggle for completion' effectively."
+                      "Completion toggles allow users to track their progress on tasks."
                     ],
-                    "starting_code": "// Begin coding: Add checkbox or toggle for completion",
-                    "final_code": "// Final implementation: Add checkbox or toggle for completion"
+                    "Output": []
                   },
                   {
                     "step_id": "RP2_T5_S4",
                     "step_name": "Style completed tasks with line-through",
-                    "description": "This step helps you to style completed tasks with line-through.",
+                    "description": "Visually distinguish completed tasks from active ones.",
                     "guidelines": [
-                      "Use clear variable names.",
-                      "Test each UI element before connecting logic.",
-                      "Use minimal but meaningful CSS for layout and feedback."
+                      "Add conditional CSS class based on task.completed status.",
+                      "Create CSS rule with text-decoration: line-through for completed tasks.",
+                      "Consider changing text color or opacity for completed tasks."
                     ],
                     "why": [
-                      "This is necessary for implementing 'Style completed tasks with line-through' effectively."
+                      "Visual feedback helps users quickly identify completed vs. pending tasks."
                     ],
-                    "starting_code": "// Begin coding: Style completed tasks with line-through",
-                    "final_code": "// Final implementation: Style completed tasks with line-through"
+                    "Output": []
                   }
                 ]
               },
               {
                 "task_id": "RP2_T6",
                 "task_name": "Filter and Sort Tasks (Optional)",
-                "description": "Filter and Sort Tasks (Optional) in the Task Manager App project.",
+                "description": "Add advanced features to organize and view tasks.",
                 "steps": [
                   {
                     "step_id": "RP2_T6_S1",
                     "step_name": "Add filter for completed vs active",
-                    "description": "This step helps you to add filter for completed vs active.",
+                    "description": "Create options to view different subsets of tasks.",
                     "guidelines": [
-                      "Use clear variable names.",
-                      "Test each UI element before connecting logic.",
-                      "Use minimal but meaningful CSS for layout and feedback."
+                      "Add filter buttons or dropdown for All, Active, and Completed tasks.",
+                      "Create state to track current filter selection.",
+                      "Filter the tasks array before mapping to Task components."
                     ],
                     "why": [
-                      "This is necessary for implementing 'Add filter for completed vs active' effectively."
+                      "Filtering helps users focus on specific types of tasks."
                     ],
-                    "starting_code": "// Begin coding: Add filter for completed vs active",
-                    "final_code": "// Final implementation: Add filter for completed vs active"
+                    "Output": []
                   },
                   {
                     "step_id": "RP2_T6_S2",
                     "step_name": "Add dropdown or toggle for sorting",
-                    "description": "This step helps you to add dropdown or toggle for sorting.",
+                    "description": "Implement sorting options for task organization.",
                     "guidelines": [
-                      "Use clear variable names.",
-                      "Test each UI element before connecting logic.",
-                      "Use minimal but meaningful CSS for layout and feedback."
+                      "Create sorting options like alphabetical, date created, or completion status.",
+                      "Add UI controls for users to select sorting method.",
+                      "Sort the tasks array before rendering."
                     ],
                     "why": [
-                      "This is necessary for implementing 'Add dropdown or toggle for sorting' effectively."
+                      "Sorting helps users organize tasks according to their preferences."
                     ],
-                    "starting_code": "// Begin coding: Add dropdown or toggle for sorting",
-                    "final_code": "// Final implementation: Add dropdown or toggle for sorting"
+                    "Output": []
                   },
                   {
                     "step_id": "RP2_T6_S3",
                     "step_name": "Use useEffect or a derived list",
-                    "description": "This step helps you to use useeffect or a derived list.",
+                    "description": "Optimize filtering and sorting performance.",
                     "guidelines": [
-                      "Use clear variable names.",
-                      "Test each UI element before connecting logic.",
-                      "Use minimal but meaningful CSS for layout and feedback."
+                      "Consider using useMemo for expensive filtering/sorting operations.",
+                      "Use useEffect to update filtered lists when dependencies change.",
+                      "Ensure UI updates smoothly when filters or sorts change."
                     ],
                     "why": [
-                      "This is necessary for implementing 'Use useEffect or a derived list' effectively."
+                      "Performance optimization ensures the app remains responsive with many tasks."
                     ],
-                    "starting_code": "// Begin coding: Use useEffect or a derived list",
-                    "final_code": "// Final implementation: Use useEffect or a derived list"
+                    "Output": []
                   },
                   {
                     "step_id": "RP2_T6_S4",
                     "step_name": "Ensure UI reflects changes live",
-                    "description": "This step helps you to ensure ui reflects changes live.",
+                    "description": "Verify that all filtering and sorting updates happen immediately.",
                     "guidelines": [
-                      "Use clear variable names.",
-                      "Test each UI element before connecting logic.",
-                      "Use minimal but meaningful CSS for layout and feedback."
+                      "Test all filter combinations to ensure they work correctly.",
+                      "Verify that adding, deleting, or completing tasks updates filtered views.",
+                      "Ensure sorting persists when tasks are modified."
                     ],
                     "why": [
-                      "This is necessary for implementing 'Ensure UI reflects changes live' effectively."
+                      "Real-time updates provide immediate feedback and better user experience."
                     ],
-                    "starting_code": "// Begin coding: Ensure UI reflects changes live",
-                    "final_code": "// Final implementation: Ensure UI reflects changes live"
-                  
-                        }
-                    ]
-                }
+                    "Output": []
+                  }
+                ]
+              }
             ]
         },
         {
@@ -644,391 +606,369 @@
               {
                 "task_id": "RP3_T1",
                 "task_name": "Initialize Weather Dashboard App",
-                "description": "Initialize Weather Dashboard App in the Weather Dashboard project.",
+                "description": "Set up the project foundation and required dependencies.",
                 "steps": [
                   {
                     "step_id": "RP3_T1_S1",
                     "step_name": "Create project using Create React App",
-                    "description": "This step explains how to create project using create react app.",
+                    "description": "Initialize a new React application for the weather dashboard.",
                     "guidelines": [
-                      "Follow React best practices for component structure.",
-                      "Use async/await with try/catch for API calls.",
-                      "Keep the UI clean and informative."
+                      "Run 'npx create-react-app weather-dashboard' in your terminal.",
+                      "Navigate to the project directory after creation.",
+                      "Start the development server to verify setup."
                     ],
                     "why": [
-                      "'Create project using Create React App' is essential for a complete weather dashboard experience."
+                      "Create React App provides a solid foundation with all necessary build tools configured."
                     ],
-                    "starting_code": "// Start: Create project using Create React App",
-                    "final_code": "// Completed: Create project using Create React App"
+                    "Output": []
                   },
                   {
                     "step_id": "RP3_T1_S2",
                     "step_name": "Install Axios for API calls",
-                    "description": "This step explains how to install axios for api calls.",
+                    "description": "Add HTTP client library for making API requests.",
                     "guidelines": [
-                      "Follow React best practices for component structure.",
-                      "Use async/await with try/catch for API calls.",
-                      "Keep the UI clean and informative."
+                      "Run 'npm install axios' in the project directory.",
+                      "Verify installation by checking package.json dependencies.",
+                      "Import axios in components where API calls will be made."
                     ],
                     "why": [
-                      "'Install Axios for API calls' is essential for a complete weather dashboard experience."
+                      "Axios simplifies HTTP requests and provides better error handling than fetch."
                     ],
-                    "starting_code": "// Start: Install Axios for API calls",
-                    "final_code": "// Completed: Install Axios for API calls"
+                    "Output": []
                   },
                   {
                     "step_id": "RP3_T1_S3",
                     "step_name": "Add .env file for API key storage",
-                    "description": "This step explains how to add .env file for api key storage.",
+                    "description": "Set up environment variables for secure API key management.",
                     "guidelines": [
-                      "Follow React best practices for component structure.",
-                      "Use async/await with try/catch for API calls.",
-                      "Keep the UI clean and informative."
+                      "Create a .env file in the project root directory.",
+                      "Add your API key with REACT_APP_ prefix for React access.",
+                      "Add .env to .gitignore to keep API keys secure."
                     ],
                     "why": [
-                      "'Add .env file for API key storage' is essential for a complete weather dashboard experience."
+                      "Environment variables keep sensitive information like API keys secure and configurable."
                     ],
-                    "starting_code": "// Start: Add .env file for API key storage",
-                    "final_code": "// Completed: Add .env file for API key storage"
+                    "Output": []
                   }
                 ]
               },
               {
                 "task_id": "RP3_T2",
                 "task_name": "Create Layout Components",
-                "description": "Create Layout Components in the Weather Dashboard project.",
+                "description": "Build the basic UI structure and reusable components.",
                 "steps": [
                   {
                     "step_id": "RP3_T2_S1",
                     "step_name": "Create Header, SearchBar, and WeatherCard components",
-                    "description": "This step explains how to create header, searchbar, and weathercard components.",
+                    "description": "Build the main UI components for the weather dashboard.",
                     "guidelines": [
-                      "Follow React best practices for component structure.",
-                      "Use async/await with try/catch for API calls.",
-                      "Keep the UI clean and informative."
+                      "Create separate files for Header.js, SearchBar.js, and WeatherCard.js.",
+                      "Set up basic functional component structure for each.",
+                      "Plan the props each component will need to receive."
                     ],
                     "why": [
-                      "'Create Header, SearchBar, and WeatherCard components' is essential for a complete weather dashboard experience."
+                      "Modular components make the code more maintainable and reusable."
                     ],
-                    "starting_code": "// Start: Create Header, SearchBar, and WeatherCard components",
-                    "final_code": "// Completed: Create Header, SearchBar, and WeatherCard components"
+                    "Output": []
                   },
                   {
                     "step_id": "RP3_T2_S2",
                     "step_name": "Use props to pass data",
-                    "description": "This step explains how to use props to pass data.",
+                    "description": "Configure components to receive and display data via props.",
                     "guidelines": [
-                      "Follow React best practices for component structure.",
-                      "Use async/await with try/catch for API calls.",
-                      "Keep the UI clean and informative."
+                      "Define prop interfaces for each component.",
+                      "Pass weather data from parent to child components.",
+                      "Handle cases where props might be undefined or null."
                     ],
                     "why": [
-                      "'Use props to pass data' is essential for a complete weather dashboard experience."
+                      "Props enable data flow between components and make them flexible."
                     ],
-                    "starting_code": "// Start: Use props to pass data",
-                    "final_code": "// Completed: Use props to pass data"
+                    "Output": []
                   },
                   {
                     "step_id": "RP3_T2_S3",
                     "step_name": "Style layout with CSS or a library",
-                    "description": "This step explains how to style layout with css or a library.",
+                    "description": "Add visual styling to make the dashboard attractive and functional.",
                     "guidelines": [
-                      "Follow React best practices for component structure.",
-                      "Use async/await with try/catch for API calls.",
-                      "Keep the UI clean and informative."
+                      "Create CSS files for each component or use a CSS framework.",
+                      "Implement responsive design for mobile and desktop.",
+                      "Use consistent color scheme and typography."
                     ],
                     "why": [
-                      "'Style layout with CSS or a library' is essential for a complete weather dashboard experience."
+                      "Good styling improves user experience and makes the app professional."
                     ],
-                    "starting_code": "// Start: Style layout with CSS or a library",
-                    "final_code": "// Completed: Style layout with CSS or a library"
+                    "Output": []
                   }
                 ]
               },
               {
                 "task_id": "RP3_T3",
                 "task_name": "Integrate OpenWeatherMap API",
-                "description": "Integrate OpenWeatherMap API in the Weather Dashboard project.",
+                "description": "Connect to weather API service to fetch real weather data.",
                 "steps": [
                   {
                     "step_id": "RP3_T3_S1",
                     "step_name": "Register and get API key from OpenWeatherMap",
-                    "description": "This step explains how to register and get api key from openweathermap.",
+                    "description": "Set up account and obtain API credentials.",
                     "guidelines": [
-                      "Follow React best practices for component structure.",
-                      "Use async/await with try/catch for API calls.",
-                      "Keep the UI clean and informative."
+                      "Visit openweathermap.org and create a free account.",
+                      "Navigate to API keys section and generate a new key.",
+                      "Store the API key in your .env file securely."
                     ],
                     "why": [
-                      "'Register and get API key from OpenWeatherMap' is essential for a complete weather dashboard experience."
+                      "API key is required to authenticate requests to the weather service."
                     ],
-                    "starting_code": "// Start: Register and get API key from OpenWeatherMap",
-                    "final_code": "// Completed: Register and get API key from OpenWeatherMap"
+                    "Output": []
                   },
                   {
                     "step_id": "RP3_T3_S2",
                     "step_name": "Create Axios GET request for current weather",
-                    "description": "This step explains how to create axios get request for current weather.",
+                    "description": "Implement function to fetch weather data for a specific city.",
                     "guidelines": [
-                      "Follow React best practices for component structure.",
-                      "Use async/await with try/catch for API calls.",
-                      "Keep the UI clean and informative."
+                      "Create an async function that takes city name as parameter.",
+                      "Use axios.get() with the OpenWeatherMap API endpoint.",
+                      "Include API key and city name in the request URL."
                     ],
                     "why": [
-                      "'Create Axios GET request for current weather' is essential for a complete weather dashboard experience."
+                      "This function will be the core of your weather data fetching functionality."
                     ],
-                    "starting_code": "// Start: Create Axios GET request for current weather",
-                    "final_code": "// Completed: Create Axios GET request for current weather"
+                    "Output": []
                   },
                   {
                     "step_id": "RP3_T3_S3",
                     "step_name": "Handle success and error responses",
-                    "description": "This step explains how to handle success and error responses.",
+                    "description": "Implement proper error handling and response processing.",
                     "guidelines": [
-                      "Follow React best practices for component structure.",
-                      "Use async/await with try/catch for API calls.",
-                      "Keep the UI clean and informative."
+                      "Use try-catch blocks to handle API errors gracefully.",
+                      "Check response status and data validity.",
+                      "Provide user-friendly error messages for different scenarios."
                     ],
                     "why": [
-                      "'Handle success and error responses' is essential for a complete weather dashboard experience."
+                      "Error handling ensures your app works reliably even when API calls fail."
                     ],
-                    "starting_code": "// Start: Handle success and error responses",
-                    "final_code": "// Completed: Handle success and error responses"
+                    "Output": []
                   },
                   {
                     "step_id": "RP3_T3_S4",
                     "step_name": "Test API with a static city",
-                    "description": "This step explains how to test api with a static city.",
+                    "description": "Verify API integration works correctly with test data.",
                     "guidelines": [
-                      "Follow React best practices for component structure.",
-                      "Use async/await with try/catch for API calls.",
-                      "Keep the UI clean and informative."
+                      "Call your API function with a known city name like 'London'.",
+                      "Log the response to console to verify data structure.",
+                      "Test both successful requests and error scenarios."
                     ],
                     "why": [
-                      "'Test API with a static city' is essential for a complete weather dashboard experience."
+                      "Testing ensures your API integration works before building the UI around it."
                     ],
-                    "starting_code": "// Start: Test API with a static city",
-                    "final_code": "// Completed: Test API with a static city"
+                    "Output": []
                   }
                 ]
               },
               {
                 "task_id": "RP3_T4",
                 "task_name": "Implement Search Functionality",
-                "description": "Implement Search Functionality in the Weather Dashboard project.",
+                "description": "Create user interface for searching weather by city name.",
                 "steps": [
                   {
                     "step_id": "RP3_T4_S1",
                     "step_name": "Capture input from search field",
-                    "description": "This step explains how to capture input from search field.",
+                    "description": "Set up controlled input for city name entry.",
                     "guidelines": [
-                      "Follow React best practices for component structure.",
-                      "Use async/await with try/catch for API calls.",
-                      "Keep the UI clean and informative."
+                      "Use useState to manage search input value.",
+                      "Add onChange handler to update state as user types.",
+                      "Set input value prop to the state variable."
                     ],
                     "why": [
-                      "'Capture input from search field' is essential for a complete weather dashboard experience."
+                      "Controlled inputs ensure React manages the form state properly."
                     ],
-                    "starting_code": "// Start: Capture input from search field",
-                    "final_code": "// Completed: Capture input from search field"
+                    "Output": []
                   },
                   {
                     "step_id": "RP3_T4_S2",
                     "step_name": "Trigger API request on button click or Enter",
-                    "description": "This step explains how to trigger api request on button click or enter.",
+                    "description": "Implement search trigger mechanisms for better UX.",
                     "guidelines": [
-                      "Follow React best practices for component structure.",
-                      "Use async/await with try/catch for API calls.",
-                      "Keep the UI clean and informative."
+                      "Add onClick handler to search button.",
+                      "Add onKeyPress handler to input for Enter key detection.",
+                      "Call your weather API function with the input value."
                     ],
                     "why": [
-                      "'Trigger API request on button click or Enter' is essential for a complete weather dashboard experience."
+                      "Multiple trigger options provide flexible user interaction."
                     ],
-                    "starting_code": "// Start: Trigger API request on button click or Enter",
-                    "final_code": "// Completed: Trigger API request on button click or Enter"
+                    "Output": []
                   },
                   {
                     "step_id": "RP3_T4_S3",
                     "step_name": "Display weather card using API response",
-                    "description": "This step explains how to display weather card using api response.",
+                    "description": "Show weather data in a formatted card component.",
                     "guidelines": [
-                      "Follow React best practices for component structure.",
-                      "Use async/await with try/catch for API calls.",
-                      "Keep the UI clean and informative."
+                      "Store API response in component state.",
+                      "Pass weather data to WeatherCard component as props.",
+                      "Handle loading states while API request is in progress."
                     ],
                     "why": [
-                      "'Display weather card using API response' is essential for a complete weather dashboard experience."
+                      "Displaying data completes the search-to-display workflow."
                     ],
-                    "starting_code": "// Start: Display weather card using API response",
-                    "final_code": "// Completed: Display weather card using API response"
+                    "Output": []
                   }
                 ]
               },
               {
                 "task_id": "RP3_T5",
                 "task_name": "Display Weather Data",
-                "description": "Display Weather Data in the Weather Dashboard project.",
+                "description": "Format and present weather information in an attractive layout.",
                 "steps": [
                   {
                     "step_id": "RP3_T5_S1",
                     "step_name": "Extract temperature, humidity, and conditions",
-                    "description": "This step explains how to extract temperature, humidity, and conditions.",
+                    "description": "Parse relevant data from the API response.",
                     "guidelines": [
-                      "Follow React best practices for component structure.",
-                      "Use async/await with try/catch for API calls.",
-                      "Keep the UI clean and informative."
+                      "Access temperature from response.main.temp.",
+                      "Get humidity from response.main.humidity.",
+                      "Extract weather conditions from response.weather[0].description."
                     ],
                     "why": [
-                      "'Extract temperature, humidity, and conditions' is essential for a complete weather dashboard experience."
+                      "Extracting specific data points makes the information more useful to users."
                     ],
-                    "starting_code": "// Start: Extract temperature, humidity, and conditions",
-                    "final_code": "// Completed: Extract temperature, humidity, and conditions"
+                    "Output": []
                   },
                   {
                     "step_id": "RP3_T5_S2",
                     "step_name": "Format and display date/time",
-                    "description": "This step explains how to format and display date/time.",
+                    "description": "Show current date and time information clearly.",
                     "guidelines": [
-                      "Follow React best practices for component structure.",
-                      "Use async/await with try/catch for API calls.",
-                      "Keep the UI clean and informative."
+                      "Use JavaScript Date object to get current date/time.",
+                      "Format date using toLocaleDateString() or similar methods.",
+                      "Display time in user-friendly format."
                     ],
                     "why": [
-                      "'Format and display date/time' is essential for a complete weather dashboard experience."
+                      "Date/time context helps users understand when the weather data was retrieved."
                     ],
-                    "starting_code": "// Start: Format and display date/time",
-                    "final_code": "// Completed: Format and display date/time"
+                    "Output": []
                   },
                   {
                     "step_id": "RP3_T5_S3",
                     "step_name": "Add weather icon from API response",
-                    "description": "This step explains how to add weather icon from api response.",
+                    "description": "Include visual weather icons to enhance the display.",
                     "guidelines": [
-                      "Follow React best practices for component structure.",
-                      "Use async/await with try/catch for API calls.",
-                      "Keep the UI clean and informative."
+                      "Get icon code from response.weather[0].icon.",
+                      "Use OpenWeatherMap icon URL format to display icons.",
+                      "Add alt text for accessibility."
                     ],
                     "why": [
-                      "'Add weather icon from API response' is essential for a complete weather dashboard experience."
+                      "Visual icons make weather conditions immediately recognizable."
                     ],
-                    "starting_code": "// Start: Add weather icon from API response",
-                    "final_code": "// Completed: Add weather icon from API response"
+                    "Output": []
                   }
                 ]
               },
               {
                 "task_id": "RP3_T6",
                 "task_name": "Add Multiple City Support",
-                "description": "Add Multiple City Support in the Weather Dashboard project.",
+                "description": "Enable users to track weather for multiple cities simultaneously.",
                 "steps": [
                   {
                     "step_id": "RP3_T6_S1",
                     "step_name": "Allow user to enter and save multiple cities",
-                    "description": "This step explains how to allow user to enter and save multiple cities.",
+                    "description": "Implement functionality to add cities to a watchlist.",
                     "guidelines": [
-                      "Follow React best practices for component structure.",
-                      "Use async/await with try/catch for API calls.",
-                      "Keep the UI clean and informative."
+                      "Create state array to store multiple city weather data.",
+                      "Add new cities to the array when searched.",
+                      "Prevent duplicate cities from being added."
                     ],
                     "why": [
-                      "'Allow user to enter and save multiple cities' is essential for a complete weather dashboard experience."
+                      "Multiple city support makes the dashboard more useful for users who travel or have interests in various locations."
                     ],
-                    "starting_code": "// Start: Allow user to enter and save multiple cities",
-                    "final_code": "// Completed: Allow user to enter and save multiple cities"
+                    "Output": []
                   },
                   {
                     "step_id": "RP3_T6_S2",
                     "step_name": "Display each city's weather in a card",
-                    "description": "This step explains how to display each city's weather in a card.",
+                    "description": "Show all tracked cities in individual weather cards.",
                     "guidelines": [
-                      "Follow React best practices for component structure.",
-                      "Use async/await with try/catch for API calls.",
-                      "Keep the UI clean and informative."
+                      "Map over the cities array to render multiple WeatherCard components.",
+                      "Ensure each card has unique key prop.",
+                      "Arrange cards in a responsive grid layout."
                     ],
                     "why": [
-                      "'Display each city's weather in a card' is essential for a complete weather dashboard experience."
+                      "Individual cards provide clear separation and easy comparison between cities."
                     ],
-                    "starting_code": "// Start: Display each city's weather in a card",
-                    "final_code": "// Completed: Display each city's weather in a card"
+                    "Output": []
                   },
                   {
                     "step_id": "RP3_T6_S3",
                     "step_name": "Store cities in state and map over them",
-                    "description": "This step explains how to store cities in state and map over them.",
+                    "description": "Implement proper state management for multiple cities.",
                     "guidelines": [
-                      "Follow React best practices for component structure.",
-                      "Use async/await with try/catch for API calls.",
-                      "Keep the UI clean and informative."
+                      "Use useState to manage array of city weather objects.",
+                      "Update state immutably when adding new cities.",
+                      "Consider adding remove functionality for individual cities."
                     ],
                     "why": [
-                      "'Store cities in state and map over them' is essential for a complete weather dashboard experience."
+                      "Proper state management ensures the UI updates correctly when cities are added or removed."
                     ],
-                    "starting_code": "// Start: Store cities in state and map over them",
-                    "final_code": "// Completed: Store cities in state and map over them"
+                    "Output": []
                   }
                 ]
               },
               {
                 "task_id": "RP3_T7",
                 "task_name": "Optional Features and Enhancements",
-                "description": "Optional Features and Enhancements in the Weather Dashboard project.",
+                "description": "Add advanced features to improve user experience and functionality.",
                 "steps": [
                   {
                     "step_id": "RP3_T7_S1",
                     "step_name": "Add localStorage to persist city list",
-                    "description": "This step explains how to add localstorage to persist city list.",
+                    "description": "Save user's city list between browser sessions.",
                     "guidelines": [
-                      "Follow React best practices for component structure.",
-                      "Use async/await with try/catch for API calls.",
-                      "Keep the UI clean and informative."
+                      "Use localStorage.setItem() to save cities array.",
+                      "Use localStorage.getItem() to restore cities on app load.",
+                      "Handle cases where localStorage might be unavailable."
                     ],
                     "why": [
-                      "'Add localStorage to persist city list' is essential for a complete weather dashboard experience."
+                      "Persistence improves user experience by remembering their preferences."
                     ],
-                    "starting_code": "// Start: Add localStorage to persist city list",
-                    "final_code": "// Completed: Add localStorage to persist city list"
+                    "Output": []
                   },
                   {
                     "step_id": "RP3_T7_S2",
-                    "step_name": "Add forecast for next 3\u20135 days",
-                    "description": "This step explains how to add forecast for next 3\u20135 days.",
+                    "step_name": "Add forecast for next 3–5 days",
+                    "description": "Extend functionality to show weather forecasts.",
                     "guidelines": [
-                      "Follow React best practices for component structure.",
-                      "Use async/await with try/catch for API calls.",
-                      "Keep the UI clean and informative."
+                      "Use OpenWeatherMap forecast API endpoint.",
+                      "Parse forecast data for multiple days.",
+                      "Create forecast display component."
                     ],
                     "why": [
-                      "'Add forecast for next 3\u20135 days' is essential for a complete weather dashboard experience."
+                      "Forecast data provides more value to users planning ahead."
                     ],
-                    "starting_code": "// Start: Add forecast for next 3\u20135 days",
-                    "final_code": "// Completed: Add forecast for next 3\u20135 days"
+                    "Output": []
                   },
                   {
                     "step_id": "RP3_T7_S3",
                     "step_name": "Add loading state and error message display",
-                    "description": "This step explains how to add loading state and error message display.",
+                    "description": "Improve user feedback during API operations.",
                     "guidelines": [
-                      "Follow React best practices for component structure.",
-                      "Use async/await with try/catch for API calls.",
-                      "Keep the UI clean and informative."
+                      "Show loading spinner or message during API calls.",
+                      "Display user-friendly error messages for failed requests.",
+                      "Handle different types of errors (network, invalid city, etc.)."
                     ],
                     "why": [
-                      "'Add loading state and error message display' is essential for a complete weather dashboard experience."
+                      "Good loading and error states provide better user experience."
                     ],
-                    "starting_code": "// Start: Add loading state and error message display",
-                    "final_code": "// Completed: Add loading state and error message display"
+                    "Output": []
                   },
                   {
                     "step_id": "RP3_T7_S4",
                     "step_name": "Support Celsius/Fahrenheit toggle",
-                    "description": "This step explains how to support celsius/fahrenheit toggle.",
+                    "description": "Allow users to choose their preferred temperature unit.",
                     "guidelines": [
-                      "Follow React best practices for component structure.",
-                      "Use async/await with try/catch for API calls.",
-                      "Keep the UI clean and informative."
+                      "Add toggle button or dropdown for temperature units.",
+                      "Convert temperatures between Celsius and Fahrenheit.",
+                      "Store user preference in localStorage."
                     ],
                     "why": [
-                      "'Support Celsius/Fahrenheit toggle' is essential for a complete weather dashboard experience."
+                      "Temperature unit preference varies by location and user preference."
                     ],
                     "starting_code": "// Start: Support Celsius/Fahrenheit toggle",
                     "final_code": "// Completed: Support Celsius/Fahrenheit toggle"
