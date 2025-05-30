@@ -2235,6 +2235,881 @@
             ]
         },
         {
+  "project_id": "P09",
+  "project_name": "File-Based Todo List Manager",
+  "description": "Build a command-line Todo List application that stores and retrieves tasks from a text file. It should support adding, viewing, marking complete, and deleting tasks.",
+  "difficulty": "Beginner",
+  "tasks": [
+    {
+      "task_id": "P09_T1",
+      "task_name": "Setup Project and Data Structure",
+      "description": "Initialize the project structure and create a class to represent a todo task.",
+      "steps": [
+        {
+          "step_id": "P09_T1_S1",
+          "step_name": "Create Java files",
+          "description": "Create the base files for your app: TodoApp.java and Task.java.",
+          "guidelines": [
+            "Use an IDE like IntelliJ or any text editor.",
+            "Add a main() method in TodoApp.java.",
+            "In Task.java, define a class with fields: id, description, isCompleted."
+          ],
+          "why": [
+            "Keeping Task as a separate class improves readability and future scalability."
+          ]
+        },
+        {
+          "step_id": "P09_T1_S2",
+          "step_name": "Define Task Class with Constructor and Methods",
+          "description": "In Task.java, write code to initialize a task and provide functions like toString() a markCompleted().",
+          "guidelines": [
+            "public Task(int id, String description) {\\n    this.id = id;\\n    this.description = description;\\n    this.isCompleted = false;\\n}\\n\\npublic void markCompleted() {\\n    isCompleted = true;\\n}\\n\\npublic String toString() {\\n    return (isCompleted ? \\\"[X] : \\\" : \\\"[ ] : \\\") + id + \\\" : \\\" + description;\\n}\\n\\n// Add getters if needed"
+          ],
+          "why": [
+            "This structure helps manage task operations cleanly and reuse logic throughout the app."
+          ]
+        },
+        {
+          "step_id": "P09_T1_S1",
+          "step_name": "Add Sample Output in Main to Confirm Setup",
+          "description": "Print a few dummy tasks in main() to test everything compiles and runs.",
+          "guidelines": [
+            "public static void main(String[] args) {\\n    Task t1 = new Task(1, \\\"Buy groceries\\\");\\n    System.out.println(t1);\\n}"
+          ],
+          "why": [
+            "Early testing helps catch setup bugs before you add file or logic code."
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "P09_T2",
+      "task_name": "Load and Save Tasks to File",
+      "description": "Persist tasks across sessions using a text file.",
+      "steps": [
+        {
+          "step_id": "P09_T2_S1",
+          "step_name": "Create a tasks.txt File",
+          "description": "Create a file named tasks.txt in your project directory.",
+          "guidelines": [
+            "You can manually create it or let the program create it with FileWriter."
+          ],
+          "why": [
+            "Having this file ensures data isn't lost when the program ends."
+          ]
+        },
+        {
+          "step_id": "P09_T2_S2",
+          "step_name": "Write Tasks to File",
+          "description": "In TodoApp.java, implement a method to save tasks to tasks.txt.",
+          "guidelines": [
+            "public static void saveTasks(List<Task> tasks) throws IOException {\\n    BufferedWriter writer = new BufferedWriter(new FileWriter(\\\"tasks.txt\\\"));\\n    for (Task task : tasks) {\\n        writer.write(task.getId() + \\\";\\\" + task.getDescription() + \\\";\\\" + task.isCompleted());\\n        writer.newLine();\\n    }\\n    writer.close();\\n}"
+          ],
+          "why": [
+            "A semicolon-separated format keeps data readable and easy to parse."
+          ]
+        },
+        {
+          "step_id": "P09_T2_S3",
+          "step_name": "Load Tasks from File",
+          "description": "Read from tasks.txt on app start and recreate Task objects.",
+          "guidelines": [
+            "public static List<Task> loadTasks() throws IOException {\\n    List<Task> tasks = new ArrayList<>();\\n    BufferedReader reader = new BufferedReader(new FileReader(\\\"tasks.txt\\\"));\\n    String line;\\n    while ((line = reader.readLine()) != null) {\\n        String[] parts = line.split(\\\";\\\");\\n        Task task = new Task(Integer.parseInt(parts[0]), parts[1]);\\n        if (Boolean.parseBoolean(parts[2])) task.markCompleted();\\n        tasks.add(task);\\n    }\\n    reader.close();\\n    return tasks;\\n}"
+          ],
+          "why": [
+            "Loading tasks allows continuity across runs and enables better user experience."
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "P09_T3",
+      "task_name": "Display and Add Tasks via Menu",
+      "description": "Provide user interface to list tasks and add new ones through the console.",
+      "steps": [
+        {
+          "step_id": "P09_T3_S1",
+          "step_name": "Display Menu Options in Loop",
+          "description": "Create a simple CLI menu: 1. View Tasks 2. Add Task 3. Exit",
+          "guidelines": [
+            "Scanner scanner = new Scanner(System.in);\\nwhile (true) {\\n    System.out.println(\\\"1. View Tasks\\\\n2. Add Task\\\\n3. Exit\\\");\\n    int choice = scanner.nextInt();\\n    scanner.nextLine(); // consume newline\\n    // call methods based on choice\\n}"
+          ],
+          "why": [
+            "A menu loop allows multiple operations without restarting the app."
+          ]
+        },
+        {
+          "step_id": "P09_T3_S2",
+          "step_name": "Add New Task via Input",
+          "description": "Ask user for task description and append a new Task to the list.",
+          "guidelines": [
+            "System.out.print(\"Enter task description: \");\nString desc = scanner.nextLine();\nint newId = tasks.size() + 1;\nTask newTask = new Task(newId, desc);\ntasks.add(newTask);\nsaveTasks(tasks);"
+          ],
+          "why": [
+            "Real-time adding with persistent saving completes the core loop."
+          ]
+        },
+        {
+          "step_id": "P09_T3_S3",
+          "step_name": "Display All Tasks Nicely",
+          "description": "Print all tasks in the list with status markers.",
+          "guidelines": [
+            "System.out.println(\"Your Tasks:\");\nfor (Task task : tasks) {\n    System.out.println(task);\n}"
+          ],
+          "why": [
+            "Showing [X] or [ ] makes it intuitive to understand task progress."
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "P09_T4",
+      "task_name": "Mark Task as Complete",
+      "description": "Let the user mark a specific task as completed and persist that change in the file.",
+      "steps": [
+        {
+          "step_id": "P09_T4_S1",
+          "step_name": "Update the Menu with a New Option",
+          "description": "Inside your menu loop, add a new option: 4. Mark Task as Complete",
+          "guidelines": [
+            "Update the System.out.println() menu block inside your loop.",
+            "Add a new case or if block that executes when user selects 4."
+          ],
+          "why": [
+            "Enables the user to explicitly trigger the mark-as-complete feature."
+          ],
+          "Output": [
+            "Choose an option:\n1. View Tasks\n2. Add Task\n3. Exit\n4. Mark Task as Complete"
+          ]
+        },
+        {
+          "step_id": "P09_T4_S2",
+          "step_name": "Prompt the User to View Tasks",
+          "description": "Display all current tasks before asking which one to complete.",
+          "guidelines": [
+            "Use a loop: for (Task task : tasks) and print each task.",
+            "Make sure tasks are numbered and show their status [ ] or [X]."
+          ],
+          "why": [
+            "Helps the user remember which task they want to complete."
+          ],
+          "Output": [
+            "Your Tasks:\n[ ] 1. Buy groceries\n[ ] 2. Finish homework\n[ ] 3. Call Alice"
+          ]
+        },
+        {
+          "step_id": "P09_T4_S3",
+          "step_name": "Ask for the Task ID to Mark as Complete",
+          "description": [
+            "Prompt the user to enter the number of the task they want to mark as complete.",
+            "Read that number using Scanner."
+          ],
+          "guidelines": [
+            "Use a simple prompt: Enter the task number to mark complete:",
+            "Ensure it's a valid integer and within the task list range.",
+            "If invalid, show an error and return to the menu."
+          ],
+          "why": [
+            "User input drives which task will be updated.",
+            "Prevents crashes due to invalid input"
+          ],
+          "Output": [
+            "(when user enters ID 2):\nEnter the task number to mark complete:\n> 2\n\nIf invalid:\nInvalid task number. Please try again."
+          ]
+        },
+        {
+          "step_id": "P09_T4_S4",
+          "step_name": "Mark the Task as Completed Internally",
+          "description": [
+            "Loop through your task list.",
+            "When you find the task with the matching ID, call markCompleted() on it."
+          ],
+          "guidelines": [
+            "Use a loop or get(index) if tasks are stored by position.",
+            "Make sure only uncompleted tasks are marked.",
+            "Optionally show a warning if the task is already completed."
+          ],
+          "why": [
+            "Sets the isCompleted flag to true, so it displays [X] later."
+          ],
+          "Output": [
+            "Task #2 marked as complete."
+          ]
+        },
+        {
+          "step_id":"P09_T4_S5",
+          "step_name": "Save the Updated Tasks Back to File",
+          "description": "Call your saveTasks(tasks) method to update tasks.txt.",
+          "guidelines": [
+            "Ensure file write logic overwrites the previous version.",
+            "Use semicolon format: id;description;true."
+          ],
+          "why": [
+            "Makes sure changes persist after restarting the app."
+          ],
+          "file_content": [
+            "(tasks.txt): \n1;Buy groceries;false\n2;Finish homework;true\n3;Call Alice;false"
+          ],
+          "Output": [
+            "Changes saved to file."
+          ]
+        },
+        {
+          "step_id": "P09_T4_S6",
+          "step_name": "Display the Updated List (Optional)",
+          "description": "After marking the task as complete and saving, show the updated list again.",
+          "guidelines": [
+            "Use the same logic as Step 2 to print the task list."
+          ],
+          "why": [
+            "Gives the user immediate feedback that the change worked."
+          ],
+          "Output": [
+            "Your Tasks:\n[ ] 1. Buy groceries\n[X] 2. Finish homework\n[ ] 3. Call Alice"
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "P09_T5",
+      "task_name": "Delete a Task",
+      "description": "Allow users to delete a specific task by its ID and update the file accordingly.",
+      "steps": [
+        {
+          "step_id": "P09_T5_S1",
+          "step_name": "Add 'Delete Task' Option to Menu",
+          "description": "Add this new menu line:\n5. Delete a Task\n\nHandle user input 5 to trigger the delete logic.",
+          "guidelines": [
+            "Insert this in your main loop where the menu is shown.",
+            "Add an if or switch case for option 5."
+          ],
+          "why": [
+            "Allows users to intentionally choose to delete a task."
+          ],
+          "Output": [
+            "Choose an option:\n1. View Tasks\n2. Add Task\n3. Exit\n4. Mark Task as Complete\n5. Delete a Task"
+          ]
+        },
+        {
+          "step_id": "P09_T5_S2",
+          "step_name": "Display All Tasks for Context",
+          "description": "Show the user all existing tasks before deletion.",
+          "guidelines": [
+            "Use a loop to print each task in this format:",
+            "[ ] 1. Task description",
+            "[X] 2. Completed task"
+          ],
+          "why": [
+            "Users need context to choose what to delete."
+          ],
+          "Output": [
+            "Your Tasks:\n[ ] 1. Buy groceries\n[X] 2. Finish homework\n[ ] 3. Call Alice"
+          ]
+        },
+        {
+          "step_id": "P09_T5_S3",
+          "step_name": "Prompt for Task ID to Delete",
+          "description": [
+            "Ask the user which task to delete.",
+            "Read the ID input."
+          ],
+          "guidelines": [
+            "Prompt with: Enter the task number to delete:",
+            "Use scanner.nextInt() to get input.",
+            "Handle non-integer input or out-of-range values.",
+            "If input is invalid, show an error and return to menu."
+          ],
+          "why": [
+            "Prevents accidental deletion and ensures valid choice."
+          ],
+          "Output": [
+            "Enter the task number to delete:\n> 3\n\nIf invalid:\nTask not found. Please enter a valid task number."
+          ]
+        },
+        {
+          "step_id": "T5_S4",
+          "step_name": "Remove the Task from the List",
+          "description": [
+            "Loop through the list and remove the task with the given ID.",
+            "Handle task not found case."
+          ],
+          "guidelines": [
+            "Use Iterator, removeIf(), or indexed loop for removal.",
+            "IDs may not be equal to list index, so search by task ID field."
+          ],
+          "why": [
+            "Safely modifies the task list in memory."
+          ],
+          "Output": [
+            "Task #3 ('Call Alice') has been deleted."
+          ]
+        },
+        {
+          "step_id": "P09_T5_S5",
+          "step_name": "Reassign IDs to Remaining Tasks",
+          "description": "After removal, update task IDs so they remain sequential (1, 2, 3...).",
+          "guidelines": [
+            "Loop through the list and update the id field in order."
+          ],
+          "why": [
+            "Maintains a clean and consistent list for the user."
+          ],
+          "Output": [
+            "Reassigning task numbers...\n\nUpdated Task List in Memory:\n[ ] 1. Buy groceries\n[X] 2. Finish homework"
+          ]
+        },
+        {
+          "step_id": "P09_T5_S6",
+          "step_name": "Save Updated List to File",
+          "description": "Use saveTasks(tasks) to write new data to tasks.txt.",
+          "guidelines": [
+            "File should reflect new IDs and exclude deleted task.",
+            "Use same format: id;description;isCompleted"
+          ],
+          "why": [
+            "Ensures the delete is permanent and persists across sessions."
+          ],
+          "file_content": [
+            "(tasks.txt):\n1;Buy groceries;false\n2;Finish homework;true"
+          ],
+          "Output": [
+            "Task list updated and saved to file."
+          ]
+        },
+        {
+          "step_id": "P09_T5_S7",
+          "step_name": "Show Updated Task List (Optional)",
+          "description": "Print the task list after deletion for confirmation.",
+          "guidelines": [
+            "Reuse your view task logic.",
+            "Confirms to the user that the deletion was successful."
+          ],
+          "why": [
+            "Confirms to the user that the deletion was successful."
+          ],
+          "Output": [
+            "Updated Task List:\n[ ] 1. Buy groceries\n[X] 2. Finish homework"
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "P09_T6",
+      "task_name": "Input Validation & Error Handling",
+      "description": "Make the program stable and user-friendly by catching bad input, handling file issues, and preventing crashes.",
+      "steps": [
+        {
+          "step_id": "P09_T6_S1",
+          "step_name": "Validate Menu Input",
+          "description": [
+            "Make sure users enter valid numbers (1-5) in the main menu.",
+            "Handle non-integer or out-of-range values gracefully."
+          ],
+          "guidelines": [
+              "Use scanner.hasNextInt() before reading the choice.",
+              "If it’s not a number, show an error and skip reading.",
+              "Use a check like if (choice < 1 || choice > 5) to restrict range."
+          ],
+          "why": [
+              "Prevents app from crashing on unexpected input like abc or 9."
+          ],
+          "Output": [
+            "Choose an option:\n> hello\nInvalid input. Please enter a number between 1 and 5."
+          ]
+        },
+        {
+          "step_id": "P09_T6_S2",
+          "step_name": "Protect Task ID Input (Delete/Complete)",
+          "description": [
+            "When user enters a task number (for delete or complete), validate that:",
+            "It’s an integer.",
+            "The task ID exists in the list."
+          ],
+          "guidelines": [
+            "Use a try-catch for scanner.nextInt() OR validate with scanner.hasNextInt().",
+            "After reading the number, check if it’s within bounds using:\nif (taskId < 1 || taskId > tasks.size()) {...}"
+          ],
+          "why": [
+            "Prevents IndexOutOfBoundsException and improves UX."
+          ],
+          "Output": [
+            "(invalid input):\nEnter task number:\n> -2\nTask number must be between 1 and 3.\n\n(non-numeric input):\nEnter task number:\n> abc\nPlease enter a valid number."
+          ]
+        },
+        {
+          "step_id": "P09_T6_S3",
+          "step_name": "Handle Empty Task List Operations",
+          "description": "If the task list is empty, disable options like View, Delete, or Mark Complete.",
+          "guidelines": [
+            "Check if (tasks.isEmpty()) before executing operations.",
+            "Print an informative message instead of trying to loop or access elements."
+          ],
+          "why": [
+            "Prevents unnecessary crashes or empty loops.",
+            "Gives helpful user feedback."
+          ],
+          "Output": [
+            "No tasks found. Please add some tasks first!"
+          ]
+        },
+        {
+          "step_id": "P09_T6_S4",
+          "step_name": "Handle File Read Errors Gracefully",
+          "description": "If tasks.txt is missing, corrupted, or unreadable, show a clean message instead of crashing.",
+          "guidelines": [
+            "Wrap file operations (BufferedReader, FileReader) in try-catch.",
+            "If FileNotFoundException is caught, print No saved tasks found. Starting fresh.",
+            "If IOException is caught, print an error and exit or retry."
+          ],
+          "why": [
+            "Many beginner apps crash if file access fails — this avoids that."
+          ],
+          "Output": [
+            "(first run, no file):\nNo existing task file found. A new one will be created.\n\nExpected Output (file read error):\nError reading file. Please check file permissions or try again."
+          ]
+        },
+        {
+          "step_id": "P09_T6_S5",
+          "step_name": "Handle File Write Failures",
+          "description": "Wrap BufferedWriter or FileWriter operations in try-catch.",
+          "guidelines": [
+            "Catch and print IOException errors when saving tasks.",
+            "Optionally, retry once or save to a backup file if write fails."
+          ],
+          "why": [
+            "Data integrity is important. You don’t want a crash while saving to corrupt the file."
+          ],
+          "Output": [
+            "Failed to save tasks. Please try again later."
+          ]
+        },
+        {
+          "step_id": "P09_T6_S6",
+          "step_name": "Don't Crash on Unexpected Input in Menu Loop",
+          "description": "If the user hits Enter without typing anything or types nonsense, the app should continue running.",
+          "guidelines": [
+            "Place the whole menu inside a while (true) loop.",
+            "After each invalid action, print a message and continue to next loop."
+          ],
+          "why": [
+            "This makes your CLI feel polished and “fail-safe.”"
+          ],
+          "Output": [
+            "Choose an option:\n> \nNo input detected. Please choose a number."
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "P09_9_T7",
+      "task_name": "Search and Sort Tasks",
+      "description": "Let users search tasks by keyword and sort tasks by completion status.",
+      "steps": [
+        {
+          "step_id": "P09_T7_S1",
+          "step_name": "Add 'Search and Sort' Option in Menu",
+          "description": [
+            "Add a new menu entry:\nmathematica\nCopyEdit\n6. Search or Sort Tasks\n\nAdd a new handler block when user enters choice 6."
+          ],
+          "guidelines": [
+            "Place this as a new menu case.",
+            "Use a sub-menu to let the user choose either search or sort."
+          ],
+          "why": [
+            "Separates this feature from basic task operations."
+          ],
+          "Output": [
+            "text\nCopyEdit\nChoose an option:\n6. Search or Sort Tasks\n\nSearch & Sort Menu:\n1. Search by keyword\n2. Sort by completion\n3. Back to main menu"
+          ]
+        },
+        {
+          "step_id": "P09_T7_S2",
+          "step_name": "Implement Search by Keyword",
+          "description": [
+            "Prompt the user to enter a word or phrase to search.",
+            "Display all tasks containing that keyword in the description."
+          ],
+          "guidelines": [
+            "Use Scanner.nextLine() to get input.",
+            "Loop through all tasks and use .contains() or .toLowerCase().contains() to match descriptions.",
+            "Ignore case for flexibility."
+          ],
+          "why": [
+            "Allows fast lookup for large task lists."
+          ],
+          "Output": [
+            "text\nCopyEdit\nEnter keyword to search:\n> groceries\n\nSearch Results:\n[ ] 1. Buy groceries\n\nExpected Output (no match):\ntext\nCopyEdit\nNo tasks matched your keyword."
+          ]
+        },
+        {
+          "step_id": "T7_S3",
+          "step_name": "Add Sort Option for Completed vs Incomplete",
+          "description": [
+            "Offer a sort mode that groups completed and incomplete tasks.",
+            "Show incomplete tasks first (or let user choose sort order)."
+          ],
+          "guidelines": [
+            "Use Collections.sort() with a custom Comparator.",
+            "Sort by task.isCompleted() — false should come before true."
+          ],
+          "why": [
+            "Makes it easy to prioritize incomplete tasks."
+          ],
+          "Output": [
+            "text\nCopyEdit\nSorted Task List:\n[ ] 1. Buy groceries\n[ ] 2. Call Alice\n[X] 3. Finish homework"
+          ]
+        },
+        {
+          "step_id": "P09_T7_S4",
+          "step_name": "Return to Main Menu",
+          "description": "After search or sort operation, prompt the user to return to the main menu.",
+          "guidelines": [
+            "Add a prompt like: Press Enter to go back...",
+            "Use scanner.nextLine() to pause."
+          ],
+          "why": [
+            "Gives user time to read the results before jumping back."
+          ],
+          "Output": [
+            "text\nCopyEdit\n(After showing results)\n\nPress Enter to return to main menu..."
+          ]
+        },
+        {
+          "step_id": "P09_T7_S5",
+          "step_name": "(Optional Bonus) Let User Choose Sort Order",
+          "description": [
+            "Ask user if they want to sort:\n1. Incomplete first\n2. Completed first\n3. Alphabetically"
+          ],
+          "guidelines": [
+            "mathematica\nCopyEdit\nSort Options:\n1. Incomplete First\n2. Completed First\n3. Alphabetical\n\nUse comparators for sorting by description or isCompleted() as needed."
+          ],
+          "why": [
+            "Improves user control and future extensibility."
+          ],
+          "Output": [
+            "text\nCopyEdit\nSort by:\n1. Incomplete First\n2. Completed First\n3. Alphabetical (A–Z)\n> 3\n\nSorted Tasks:\n[ ] 1. Buy groceries\n[ ] 2. Call Alice\n[X] 3. Finish homework"
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "P09_T8",
+      "task_name": "Track Task History (Audit Log)",
+      "description": "Maintain a separate log file (e.g., history.txt) that records every user action like adding, completing, deleting a task — along with timestamps.",
+      "steps": [
+        {
+          "step_id": "P09_T8_S1",
+          "step_name": "Create or Open history.txt File",
+          "description": [
+            "Ensure that a history.txt file exists in your project directory.",
+            "If it doesn’t exist, create it when the app starts or during the first log action."
+          ],
+          "guidelines": [
+            "Use new FileWriter('history.txt', true) to append to the file.",
+            "Never overwrite this file — it should grow with the session.",
+            "Wrap file operations in try-catch to avoid crashes."
+          ],
+          "why": [
+            "This is your permanent audit trail of user actions."
+          ],
+          "Output": [
+            "text\nCopyEdit\nAction log file created at: history.txt"
+          ]
+        },
+        {
+          "step_id": "P09_T8_S2",
+          "step_name": "Log Task Creation",
+          "description": "When a new task is added (in Task 3 logic), log this event.",
+          "guidelines": [
+            "After adding a task, create a string like:",
+            "[2025-05-22 12:30] Task Added: Call Alice",
+            "Use LocalDateTime.now() with DateTimeFormatter."
+          ],
+          "why": [
+            "Keeps a record of all created tasks — good for recovery or auditing."
+          ],
+          "how": [
+            "After adding the task to tasks and before saveTasks(tasks), call:\njava\nCopyEdit\nlogAction(\"Task Added: \" + task.getDescription());"
+          ],
+          "Output": [
+            "yaml\nCopyEdit\n[2025-05-22 12:30] Task Added: Call Alice"
+          ]
+        },
+        {
+          "step_id": "P09_T8_S3",
+          "step_name": "Log Task Completion",
+          "description": "When user marks a task complete (Task 4), log it in history.",
+          "guidelines": [
+            "After calling markCompleted(), add:",
+            "java",
+            "CopyEdit",
+            "logAction(\"Task Completed: \" + task.getDescription());"
+          ],
+          "why": [
+            "Tracks what tasks were finished and when — useful for journaling or reports."
+          ],
+          "Output": [
+            "yaml\nCopyEdit\n[2025-05-22 12:35] Task Completed: Call Alice"
+          ]
+        },
+        {
+          "step_id": "P09_T8_S4",
+          "step_name": "Log Task Deletion",
+          "description": "When deleting a task (Task 5), log that event before removing the task.",
+          "guidelines": [
+            "Capture the task description before deletion.",
+            "Log using:",
+            "java",
+            "CopyEdit",
+            "logAction(\"Task Deleted: \" + task.getDescription());"
+          ],
+          "why": [
+            "Keeps an audit trail of removals in case something is deleted by mistake."
+          ],
+          "Output": [
+            "yaml\nCopyEdit\n[2025-05-22 12:38] Task Deleted: Call Alice"
+          ]
+        },
+        {
+          "step_id": "P09_T8_S5",
+          "step_name": "Implement logAction() Method",
+          "description": "Write a utility method to handle log writing with timestamp.",
+          "guidelines": [
+            "java\nCopyEdit\npublic static void logAction(String action) {\n    try (BufferedWriter writer = new BufferedWriter(new FileWriter(\"history.txt\", true))) {\n        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern(\"yyyy-MM-dd HH:mm\"));\n        writer.write(\"[\" + timestamp + \"] \" + action);\n        writer.newLine();\n    } catch (IOException e) {\n        System.out.println(\"⚠️ Failed to write to log file.\");\n    }\n}\n\nThis method should be called after any major action (Add, Complete, Delete)."
+          ],
+          "why": [
+            "Centralizes logging logic for easy reuse and better readability."
+          ]
+        },
+        {
+          "step_id": "P09_T8_S6",
+          "step_name": "Optional: Add Option to View History",
+          "description": [
+            "Let the user select:",
+            "7. View Task History"
+          ],
+          "guidelines": [
+              "Use a simple BufferedReader to read and print lines from history.txt."
+          ],
+          "why": [
+              "Makes it feel like a timeline or activity feed — users can reflect on what they’ve done."
+          ],
+          "Output": [
+            "text\nCopyEdit\n📓 Task History:\n[2025-05-22 12:30] Task Added: Call Alice\n[2025-05-22 12:35] Task Completed: Call Alice\n[2025-05-22 12:38] Task Deleted: Call Alice"
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "P09_T9",
+      "task_name": "Add Due Dates & Reminders",
+      "description": "Allow users to assign due dates to tasks and optionally get notified or filter tasks by upcoming/overdue status.",
+      "steps": [
+        {
+          "step_id": "P09_T9_S1",
+          "step_name": "Extend the Task Class to Include a Due Date",
+          "description": "Modify your Task class to hold an extra field: dueDate.",
+          "guidelines": [
+            "Use a data type that stores a date (e.g., LocalDate).",
+            "Add logic to store, retrieve, and print this value with each task.",
+            "Update the constructor and toString() to show the due date in a readable format."
+          ],
+          "why": [
+            "Adds time-sensitive context to your tasks, helping users prioritize."
+          ],
+          "Output": [
+            "[ ] 2. Finish homework (Due: 2025-05-25)"
+          ]
+        },
+        {
+          "step_id": "P09_T9_S2",
+          "step_name": "Prompt User to Enter Due Date While Adding a Task",
+          "description": "When the user chooses to “Add Task,” also ask for a due date.",
+          "guidelines": [
+            "After getting the task description, ask for the due date (e.g., YYYY-MM-DD).",
+            "Validate the format and ensure it's a real future date.",
+            "If no date is entered, store null or mark as “No due date”."
+          ],
+          "why": [
+            "Helps users stay ahead of deadlines."
+          ],
+          "Output": [
+            "Enter task description:\n> Submit report\nEnter due date (YYYY-MM-DD):\n> 2025-05-25\nTask added: Submit report (Due: 2025-05-25)"
+          ]
+        },
+        {
+          "step_id": "P09_T9_S3",
+          "step_name": "Save and Load Due Dates in the File",
+          "description": "Modify your file saving and loading logic to include due date info.",
+          "guidelines": [
+            "When saving, write due date as an extra field in each line.",
+            "When reading from the file, parse that field into a date object.",
+            "Be sure to update both saveTasks() and loadTasks() logic to handle this new field."
+          ],
+          "why": [
+            "Preserves due date info between sessions."
+          ],
+          "Output": [
+            "2;Finish homework;false;2025-05-25"
+          ]
+        },
+        {
+          "step_id": "P09_T9_S4",
+          "step_name": "Allow Filtering by Due Date",
+          "description": "Add a menu option like 8. View Upcoming Tasks or 9. View Overdue Tasks.",
+          "guidelines": [
+            "Use a sub-menu or filters that let users choose:",
+            "Tasks due today",
+            "Tasks due this week",
+            "Tasks overdue",
+            "Use your date field to compare with LocalDate.now() and sort or filter."
+          ],
+          "why": [
+            "Prioritizes what's urgent and improves task planning."
+          ],
+          "Output": [
+            "Tasks Due This Week:\n[ ] 2. Finish homework (Due: 2025-05-25)\n[ ] 4. Submit project (Due: 2025-05-26)"
+          ]
+        },
+        {
+          "step_id": "P09_T9_S5",
+          "step_name": "Warn Users About Overdue Tasks on Startup",
+          "description": "When the app starts, check if there are any overdue tasks and display a warning.",
+          "guidelines": [
+            "Loop through all tasks and compare due date to current date.",
+            "Show a list or summary if overdue tasks exist."
+          ],
+          "why": [
+            "Encourages action and creates urgency on important items."
+          ],
+          "Output": [
+            "You have 2 overdue tasks!\n- Pay bills (Due: 2025-05-20)\n- Email professor (Due: 2025-05-21)"
+          ]
+        },
+        {
+          "step_id": "T9_S6",
+          "step_name": "(Optional Bonus) Add Color or Symbol Indicators for Urgency",
+          "description": "Use color or symbols to show task urgency in terminal view.",
+          "guidelines": [
+            "symbolsGuide\": \"Upcoming tasks\nOverdue tasks\nDue soon\n\nOr use ANSI color codes if your terminal supports it."
+          ],
+          "why": [
+            "Makes the app visually clearer without a GUI."
+          ],
+          "Output": [
+            "1. Pay bills (Due: 2025-05-20)\n2. Finish homework (Due: 2025-05-25)\n3. Buy groceries (No due date)"
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "P09_9_T10",
+      "task_name": "Final Review & UI Cleanup",
+      "description": "Refactor the code, improve the user interface, and finalize everything into a smooth, well-organized CLI application.",
+      "steps": [
+        {
+          "step_id": "P09_T10_S1",
+          "step_name": "Organize Code into Methods and Files",
+          "description": [
+            "Move all repeated logic (e.g., viewing tasks, validating input, loading/saving files) into reusable methods.",
+            "Keep your main loop clean and minimal."
+          ],
+          "guidelines": [
+            "Extract large blocks from main() into functions like displayMenu(), handleAddTask(), handleDeleteTask().",
+            "Group file I/O logic separately.",
+            "Optionally, create a utility class for file operations or logs."
+          ],
+          "why": [
+            "Improves readability and makes debugging or updating easier."
+          ],
+          "Output": [
+            "while (true) {\n    displayMenu();\n    handleUserChoice();\n}"
+          ]
+        },
+        {
+          "step_id": "P09_T10_S2",
+          "step_name": "Improve Terminal Layout and Readability",
+          "description": [
+            "Reformat console outputs to be clean, aligned, and spaced.",
+            "Add visual separators between task lists or menus."
+          ],
+          "guidelines": [
+            "Use lines like \"-----------------------------\" or blank lines for spacing.",
+            "Align tasks nicely in tabular or boxed format.",
+            "Highlight headings (e.g., “Your Tasks”, “Upcoming Tasks”) with all caps or emojis."
+          ],
+          "why": [
+            "Enhances usability and makes the app feel polished."
+          ],
+          "Output": [
+            "==============================\n          YOUR TASKS          \n==============================\n[ ] 1. Buy groceries        (Due: 2025-05-26)\n[X] 2. Finish homework      (Due: 2025-05-22)\n------------------------------"
+          ]
+        },
+        {
+          "step_id": "P09_T10_S3",
+          "step_name": "Add Graceful Exit with Save Confirmation",
+          "description": "When the user chooses to exit, confirm that everything is saved and exit cleanly.",
+          "guidelines": [
+            "Show a message like: “Saving your data... ”",
+            "Give a friendly goodbye message at the end.",
+            "Use a System.exit(0) or break loop properly."
+          ],
+          "why": [
+            "Adds professionalism and clear closure."
+          ],
+          "Output": [
+            "Saving your data...\nAll tasks saved to tasks.txt.\nThanks for using SimpleTodo! Goodbye!"
+          ]
+        },
+        {
+          "step_id": "P09_T10_S4",
+          "step_name": "Refactor File Structure (Optional)",
+          "description": [
+            "Create separate .java files if needed:",
+            "Task.java (data model)",
+            "TodoApp.java (main logic)",
+            "FileUtils.java (for file I/O methods)",
+            "Logger.java (for history logging)"
+          ],
+          "guidelines": [
+            "Move each class to its own file.",
+            "Use package keyword if organizing into folders."
+          ],
+          "why": [
+            "Makes your app modular and scalable."
+          ],
+          "Output": [
+            "Your src/ directory looks like:\n├── Task.java\n├── TodoApp.java\n├── FileUtils.java\n├── Logger.java\n└── tasks.txt"
+          ]
+        },
+        {
+          "step_id": "P09_T10_S5",
+          "step_name": "Optional Enhancements (Bonus Polish)",
+          "description": [
+            "Add any of these finishing touches:",
+            "Emoji symbols in the menu",
+            "Colored output using ANSI escape codes",
+            "Random motivational quotes after completing tasks",
+            "Daily summary of pending/overdue tasks",
+            "Import/export tasks as JSON for integration with other tools"
+          ],
+          "guidelines": [
+            "These are optional features to make the app stand out.",
+            "Keep them modular so they can be turned on/off easily."
+          ],
+          "why": [
+            "Adds joy, fun, or flexibility for power users."
+          ],
+          "Output": [
+            "Task Completed: Finish report\nTip: “Discipline is the bridge between goals and accomplishment.” – Jim Rohn"
+          ]
+        }
+      ]
+    }
+  ]
+},
+
+        {
             "project_id": "JP10",
             "project_name": "Chat Application",
             "description": "Develop a full-featured Java-based Chat Application with multi-user support, threading, sockets, message broadcasting, chat history, encryption, and real-time communication.",
