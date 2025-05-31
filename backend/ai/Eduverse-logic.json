@@ -1,0 +1,119 @@
+{
+  "promptLogic": {
+    "version": "1.1",
+    "description": "Defines how to interpret user inputs for multi-step guided projects, capturing skill level, domain, tools, difficulty, and desired steps.",
+    "fields": [
+      {
+        "name": "userProfile",
+        "type": "object",
+        "properties": {
+          "domain": { "type": "string", "description": "Area of interest (e.g. web dev, ML)" },
+          "skillLevel": {
+            "type": "string",
+            "enum": ["beginner", "intermediate", "advanced"],
+            "description": "Self-assessed proficiency"
+          }
+        }
+      },
+      {
+        "name": "projectPreferences",
+        "type": "object",
+        "properties": {
+          "projectType": { "type": "string", "description": "Nature of project (e.g. tutorial, prototype, production)" },
+          "languages": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Programming languages or frameworks requested"
+          },
+          "tools": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Specific libraries, platforms, or environments"
+          },
+          "difficulty": {
+            "type": "string",
+            "enum": ["easy", "moderate", "hard"],
+            "description": "Desired challenge level"
+          },
+          "steps": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10,
+            "description": "Number of guided steps desired"
+          }
+        }
+      }
+    ],
+    "rules": [
+      {
+        "ruleId": "parseBasicIntent",
+        "pattern": "(build|create|develop)\\s+a\\s+([\\w\\s]+)\\s+project",
+        "mappings": {
+          "projectType": "$2"
+        }
+      },
+      {
+        "ruleId": "detectSkillLevel",
+        "pattern": "(beginner|intermediate|advanced)",
+        "mappings": {
+          "userProfile.skillLevel": "$1"
+        }
+      },
+      {
+        "ruleId": "extractLanguages",
+        "pattern": "(using|with)\\s+([A-Za-z0-9,\\s]+)",
+        "mappings": {
+          "projectPreferences.languages": "$2"
+        }
+      },
+      {
+        "ruleId": "suggestDefaults",
+        "condition": "missing(projectPreferences.difficulty)",
+        "default": {
+          "projectPreferences.difficulty": "moderate"
+        }
+      },
+      {
+        "ruleId": "suggestStepCountDefault",
+        "condition": "missing(projectPreferences.steps)",
+        "default": {
+          "projectPreferences.steps": 3
+        }
+      }
+    ],
+    "testPrompts": [
+      {
+        "input": "I want to build an ML project using Python",
+        "expectedParse": {
+          "userProfile": {
+            "domain": "machine learning",
+            "skillLevel": null
+          },
+          "projectPreferences": {
+            "projectType": "ML",
+            "languages": ["Python"],
+            "tools": [],
+            "difficulty": "moderate",
+            "steps": 3
+          }
+        }
+      },
+      {
+        "input": "User is a beginner in web dev, wants to build in Python and HTML — suggest a 3-step guided project.",
+        "expectedParse": {
+          "userProfile": {
+            "domain": "web dev",
+            "skillLevel": "beginner"
+          },
+          "projectPreferences": {
+            "projectType": "guided project",
+            "languages": ["Python", "HTML"],
+            "tools": [],
+            "difficulty": "moderate",
+            "steps": 3
+          }
+        }
+      }
+    ]
+  }
+}
