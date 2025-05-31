@@ -121,11 +121,11 @@ const Register = () => {
     try {
       const deviceFingerprint = await getDeviceFingerprint();
       await apiClient.post("api/accounts/register/", {
-        username: formData.username,
-        email: formData.email,
-        password: formData.password,
-        password2: formData.password2,
-        agreeToTerms: formData.agreeToTerms,
+          username: formData.username,
+          email: formData.email,
+          password: formData.password,
+          password2: formData.password2,
+          agreeToTerms: formData.agreeToTerms,
         device_fingerprint: deviceFingerprint
       });
 
