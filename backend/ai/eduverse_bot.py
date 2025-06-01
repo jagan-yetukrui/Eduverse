@@ -18,24 +18,14 @@ class EduVerseBot(ActivityHandler):
         self.conversation_history = {}
 
         # ─── NEW: load project steps JSON into memory ────────────────────────
-        # Assume you create a file `ai/project_steps.json` with content like:
-        # {
-        #   "web_app": [
-        #     {"step_id": "setup_environment", "keywords": ["install", "setup", "environment"], "description": "Install prerequisites and set up virtual environment"},
-        #     {"step_id": "create_repo",      "keywords": ["repository", "repo", "git"],    "description": "Create a GitHub repo and clone it"},
-        #     {"step_id": "build_ui",         "keywords": ["ui", "html", "css"],           "description": "Build the basic HTML/CSS structure"},
-        #     ...
-        #   ],
-        #   "api_project": [
-        #     {"step_id": "design_endpoints", "keywords": ["design", "endpoints"],            "description": "Sketch endpoints and data models"},
-        #     {"step_id": "implement_routes", "keywords": ["routes", "implement"],            "description": "Code the route handlers in Flask/Django"},
-        #     ...
-        #   ]
-        # }
         self.project_steps = self._load_project_steps()
 
+        # ─── NEW: load Eduverse-logic.json into memory ───────────────────────
+        # Since Eduverse-logic.json lives in the same folder as this .py file,
+        # we can open it with just its filename.
+        self.prompt_logic = self._load_eduverse_logic()
+
         # ─── NEW: a per-user dictionary storing which project & which step they’re on ───
-        # e.g. { user_id1: {"project": "web_app", "current_step": "setup_environment"}, … }
         self.user_project_state = {}
 
         # ─── EXISTING: load environment variables and initialize Gemini client ─────────
@@ -92,31 +82,35 @@ class EduVerseBot(ActivityHandler):
     # ─── NEW: helper to load project_steps.json ──────────────────────────────
     def _load_project_steps(self):
         """
-        Loads a JSON file that defines all projects and their ordered steps.
-        Each project key maps to a list of step‐objects, each of which has:
-          - step_id: a short unique identifier (string)
-          - keywords: a list of keywords that indicate that step
-          - description: a human‐readable description of the step
+        Loads ai/project_steps.json (if present). Returns {} on FileNotFoundError.
         """
         try:
             with open('ai/project_steps.json', 'r') as f:
                 return json.load(f)
         except FileNotFoundError:
-            # If the file does not exist yet, return an empty dict.
+            return {}
+
+    # ─── NEW: helper to load Eduverse-logic.json ────────────────────────────
+    def _load_eduverse_logic(self):
+        """
+        Loads Eduverse-logic.json from the same directory as this script.
+        If the file is missing or unreadable, returns an empty dict.
+        """
+        try:
+            # Since eduverse_bot.py and Eduverse-logic.json live in the same folder,
+            # we can just refer to the filename directly.
+            with open('Eduverse-logic.json', 'r') as f:
+                return json.load(f)
+        except FileNotFoundError:
+            print("Warning: Eduverse-logic.json not found in the current directory.")
+            return {}
+        except json.JSONDecodeError as e:
+            print(f"Warning: Eduverse-logic.json is invalid JSON: {e}")
             return {}
 
     # ─── NEW: function to match user input to a “best step” ───────────────────
     async def _determine_best_step(self, user_message: str, user_id: str):
-        """
-        Given a user’s text, this function:
-          1. Checks if the user has an active project assignment in self.user_project_state.
-          2. Looks up that project’s step definitions in self.project_steps.
-          3. For each step in that project, compares user_message against the step’s keywords.
-          4. Finds the step with the highest count of keyword matches (or use simple heuristics).
-          5. If no match is strong enough, returns the previous step (no change).
-          6. Updates self.user_project_state[user_id]['current_step'] if a new step is found.
-        """
-        # If the user hasn’t been assigned to a project yet, do nothing.
+        # (identical to previous snippet; unchanged)
         if user_id not in self.user_project_state:
             return None
 
@@ -124,22 +118,18 @@ class EduVerseBot(ActivityHandler):
         if not project_name or project_name not in self.project_steps:
             return None
 
-        # Normalize user text
         text = user_message.lower()
-        steps = self.project_steps[project_name]  # list of step‐dicts
+        steps = self.project_steps[project_name]
 
         best_match = None
         best_score = 0
 
         for step_obj in steps:
-            # Count how many keywords appear in user_message
             score = sum(1 for kw in step_obj['keywords'] if kw.lower() in text)
             if score > best_score:
                 best_score = score
                 best_match = step_obj['step_id']
 
-        # If we found a better match (score >= 1), update the user’s current_step
-        # Otherwise, keep whatever was there
         if best_match and best_score >= 1:
             old_step = self.user_project_state[user_id].get('current_step')
             if old_step != best_match:
@@ -151,19 +141,32 @@ class EduVerseBot(ActivityHandler):
 
     async def _generate_gemini_response(self, user_message, user_id):
         """
-        Build a prompt that includes:
-         - system prompt
-         - brief note about “where the user currently is in their project”
-         - the last few turns of conversation
-         - the new user query.
-         
-        Gemini will be able to see: “User is on step X of project Y” in the context.
+        Builds a prompt for Gemini that now also has access to:
+         - self.prompt_logic  (loaded from Eduverse-logic.json)
+         - self.project_steps / self.user_project_state
+         - conversation history, etc.
         """
+
         system_prompt = """You are Edura, an AI educational mentor for EduVerse. 
 You help users with project suggestions, career guidance, course recommendations, 
 code review, and general educational questions. Maintain a helpful, encouraging tone.
 Your responses should be educational and guide users toward learning resources.
 """
+
+        # ─── NEW: If Eduverse-logic.json defines some “instruction templates” or “rules,”
+        # you could incorporate them here. For example:
+        #
+        #   logic = self.prompt_logic.get("some_logic_key", "")
+        #   if logic:
+        #       system_prompt += logic + "\n\n"
+        #
+        # (Below is just a placeholder showing where you would do that.)
+
+        if self.prompt_logic:
+            # Example: suppose Eduverse-logic.json has a field "default_instruction"
+            default_inst = self.prompt_logic.get("default_instruction")
+            if default_inst:
+                system_prompt += default_inst + "\n\n"
 
         # ─── NEW: insert project‐state context (if available) ──────────────────────
         project_context = ""
@@ -172,13 +175,15 @@ Your responses should be educational and guide users toward learning resources.
             proj = state.get('project')
             step = state.get('current_step')
             if proj and step:
-                # Find a human‐readable description for that step:
                 desc = None
                 for s in self.project_steps.get(proj, []):
                     if s['step_id'] == step:
                         desc = s.get('description', step)
                         break
-                project_context = f"[Project Status] You are helping a user who is on step “{desc}” (ID: {step}) of the “{proj}” project.\n\n"
+                project_context = (
+                    f"[Project Status] You are helping a user who is on step “{desc}” "
+                    f"(ID: {step}) of the “{proj}” project.\n\n"
+                )
 
         # Build conversation context
         history = self.conversation_history.get(user_id, [])
@@ -233,23 +238,27 @@ Your responses should be educational and guide users toward learning resources.
         user_message = turn_context.activity.text.strip()
 
         # ─── NEW: Quick check—if user is “selecting” a project, store that selection ──
-        # For instance, if the user says “I want to work on the web_app project”, we store that.
-        # You can refine this to match exactly how you ask users to name projects.
         project_match = re.search(r'project\s+([a-zA-Z0-9_]+)', user_message.lower())
         if project_match:
             chosen_proj = project_match.group(1)
             if chosen_proj in self.project_steps:
-                # Initialize their state
                 self.user_project_state[user_id] = {
                     'project': chosen_proj,
-                    'current_step': None  # Not known yet until they give input
+                    'current_step': None
                 }
-                response = f"Okay! I've set your current project to “{chosen_proj}”. Whenever you tell me what you’re working on next, I'll track your progress. Which step have you completed or want to ask about?"
+                response = (
+                    f"Okay! I've set your current project to “{chosen_proj}”. "
+                    "Whenever you tell me what you’re working on next, I'll track your progress. "
+                    "Which step have you completed or want to ask about?"
+                )
                 await turn_context.send_activity(response)
                 await self._save_interaction(user_id, user_message, response)
                 return
             else:
-                response = f"I don’t recognize a project called “{chosen_proj}”. Try one of: {', '.join(self.project_steps.keys())}."
+                response = (
+                    f"I don’t recognize a project called “{chosen_proj}”. "
+                    f"Try one of: {', '.join(self.project_steps.keys())}."
+                )
                 await turn_context.send_activity(response)
                 await self._save_interaction(user_id, user_message, response)
                 return
@@ -257,20 +266,21 @@ Your responses should be educational and guide users toward learning resources.
         # ─── NEW: if they’ve already selected a project, try to determine which step they’re talking about ─
         if user_id in self.user_project_state:
             new_step = await self._determine_best_step(user_message, user_id)
-            # If _determine_best_step returned something new, let the user know
             if new_step:
-                # (Optionally craft a friendly message about “Noticed you seem to be at Step X now”)
                 step_desc = None
                 for s in self.project_steps[self.user_project_state[user_id]['project']]:
                     if s['step_id'] == new_step:
                         step_desc = s['description']
                         break
                 if step_desc:
-                    response = f"It sounds like you're now on: **{step_desc}**. Let me know what questions you have, and I'll guide you through."
+                    response = (
+                        f"It sounds like you're now on: **{step_desc}**. "
+                        "Let me know what questions you have, and I'll guide you through."
+                    )
                     await turn_context.send_activity(response)
                     await self._save_interaction(user_id, user_message, response)
                     return
-                # If no description, we’ll let Gemini handle it, so fall through to generating a normal response.
+                # If no description, we’ll let Gemini handle it.
 
         # ─── EXISTING HANDLERS (FAQs, career, projects, etc.)────────────────────────
         response = ""
@@ -322,7 +332,7 @@ Your responses should be educational and guide users toward learning resources.
                 response = "Browse our comprehensive FAQ section at: [EduVerse FAQs](#)"
 
         else:
-            # ─── NEW: Call Gemini, INCLUDING project context ───────────────────
+            # ─── NEW: Call Gemini, INCLUDING project context and (if you like) prompt_logic ──
             response = await self._generate_gemini_response(user_message, user_id)
 
         # Send whatever response we built
