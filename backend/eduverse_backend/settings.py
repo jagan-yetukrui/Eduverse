@@ -109,7 +109,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'postgres',
         'USER': 'Jagan',
-        'PASSWORD': 'Jagan%579',
+        'PASSWORD': 'Jagan579',
         'HOST': 'eduverse-db.crgqasis8mt9.us-east-2.rds.amazonaws.com',
         'PORT': '5432',
     }

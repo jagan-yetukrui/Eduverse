@@ -89,7 +89,7 @@ const Notes = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:8000/chat/", {
+      const response = await fetch("https://edu-verse.in/chat/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
