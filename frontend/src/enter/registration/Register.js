@@ -17,7 +17,7 @@ import { getDeviceFingerprint } from "../../utils/tokenManager";
 
 // Create axios instance with base URL
 const apiClient = axios.create({
-  baseURL: "https://edu-verse.in/",
+  baseURL: "http://localhost:8000/",
 });
 
 const Register = () => {

@@ -9,7 +9,7 @@ import { getDeviceFingerprint, setTokens, isAuthenticated } from "../../utils/to
 
 // Create axios instance with base URL
 const apiClient = axios.create({
-  baseURL: "https://edu-verse.in/",
+  baseURL: "http://localhost:8000/",
 });
 
 // Add request interceptor
@@ -127,9 +127,8 @@ const Login = () => {
 
       try {
         const deviceFingerprint = await getDeviceFingerprint();
-        const response = await apiClient.post("api/token/", {
-          ...formData,
-          device_fingerprint: deviceFingerprint
+        const response = await apiClient.post("api/accounts/login/", {
+          ...formData
         });
 
         const { access, refresh } = response.data;

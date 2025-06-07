@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './Search.css';
+import { useNavigate } from 'react-router-dom';
+import defaultProfileImage from '../assets/default-profile.png';
 
 const Search = () => {
   const [query, setQuery] = useState('');
@@ -19,6 +21,7 @@ const Search = () => {
   const searchContainerRef = useRef(null);
   const searchBarRef = useRef(null);
   const aiOrbRef = useRef(null);
+  const navigate = useNavigate();
 
   // Initialize page load animations
   useEffect(() => {
@@ -54,7 +57,7 @@ const Search = () => {
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
-        const response = await fetch('/api/user/current');
+        const response = await fetch('http://localhost:8000/api/user/current');
         const data = await response.json();
         setCurrentUser(data);
       } catch (error) {
@@ -76,12 +79,12 @@ const Search = () => {
         
         setLoading(true);
         try {
-          const response = await fetch(`/api/users/search?query=${encodeURIComponent(query)}`);
+          const response = await fetch(`http://localhost:8000/api/users/search?query=${encodeURIComponent(query)}`);
           const users = await response.json();
           
           const usersWithMutuals = await Promise.all(
             users.map(async (user) => {
-              const mutualsResponse = await fetch(`/api/users/${user.id}/mutuals`);
+              const mutualsResponse = await fetch(`http://localhost:8000/api/users/${user.id}/mutuals`);
               const mutualsData = await mutualsResponse.json();
               return {
                 ...user,
@@ -163,7 +166,7 @@ const Search = () => {
       triggerSearchAnimation();
 
       try {
-        const response = await fetch(`/api/users/search?query=${encodeURIComponent(query)}&detailed=true`);
+        const response = await fetch(`http://localhost:8000/api/users/search?query=${encodeURIComponent(query)}&detailed=true&exclude_self=false`);
         const results = await response.json();
         
         setTimeout(() => {
@@ -177,18 +180,19 @@ const Search = () => {
     }
   };
 
-  const handleSuggestionClick = async (userId) => {
+  const handleSuggestionClick = async (username) => {
     if (!currentUser) {
       setShowLoginPopup(true);
       return;
     }
     
     try {
-      const response = await fetch(`/api/users/${userId}`);
+      const response = await fetch(`http://localhost:8000/api/profiles/${username}/`);
       const userData = await response.json();
       setQuery(userData.name);
       setSearchResults([userData]);
       setSuggestions([]);
+      navigate(`/profile/${username}`);
     } catch (error) {
       console.error('Error fetching user details:', error);
     }
@@ -201,6 +205,12 @@ const Search = () => {
 
   const closeLoginPopup = () => {
     setShowLoginPopup(false);
+  };
+
+  const formatDisplayName = (user) => {
+    if (user.display_name) return user.display_name;
+    const fullName = `${user.first_name} ${user.last_name}`.trim();
+    return fullName || `@${user.username}`;
   };
 
   return (
@@ -268,18 +278,32 @@ const Search = () => {
       {suggestions.length > 0 && (
         <ul className="suggestions-list">
           {suggestions.map((user) => (
-            <li key={user.id} onClick={() => handleSuggestionClick(user.id)} className="suggestion-item">
-              <img src={user.profileImage} alt={user.name} className="user-avatar" />
+            <li 
+              key={user.username} 
+              onClick={() => handleSuggestionClick(user.username)} 
+              className="suggestion-item"
+            >
+              <img 
+                src={user.profile_image || defaultProfileImage} 
+                alt={`${formatDisplayName(user)}'s profile`} 
+                className="user-avatar"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = defaultProfileImage;
+                }}
+              />
               <div className="user-info">
-                <h4>{user.name}</h4>
-                <p className="user-title">{user.title}</p>
+                <h4>{formatDisplayName(user)}</h4>
+                <p className="username">@{user.username}</p>
                 <div className="mutual-connections">
                   {user.mutualCount > 0 && (
                     <>
                       <span className="mutual-count">{user.mutualCount} mutual connections</span>
                       <div className="mutual-preview">
                         {user.mutualConnections.slice(0, 3).map(mutual => (
-                          <span key={mutual.id} className="mutual-name">{mutual.name}</span>
+                          <span key={mutual.username} className="mutual-name">
+                            {mutual.display_name || `@${mutual.username}`}
+                          </span>
                         ))}
                       </div>
                     </>
@@ -295,29 +319,32 @@ const Search = () => {
         <div className="search-results">
           <h3>Search Results</h3>
           <div className="results-grid">
-            {searchResults.map((user, index) => (
+            {searchResults.map((user) => (
               <div 
-                key={user.id} 
+                key={user.username}
                 className="result-card"
-                style={{animationDelay: `${index * 0.1}s`}}
-                onClick={() => {
-                  const card = document.querySelector(`[data-user-id="${user.id}"]`);
-                  card.classList.add('expanded');
-                }}
-                data-user-id={user.id}
+                onClick={() => navigate(`/profile/${user.username}`)}
+                data-user-id={user.username}
               >
                 <div className="card-glow"></div>
-                <img src={user.profileImage} alt={user.name} className="user-avatar" />
+                <img 
+                  src={user.profile_image || defaultProfileImage} 
+                  alt={`${formatDisplayName(user)}'s profile`} 
+                  className="user-avatar"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = defaultProfileImage;
+                  }}
+                />
                 <div className="user-info">
-                  <h4>{user.name}</h4>
-                  <p className="user-title">{user.title}</p>
-                  <p className="user-location">{user.location}</p>
+                  <h4>{formatDisplayName(user)}</h4>
+                  <p className="username">@{user.username}</p>
                   {user.mutualCount > 0 && (
                     <div className="mutual-connections">
                       <h5>Mutual Connections ({user.mutualCount})</h5>
                       <ul className="mutual-list">
                         {user.mutualConnections.map(mutual => (
-                          <li key={mutual.id}>{mutual.name}</li>
+                          <li key={mutual.username}>{mutual.display_name || `@${mutual.username}`}</li>
                         ))}
                       </ul>
                     </div>

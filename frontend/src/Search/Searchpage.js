@@ -1,12 +1,15 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import "./SearchPage.css";
 import UserCard from '../components/UserCard/UserCard';
 import PostCard from '../components/PostCard/PostCard';
-import { FaSearch, FaFilter, FaTimes } from 'react-icons/fa';
+import { FaSearch, FaFilter } from 'react-icons/fa';
 import apiClient from '../utils/api';
+import defaultProfileImage from '../assets/default-profile.png';
 
 const Search = () => {
+  const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [searchResults, setSearchResults] = useState({ users: [], posts: [] });
   const [loading, setLoading] = useState(false);
@@ -17,10 +20,10 @@ const Search = () => {
   const [showFilters, setShowFilters] = useState(false);
   const searchTimeoutRef = useRef(null);
 
-  const handleSearch = async (searchQuery) => {
+  const handleSearch = useCallback(async (searchQuery) => {
     if (searchTimeoutRef.current) {
       clearTimeout(searchTimeoutRef.current);
-      }
+    }
 
     searchTimeoutRef.current = setTimeout(async () => {
       if (!searchQuery.trim()) {
@@ -33,11 +36,12 @@ const Search = () => {
         const params = new URLSearchParams({
           query: searchQuery,
           type: searchType,
+          exclude_self: "false",
           ...(postType !== 'all' && { post_type: postType }),
           ...(timeFilter !== 'all' && { time: timeFilter })
         });
 
-        const response = await apiClient.get(`api/search/?${params.toString()}`);
+        const response = await apiClient.get(`http://localhost:8000/api/search/?${params.toString()}`);
         setSearchResults(response.data);
       } catch (err) {
         console.error('Search error:', err);
@@ -46,11 +50,11 @@ const Search = () => {
         setLoading(false);
       }
     }, 300);
-  };
+  }, [searchType, postType, timeFilter]);
 
   useEffect(() => {
     handleSearch(query);
-  }, [query, searchType, postType, timeFilter]);
+  }, [query, handleSearch]);
 
   const FilterButton = ({ active, onClick, children }) => (
     <button
@@ -60,6 +64,16 @@ const Search = () => {
       {children}
     </button>
   );
+
+  const formatDisplayName = (user) => {
+    if (user.display_name) return user.display_name;
+    const fullName = `${user.first_name} ${user.last_name}`.trim();
+    return fullName || `@${user.username}`;
+  };
+
+  const handleUserClick = (username) => {
+    navigate(`/profile/${username}`);
+  };
 
   return (
     <div className="search-container">
@@ -199,7 +213,19 @@ const Search = () => {
                 <h2>Users</h2>
               <div className="search-results-grid">
                 {searchResults.users.map(user => (
-                  <UserCard key={user.id} user={user} />
+                  <div 
+                    key={user.username}
+                    onClick={() => handleUserClick(user.username)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <UserCard 
+                      user={{
+                        ...user,
+                        display_name: formatDisplayName(user),
+                        profile_image: user.profile_image || defaultProfileImage
+                      }}
+                    />
+                  </div>
                   ))}
                 </div>
               </div>
@@ -210,7 +236,17 @@ const Search = () => {
                 <h2>Posts</h2>
               <div className="search-results-grid">
                 {searchResults.posts.map(post => (
-                  <PostCard key={post.id} post={post} />
+                  <PostCard 
+                    key={post.id}
+                    post={{
+                      ...post,
+                      author: {
+                        ...post.author,
+                        display_name: formatDisplayName(post.author),
+                        profile_image: post.author.profile_image || defaultProfileImage
+                      }
+                    }}
+                  />
                   ))}
                 </div>
               </div>

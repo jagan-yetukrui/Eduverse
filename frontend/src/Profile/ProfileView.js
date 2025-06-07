@@ -152,7 +152,7 @@ const ProfileView = () => {
 
   const handleCopyUsername = useCallback(() => {
     try {
-      const profileLink = `https://edu-verse.in/user/${user.username}`;
+      const profileLink = `http://localhost:8000/user/${user.username}`;
       navigator.clipboard.writeText(profileLink);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
@@ -176,7 +176,7 @@ const ProfileView = () => {
         }
 
         const response = await axios.get(
-          `https://edu-verse.in/api/profiles/me/`,
+          `http://localhost:8000/api/profiles/me/`,
           {
           headers: { Authorization: `Bearer ${token}` }
           }
@@ -220,7 +220,7 @@ const ProfileView = () => {
       const endpoint = profile.is_following ? 'unfollow' : 'follow';
       
       const response = await axios.post(
-        `https://edu-verse.in/api/profiles/${profile.id}/${endpoint}/`,
+        `http://localhost:8000/api/profiles/${profile.id}/${endpoint}/`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` }

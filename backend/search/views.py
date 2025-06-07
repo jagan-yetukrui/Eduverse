@@ -11,20 +11,23 @@ from posts.models import Post
 from profiles.models import Profile
 from django.utils import timezone
 from datetime import timedelta
+from .serializers import UserSearchSerializer
 
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def search(request):
     """
-    Search endpoint for users and posts with filtering and relevance scoring
+    Real-time search endpoint for users and posts with filtering
     """
     try:
         # Get and validate search parameters
         query = request.GET.get("query", "").strip()
-        search_type = request.GET.get("type", "all")
-        post_type = request.GET.get("post_type", None)
-        time_filter = request.GET.get("time", None)
+        search_type = request.GET.get("type", "users")
+        exclude_self = str(request.GET.get("exclude_self", "true")).lower() == "true"
+        
+        # Debug logging
+        print("Search Params — Query:", query, "Type:", search_type, "Exclude Self:", exclude_self)
         
         # Validate inputs
         if not query:
@@ -41,12 +44,23 @@ def search(request):
         
         # Search users
         if search_type in ["all", "users"]:
-            users = _search_users(query, request.user)
-            results["users"] = users
+            users = CustomUser.objects.filter(
+                Q(username__icontains=query) |
+                Q(first_name__icontains=query) |
+                Q(last_name__icontains=query)
+            ).select_related('profile')
+            
+            # Exclude current user if requested and authenticated
+            if request.user.is_authenticated and exclude_self:
+                users = users.exclude(id=request.user.id)
+            
+            # Serialize results
+            serializer = UserSearchSerializer(users, many=True)
+            results["users"] = serializer.data
         
         # Search posts
         if search_type in ["all", "posts"]:
-            posts = _search_posts(query, post_type, time_filter)
+            posts = _search_posts(query)
             results["posts"] = posts
         
         results["total_results"] = len(results["users"]) + len(results["posts"])
@@ -54,96 +68,20 @@ def search(request):
         return Response(results, status=status.HTTP_200_OK)
         
     except Exception as e:
+        print(f"Search error: {str(e)}")
         return Response(
             {"error": "An error occurred while searching", "details": str(e)}, 
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
 
 
-def _search_users(query, current_user):
-    """Search for users based on query"""
-    users = CustomUser.objects.filter(
-        Q(username__icontains=query) |
-        Q(first_name__icontains=query) |
-        Q(last_name__icontains=query) |
-        Q(email__icontains=query)
-    ).select_related('profile')
-    
-    # Exclude current user if authenticated
-    if current_user.is_authenticated:
-        users = users.exclude(id=current_user.id)
-    
-    user_results = []
-    for user in users:
-        try:
-            profile = getattr(user, 'profile', None)
-            if not profile:
-                continue
-                
-            mutual_followers = 0
-            is_following = False
-            
-            if current_user.is_authenticated and hasattr(current_user, 'profile'):
-                # Calculate mutual connections
-                mutual_followers = profile.followers.filter(
-                    id__in=current_user.profile.followers.values_list('id', flat=True)
-                ).count()
-                
-                # Check if current user is following this user
-                is_following = current_user.profile.following.filter(id=user.id).exists()
-            
-            user_data = {
-                "id": user.id,
-                "username": user.username,
-                "email": user.email,
-                "first_name": user.first_name,
-                "last_name": user.last_name,
-                "display_name": profile.display_name or f"{user.first_name} {user.last_name}".strip(),
-                "avatar_url": profile.avatar.url if profile.avatar else None,
-                "bio": profile.bio or "",
-                "location": profile.location or "",
-                "skills": [skill.name for skill in profile.skills.all()],
-                "followers_count": profile.followers.count(),
-                "following_count": profile.following.count(),
-                "is_following": is_following,
-                "mutual_connections": mutual_followers,
-                "relevance_score": calculate_user_relevance(user, profile, query, mutual_followers)
-            }
-            user_results.append(user_data)
-            
-        except Exception as e:
-            # Log error but continue processing other users
-            continue
-    
-    # Sort by relevance score
-    user_results.sort(key=lambda x: x["relevance_score"], reverse=True)
-    return user_results
-
-
-def _search_posts(query, post_type=None, time_filter=None):
-    """Search for posts based on query and filters"""
+def _search_posts(query):
+    """Search for posts based on query"""
     posts = Post.objects.filter(
         Q(title__icontains=query) |
         Q(content__icontains=query) |
         Q(author__username__icontains=query)
     ).select_related('author').prefetch_related('likes', 'comments')
-    
-    # Apply post type filter
-    if post_type:
-        posts = posts.filter(post_type=post_type)
-    
-    # Apply time filter
-    if time_filter:
-        now = timezone.now()
-        time_filters = {
-            "today": now - timedelta(days=1),
-            "week": now - timedelta(weeks=1),
-            "month": now - timedelta(days=30),
-            "year": now - timedelta(days=365)
-        }
-        
-        if time_filter in time_filters:
-            posts = posts.filter(created_at__gte=time_filters[time_filter])
     
     post_results = []
     for post in posts:
@@ -155,7 +93,6 @@ def _search_posts(query, post_type=None, time_filter=None):
                 "title": post.title,
                 "content": post.content[:200] + "..." if len(post.content) > 200 else post.content,
                 "author": {
-                    "id": post.author.id,
                     "username": post.author.username,
                     "display_name": author_profile.display_name if author_profile else post.author.username,
                     "avatar_url": author_profile.avatar.url if author_profile and author_profile.avatar else None
@@ -164,17 +101,14 @@ def _search_posts(query, post_type=None, time_filter=None):
                 "created_at": post.created_at,
                 "updated_at": post.updated_at,
                 "likes_count": post.likes.count(),
-                "comments_count": post.comments.count(),
-                "relevance_score": calculate_post_relevance(post, query)
+                "comments_count": post.comments.count()
             }
             post_results.append(post_data)
             
         except Exception as e:
-            # Log error but continue processing other posts
+            print(f"Error processing post {post.id}: {str(e)}")
             continue
     
-    # Sort by relevance score
-    post_results.sort(key=lambda x: x["relevance_score"], reverse=True)
     return post_results
 
 
