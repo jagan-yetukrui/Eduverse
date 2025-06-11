@@ -1,188 +1,251 @@
-from botbuilder.core import ActivityHandler, TurnContext
-from botbuilder.schema import ChannelAccount
-import json
-import re
-from pathlib import Path
-from google import genai
 import os
-from dotenv import load_dotenv
+import json
+import google.generativeai as genai
+import logging
 
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
-class EduVerseBot(ActivityHandler):
+def is_project_question(user_message):
+    """Enhanced project detection with more keywords and natural language patterns."""
+    project_keywords = [
+        "project", "task", "step", "code", "api", "database", "frontend", "backend",
+        "bug", "problem", "issue", "feature", "json", "logic", "guide", "help with",
+        "how to", "explain", "implement", "create", "build", "develop", "write"
+    ]
+    lowered = user_message.lower()
+    return any(word in lowered for word in project_keywords)
+
+class EduVerseBot:
     def __init__(self):
-        super().__init__()
-        print("Initializing EduVerseBot...")
-        self.knowledge_base = self._load_knowledge_base()
-        self.conversation_history = {}
-
-        # Load environment variables
-        load_dotenv()
-
-        # Initializing Gemini
+        """Initialize the EduVerseBot with Gemini model and load all project data."""
         api_key = os.getenv("GEMINI_API_KEY")
         if not api_key:
-            print("Warning: GEMINI_API_KEY not found in environment variables")
-        else:
-            self.genai_client = genai.Client(api_key=api_key)
+            raise ValueError("GEMINI_API_KEY not found in environment variables")
         
-    async def _generate_gemini_response(self, user_message, user_id):
-        system_prompt = """You are Edura, an AI educational mentor for EduVerse. 
-        You help users with project suggestions, career guidance, course recommendations, 
-        code review, and general educational questions. Maintain a helpful, encouraging tone.
-        Your responses should be educational and guide users toward learning resources."""
+        genai.configure(api_key=api_key)
+        self.model = genai.GenerativeModel("gemini-1.5-pro")
         
-        history = self.conversation_history.get(user_id, [])
-        recent_history = history[-5:] if len(history) > 5 else history
+        # Set up data folder path
+        self.data_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'Data')
         
-        conversation_context = ""
-        for interaction in recent_history:
-            conversation_context += f"User: {interaction['user_message']}\n"
-            conversation_context += f"Edura: {interaction['bot_response']}\n"
+        # Define project files
+        self.project_files = [
+            "aws_projects_complete copy.json",
+            "java_projects_complete copy.json",
+            "node_projects_complete copy.json",
+            "python_projects_complete copy.json",
+            "react_projects_complete copy.json",
+            "sql_projects_complete copy.json"
+        ]
         
-        prompt = f"{system_prompt}\n\nConversation History:\n{conversation_context}\n\nUser: {user_message}\nEdura:"
-        print(prompt)
-        try:
-            response = self.genai_client.models.generate_content(
-                model="gemini-2.0-flash",
-                contents=prompt
-            )
-            return response.text
-        except Exception as e:
-            print(f"Error calling Gemini API: {str(e)}")
-            return "I'm having trouble connecting to my knowledge systems. Let's try a different approach to your question."
+        # Load all project data
+        self.project_data = {"projects": self.load_all_project_data()}
 
-    def _load_knowledge_base(self):
-        try:
-            with open('ai/knowledge_base.json', 'r') as f:
-                return json.load(f)
-        except FileNotFoundError:
-            return {
-                'faqs': {
-                    'how to start': 'Start by choosing a learning path and completing the skill assessment',
-                    'pricing': 'We offer both free and premium plans. Check our pricing page for details',
-                    'certificates': 'Yes, you receive certificates upon completing courses',
-                    'learning paths': 'We offer structured learning paths in Web Development, Data Science, and Mobile Development',
-                    'support': 'You can reach our support team 24/7 through chat or email at support@eduverse.com'
-                },
-                'career_paths': {
-                    'web development': {
-                        'roles': ['Frontend Developer', 'Backend Developer', 'Full Stack Developer'],
-                        'skills': ['HTML/CSS', 'JavaScript', 'React/Angular', 'Node.js', 'Databases'],
-                        'courses': ['Web Development Bootcamp', 'JavaScript Mastery', 'React Complete Guide']
-                    },
-                    'data science': {
-                        'roles': ['Data Analyst', 'Machine Learning Engineer', 'Data Scientist'],
-                        'skills': ['Python', 'SQL', 'Machine Learning', 'Statistics', 'Data Visualization'],
-                        'courses': ['Data Science Fundamentals', 'Machine Learning A-Z', 'Python for Data Science']
-                    }
-                },
-                'project_suggestions': {
-                    'web': [
-                        {'name': 'Portfolio Website', 'difficulty': 'Beginner'},
-                        {'name': 'E-commerce Platform', 'difficulty': 'Intermediate'},
-                        {'name': 'Social Media Clone', 'difficulty': 'Advanced'}
-                    ],
-                    'python': [
-                        {'name': 'Web Scraper', 'difficulty': 'Beginner'},
-                        {'name': 'Task Management API', 'difficulty': 'Intermediate'},
-                        {'name': 'Data Analysis Dashboard', 'difficulty': 'Advanced'}
-                    ]
-                },
-                'courses': {},
-                'learning_data': []
-            }
+        # Casual chat prompt for friendly conversation
+        self.casual_prompt = """
+You are Edura — a friendly but concise AI mentor inside Eduverse.
 
-    async def _save_interaction(self, user_id, user_message, bot_response):
-        if user_id not in self.conversation_history:
-            self.conversation_history[user_id] = []
-        self.conversation_history[user_id].append({
-            'user_message': user_message,
-            'bot_response': bot_response
-        })
+Your role is to help users navigate projects, give suggestions, and explain concepts simply.
 
+Guidelines:
+- When suggesting projects, give 3-4 relevant ideas max.
+- Keep explanations short, natural, and friendly.
+- Avoid long lectures or unnecessary deep dives.
+- Use simple, casual language like a human mentor.
+- If user seems stuck, give a short helpful hint.
+- Always encourage next actionable step.
+- Avoid repeating the project name too many times.
+
+Example:
+User: Hey Edura
+Response: Hey there! I'm here to help you learn. What would you like to explore today? 😊
+"""
+
+        # Project guidance prompt for technical assistance
+        self.system_prompt = """
+You are Edura — a friendly but concise AI mentor inside Eduverse.
+
+Your role is to help users navigate projects, give suggestions, and explain concepts simply.
+
+Guidelines:
+- When suggesting projects, give 3-4 relevant ideas max.
+- Keep explanations short, natural, and friendly.
+- Avoid long lectures or unnecessary deep dives.
+- Use simple, casual language like a human mentor.
+- If user seems stuck, give a short helpful hint.
+- Always encourage next actionable step.
+- Avoid repeating the project name too many times.
+
+For technical questions:
+- Give small, actionable hints rather than full solutions
+- Explain concepts in simple terms
+- Focus on one step at a time
+- Encourage learning through doing
+"""
+
+    def load_all_project_data(self):
+        """Load all project JSON files from the Data directory."""
+        all_projects = []
         
-
-        self.knowledge_base['learning_data'].append({
-            'input': user_message,
-            'response': bot_response
-        })
-        # Save updated knowledge base
-        with open('ai/knowledge_base.json', 'w') as f:
-            json.dump(self.knowledge_base, f)
-
-    async def _analyze_code(self, code):
-        suggestions = []
+        for file_name in self.project_files:
+            file_path = os.path.join(self.data_folder, file_name)
+            try:
+                with open(file_path, "r") as file:
+                    data = json.load(file)
+                    all_projects.extend(data["projects"])
+                    logger.info(f"Loaded {len(data['projects'])} projects from {file_name}")
+            except Exception as e:
+                logger.error(f"Error loading {file_name}: {str(e)}")
         
-        if 'print' in code and not any(['def' in code, 'class' in code]):
-            suggestions.append("Consider wrapping this code in a function for better reusability")
+        logger.info(f"Total projects loaded: {len(all_projects)}")
+        return all_projects
+
+    def find_relevant_project_data(self, user_message):
+        """Find relevant project, task, or step based on user message with enhanced matching."""
+        lowered = user_message.lower()
+        best_match = None
+        best_match_type = None
+        best_match_score = 0
         
-        if not code.strip().startswith('def') and len(code.split('\n')) > 5:
-            suggestions.append("Consider breaking this code into smaller functions")
+        # First, try to match project type from file names
+        project_type = None
+        for file_name in self.project_files:
+            base_name = file_name.replace("_projects_complete copy.json", "").lower()
+            if base_name in lowered:
+                project_type = base_name
+                break
+        
+        for project in self.project_data["projects"]:
+            project_name = project.get("project_name", "").lower()
+            project_desc = project.get("description", "").lower()
             
-        return suggestions
+            # Check project name and description
+            if project_name in lowered or project_desc in lowered:
+                return {"type": "project", "data": project}
+            
+            # Check tasks
+            for task in project.get("tasks", []):
+                task_name = task.get("task_name", "").lower()
+                task_desc = task.get("description", "").lower()
+                
+                # Calculate match score for task
+                task_score = 0
+                if task_name in lowered:
+                    task_score += 2
+                if task_desc in lowered:
+                    task_score += 1
+                
+                if task_score > best_match_score:
+                    best_match = {"type": "task", "data": {"project": project, "task": task}}
+                    best_match_type = "task"
+                    best_match_score = task_score
+                
+                # Check steps
+                for step in task.get("steps", []):
+                    step_name = step.get("step_name", "").lower()
+                    step_desc = step.get("description", "").lower()
+                    
+                    # Calculate match score for step
+                    step_score = 0
+                    if step_name in lowered:
+                        step_score += 3
+                    if step_desc in lowered:
+                        step_score += 1
+                    
+                    if step_score > best_match_score:
+                        best_match = {"type": "step", "data": {"project": project, "task": task, "step": step}}
+                        best_match_type = "step"
+                        best_match_score = step_score
+        
+        return best_match
 
-    async def on_message_activity(self, turn_context: TurnContext):
-        user_id = turn_context.activity.from_property.id
-        user_message = turn_context.activity.text.lower()
-        response = ""
-
-        code_pattern = re.compile(r'``````')
-        if code_match := code_pattern.search(user_message):
-            code = code_match.group(0).strip('`')
-            suggestions = await self._analyze_code(code)
-            response = "Code Analysis Results:\n" + "\n".join(suggestions)
-        elif "project" in user_message:
-            category = next((cat for cat in ['web', 'python'] if cat in user_message), None)
-            if category and category in self.knowledge_base['project_suggestions']:
-                projects = self.knowledge_base['project_suggestions'][category]
-                response = f"Here are some {category.title()} project suggestions:\n"
-                response += "\n".join([f"{i+1}. {p['name']} ({p['difficulty']})" 
-                                     for i, p in enumerate(projects)])
-            else:
-                response = "I can suggest projects in various domains. What technology or field interests you? (e.g., Python, Web Development, Mobile Apps)"
-        elif "career" in user_message:
-            career_type = next((career for career in ['web development', 'data science'] 
-                              if career in user_message), None)
-            if career_type and career_type in self.knowledge_base['career_paths']:
-                career_info = self.knowledge_base['career_paths'][career_type]
-                response = f"For a career in {career_type.title()}, here's what you need to know:\n\n"
-                response += f"Potential Roles:\n{', '.join(career_info['roles'])}\n\n"
-                response += f"Key Skills:\n{', '.join(career_info['skills'])}\n\n"
-                response += f"Recommended Courses:\n{', '.join(career_info['courses'])}"
-            else:
-                response = "I can provide career guidance in various tech fields. What area interests you? (e.g., Data Science, Web Development, Cloud Computing)"
-        elif "course" in user_message:
-            if "beginner" in user_message:
-                response = "For beginners, I recommend:\n1. CS50 by Harvard\n2. Python for Everybody\n3. Web Development Bootcamp"
-            else:
-                response = "What's your current skill level and area of interest? This will help me suggest appropriate courses."
-        elif "faq" in user_message:
-            faqs = {
-                "how to start": "Start by choosing a learning path and completing the skill assessment",
-                "pricing": "We offer both free and premium plans. Check our pricing page for details",
-                "certificates": "Yes, you receive certificates upon completing courses"
-            }
-            for keyword, answer in faqs.items():
-                if keyword in user_message:
-                    response = answer
-                    break
-            if not response:
-                response = "Browse our comprehensive FAQ section at: [EduVerse FAQs](#)"
+    def build_project_prompt(self, data, project_context=None):
+        """Build prompt for project-related questions with enhanced context handling."""
+        prompt = self.system_prompt + "\n"
+        
+        if project_context:
+            context_type = project_context.get("type")
+            context_data = project_context.get("data", {})
+            
+            if context_type == "project":
+                project = context_data
+                prompt += f"\nProject: {project.get('project_name', 'N/A')}\n"
+                prompt += f"Description: {project.get('description', 'N/A')}\n"
+                prompt += f"Difficulty: {project.get('difficulty', 'N/A')}\n"
+            
+            elif context_type == "task":
+                project = context_data.get("project", {})
+                task = context_data.get("task", {})
+                prompt += f"\nProject: {project.get('project_name', 'N/A')}\n"
+                prompt += f"Description: {project.get('description', 'N/A')}\n"
+                prompt += f"Task: {task.get('task_name', 'N/A')}\n"
+                prompt += f"Task Description: {task.get('description', 'N/A')}\n"
+            
+            elif context_type == "step":
+                project = context_data.get("project", {})
+                task = context_data.get("task", {})
+                step = context_data.get("step", {})
+                
+                prompt += f"\nProject: {project.get('project_name', 'N/A')}\n"
+                prompt += f"Description: {project.get('description', 'N/A')}\n"
+                prompt += f"Task: {task.get('task_name', 'N/A')}\n"
+                
+                if step:
+                    guidelines = step.get("guidelines", [])
+                    why = step.get("why", [])
+                    hints = step.get("hints", [])
+                    starting_code = step.get("starting_code", "")
+                    final_code = step.get("final_code", "")
+                    
+                    prompt += f"\nStep: {step.get('step_name', 'N/A')}\n"
+                    prompt += f"Description: {step.get('description', 'N/A')}\n"
+                    prompt += f"Guidelines: {guidelines}\n"
+                    prompt += f"Why: {why}\n"
+                    prompt += f"Hints: {hints}\n"
+                    prompt += f"Starting Code: {starting_code}\n"
+                    prompt += f"Final Code: {final_code}\n"
+                else:
+                    prompt += "\nNo specific step found. Providing general task guidance.\n"
         else:
-            response = await self._generate_gemini_response(user_message, user_id)
+            # Use provided data
+            prompt += f"\nProject: {data.get('project', 'N/A')}\n"
+            prompt += f"Task: {data.get('task', 'N/A')}\n"
+            prompt += f"Step: {data.get('step', 'N/A')}\n"
+            prompt += f"Guidelines: {data.get('guidelines', 'N/A')}\n"
+            prompt += f"Why: {data.get('why', 'N/A')}\n"
 
-        await turn_context.send_activity(response)
-        await self._save_interaction(user_id, user_message, response)
+        prompt += f"\nUser Question: {data.get('user_question', 'N/A')}\n"
+        prompt += f"User Profile: {data.get('user_profile', 'N/A')}\n"
+        
+        return prompt
 
-    async def on_members_added_activity(self, members_added, turn_context: TurnContext):
-        for member in members_added:
-            if member.id != turn_context.activity.recipient.id:
-                await turn_context.send_activity(
-                    "Welcome to EduVerse! I'm Edura, your AI mentor. I can help you with:\n"
-                    "1. Project suggestions\n"
-                    "2. Career guidance\n"
-                    "3. Course recommendations\n"
-                    "4. Code review\n"
-                    "5. FAQs\n"
-                    "How can I assist you today?"
-                )
+    def process_chat(self, data):
+        """Process the chat request and return the model's response."""
+        try:
+            user_message = data.get('user_question', '')
+            
+            # Check if it's a project-related question
+            if is_project_question(user_message):
+                # Try to find relevant project context
+                project_context = self.find_relevant_project_data(user_message)
+                
+                # Build appropriate prompt
+                if project_context:
+                    full_prompt = self.build_project_prompt(data, project_context)
+                else:
+                    full_prompt = self.build_project_prompt(data)
+                
+                # Generate response
+                response = self.model.generate_content(full_prompt)
+                return response.text
+            else:
+                # Use casual chat mode
+                casual_prompt = f"{self.casual_prompt}\nUser: {user_message}\nResponse:"
+                response = self.model.generate_content(casual_prompt)
+                return response.text
+
+        except Exception as e:
+            logger.error(f"Error processing chat: {str(e)}")
+            return "I apologize, but I encountered an error. Could you please try again?"

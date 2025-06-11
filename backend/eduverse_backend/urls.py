@@ -3,8 +3,6 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.http import HttpResponse
 from django.urls import path, include
-from django.urls import path
-from ai.views import bot_endpoint
 
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -20,10 +18,9 @@ urlpatterns = [
     path("api/profiles/", include("profiles.urls")), #works
     path("api/search/", include("search.urls")), #works
     path("api/posts/", include("posts.urls")),  # Include the posts app's URLs #Works 
-    path('ai/', include('ai.urls')),# has the chatbot   
+    path("api/ai/", include("ai.urls")),  # AI app URLs with proper prefix
     path("api/projects/", include("trending.urls")),
     path("api/events/", include("events.urls")),
-    path('chat/', bot_endpoint),  # Direct chat endpoint
 ]
 
 # Serve media files during development

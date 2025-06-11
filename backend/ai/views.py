@@ -1,65 +1,60 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
 import json
-import asyncio
-import os
+import logging
 from .eduverse_bot import EduVerseBot
-import traceback
 
-# Create a single instance of the bot
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# Initialize the bot
 bot = EduVerseBot()
 
 @csrf_exempt
+@require_http_methods(["POST"])
 def bot_endpoint(request):
-    if request.method == "POST":
-        try:
-            # Parse the incoming JSON message
-            data = json.loads(request.body)
-            message = data.get('message', '')
-            user_id = data.get('user_id', 'default_user')
-            
-            print(f"Received message: {message} from user: {user_id}")
-            
-            # Create a simple context object that mimics TurnContext
-            class SimpleTurnContext:
-                def __init__(self, message, user_id):
-                    self.activity = type('obj', (object,), {
-                        'text': message,
-                        'from_property': type('obj', (object,), {'id': user_id})
-                    })
-                    self.responses = []
-                
-                async def send_activity(self, text):
-                    self.responses.append(text)
-            
-            # Create context and process message
-            context = SimpleTurnContext(message, user_id)
-            
-            # Run the bot's message handler
-            asyncio.run(bot.on_message_activity(context))
-            
-            # Get the response from the bot
-            bot_response = context.responses[0] if context.responses else "No response generated"
-            print(f"Bot response: {bot_response[:50]}...")  # Log first 50 chars
-
-            print(f"Bot response: {bot_response}")
-            
-            response = {
-                "response": bot_response,
-                "sender": "ai",
-                "suggestions": []
-            }
-            
-            return JsonResponse(response)
-            
-        except Exception as e:
-            print(f"Error in bot_endpoint: {str(e)}")
-            traceback.print_exc()
+    """
+    API endpoint for the Edura chatbot.
+    Accepts POST requests with project-based learning context.
+    """
+    try:
+        # Parse the request body
+        data = json.loads(request.body)
+        
+        # Log the incoming request
+        logger.info(f"Received chat request: {data}")
+        
+        # Validate required fields
+        required_fields = ['project', 'task', 'step', 'guidelines', 'why', 'user_question', 'user_profile']
+        missing_fields = [field for field in required_fields if field not in data]
+        
+        if missing_fields:
             return JsonResponse({
-                "response": "🌋 The mystical connection was lost! Let's try again, brave adventurer.",
-                "error": str(e),
-                "sender": "ai",
-                "suggestions": []
-            }, status=500)
-            
-    return JsonResponse({"error": "Only POST requests are allowed."}, status=405)
+                'status': 'error',
+                'message': f'Missing required fields: {", ".join(missing_fields)}'
+            }, status=400)
+        
+        # Process the chat request
+        response_text = bot.process_chat(data)
+        
+        # Return the response
+        return JsonResponse({
+            'status': 'success',
+            'response': response_text
+        })
+        
+    except json.JSONDecodeError:
+        logger.error("Invalid JSON in request body")
+        return JsonResponse({
+            'status': 'error',
+            'message': 'Invalid JSON in request body'
+        }, status=400)
+        
+    except Exception as e:
+        logger.error(f"Error processing request: {str(e)}")
+        return JsonResponse({
+            'status': 'error',
+            'message': 'An error occurred while processing your request'
+        }, status=500)
