@@ -9,8 +9,19 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 import logging
 from django.http import JsonResponse
 from django.urls import path
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenBlacklistView
+from .models import UserSession
+from django.core.cache import cache
+from django.utils import timezone
+from rest_framework.throttling import AnonRateThrottle, UserRateThrottle
 
 logger = logging.getLogger(__name__)
+
+class TokenRateThrottle(UserRateThrottle):
+    rate = '100/day'  # Limit to 100 requests per day per user
+
+class AnonTokenRateThrottle(AnonRateThrottle):
+    rate = '50/day'  # Limit to 50 requests per day per IP
 
 class RegisterView(APIView):
     """
@@ -111,3 +122,109 @@ class ProtectedView(APIView):
     
     def get(self, request):
         return Response({"message": "This is a protected endpoint."})
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    throttle_classes = [AnonTokenRateThrottle]
+
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+        
+        if response.status_code == 200:
+            # Get the refresh token from response
+            refresh_token = response.data.get('refresh')
+            
+            # Get device info
+            device_fingerprint = request.data.get('device_fingerprint')
+            ip_address = self.get_client_ip(request)
+            user_agent = request.META.get('HTTP_USER_AGENT')
+            
+            # Create or update user session
+            UserSession.create_session(
+                user=request.user,
+                refresh_token=refresh_token,
+                device_fingerprint=device_fingerprint,
+                ip_address=ip_address,
+                user_agent=user_agent
+            )
+            
+        return response
+
+    def get_client_ip(self, request):
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            ip = x_forwarded_for.split(',')[0]
+        else:
+            ip = request.META.get('REMOTE_ADDR')
+        return ip
+
+class CustomTokenRefreshView(TokenRefreshView):
+    throttle_classes = [TokenRateThrottle]
+
+    def post(self, request, *args, **kwargs):
+        # Get device info
+        device_fingerprint = request.data.get('device_fingerprint')
+        ip_address = self.get_client_ip(request)
+        
+        # Validate session
+        try:
+            session = UserSession.objects.get(
+                user=request.user,
+                refresh_token=request.data.get('refresh'),
+                is_active=True
+            )
+            
+            if not session.validate_session(device_fingerprint, ip_address):
+                return Response(
+                    {"error": "Invalid session. Please login again."},
+                    status=status.HTTP_401_UNAUTHORIZED
+                )
+                
+        except UserSession.DoesNotExist:
+            return Response(
+                {"error": "Invalid refresh token."},
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+        
+        response = super().post(request, *args, **kwargs)
+        
+        if response.status_code == 200:
+            # Get the new refresh token
+            refresh_token = response.data.get('refresh')
+            
+            # Update user session with new refresh token
+            UserSession.create_session(
+                user=request.user,
+                refresh_token=refresh_token,
+                device_fingerprint=device_fingerprint,
+                ip_address=ip_address,
+                user_agent=request.META.get('HTTP_USER_AGENT')
+            )
+            
+        return response
+
+    def get_client_ip(self, request):
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            ip = x_forwarded_for.split(',')[0]
+        else:
+            ip = request.META.get('REMOTE_ADDR')
+        return ip
+
+class CustomTokenBlacklistView(TokenBlacklistView):
+    throttle_classes = [TokenRateThrottle]
+
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+        
+        if response.status_code == 200:
+            # Deactivate the current session
+            try:
+                session = UserSession.objects.get(
+                    user=request.user,
+                    refresh_token=request.data.get('refresh')
+                )
+                session.deactivate()
+            except UserSession.DoesNotExist:
+                pass
+            
+        return response

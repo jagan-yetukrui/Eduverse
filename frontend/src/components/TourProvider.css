@@ -1,0 +1,153 @@
+/* Custom tooltip styling */
+.custom-tooltip {
+  background: rgba(0, 0, 0, 0.9) !important;
+  border: 2px solid #00ff00 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00 !important;
+  color: #fff !important;
+  font-family: 'Courier New', monospace !important;
+  padding: 20px !important;
+  max-width: 400px !important;
+  backdrop-filter: blur(5px) !important;
+  animation: glow 2s ease-in-out infinite alternate !important;
+}
+
+@keyframes glow {
+  from {
+    box-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
+  }
+  to {
+    box-shadow: 0 0 15px #00ff00, 0 0 30px #00ff00;
+  }
+}
+
+.custom-tooltip .introjs-tooltip-title {
+  color: #00ff00 !important;
+  font-size: 1.2em !important;
+  margin-bottom: 10px !important;
+  text-shadow: 0 0 5px #00ff00 !important;
+}
+
+.custom-tooltip .introjs-tooltiptext {
+  color: #fff !important;
+  font-size: 1em !important;
+  line-height: 1.5 !important;
+}
+
+/* Custom highlight styling */
+.custom-highlight {
+  box-shadow: 0 0 0 4px rgba(0, 255, 0, 0.3), 0 0 20px rgba(0, 255, 0, 0.5) !important;
+  border-radius: 4px !important;
+  animation: pulse 2s infinite !important;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 4px rgba(0, 255, 0, 0.3), 0 0 20px rgba(0, 255, 0, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(0, 255, 0, 0.4), 0 0 30px rgba(0, 255, 0, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 0 4px rgba(0, 255, 0, 0.3), 0 0 20px rgba(0, 255, 0, 0.5);
+  }
+}
+
+/* Navigation buttons */
+.introjs-button {
+  background: #000 !important;
+  border: 1px solid #00ff00 !important;
+  color: #00ff00 !important;
+  text-shadow: 0 0 5px #00ff00 !important;
+  padding: 8px 16px !important;
+  margin: 0 5px !important;
+  border-radius: 4px !important;
+  transition: all 0.3s ease !important;
+  font-family: 'Courier New', monospace !important;
+}
+
+.introjs-button:hover {
+  background: #00ff00 !important;
+  color: #000 !important;
+  box-shadow: 0 0 10px #00ff00 !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Progress bar */
+.introjs-progress {
+  background: rgba(0, 255, 0, 0.2) !important;
+  height: 4px !important;
+  border-radius: 2px !important;
+}
+
+.introjs-progressbar {
+  background: #00ff00 !important;
+  box-shadow: 0 0 10px #00ff00 !important;
+  border-radius: 2px !important;
+}
+
+/* Bullets */
+.introjs-bullets ul li a {
+  background: rgba(0, 255, 0, 0.3) !important;
+  border: 1px solid #00ff00 !important;
+  transition: all 0.3s ease !important;
+}
+
+.introjs-bullets ul li a.active {
+  background: #00ff00 !important;
+  box-shadow: 0 0 10px #00ff00 !important;
+  transform: scale(1.2) !important;
+}
+
+/* Replay tour button */
+.replay-tour-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.8);
+  border: 2px solid #00ff00;
+  color: #00ff00;
+  padding: 10px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+  backdrop-filter: blur(5px);
+}
+
+.replay-tour-button:hover {
+  background: #00ff00;
+  color: #000;
+  box-shadow: 0 0 20px #00ff00;
+  transform: translateY(-2px);
+}
+
+/* Overlay */
+.introjs-overlay {
+  background: rgba(0, 0, 0, 0.7) !important;
+  backdrop-filter: blur(3px) !important;
+  transition: all 0.3s ease !important;
+}
+
+/* Mobile fixes */
+@media (max-width: 768px) {
+  .custom-tooltip {
+    max-width: 90% !important;
+    margin: 0 auto !important;
+  }
+  
+  .introjs-button {
+    padding: 6px 12px !important;
+    font-size: 14px !important;
+  }
+  
+  .replay-tour-button {
+    bottom: 10px !important;
+    right: 10px !important;
+    padding: 8px 16px !important;
+    font-size: 12px !important;
+  }
+} 

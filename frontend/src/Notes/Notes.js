@@ -1,104 +1,47 @@
-import React, { useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useRef, useEffect } from "react";
 import "./Notes.css";
-// eslint-disable-next-line no-unused-vars
-import ProjectSuggestions from "./ProjectSuggestions";
-// eslint-disable-next-line no-unused-vars
-import CareerGuidance from "./CareerGuidance";
 
 const Notes = () => {
-  const navigate = useNavigate();
   const [messages, setMessages] = useState([
-    {
-      id: 0,
-      text: "🌟 Welcome to the Enchanted Portal! I'm your magical assistant, ready to help you on your coding journey. What mysteries shall we unravel today? 🌟",
-      sender: "ai",
-    },
+    { sender: 'ai', text: 'Hello Dreamer 👋' }
   ]);
   const [inputText, setInputText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
-  const chatContainerRef = useRef(null);
-  const avatarRef = useRef(null);
+  const messageEndRef = useRef(null);
+
+  useEffect(() => {
+    if (messageEndRef.current) {
+      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages, isTyping]);
 
   const handleSendMessage = async () => {
     if (!inputText.trim()) return;
 
     const userMessage = {
-      id: messages.length + 1,
-      text: inputText,
       sender: "user",
+      text: inputText,
     };
     setMessages((prev) => [...prev, userMessage]);
     setInputText("");
     setIsTyping(true);
 
-    if (avatarRef.current) {
-      avatarRef.current.classList.add("casting-spell");
-    }
-
-    try {
-      const response = await fetch("http://edu-verse.in/ai/chat/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          message: inputText,
-          user_id: localStorage.getItem("user_id"),
-          channel: {
-            id: "web_chat",
-            name: "Magic Portal Interface",
-          },
-          locale: "en-US",
-          timestamp: new Date().toISOString(),
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Quest failed! Status: ${response.status}`);
-      }
-
-      const data = await response.json();
-
-      if (!data.response) {
-        throw new Error("The magic scroll returned empty!");
-      }
-
-      const aiMessage = {
-        id: messages.length + 2,
-        text: data.response,
-        sender: "ai",
-      };
-
-      if (data.suggestions?.length > 0) {
-        const suggestionMessage = {
-          id: messages.length + 3,
-          text: data.suggestions.join("\n"),
-          sender: "ai",
-          type: "magical-scroll",
-        };
-        setMessages((prev) => [...prev, aiMessage, suggestionMessage]);
-      } else {
-        setMessages((prev) => [...prev, aiMessage]);
-      }
-    } catch (error) {
+    // Simulate AI response
+    setTimeout(() => {
+      const error = false;
       if (error) {
-        console.error("Connection failed:", error);
-        const errorMessage = {
-          id: messages.length + 2,
-          text: "🌋 The mystical connection was lost! Let's try again, brave adventurer.",
-          sender: "ai",
-        };
-        setMessages((prev) => [...prev, errorMessage]);
+        setMessages(prev => [...prev, { 
+          sender: 'ai', 
+          text: '⚠ Unable to connect to Edura. Please try again later.' 
+        }]);
+      } else {
+        setMessages(prev => [...prev, { 
+          sender: 'ai', 
+          text: "I am unable to connect to Edura. Please try again later." 
+        }]);
       }
-    } finally {
       setIsTyping(false);
-      if (avatarRef.current) {
-        avatarRef.current.classList.remove("casting-spell");
-      }
-    }
+    }, 1200);
   };
 
   const handleKeyPress = (e) => {
@@ -109,51 +52,18 @@ const Notes = () => {
   };
 
   return (
-    <div className="notes-page">
-      <div className="notes-container" ref={chatContainerRef}>
-        <div className="notes-header">
-          <div className="avatar-crystal" ref={avatarRef}>
-            <div className="magical-aura"></div>
-            <div className="crystal-core"></div>
-          </div>
-
-          <div className="quest-board">
-            <button
-              className="quest-btn glow-effect"
-              onClick={() => navigate("/project-suggestions")}
-            >
-              <span className="quest-icon bounce">🎯</span>
-              <span>Quests</span>
-            </button>
-
-            <button
-              className="quest-btn glow-effect"
-              onClick={() => navigate("/career-guidance")}
-            >
-              <span className="quest-icon swing">⚔️</span>
-              <span>Journey</span>
-            </button>
-
-            <button className="quest-btn glow-effect">
-              <span className="quest-icon pulse">🔮</span>
-              <span>Spells</span>
-            </button>
-          </div>
-        </div>
-
-        <div className="notes-divider" />
-
-        <div className="notes-list custom-scrollbar">
-          {messages.map((message) => (
+    <div className="chat-page">
+      <div className="chat-container">
+        {/* Chat Feed */}
+        <div className="messages-container">
+          {messages.map((message, index) => (
             <div
-              key={message.id}
-              className={`note-item fade-in ${
-                message.sender === "user" ? "note-right" : "note-left"
+              key={index}
+              className={`message-item ${
+                message.sender === "user" ? "user-message" : "ai-message"
               }`}
             >
-              <div
-                className={`message ${message.sender} ${message.type || ""}`}
-              >
+              <div className="message-bubble">
                 {message.text.split("\n").map((line, i) => (
                   <div key={i} className="message-line">
                     {line}
@@ -163,33 +73,36 @@ const Notes = () => {
             </div>
           ))}
           {isTyping && (
-            <div className="note-item typing fade-in">
-              <div className="casting-indicator">
-                <span className="sparkle">🌟</span>
-                <span className="sparkle delay-1">💫</span>
-                <span className="sparkle delay-2">⭐</span>
+            <div className="message-item ai-message">
+              <div className="typing-indicator">
+                <span className="dot"></span>
+                <span className="dot"></span>
+                <span className="dot"></span>
               </div>
             </div>
           )}
+          <div ref={messageEndRef} />
         </div>
 
-        <div className="note-input floating">
-          <textarea
-            className="note-textarea custom-scrollbar"
-            value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder="✨ Whisper your thoughts into the magical realm..."
-            rows="2"
-          />
-          <button
-            className="add-note-btn pulse-effect"
-            onClick={handleSendMessage}
-            disabled={!inputText.trim() || isTyping}
-          >
-            <span className="btn-text">Cast</span>
-            <span className="btn-icon">🌠</span>
-          </button>
+        {/* Input Section */}
+        <div className="input-section">
+          <div className="input-area">
+            <textarea
+              className="chat-input"
+              placeholder="Ask about your current project step..."
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              onKeyPress={handleKeyPress}
+              rows={1}
+            />
+            <button
+              className="send-btn"
+              onClick={handleSendMessage}
+              disabled={!inputText.trim()}
+            >
+              Send
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -1,243 +1,269 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import "./SearchPage.css";
+import UserCard from '../components/UserCard/UserCard';
+import PostCard from '../components/PostCard/PostCard';
+import { FaSearch, FaFilter } from 'react-icons/fa';
+import apiClient from '../utils/api';
+import defaultProfileImage from '../assets/default-profile.png';
 
 const Search = () => {
+  const navigate = useNavigate();
   const [query, setQuery] = useState("");
-  const [suggestions, setSuggestions] = useState([]);
-  const [searchResults, setSearchResults] = useState([]);
-  // eslint-disable-next-line no-unused-vars
-  const [currentUser, setCurrentUser] = useState(null);
+  const [searchResults, setSearchResults] = useState({ users: [], posts: [] });
   const [loading, setLoading] = useState(false);
-  const [showResults, setShowResults] = useState(false);
-  const searchContainerRef = useRef(null);
-  const searchBarRef = useRef(null);
+  const [error, setError] = useState(null);
+  const [searchType, setSearchType] = useState('all'); // 'all', 'users', 'posts'
+  const [postType, setPostType] = useState('all'); // 'all', 'project', 'job', 'research'
+  const [timeFilter, setTimeFilter] = useState('all'); // 'all', 'today', 'week', 'month'
+  const [showFilters, setShowFilters] = useState(false);
+  const searchTimeoutRef = useRef(null);
 
-  // Fetch current user data on mount
-  useEffect(() => {
-    const fetchCurrentUser = async () => {
-      try {
-        const response = await fetch("/api/user/current");
-        const data = await response.json();
-        setCurrentUser(data);
-      } catch (error) {
-        console.error("Error fetching current user:", error);
+  const handleSearch = useCallback(async (searchQuery) => {
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+
+    searchTimeoutRef.current = setTimeout(async () => {
+      if (!searchQuery.trim()) {
+        setSearchResults({ users: [], posts: [] });
+        return;
       }
-    };
-    fetchCurrentUser();
-  }, []);
 
-  // Handle search suggestions with debouncing
-  useEffect(() => {
-    const fetchSuggestions = async () => {
-      if (query.length > 0) {
-        setLoading(true);
-        try {
-          const response = await fetch(
-            `/api/users/search?query=${encodeURIComponent(query)}`
-          );
-          const users = await response.json();
-
-          const usersWithMutuals = await Promise.all(
-            users.map(async (user) => {
-              const mutualsResponse = await fetch(
-                `/api/users/${user.id}/mutuals`
-              );
-              const mutualsData = await mutualsResponse.json();
-              return {
-                ...user,
-                mutualConnections: mutualsData.mutuals,
-                mutualCount: mutualsData.count,
-              };
-            })
-          );
-
-          setSuggestions(usersWithMutuals);
-        } catch (error) {
-          console.error("Error fetching suggestions:", error);
-        } finally {
-          setLoading(false);
-        }
-      } else {
-        setSuggestions([]);
-      }
-    };
-
-    const debounceTimer = setTimeout(fetchSuggestions, 300);
-    return () => clearTimeout(debounceTimer);
-  }, [query]);
-
-  const triggerSearchAnimation = () => {
-    const container = searchContainerRef.current;
-    const rocket = document.createElement("div");
-    rocket.className = "rocket";
-    container.appendChild(rocket);
-
-    setTimeout(() => {
-      rocket.remove();
-      setShowResults(true);
-    }, 2000);
-  };
-
-  const handleSearch = async (e) => {
-    e.preventDefault();
-    if (query) {
       setLoading(true);
-      setShowResults(false);
-      triggerSearchAnimation();
-
       try {
-        const response = await fetch(
-          `http://localhost:8000/api/search/?name=${encodeURIComponent(
-            query
-          )}&post_author=${encodeURIComponent(query)}`
-        );
+        const params = new URLSearchParams({
+          query: searchQuery,
+          type: searchType,
+          exclude_self: "false",
+          ...(postType !== 'all' && { post_type: postType }),
+          ...(timeFilter !== 'all' && { time: timeFilter })
+        });
 
-        const results = await response.json();
-        console.log(results);
-
-        setTimeout(() => {
-          setSearchResults(results);
-          setLoading(false);
-        }, 2000);
-      } catch (error) {
-        console.error("Error performing search:", error);
+        const response = await apiClient.get(`http://localhost:8000/api/search/?${params.toString()}`);
+        setSearchResults(response.data);
+      } catch (err) {
+        console.error('Search error:', err);
+        setError(err.message || 'Failed to perform search');
+      } finally {
         setLoading(false);
       }
-    }
+    }, 300);
+  }, [searchType, postType, timeFilter]);
+
+  useEffect(() => {
+    handleSearch(query);
+  }, [query, handleSearch]);
+
+  const FilterButton = ({ active, onClick, children }) => (
+    <button
+      className={`filter-button ${active ? 'active' : ''}`}
+      onClick={onClick}
+    >
+      {children}
+    </button>
+  );
+
+  const formatDisplayName = (user) => {
+    if (user.display_name) return user.display_name;
+    const fullName = `${user.first_name} ${user.last_name}`.trim();
+    return fullName || `@${user.username}`;
   };
 
-  const handleSuggestionClick = async (userId) => {
-    try {
-      const response = await fetch(`/api/users/${userId}`);
-      const userData = await response.json();
-      setQuery(userData.name);
-      setSearchResults([userData]);
-      setSuggestions([]);
-    } catch (error) {
-      console.error("Error fetching user details:", error);
-    }
+  const handleUserClick = (username) => {
+    navigate(`/profile/${username}`);
   };
 
   return (
-    <div className="search-container" ref={searchContainerRef}>
-      <form onSubmit={handleSearch} className="search-bar" ref={searchBarRef}>
-        <input
-          type="text"
-          placeholder="Search for users, posts, and more..."
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          onFocus={(e) => e.target.classList.add("focused")}
-          onBlur={(e) => e.target.classList.remove("focused")}
-          autoComplete="off"
-          className="search-input"
-        />
-        <button type="submit" disabled={loading} className="search-button">
-          {loading ? (
-            <div className="loading-spinner-small"></div>
-          ) : (
-            <i className="fas fa-search"></i>
-          )}
-        </button>
-      </form>
-
-      {loading && (
-        <div className="loading-container">
-          <div className="loading-spinner"></div>
-          <p>Searching the universe...</p>
+    <div className="search-container">
+      <div className="search-header">
+        <h1>Search EduVerse</h1>
+        <div className="search-input-container">
+          <FaSearch className="search-icon" />
+            <input
+              type="text"
+            className="search-input"
+            placeholder="Search users, posts, and more..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+            />
+          <button 
+            className="filter-toggle"
+            onClick={() => setShowFilters(!showFilters)}
+          >
+            <FaFilter />
+            </button>
         </div>
-      )}
 
-      {suggestions.length > 0 && (
-        <div className="suggestions-container">
-          <ul className="suggestions-list">
-            {suggestions.map((user) => (
-              <li
-                key={user.id}
-                onClick={() => handleSuggestionClick(user.id)}
-                className="suggestion-item"
-              >
-                <div className="suggestion-avatar">
-                  <img src={user.avatar} alt={user.name} />
-                </div>
-                <div className="suggestion-content">
-                  <h3>{user.username}</h3>
-                  <p>{user.title}</p>
-                  {user.mutualCount > 0 && (
-                    <div className="mutual-info">
-                      <span>{user.mutualCount} mutual connections</span>
-                      <div className="mutual-avatars">
-                        {user.mutualConnections.slice(0, 3).map((mutual) => (
-                          <img key={mutual.id} src={mutual.avatar} alt={mutual.name} />
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </li>
-            ))}
-          </ul>
+        <div className="search-type-tabs">
+          <FilterButton
+            active={searchType === 'all'}
+            onClick={() => setSearchType('all')}
+          >
+            All
+          </FilterButton>
+          <FilterButton
+            active={searchType === 'users'}
+            onClick={() => setSearchType('users')}
+            >
+            Users
+          </FilterButton>
+          <FilterButton
+            active={searchType === 'posts'}
+            onClick={() => setSearchType('posts')}
+          >
+            Posts
+          </FilterButton>
         </div>
-      )}
 
-      <div className="search-results-container">
-        {showResults && (
-          <>
-            {searchResults?.users?.length > 0 && (
-              <div className="results-section users-section">
-                <h2>Users</h2>
-                <div className="results-grid">
-                  {searchResults.users.map((user) => (
-                    <div key={user.username} className="user-card">
-                      <div className="user-card-header">
-                        <img
-                          src={user.profile_picture || "/default-avatar.jpg"}
-                          alt={user.username}
-                          className="user-avatar"
-                        />
-                        <h3>{user.username}</h3>
-                      </div>
-                      <div className="user-card-body">
-                        <p className="user-email">{user.email}</p>
-                        <div className="skills-container">
-                          {user.skills ? (
-                            user.skills.split(',').map((skill, index) => (
-                              <span key={index} className="skill-tag">
-                                {skill.trim()}
-                              </span>
-                            ))
-                          ) : (
-                            <p className="no-skills">No skills listed</p>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+        {showFilters && (
+          <motion.div 
+            className="search-filters"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+          >
+            <div className="filter-section">
+              <h3>Post Type</h3>
+              <div className="filter-buttons">
+                <FilterButton
+                  active={postType === 'all'}
+                  onClick={() => setPostType('all')}
+                >
+                  All Types
+                </FilterButton>
+                <FilterButton
+                  active={postType === 'project'}
+                  onClick={() => setPostType('project')}
+                >
+                  Projects
+                </FilterButton>
+                <FilterButton
+                  active={postType === 'job'}
+                  onClick={() => setPostType('job')}
+                >
+                  Jobs
+                </FilterButton>
+                <FilterButton
+                  active={postType === 'research'}
+                  onClick={() => setPostType('research')}
+                >
+                  Research
+                </FilterButton>
               </div>
-            )}
+            </div>
 
-            {searchResults?.posts?.length > 0 && (
-              <div className="results-section posts-section">
-                <h2>Posts</h2>
-                <div className="posts-grid">
-                  {searchResults.posts.map((post) => (
-                    <div key={post.id} className="post-card">
-                      <div className="post-card-header">
-                        <h3>{post.title}</h3>
-                        <span className="post-type">{post.post_type}</span>
-                      </div>
-                      <div className="post-card-body">
-                        <p className="post-author">By {post.author}</p>
-                        <p className="post-content">{post.content}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+            <div className="filter-section">
+              <h3>Time Range</h3>
+              <div className="filter-buttons">
+                <FilterButton
+                  active={timeFilter === 'all'}
+                  onClick={() => setTimeFilter('all')}
+                >
+                  All Time
+                </FilterButton>
+                <FilterButton
+                  active={timeFilter === 'today'}
+                  onClick={() => setTimeFilter('today')}
+                >
+                  Today
+                </FilterButton>
+                <FilterButton
+                  active={timeFilter === 'week'}
+                  onClick={() => setTimeFilter('week')}
+                >
+                  This Week
+                </FilterButton>
+                <FilterButton
+                  active={timeFilter === 'month'}
+                  onClick={() => setTimeFilter('month')}
+                >
+                  This Month
+                </FilterButton>
               </div>
-            )}
-          </>
+            </div>
+          </motion.div>
         )}
       </div>
+
+      {loading ? (
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p>Searching...</p>
+        </div>
+      ) : error ? (
+        <div className="error-container">
+          <h2>Error Loading Results</h2>
+          <p>{error}</p>
+          <button 
+            onClick={() => {
+              setError(null);
+              handleSearch(query);
+            }}
+            className="retry-button"
+          >
+            Try Again
+          </button>
+        </div>
+      ) : (
+          <>
+          {searchType !== 'posts' && searchResults.users.length > 0 && (
+            <div className="search-section">
+                <h2>Users</h2>
+              <div className="search-results-grid">
+                {searchResults.users.map(user => (
+                  <div 
+                    key={user.username}
+                    onClick={() => handleUserClick(user.username)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <UserCard 
+                      user={{
+                        ...user,
+                        display_name: formatDisplayName(user),
+                        profile_image: user.profile_image || defaultProfileImage
+                      }}
+                    />
+                  </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+          {searchType !== 'users' && searchResults.posts.length > 0 && (
+            <div className="search-section">
+                <h2>Posts</h2>
+              <div className="search-results-grid">
+                {searchResults.posts.map(post => (
+                  <PostCard 
+                    key={post.id}
+                    post={{
+                      ...post,
+                      author: {
+                        ...post.author,
+                        display_name: formatDisplayName(post.author),
+                        profile_image: post.author.profile_image || defaultProfileImage
+                      }
+                    }}
+                  />
+                  ))}
+                </div>
+              </div>
+            )}
+
+          {!loading && query && 
+           searchResults.users.length === 0 && 
+           searchResults.posts.length === 0 && (
+            <div className="no-results">
+              <p>No results found for "{query}"</p>
+              <p className="no-results-suggestion">
+                Try adjusting your filters or search terms
+              </p>
+            </div>
+          )}
+          </>
+        )}
     </div>
   );
 };

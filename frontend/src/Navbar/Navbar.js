@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useUser } from '../Accounts/UserContext';
 import "./Navbar.css";
 import FirstLogo from "../First_logo.png";
 import { AiOutlineUser } from "react-icons/ai";
@@ -19,9 +20,11 @@ const NavbarButton = ({ path, label, icon, onClick, isActive }) => (
 const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { user: currentUser } = useUser();
   const [isExpanded, setIsExpanded] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const isProjectPage = location.pathname.startsWith('/projects');
 
   const handleResize = () => {
     setIsMobile(window.innerWidth <= 768);
@@ -41,6 +44,14 @@ const Navbar = () => {
     navigate("/login");
   };
 
+  const handleProfileNavigation = () => {
+    if (currentUser?.username) {
+      navigate('/profile');
+    } else {
+      navigate('/login');
+    }
+  };
+
   useEffect(() => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
@@ -51,8 +62,13 @@ const Navbar = () => {
     setIsAuthenticated(Boolean(token));
   }, [location]);
 
+  // Hide navbar on /jagan-yetukuri path
+  if (location.pathname === '/jagan-yetukuri') {
+    return null;
+  }
+
   return (
-    <nav className={`navbar ${isMobile ? "mobile" : ""}`} aria-label="Main Navigation">
+    <nav className={`navbar ${isMobile ? "mobile" : ""} ${isProjectPage ? "alt-navbar" : ""}`} aria-label="Main Navigation">
       <div className="nav-item-container">
         <div className="logo-container-nav" onClick={() => handleNavigation("/")}>
           <img src={FirstLogo} alt="EduVerse" className="nav-logo" />
@@ -67,13 +83,6 @@ const Navbar = () => {
         />
 
         <NavbarButton
-          path="/messages"
-          label="MESSAGES"
-          onClick={() => handleNavigation("/messages")}
-          isActive={isActive("/messages", location.pathname)}
-        />
-
-        <NavbarButton
           path="/notes"
           label="EDURA"
           onClick={() => handleNavigation("/notes")}
@@ -81,10 +90,10 @@ const Navbar = () => {
         />
 
         <NavbarButton
-          path="/newpost"
-          label="NEW POST"
-          onClick={() => handleNavigation("/newpost")}
-          isActive={isActive("/newpost", location.pathname)}
+          path="/project-suggestions"
+          label="BUILDZONE"
+          onClick={() => handleNavigation("/project-suggestions")}
+          isActive={isActive("/project-suggestions", location.pathname)}
         />
       </div>
 
@@ -94,8 +103,8 @@ const Navbar = () => {
             path="/profile"
             label="PROFILE"
             icon={<AiOutlineUser />}
-            onClick={() => handleNavigation("/profile")}
-            isActive={isActive("/profile", location.pathname)}
+            onClick={handleProfileNavigation}
+            isActive={isActive("/profile", location.pathname) || location.pathname.startsWith('/profile/')}
           />
           <button
             onClick={handleLogout}

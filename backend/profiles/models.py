@@ -107,8 +107,7 @@ class Profile(models.Model):
         ('suspended', 'Suspended')
     ]
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    username = models.CharField(max_length=150, unique=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     display_name = models.CharField(max_length=150, blank=True)
     email = models.EmailField(unique=True)
     bio = models.TextField(blank=True)
@@ -120,12 +119,10 @@ class Profile(models.Model):
         default='active'
     )
     is_verified = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)  # Timestamp when profile is created
-    updated_at = models.DateTimeField(auto_now=True)  # Timestamp for last update
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     website = models.URLField(max_length=200, blank=True, null=True, default="")
     location = models.CharField(max_length=100, blank=True, null=True, default="")
-    # AI managed skills field
-    skills = models.JSONField(default=dict, blank=True, editable=False, help_text="This field is managed by AI")
     last_login = models.DateTimeField(null=True, blank=True)
     last_active = models.DateTimeField(null=True, blank=True)
     followers = models.ManyToManyField('self', symmetrical=False, related_name='following')
@@ -133,10 +130,10 @@ class Profile(models.Model):
     close_friends = models.ManyToManyField('self', symmetrical=False, related_name='close_friend_of')
     posts = models.ForeignKey('posts.Post', on_delete=models.CASCADE, related_name='authorProfile', null=True)
     liked_posts = models.ManyToManyField('posts.Post', related_name='liked_by')
-    social_links = models.JSONField(default=dict, blank=True)  
-    notification_settings = models.JSONField(default=dict, blank=True, help_text="Notification settings.")
-    privacy_settings = models.JSONField(default=dict, blank=True, help_text="Privacy settings.")
-    security_settings = models.JSONField(default=dict, blank=True, help_text="Security settings.")
+    social_links = models.JSONField(default=dict, blank=True)
+    notification_settings = models.JSONField(default=dict, blank=True)
+    privacy_settings = models.JSONField(default=dict, blank=True)
+    security_settings = models.JSONField(default=dict, blank=True)
     
     class Meta:
         ordering = ['-created_at']
@@ -148,25 +145,17 @@ class Profile(models.Model):
             raise ValidationError(f"Invalid account status: {self.account_status}")
 
     def __str__(self):
-        return self.username
+        return self.user.username
+
+    @property
+    def username(self):
+        """Get username from associated user"""
+        return self.user.username
 
     @classmethod
-    def get_by_user_id(cls, user_id):
+    def get_by_username(cls, username):
+        """Get profile by username"""
         try:
-            return cls.objects.get(user_id=user_id)
+            return cls.objects.get(user__username=username)
         except cls.DoesNotExist:
             return None
-
-@receiver(post_save, sender=settings.AUTH_USER_MODEL)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        Profile.objects.create(
-            user=instance,
-            username=instance.username,
-            email=instance.email,
-            display_name=instance.get_full_name() or instance.username
-        )
-
-@receiver(post_save, sender=settings.AUTH_USER_MODEL)
-def save_user_profile(sender, instance, **kwargs):
-    instance.profile.save()

@@ -1,124 +1,374 @@
+/* Education Container */
 .education-container {
-  padding: 20px;
+  padding: 2rem;
+  background: var(--background-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Header Section */
+.education-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.education-header h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.5rem;
+  color: var(--text-color);
+}
+
+.header-icon {
+  color: var(--primary-color);
+  font-size: 1.25rem;
+}
+
+/* Add Education Button */
+.add-education-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+}
+
+.add-education-btn:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+/* Education List */
+.education-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Education Card */
+.education-card {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-normal);
+  border: 1px solid var(--border-color);
+}
+
+.education-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.education-card .education-header {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.school-logo {
+  width: 48px;
+  height: 48px;
+  background: var(--background-color);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-color);
+  font-size: 1.5rem;
+}
+
+.education-info {
+  flex: 1;
+}
+
+.education-info h3 {
+  font-size: 1.1rem;
+  color: var(--text-color);
+  margin-bottom: 0.25rem;
+}
+
+.degree {
+  font-weight: 500;
+  color: var(--text-color);
+  margin-bottom: 0.25rem;
+}
+
+.major {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin-bottom: 0.25rem;
+}
+
+.location, .date {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+}
+
+.education-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.edit-btn, .delete-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: var(--background-color);
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-normal);
+}
+
+.edit-btn:hover {
+  background: var(--primary-color);
+  color: white;
+}
+
+.delete-btn:hover {
+  background: var(--error-color);
+  color: white;
+}
+
+.education-description {
+  color: var(--text-color);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+}
+
+/* Education Form */
+.education-form-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn var(--transition-normal);
 }
 
 .education-form {
-  margin-bottom: 30px;
-  padding: 20px;
-  background: #f5f5f5;
-  border-radius: 8px;
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  animation: slideUp var(--transition-normal);
 }
 
-.input-group {
-  margin-bottom: 15px;
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
 }
 
-.input-group label {
+.form-header h3 {
+  font-size: 1.25rem;
+  color: var(--text-color);
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 1.25rem;
+  transition: color var(--transition-normal);
+}
+
+.close-btn:hover {
+  color: var(--error-color);
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-group label {
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 0.5rem;
+  color: var(--text-color);
   font-weight: 500;
 }
 
-.input-group input,
-.input-group textarea {
+.form-group input[type="text"],
+.form-group input[type="date"],
+.form-group select,
+.form-group textarea {
   width: 100%;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: 0.95rem;
+  transition: all var(--transition-normal);
+  background-color: white;
 }
 
-.input-group.checkbox {
+.form-group select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1em;
+  padding-right: 2.5rem;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(0, 149, 246, 0.1);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.checkbox {
   display: flex;
   align-items: center;
+  gap: 0.5rem;
 }
 
-.input-group.checkbox input {
-  width: auto;
-  margin-right: 10px;
+.checkbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--primary-color);
 }
 
-.education-item {
-  margin-bottom: 20px;
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-}
-
-.education-details {
-  margin: 10px 0;
-}
-
-.button-group {
+.form-actions {
   display: flex;
-  gap: 10px;
-  margin-top: 15px;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
 }
 
-.add-button,
-.edit-button,
-.delete-button {
-  padding: 8px 16px;
+.cancel-btn {
+  padding: 0.75rem 1.5rem;
+  background: var(--background-color);
+  color: var(--text-color);
   border: none;
-  border-radius: 4px;
+  border-radius: var(--radius-md);
+  font-weight: 500;
   cursor: pointer;
+  transition: all var(--transition-normal);
 }
 
-.add-button {
-  background: #4CAF50;
+.cancel-btn:hover {
+  background: var(--border-color);
+}
+
+.save-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--primary-color);
   color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-normal);
 }
 
-.edit-button {
-  background: #2196F3;
-  color: white;
+.save-btn:hover:not(:disabled) {
+  background: var(--primary-hover);
 }
 
-.delete-button {
-  background: #f44336;
-  color: white;
-}
-
-.add-button:hover {
-  background: #45a049;
-}
-
-.edit-button:hover {
-  background: #1976D2;
-}
-
-.delete-button:hover {
-  background: #d32f2f;
-}
-
-.add-button:disabled,
-.edit-button:disabled,
-.delete-button:disabled {
-  background: #cccccc;
+.save-btn:disabled {
+  opacity: 0.7;
   cursor: not-allowed;
 }
 
-.education-item h3 {
-  margin-bottom: 10px;
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-.description {
-  color: #666;
-  margin-bottom: 10px;
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.education-details p {
-  margin: 5px 0;
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .education-card {
+    background: #1a1a1a;
+    border-color: #262626;
+  }
+
+  .school-logo {
+    background: #262626;
+  }
+
+  .form-group input[type="text"],
+  .form-group input[type="date"],
+  .form-group select,
+  .form-group textarea {
+    background: #262626;
+    color: var(--text-color);
+  }
+
+  .cancel-btn {
+    background: #262626;
+  }
+
+  .cancel-btn:hover {
+    background: #2d2d2d;
+  }
 }
 
-.education-details strong {
-  margin-right: 5px;
-}
+/* Responsive Design */
+@media (max-width: 768px) {
+  .education-container {
+    padding: 1rem;
+  }
 
-.education-details a {
-  color: #2196F3;
-  text-decoration: none;
-}
+  .form-row {
+    grid-template-columns: 1fr;
+  }
 
-.education-details a:hover {
-  text-decoration: underline;
+  .education-form {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
 }

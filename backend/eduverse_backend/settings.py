@@ -13,6 +13,11 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 import os
 from datetime import timedelta
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+load_dotenv(os.path.join(BASE_DIR, '.env'))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,6 +31,8 @@ SECRET_KEY = 'django-insecure-vd(nyu_b$gekaow9#@gyv&@9wuj(mb_v+b7z!%3xe+a%4nhm)u
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
+ALLOWED_HOSTS = ['edu-verse.in', 'www.edu-verse.in', '3.12.162.79', "127.0.0.1", "localhost"]
 
 #  = [
 #     "127.0.0.1",
@@ -53,7 +60,10 @@ INSTALLED_APPS = [
     'projects',
     'ai',
     'scraper',
-    'search'
+    'search',
+    'trending',
+    'events',
+    'rest_framework_simplejwt.token_blacklist',
 ]
 
 MIDDLEWARE = [
@@ -104,7 +114,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'postgres',
         'USER': 'Jagan',
-        'PASSWORD': 'Jagan%579',
+        'PASSWORD': 'Jagan579',
         'HOST': 'eduverse-db.crgqasis8mt9.us-east-2.rds.amazonaws.com',
         'PORT': '5432',
     }
@@ -164,9 +174,6 @@ AVATAR_ALLOWED_FILE_TYPES = ['image/jpeg', 'image/jpg', 'image/png']
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Additional BASE_DIR definition
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 # Custom User Model
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
@@ -204,13 +211,19 @@ REST_FRAMEWORK = {
     ],
 }
 
-# Simple JWT settings
+# SimpleJWT Settings
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60 if DEBUG else 10),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    'ROTATE_REFRESH_TOKENS': False,
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=14),
+    'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
-    'UPDATE_LAST_LOGIN': False,
+    'UPDATE_LAST_LOGIN': True,
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'token_type',
 }
 
 # Support and Help Settings

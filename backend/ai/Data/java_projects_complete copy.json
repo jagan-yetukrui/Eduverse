@@ -1,0 +1,3021 @@
+{
+    "projects": [
+        {
+            "project_id": "JP1",
+            "project_name": "Basic Calculator",
+            "description": "A command-line calculator that performs basic arithmetic operations using Java. Great for learning methods, input handling, and loops.",
+            "difficulty": "Beginner",
+            "tasks": [
+              {
+                "task_id": "JP1_T1",
+                "task_name": "Setup Your Project Environment",
+                "description": "Setup Your Project Environment in the Basic Calculator project.",
+                "steps": [
+                  {
+                    "step_id": "JP1_T1_S1",
+                    "step_name": "Create Your Java File",
+                    "description": "Set up your project file to begin coding your calculator.",
+                    "guidelines": [
+                      "Open an IDE or editor like IntelliJ or VS Code.",
+                      "Create a new file and name it Calculator.java.",
+                      "Include a main method inside the class."
+                    ],
+                    "why": [
+                      "This is your main program file that will contain the calculator logic."
+                    ],
+                    "starting_code": "public class Calculator {\n    public static void main(String[] args) {\n        // Your code goes here\n    }\n}",
+                    "final_code": "public class Calculator {\n    public static void main(String[] args) {\n        System.out.println(\"Welcome to the Java Calculator!\");\n    }\n}"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP1_T2",
+                "task_name": "Create Operation Methods",
+                "description": "Create Operation Methods in the Basic Calculator project.",
+                "steps": [
+                  {
+                    "step_id": "JP1_T2_S1",
+                    "step_name": "Add Method for Addition",
+                    "description": "Create a reusable method for adding two numbers.",
+                    "guidelines": [
+                      "Use 'public static' to define a method called add.",
+                      "Pass two parameters and return their sum."
+                    ],
+                    "why": [
+                      "Creating functions helps modularize your code."
+                    ],
+                    "starting_code": "public static int add(int a, int b) {\n    // TODO: Add logic\n    return 0;\n}",
+                    "final_code": "public static int add(int a, int b) {\n    return a + b;\n}"
+                  },
+                  {
+                    "step_id": "JP1_T2_S2",
+                    "step_name": "Add Methods for Subtract, Multiply, Divide",
+                    "description": "Add the other operations: subtraction, multiplication, and division.",
+                    "guidelines": [
+                      "Use the same structure as the add method.",
+                      "Ensure division method handles division by zero."
+                    ],
+                    "why": [
+                      "Each operation should have separate logic to keep code clean."
+                    ],
+                    "starting_code": "public static int subtract(int a, int b) { return 0; }\npublic static int multiply(int a, int b) { return 0; }\npublic static double divide(int a, int b) { return 0; }",
+                    "final_code": "public static int subtract(int a, int b) { return a - b; }\npublic static int multiply(int a, int b) { return a * b; }\npublic static double divide(int a, int b) {\n    if (b == 0) {\n        System.out.println(\"Cannot divide by zero\");\n        return 0;\n    }\n    return (double) a / b;\n}"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP1_T3",
+                "task_name": "Take Input from User",
+                "description": "Take Input from User in the Basic Calculator project.",
+                "steps": [
+                  {
+                    "step_id": "JP1_T3_S1",
+                    "step_name": "Use Scanner to Read Input",
+                    "description": "Get two numbers and an operation from the user.",
+                    "guidelines": [
+                      "Import java.util.Scanner.",
+                      "Use Scanner to read numbers and operation from console."
+                    ],
+                    "why": [
+                      "Takes real-time input from user making it interactive."
+                    ],
+                    "starting_code": "Scanner sc = new Scanner(System.in);\nSystem.out.print(\"Enter first number: \");",
+                    "final_code": "Scanner sc = new Scanner(System.in);\nSystem.out.print(\"Enter first number: \");\nint num1 = sc.nextInt();\nSystem.out.print(\"Enter second number: \");\nint num2 = sc.nextInt();\nSystem.out.print(\"Choose operation (+, -, *, /): \");\nchar op = sc.next().charAt(0);"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP1_T4",
+                "task_name": "Perform Operation Based on Input",
+                "description": "Perform Operation Based on Input in the Basic Calculator project.",
+                "steps": [
+                  {
+                    "step_id": "JP1_T4_S1",
+                    "step_name": "Match Input with Operation",
+                    "description": "Use if/else to select the operation based on user input.",
+                    "guidelines": [
+                      "Compare input char with +, -, *, / using if-else.",
+                      "Call the corresponding method and display result."
+                    ],
+                    "why": [
+                      "Adds conditional logic to execute proper operation."
+                    ],
+                    "starting_code": "if (op == '+') {\n    // Call method\n}",
+                    "final_code": "if (op == '+') {\n    System.out.println(\"Result: \" + add(num1, num2));\n} else if (op == '-') {\n    System.out.println(\"Result: \" + subtract(num1, num2));\n} else if (op == '*') {\n    System.out.println(\"Result: \" + multiply(num1, num2));\n} else if (op == '/') {\n    System.out.println(\"Result: \" + divide(num1, num2));\n} else {\n    System.out.println(\"Invalid operation.\");\n}"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP1_T5",
+                "task_name": "Loop Until User Exits",
+                "description": "Loop Until User Exits in the Basic Calculator project.",
+                "steps": [
+                  {
+                    "step_id": "JP1_T5_S1",
+                    "step_name": "Add While Loop and Exit Option",
+                    "description": "Wrap logic in a loop to keep calculator running until user quits.",
+                    "guidelines": [
+                      "Use while(true) and ask user at end if they want to continue.",
+                      "Use break to exit if user enters 'no'."
+                    ],
+                    "why": [
+                      "Improves usability by supporting multiple operations in one run."
+                    ],
+                    "starting_code": "while (true) {\n    // Add logic\n}",
+                    "final_code": "Scanner sc = new Scanner(System.in);\nwhile (true) {\n    System.out.print(\"Enter first number: \");\n    int num1 = sc.nextInt();\n    System.out.print(\"Enter second number: \");\n    int num2 = sc.nextInt();\n    System.out.print(\"Choose operation (+, -, *, /): \");\n    char op = sc.next().charAt(0);\n\n    if (op == '+') System.out.println(\"Result: \" + add(num1, num2));\n    else if (op == '-') System.out.println(\"Result: \" + subtract(num1, num2));\n    else if (op == '*') System.out.println(\"Result: \" + multiply(num1, num2));\n    else if (op == '/') System.out.println(\"Result: \" + divide(num1, num2));\n    else System.out.println(\"Invalid operation.\");\n\n    System.out.print(\"Do you want to continue? (yes/no): \");\n    String choice = sc.next();\n    if (choice.equalsIgnoreCase(\"no\")) break;\n}"
+
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "project_id": "JP2",
+            "project_name": "Student Management System",
+            "description": "Build a console-based system to manage student records using Java. Learn OOP, collections, and input handling.",
+            "difficulty": "Beginner",
+            "tasks": [
+              {
+                "task_id": "JP2_T1",
+                "task_name": "Setup Project Structure",
+                "description": "Setup Project Structure in the Student Management System project.",
+                "steps": [
+                  {
+                    "step_id": "JP2_T1_S1",
+                    "step_name": "Create Main Java Class",
+                    "description": "Create the entry point of the application with a main method.",
+                    "guidelines": [
+                      "Open your IDE and create a file named StudentManagementSystem.java.",
+                      "Add a class and the main method inside it."
+                    ],
+                    "why": [
+                      "You need a main method to run any Java application."
+                    ],
+                    "starting_code": "public class StudentManagementSystem {\n    public static void main(String[] args) {\n        // Start here\n    }\n}",
+                    "final_code": "public class StudentManagementSystem {\n    public static void main(String[] args) {\n        System.out.println(\"Welcome to the Student Management System!\");\n    }\n}"
+                  },
+                  {
+                    "step_id": "JP2_T1_S2",
+                    "step_name": "Import Required Packages",
+                    "description": "Add import statements for collections and scanner.",
+                    "guidelines": [
+                      "You\u2019ll use Scanner for input and ArrayList to store students.",
+                      "Add imports at the top of your main class."
+                    ],
+                    "why": [
+                      "These packages provide necessary utilities for I/O and data management."
+                    ],
+                    "starting_code": "// import java.util.*;",
+                    "final_code": "import java.util.Scanner;\nimport java.util.ArrayList;"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP2_T2",
+                "task_name": "Create the Student Class",
+                "description": "Create the Student Class in the Student Management System project.",
+                "steps": [
+                  {
+                    "step_id": "JP2_T2_S1",
+                    "step_name": "Define Fields",
+                    "description": "Create fields for student ID, name, email, and grade.",
+                    "guidelines": [
+                      "Use appropriate data types.",
+                      "Make fields public for simplicity (or private with getters/setters)."
+                    ],
+                    "why": [
+                      "Encapsulates student information in a single object."
+                    ],
+                    "starting_code": "public class Student {\n    int id;\n    String name;\n    // more fields\n}",
+                    "final_code": "public class Student {\n    int id;\n    String name;\n    String email;\n    double grade;\n}"
+                  },
+                  {
+                    "step_id": "JP2_T2_S2",
+                    "step_name": "Add Constructor and toString Method",
+                    "description": "Initialize all attributes and return student info as a string.",
+                    "guidelines": [
+                      "Create a constructor with all fields as parameters.",
+                      "Override the toString() method for readable output."
+                    ],
+                    "why": [
+                      "Constructors help easily create objects and toString improves output readability."
+                    ],
+                    "starting_code": "// public Student(...) { }",
+                    "final_code": "public Student(int id, String name, String email, double grade) {\n    this.id = id;\n    this.name = name;\n    this.email = email;\n    this.grade = grade;\n}\n\npublic String toString() {\n    return \"ID: \" + id + \", Name: \" + name + \", Email: \" + email + \", Grade: \" + grade;\n}"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP2_T3",
+                "task_name": "Store and Manage Data",
+                "description": "Store and Manage Data in the Student Management System project.",
+                "steps": [
+                  {
+                    "step_id": "JP2_T3_S1",
+                    "step_name": "Initialize Student List",
+                    "description": "Create an ArrayList to hold student objects.",
+                    "guidelines": [
+                      "Use static ArrayList<Student> if methods are static.",
+                      "Initialize it at class level."
+                    ],
+                    "why": [
+                      "Provides dynamic storage of student data."
+                    ],
+                    "starting_code": "// static ArrayList<Student> students;",
+                    "final_code": "static ArrayList<Student> students = new ArrayList<>();"
+                  },
+                  {
+                    "step_id": "JP2_T3_S2",
+                    "step_name": "Test Data Addition",
+                    "description": "Manually add a few students to test setup.",
+                    "guidelines": [
+                      "Create new Student objects and add them to the list.",
+                      "Print list contents to verify."
+                    ],
+                    "why": [
+                      "Verifies your Student class and list setup are correct."
+                    ],
+                    "starting_code": "// students.add(new Student(...));",
+                    "final_code": "students.add(new Student(1, \"Alice\", \"alice@email.com\", 92.5));\nstudents.add(new Student(2, \"Bob\", \"bob@email.com\", 85.0));"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP2_T4",
+                "task_name": "Add Student Functionality",
+                "description": "Add Student Functionality in the Student Management System project.",
+                "steps": [
+                  {
+                    "step_id": "JP2_T4_S1",
+                    "step_name": "Collect Input for New Student",
+                    "description": "Ask user to enter student details using Scanner.",
+                    "guidelines": [
+                      "Use nextInt, nextLine, and nextDouble methods of Scanner.",
+                      "Be careful with newlines after int inputs."
+                    ],
+                    "why": [
+                      "You need dynamic input to make the system useful."
+                    ],
+                    "starting_code": "// Prompt user for input using Scanner",
+                    "final_code": "System.out.print(\"Enter ID: \");\nint id = sc.nextInt();\nsc.nextLine();\nSystem.out.print(\"Enter Name: \");\nString name = sc.nextLine();"
+                  },
+                  {
+                    "step_id": "JP2_T4_S2",
+                    "step_name": "Create Object and Add to List",
+                    "description": "Use input to create a new Student and add to the list.",
+                    "guidelines": [
+                      "Pass inputs to the constructor and call add()."
+                    ],
+                    "why": [
+                      "Adds actual student data to your system."
+                    ],
+                    "starting_code": "// students.add(new Student(...));",
+                    "final_code": "students.add(new Student(id, name, email, grade));"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP2_T5",
+                "task_name": "View Student Records",
+                "description": "View Student Records in the Student Management System project.",
+                "steps": [
+                  {
+                    "step_id": "JP2_T5_S1",
+                    "step_name": "Check for Empty List",
+                    "description": "Handle case when there are no students in the list.",
+                    "guidelines": [
+                      "Use students.isEmpty() before iterating."
+                    ],
+                    "why": [
+                      "Improves UX by avoiding empty output loops."
+                    ],
+                    "starting_code": "// if (students.isEmpty())",
+                    "final_code": "if (students.isEmpty()) {\n    System.out.println(\"No student records available.\");\n    return;\n}"
+                  },
+                  {
+                    "step_id": "JP2_T5_S2",
+                    "step_name": "Print All Student Info",
+                    "description": "Loop through the list and print each student.",
+                    "guidelines": [
+                      "Use enhanced for-loop to iterate."
+                    ],
+                    "why": [
+                      "Displays student information to the user."
+                    ],
+                    "starting_code": "// for (Student s : students) { }",
+                    "final_code": "for (Student s : students) {\n    System.out.println(s);\n}"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "project_id": "JP3",
+            "project_name": "Tic-Tac-Toe",
+            "description": "Create a 2-player console-based Tic-Tac-Toe game in Java to practice arrays, game logic, input validation, and control structures.",
+            "difficulty": "Beginner",
+            "tasks": [
+              {
+                "task_id": "JP3_T1",
+                "task_name": "Set Up the Game Board",
+                "description": "Set Up the Game Board in the Tic-Tac-Toe project.",
+                "steps": [
+                  {
+                    "step_id": "JP3_T1_S1",
+                    "step_name": "Initialize the 3x3 Board",
+                    "description": "Create a 2D char array and fill it with dashes.",
+                    "guidelines": [
+                      "Use a 3x3 char array to represent the board.",
+                      "Initialize all positions to '-'."
+                    ],
+                    "why": [
+                      "This is the core data structure for the game."
+                    ],
+                    "starting_code": "char[][] board = new char[3][3];",
+                    "final_code": "char[][] board = new char[3][3];\nfor (int i = 0; i < 3; i++) {\n    for (int j = 0; j < 3; j++) {\n        board[i][j] = '-';\n    }\n}"
+                  },
+                  {
+                    "step_id": "JP3_T1_S2",
+                    "step_name": "Create a Function to Print the Board",
+                    "description": "Write a method that prints the board in a readable format.",
+                    "guidelines": [
+                      "Use nested loops to print the board state.",
+                      "Include spaces or bars to separate cells."
+                    ],
+                    "why": [
+                      "Allows players to see the board after every move."
+                    ],
+                    "starting_code": "public static void printBoard(char[][] board) {\n    // Print loop\n}",
+                    "final_code": "public static void printBoard(char[][] board) {\n    for (int i = 0; i < 3; i++) {\n        for (int j = 0; j < 3; j++) {\n            System.out.print(board[i][j] + \" \");\n        }\n        System.out.println();\n    }\n}"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP3_T2",
+                "task_name": "Player Move System",
+                "description": "Player Move System in the Tic-Tac-Toe project.",
+                "steps": [
+                  {
+                    "step_id": "JP3_T2_S1",
+                    "step_name": "Ask for Player Move",
+                    "description": "Use Scanner to prompt the current player for row and column input.",
+                    "guidelines": [
+                      "Prompt user for row and column (0\u20132).",
+                      "Read input using Scanner."
+                    ],
+                    "why": [
+                      "Takes move input from players."
+                    ],
+                    "starting_code": "Scanner sc = new Scanner(System.in);\nSystem.out.print(\"Enter row and column: \");",
+                    "final_code": "System.out.print(\"Enter row (0-2): \");\nint row = sc.nextInt();\nSystem.out.print(\"Enter column (0-2): \");\nint col = sc.nextInt();"
+                  },
+                  {
+                    "step_id": "JP3_T2_S2",
+                    "step_name": "Validate Input",
+                    "description": "Ensure the selected cell is empty. If not, ask again.",
+                    "guidelines": [
+                      "Check if board[row][col] == '-'.",
+                      "Loop until valid input is received."
+                    ],
+                    "why": [
+                      "Prevents overwriting already played cells."
+                    ],
+                    "starting_code": "if (board[row][col] != '-') {\n    System.out.println(\"Cell taken.\");\n}",
+                    "final_code": "while (board[row][col] != '-') {\n    System.out.println(\"Cell already taken! Try again.\");\n    row = sc.nextInt();\n    col = sc.nextInt();\n}"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP3_T3",
+                "task_name": "Add Game Mechanics",
+                "description": "Add Game Mechanics in the Tic-Tac-Toe project.",
+                "steps": [
+                  {
+                    "step_id": "JP3_T3_S1",
+                    "step_name": "Switch Player Turns",
+                    "description": "Alternate between player 'X' and player 'O'.",
+                    "guidelines": [
+                      "Use a variable `currentPlayer`.",
+                      "Flip between 'X' and 'O' after every turn."
+                    ],
+                    "why": [
+                      "Implements turn-based logic."
+                    ],
+                    "starting_code": "char currentPlayer = 'X';",
+                    "final_code": "currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';"
+                  },
+                  {
+                    "step_id": "JP3_T3_S2",
+                    "step_name": "Track Total Moves and Detect Draw",
+                    "description": "End the game in a draw if total moves reach 9.",
+                    "guidelines": [
+                      "Initialize a move counter and increment each valid turn.",
+                      "After 9 moves, if no win, it's a draw."
+                    ],
+                    "why": [
+                      "Ensures game terminates in case of a draw."
+                    ],
+                    "starting_code": "int moves = 0;",
+                    "final_code": "moves++;\nif (moves == 9) {\n    System.out.println(\"It's a draw!\");\n    break;\n}"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP3_T4",
+                "task_name": "Check for Win Conditions",
+                "description": "Check for Win Conditions in the Tic-Tac-Toe project.",
+                "steps": [
+                  {
+                    "step_id": "JP3_T4_S1",
+                    "step_name": "Write `checkWin()` Method",
+                    "description": "Check if the current player has won by completing a row, column, or diagonal.",
+                    "guidelines": [
+                      "Loop through rows and columns to check equality.",
+                      "Check both diagonals explicitly."
+                    ],
+                    "why": [
+                      "This decides the winner of the game."
+                    ],
+                    "starting_code": "public static boolean checkWin(char[][] board, char player) {\n    // Logic here\n    return false;\n}",
+                    "final_code": "public static boolean checkWin(char[][] board, char player) {\n    for (int i = 0; i < 3; i++) {\n        if (board[i][0] == player && board[i][1] == player && board[i][2] == player)\n            return true;\n        if (board[0][i] == player && board[1][i] == player && board[2][i] == player)\n            return true;\n    }\n    if (board[0][0] == player && board[1][1] == player && board[2][2] == player)\n        return true;\n    if (board[0][2] == player && board[1][1] == player && board[2][0] == player)\n        return true;\n    return false;\n}"
+                  },
+                  {
+                    "step_id": "JP3_T4_S2",
+                    "step_name": "Announce the Winner",
+                    "description": "If `checkWin` returns true, end the game and announce the winner.",
+                    "guidelines": [
+                      "After each move, call checkWin() with the current player.",
+                      "If true, break the game loop."
+                    ],
+                    "why": [
+                      "Handles the game-ending condition."
+                    ],
+                    "starting_code": "if (checkWin(board, currentPlayer)) {\n    // Win logic\n}",
+                    "final_code": "if (checkWin(board, currentPlayer)) {\n    System.out.println(\"Player \" + currentPlayer + \" wins!\");\n    break;\n}"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP3_T5",
+                "task_name": "Add Replay Option",
+                "description": "Add Replay Option in the Tic-Tac-Toe project.",
+                "steps": [
+                  {
+                    "step_id": "JP3_T5_S1",
+                    "step_name": "Ask to Replay After Game Ends",
+                    "description": "Prompt users if they want to play again. Reset the board if yes.",
+                    "guidelines": [
+                      "Use Scanner to ask yes/no.",
+                      "Reinitialize the board and counters if yes."
+                    ],
+                    "why": [
+                      "Improves user experience by allowing multiple games."
+                    ],
+                    "starting_code": "System.out.print(\"Play again? (yes/no): \");",
+                    "final_code": "System.out.print(\"Play again? (yes/no): \");\nString again = sc.next();\nif (again.equalsIgnoreCase(\"yes\")) {\n    // Reset game state\n} else {\n    break;\n}"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "project_id": "JP4",
+            "project_name": "Library Management System",
+            "description": "Build a console-based Library Management System in Java with functionalities like adding, viewing, issuing, and returning books.",
+            "difficulty": "Intermediate",
+            "tasks": [
+              {
+                "task_id": "JP4_T1",
+                "task_name": "Setup Your Project Structure",
+                "description": "Setup Your Project Structure in the Library Management System project.",
+                "steps": [
+                  {
+                    "step_id": "JP4_T1_S1",
+                    "step_name": "Create the Main Class LibrarySystem",
+                    "description": "Create a file named LibrarySystem.java with the main method.",
+                    "guidelines": [
+                      "Use a public class named LibrarySystem.",
+                      "Include the main method as the entry point."
+                    ],
+                    "why": [
+                      "This sets up the foundation of your Java project."
+                    ],
+                    "starting_code": "public class LibrarySystem {\n    public static void main(String[] args) {\n        // Start here\n    }\n}",
+                    "final_code": "public class LibrarySystem {\n    public static void main(String[] args) {\n        System.out.println(\"Welcome to the Library Management System!\");\n    }\n}"
+                  },
+                  {
+                    "step_id": "JP4_T1_S2",
+                    "step_name": "Setup Required Imports",
+                    "description": "Import essential Java packages.",
+                    "guidelines": [
+                      "Use Scanner for input collection.",
+                      "Use ArrayList to store book objects."
+                    ],
+                    "why": [
+                      "Imports are necessary to use standard Java utilities."
+                    ],
+                    "starting_code": "// import java.util.*;",
+                    "final_code": "import java.util.ArrayList;\nimport java.util.Scanner;"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP4_T2",
+                "task_name": "Create the Book Class",
+                "description": "Create the Book Class in the Library Management System project.",
+                "steps": [
+                  {
+                    "step_id": "JP4_T2_S1",
+                    "step_name": "Define Book Attributes",
+                    "description": "Create a Book class with fields like id, title, author, and isIssued.",
+                    "guidelines": [
+                      "Make the fields public or use private with a constructor.",
+                      "Use boolean for issue status."
+                    ],
+                    "why": [
+                      "Models each book in the system as an object."
+                    ],
+                    "starting_code": "public class Book {\n    int id;\n    String title;\n    String author;\n    boolean isIssued;\n}",
+                    "final_code": "public class Book {\n    int id;\n    String title;\n    String author;\n    boolean isIssued;\n\n    public Book(int id, String title, String author) {\n        this.id = id;\n        this.title = title;\n        this.author = author;\n        this.isIssued = false;\n    }\n\n    public String toString() {\n        return \"ID: \" + id + \", Title: \" + title + \", Author: \" + author + \", Issued: \" + isIssued;\n    }\n}"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP4_T3",
+                "task_name": "Setup the Book Inventory",
+                "description": "Setup the Book Inventory in the Library Management System project.",
+                "steps": [
+                  {
+                    "step_id": "JP4_T3_S1",
+                    "step_name": "Initialize Book List",
+                    "description": "Use an ArrayList to store books.",
+                    "guidelines": [
+                      "Declare it as a static field in LibrarySystem."
+                    ],
+                    "why": [
+                      "Stores all books dynamically."
+                    ],
+                    "starting_code": "// static ArrayList<Book> books;",
+                    "final_code": "static ArrayList<Book> books = new ArrayList<>();"
+                  },
+                  {
+                    "step_id": "JP4_T3_S2",
+                    "step_name": "Add Sample Books for Testing",
+                    "description": "Manually insert a few books to test the system.",
+                    "guidelines": [
+                      "Use the constructor to create book objects and add to list."
+                    ],
+                    "why": [
+                      "Useful for testing before full interaction is implemented."
+                    ],
+                    "starting_code": "// books.add(new Book(...));",
+                    "final_code": "books.add(new Book(1, \"1984\", \"George Orwell\"));\nbooks.add(new Book(2, \"The Hobbit\", \"J.R.R. Tolkien\"));"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP4_T4",
+                "task_name": "Add Book Functionality",
+                "description": "Add Book Functionality in the Library Management System project.",
+                "steps": [
+                  {
+                    "step_id": "JP4_T4_S1",
+                    "step_name": "Collect Book Details",
+                    "description": "Ask the user for book id, title, and author.",
+                    "guidelines": [
+                      "Use Scanner to input id, title, author.",
+                      "Use nextLine() after nextInt()."
+                    ],
+                    "why": [
+                      "Gets user data for creating book entries."
+                    ],
+                    "starting_code": "// Input book fields",
+                    "final_code": "System.out.print(\"Enter Book ID: \");\nint id = sc.nextInt();\nsc.nextLine();\nSystem.out.print(\"Enter Title: \");\nString title = sc.nextLine();\nSystem.out.print(\"Enter Author: \");\nString author = sc.nextLine();"
+                  },
+                  {
+                    "step_id": "JP4_T4_S2",
+                    "step_name": "Add New Book to List",
+                    "description": "Create and add the new Book object to the inventory list.",
+                    "guidelines": [
+                      "Use constructor and add() method."
+                    ],
+                    "why": [
+                      "Stores the user-provided book into your system."
+                    ],
+                    "starting_code": "// books.add(new Book(...));",
+                    "final_code": "books.add(new Book(id, title, author));\nSystem.out.println(\"Book added successfully!\");"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP4_T5",
+                "task_name": "View All Books",
+                "description": "View All Books in the Library Management System project.",
+                "steps": [
+                  {
+                    "step_id": "JP4_T5_S1",
+                    "step_name": "Loop and Display Books",
+                    "description": "Print all the book details in the list.",
+                    "guidelines": [
+                      "Use an enhanced for-loop to iterate and print."
+                    ],
+                    "why": [
+                      "Displays current inventory."
+                    ],
+                    "starting_code": "// for (Book book : books)",
+                    "final_code": "for (Book book : books) {\n    System.out.println(book);\n}"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP4_T6",
+                "task_name": "Issue a Book",
+                "description": "Issue a Book in the Library Management System project.",
+                "steps": [
+                  {
+                    "step_id": "JP4_T6_S1",
+                    "step_name": "Search Book by ID",
+                    "description": "Check list to find the book and issue it if available.",
+                    "guidelines": [
+                      "Loop through books, compare ID and check isIssued."
+                    ],
+                    "why": [
+                      "Lets user borrow a book."
+                    ],
+                    "starting_code": "// if (book.id == id && !book.isIssued)",
+                    "final_code": "for (Book b : books) {\n    if (b.id == id && !b.isIssued) {\n        b.isIssued = true;\n        System.out.println(\"Book issued successfully.\");\n        return;\n    }\n}\nSystem.out.println(\"Book not found or already issued.\");"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP4_T7",
+                "task_name": "Return a Book",
+                "description": "Return a Book in the Library Management System project.",
+                "steps": [
+                  {
+                    "step_id": "JP4_T7_S1",
+                    "step_name": "Mark Book as Returned",
+                    "description": "Set isIssued to false for the returned book.",
+                    "guidelines": [
+                      "Find book by ID and ensure it's currently issued."
+                    ],
+                    "why": [
+                      "Lets users return books they've borrowed."
+                    ],
+                    "starting_code": "// if (book.id == id && book.isIssued)",
+                    "final_code": "for (Book b : books) {\n    if (b.id == id && b.isIssued) {\n        b.isIssued = false;\n        System.out.println(\"Book returned successfully.\");\n        return;\n    }\n}\nSystem.out.println(\"Book not found or wasn\u2019t issued.\");"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP4_T8",
+                "task_name": "Add Menu System",
+                "description": "Add Menu System in the Library Management System project.",
+                "steps": [
+                  {
+                    "step_id": "JP4_T8_S1",
+                    "step_name": "Implement Menu Loop",
+                    "description": "Provide options and call methods accordingly.",
+                    "guidelines": [
+                      "Use while(true) and switch statement for user interaction."
+                    ],
+                    "why": [
+                      "Provides easy navigation for users."
+                    ],
+                    "starting_code": "// menu with options 1-5",
+                    "final_code": "while (true) {\n    System.out.println(\"\\n1. Add Book\\n2. View Books\\n3. Issue Book\\n4. Return Book\\n5. Exit\");\n    int choice = sc.nextInt();\n    switch (choice) {\n        case 1: /* addBook() */ break;\n        case 2: /* viewBooks() */ break;\n        case 3: /* issueBook() */ break;\n        case 4: /* returnBook() */ break;\n        case 5: return;\n        default: System.out.println(\"Invalid choice.\");\n    }\n}"
+                  
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "project_id": "J5",
+            "project_name": "Bank Management System",
+            "description": "Build a secure console-based banking app in Java to manage accounts, deposits, withdrawals, and balance inquiries.",
+            "difficulty": "Intermediate",
+            "tasks": [
+              {
+                "task_id": "JP5_T1",
+                "task_name": "Setup Project Structure",
+                "description": "Setup Project Structure in the Bank Management System project.",
+                "steps": [
+                  {
+                    "step_id": "JP5_T1_S1",
+                    "step_name": "Create Main Class",
+                    "description": "Create the main class BankSystem with a main method.",
+                    "guidelines": [
+                      "Create a file BankSystem.java.",
+                      "Add the main method for execution."
+                    ],
+                    "why": [
+                      "Entry point for the application."
+                    ],
+                    "starting_code": "public class BankSystem {\n    public static void main(String[] args) {\n        // start here\n    }\n}",
+                    "final_code": "public class BankSystem {\n    public static void main(String[] args) {\n        System.out.println(\"Welcome to the Bank Management System\");\n    }\n}"
+                  },
+                  {
+                    "step_id": "JP5_T1_S2",
+                    "step_name": "Import Required Packages",
+                    "description": "Add required Java imports like Scanner and ArrayList.",
+                    "guidelines": [
+                      "Import java.util.Scanner and java.util.ArrayList."
+                    ],
+                    "why": [
+                      "To enable input and store multiple accounts."
+                    ],
+                    "starting_code": "// import required packages",
+                    "final_code": "import java.util.Scanner;\nimport java.util.ArrayList;"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP5_T2",
+                "task_name": "Create Account Class",
+                "description": "Create Account Class in the Bank Management System project.",
+                "steps": [
+                  {
+                    "step_id": "JP5_T2_S1",
+                    "step_name": "Define Account Fields",
+                    "description": "Create fields for account number, name, and balance.",
+                    "guidelines": [
+                      "Use int for account number, String for name, and double for balance."
+                    ],
+                    "why": [
+                      "Encapsulate account information."
+                    ],
+                    "starting_code": "public class Account {\n    // fields\n}",
+                    "final_code": "public class Account {\n    private int accountNumber;\n    private String name;\n    private double balance;\n}"
+                  },
+                  {
+                    "step_id": "JP5_T2_S2",
+                    "step_name": "Create Constructor and Getters",
+                    "description": "Add a constructor and getter methods for the fields.",
+                    "guidelines": [
+                      "Initialize fields through the constructor.",
+                      "Provide public getter methods."
+                    ],
+                    "why": [
+                      "Encapsulates and accesses data safely."
+                    ],
+                    "starting_code": "// constructor and getters",
+                    "final_code": "public Account(int accNo, String name, double balance) {\n    this.accountNumber = accNo;\n    this.name = name;\n    this.balance = balance;\n}\npublic int getAccountNumber() { return accountNumber; }\npublic String getName() { return name; }\npublic double getBalance() { return balance; }"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP5_T3",
+                "task_name": "Store and Manage Accounts",
+                "description": "Store and Manage Accounts in the Bank Management System project.",
+                "steps": [
+                  {
+                    "step_id": "JP5_T3_S1",
+                    "step_name": "Create ArrayList for Accounts",
+                    "description": "Use ArrayList<Account> to store all account objects.",
+                    "guidelines": [
+                      "Declare and initialize the list globally."
+                    ],
+                    "why": [
+                      "Stores all created accounts in memory."
+                    ],
+                    "starting_code": "// ArrayList<Account> accounts;",
+                    "final_code": "static ArrayList<Account> accounts = new ArrayList<>();"
+                  },
+                  {
+                    "step_id": "JP5_T3_S2",
+                    "step_name": "Add Initial Test Account",
+                    "description": "Insert a test account to validate features.",
+                    "guidelines": [
+                      "Create an account object and add to list."
+                    ],
+                    "why": [
+                      "Facilitates testing without user input."
+                    ],
+                    "starting_code": "// accounts.add(...)",
+                    "final_code": "accounts.add(new Account(1001, \"John Doe\", 1000.00));"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP5_T4",
+                "task_name": "Create New Account",
+                "description": "Create New Account in the Bank Management System project.",
+                "steps": [
+                  {
+                    "step_id": "JP5_T4_S1",
+                    "step_name": "Take Input from User",
+                    "description": "Prompt user for account number, name, and initial balance.",
+                    "guidelines": [
+                      "Use Scanner for all inputs."
+                    ],
+                    "why": [
+                      "Interactive user account creation."
+                    ],
+                    "starting_code": "// collect input",
+                    "final_code": "System.out.print(\"Enter account number: \");\nint accNo = sc.nextInt();\nsc.nextLine();\nSystem.out.print(\"Enter account holder name: \");\nString name = sc.nextLine();\nSystem.out.print(\"Enter initial deposit: \");\ndouble balance = sc.nextDouble();"
+                  },
+                  {
+                    "step_id": "JP5_T4_S2",
+                    "step_name": "Add to Account List",
+                    "description": "Create a new account and add it to the ArrayList.",
+                    "guidelines": [
+                      "Instantiate Account and call add()."
+                    ],
+                    "why": [
+                      "Adds the user-created account to system."
+                    ],
+                    "starting_code": "// add to accounts",
+                    "final_code": "accounts.add(new Account(accNo, name, balance));\nSystem.out.println(\"Account created successfully.\");"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP5_T5",
+                "task_name": "Deposit Money",
+                "description": "Deposit Money in the Bank Management System project.",
+                "steps": [
+                  {
+                    "step_id": "JP5_T5_S1",
+                    "step_name": "Search Account by Number",
+                    "description": "Find account from list by number.",
+                    "guidelines": [
+                      "Loop through ArrayList and match account number."
+                    ],
+                    "why": [
+                      "You must locate account before modifying."
+                    ],
+                    "starting_code": "// if (acc.getAccountNumber() == accNo)",
+                    "final_code": "for (Account acc : accounts) {\n    if (acc.getAccountNumber() == accNo) {\n        // deposit\n    }\n}"
+                  },
+                  {
+                    "step_id": "JP5_T5_S2",
+                    "step_name": "Update Balance",
+                    "description": "Add deposit amount to account's balance.",
+                    "guidelines": [
+                      "Use a setter or modify directly inside Account class."
+                    ],
+                    "why": [
+                      "Implements deposit feature."
+                    ],
+                    "starting_code": "// acc.deposit(amount);",
+                    "final_code": "acc.deposit(amount); // inside Account class: balance += amount;"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP5_T6",
+                "task_name": "Withdraw Money",
+                "description": "Withdraw Money in the Bank Management System project.",
+                "steps": [
+                  {
+                    "step_id": "JP5_T6_S1",
+                    "step_name": "Check Sufficient Balance",
+                    "description": "Ensure user has enough balance.",
+                    "guidelines": [
+                      "Compare balance before subtracting amount."
+                    ],
+                    "why": [
+                      "Prevents overdraft errors."
+                    ],
+                    "starting_code": "// if (balance >= amount)",
+                    "final_code": "if (acc.getBalance() >= amount) {\n    acc.withdraw(amount);\n} else {\n    System.out.println(\"Insufficient funds.\");\n}"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP5_T7",
+                "task_name": "View Account Details",
+                "description": "View Account Details in the Bank Management System project.",
+                "steps": [
+                  {
+                    "step_id": "JP5_T7_S1",
+                    "step_name": "Display Holder Info",
+                    "description": "Show name, account number, and balance.",
+                    "guidelines": [
+                      "Use getters to print details."
+                    ],
+                    "why": [
+                      "Lets user confirm account state."
+                    ],
+                    "starting_code": "// get and print account info",
+                    "final_code": "System.out.println(\"Account Number: \" + acc.getAccountNumber());\nSystem.out.println(\"Name: \" + acc.getName());\nSystem.out.println(\"Balance: $\" + acc.getBalance());"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP5_T8",
+                "task_name": "Create Main Menu",
+                "description": "Create Main Menu in the Bank Management System project.",
+                "steps": [
+                  {
+                    "step_id": "JP5_T8_S1",
+                    "step_name": "Loop and Prompt",
+                    "description": "Show menu options in loop and switch.",
+                    "guidelines": [
+                      "Use while(true) with switch case."
+                    ],
+                    "why": [
+                      "Provides user with navigation control."
+                    ],
+                    "starting_code": "// while loop for menu",
+                    "final_code": "while (true) {\n    System.out.println(\"1. Create Account\\n2. Deposit\\n3. Withdraw\\n4. View Account\\n5. Exit\");\n    int choice = sc.nextInt();\n    // switch(choice) {...}\n}"
+                  
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "project_id": "JP6",
+            "project_name": "Weather App",
+            "description": "Build a Java app that fetches and displays real-time weather data from an external API.",
+            "difficulty": "Intermediate",
+            "tasks": [
+              {
+                "task_id": "JP6_T1",
+                "task_name": "Setup Project and Main Class",
+                "description": "Setup Project and Main Class in the Weather App project.",
+                "steps": [
+                  {
+                    "step_id": "JP6_T1_S1",
+                    "step_name": "Create Main Class",
+                    "description": "Create WeatherApp.java and define the main method.",
+                    "guidelines": [
+                      "Create a file named WeatherApp.java.",
+                      "Add a public class and the main method."
+                    ],
+                    "why": [
+                      "This is the entry point of the application."
+                    ],
+                    "starting_code": "public class WeatherApp {\n    public static void main(String[] args) {\n        // start\n    }\n}",
+                    "final_code": "public class WeatherApp {\n    public static void main(String[] args) {\n        System.out.println(\"Welcome to the Weather App!\");\n    }\n}"
+                  },
+                  {
+                    "step_id": "JP6_T1_S2",
+                    "step_name": "Add Required Imports",
+                    "description": "Import necessary packages for networking and JSON parsing.",
+                    "guidelines": [
+                      "Use java.net, java.io, and a JSON library like org.json."
+                    ],
+                    "why": [
+                      "These libraries are required for API access and response parsing."
+                    ],
+                    "starting_code": "// import java.net.*;",
+                    "final_code": "import java.net.*;\nimport java.io.*;\nimport org.json.*;"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP6_T2",
+                "task_name": "Take Input for City Name",
+                "description": "Take Input for City Name in the Weather App project.",
+                "steps": [
+                  {
+                    "step_id": "JP6_T2_S1",
+                    "step_name": "Use Scanner to Get City",
+                    "description": "Prompt user for the city name.",
+                    "guidelines": [
+                      "Use Scanner to read input from console."
+                    ],
+                    "why": [
+                      "The weather data is based on city name."
+                    ],
+                    "starting_code": "Scanner sc = new Scanner(System.in);",
+                    "final_code": "Scanner sc = new Scanner(System.in);\nSystem.out.print(\"Enter city name: \");\nString city = sc.nextLine();"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP6_T3",
+                "task_name": "Build API URL",
+                "description": "Build API URL in the Weather App project.",
+                "steps": [
+                  {
+                    "step_id": "JP6_T3_S1",
+                    "step_name": "Format URL with API Key",
+                    "description": "Insert user input and API key into URL string.",
+                    "guidelines": [
+                      "Use string concatenation to create a valid API URL."
+                    ],
+                    "why": [
+                      "This URL will be used to request weather data."
+                    ],
+                    "starting_code": "// String url = ...",
+                    "final_code": "String apiKey = \"your_api_key\";\nString urlString = \"https://api.openweathermap.org/data/2.5/weather?q=\" + city + \"&appid=\" + apiKey + \"&units=metric\";"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP6_T4",
+                "task_name": "Send HTTP Request",
+                "description": "Send HTTP Request in the Weather App project.",
+                "steps": [
+                  {
+                    "step_id": "JP6_T4_S1",
+                    "step_name": "Connect to URL",
+                    "description": "Open a connection to the weather API.",
+                    "guidelines": [
+                      "Use HttpURLConnection and set method to GET."
+                    ],
+                    "why": [
+                      "To retrieve data from the server."
+                    ],
+                    "starting_code": "// HttpURLConnection conn = ...",
+                    "final_code": "URL url = new URL(urlString);\nHttpURLConnection conn = (HttpURLConnection) url.openConnection();\nconn.setRequestMethod(\"GET\");\nconn.connect();"
+                  },
+                  {
+                    "step_id": "JP6_T4_S2",
+                    "step_name": "Read the Response",
+                    "description": "Convert the input stream to a string.",
+                    "guidelines": [
+                      "Use BufferedReader to read lines from InputStreamReader."
+                    ],
+                    "why": [
+                      "To capture the data returned by the server."
+                    ],
+                    "starting_code": "// BufferedReader reader = ...",
+                    "final_code": "BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));\nStringBuilder response = new StringBuilder();\nString line;\nwhile ((line = reader.readLine()) != null) {\n    response.append(line);\n}\nreader.close();"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP6_T5",
+                "task_name": "Parse the JSON Response",
+                "description": "Parse the JSON Response in the Weather App project.",
+                "steps": [
+                  {
+                    "step_id": "JP6_T5_S1",
+                    "step_name": "Convert to JSON Object",
+                    "description": "Use a JSON library to parse the response string.",
+                    "guidelines": [
+                      "Use JSONObject and extract nested fields."
+                    ],
+                    "why": [
+                      "Allows you to extract specific weather data."
+                    ],
+                    "starting_code": "// JSONObject obj = ...",
+                    "final_code": "JSONObject obj = new JSONObject(response.toString());\nJSONObject main = obj.getJSONObject(\"main\");\ndouble temp = main.getDouble(\"temp\");\nint humidity = main.getInt(\"humidity\");"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP6_T6",
+                "task_name": "Extract Weather Information",
+                "description": "Extract Weather Information in the Weather App project.",
+                "steps": [
+                  {
+                    "step_id": "JP6_T6_S1",
+                    "step_name": "Print Weather Details",
+                    "description": "Display temperature, humidity, and description.",
+                    "guidelines": [
+                      "Use getJSONArray() and getString() for description."
+                    ],
+                    "why": [
+                      "Presents useful info to the user."
+                    ],
+                    "starting_code": "// System.out.println(...)",
+                    "final_code": "JSONObject weather = obj.getJSONArray(\"weather\").getJSONObject(0);\nString description = weather.getString(\"description\");\nSystem.out.println(\"Weather in \" + city + \":\");\nSystem.out.println(\"Temperature: \" + temp + \"\u00b0C\");\nSystem.out.println(\"Humidity: \" + humidity + \"%\");\nSystem.out.println(\"Condition: \" + description);"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP6_T7",
+                "task_name": "Handle Errors Gracefully",
+                "description": "Handle Errors Gracefully in the Weather App project.",
+                "steps": [
+                  {
+                    "step_id": "JP6_T7_S1",
+                    "step_name": "Handle Invalid City or Response",
+                    "description": "Check response code and handle exceptions.",
+                    "guidelines": [
+                      "Use try-catch or validate response code."
+                    ],
+                    "why": [
+                      "Avoids crash and improves UX."
+                    ],
+                    "starting_code": "// if (conn.getResponseCode() != 200)",
+                    "final_code": "if (conn.getResponseCode() != 200) {\n    System.out.println(\"Error: Could not fetch weather data.\");\n    return;\n}"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP6_T8",
+                "task_name": "Create a Menu Loop",
+                "description": "Create a Menu Loop in the Weather App project.",
+                "steps": [
+                  {
+                    "step_id": "JP6_T8_S1",
+                    "step_name": "Repeat Search Based on Input",
+                    "description": "Allow the user to check multiple cities in one session.",
+                    "guidelines": [
+                      "Use while loop and prompt user for next city."
+                    ],
+                    "why": [
+                      "Improves experience and interactivity."
+                    ],
+                    "starting_code": "// while loop to continue app",
+                    "final_code": "while (true) {\n    // call weather fetch logic\n    System.out.print(\"Search another city? (yes/no): \");\n    String again = sc.next();\n    if (!again.equalsIgnoreCase(\"yes\")) break;\n}"
+                  }
+                ]
+              }
+            ]
+        },
+        {
+            "project_id": "JP7",
+            "project_name": "Advanced Weather App",
+            "description": "Create a robust Java weather application that supports search history, multi-day forecasts, unit conversion, and enhanced error handling using external APIs.",
+            "difficulty": "Advanced",
+            "tasks": [
+              {
+                "task_id": "JP7_T1",
+                "task_name": "Initialize Project",
+                "description": "Initialize Project in the Advanced Weather App project.",
+                "steps": [
+                  {
+                    "step_id": "JP7_T1_S1",
+                    "step_name": "Create Main Class",
+                    "description": "Create the AdvancedWeatherApp.java file with a main method.",
+                    "guidelines": [
+                      "Initialize the main class and display a welcome message."
+                    ],
+                    "why": [
+                      "Sets up the project entry point."
+                    ],
+                    "starting_code": "// class and main() method",
+                    "final_code": "public class AdvancedWeatherApp {\n    public static void main(String[] args) {\n        System.out.println(\"Welcome to the Advanced Weather App\");\n    }\n}"
+                  },
+                  {
+                    "step_id": "JP7_T1_S2",
+                    "step_name": "Import Required Packages",
+                    "description": "Import all Java utility and networking packages required.",
+                    "guidelines": [
+                      "Include java.net.*, java.io.*, org.json.*, java.util.*"
+                    ],
+                    "why": [
+                      "Necessary for HTTP requests and JSON parsing."
+                    ],
+                    "starting_code": "// import packages",
+                    "final_code": "import java.net.*;\nimport java.io.*;\nimport org.json.*;\nimport java.util.*;"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP7_T2",
+                "task_name": "Get User Input",
+                "description": "Get User Input in the Advanced Weather App project.",
+                "steps": [
+                  {
+                    "step_id": "JP7_T2_S1",
+                    "step_name": "Get City and Units",
+                    "description": "Prompt the user for the city name and units (Celsius/Fahrenheit).",
+                    "guidelines": [
+                      "Use Scanner to read inputs and save both values."
+                    ],
+                    "why": [
+                      "Dynamic user control over units and location."
+                    ],
+                    "starting_code": "// Scanner input for city and unit",
+                    "final_code": "Scanner sc = new Scanner(System.in);\nSystem.out.print(\"Enter city name: \");\nString city = sc.nextLine();\nSystem.out.print(\"Use metric or imperial units? \");\nString units = sc.nextLine();"
+                  },
+                  {
+                    "step_id": "JP7_T2_S2",
+                    "step_name": "Store in History List",
+                    "description": "Store each search in a list for history feature.",
+                    "guidelines": [
+                      "Use ArrayList to collect each searched city."
+                    ],
+                    "why": [
+                      "Track user searches for future reference."
+                    ],
+                    "starting_code": "// history.add(city);",
+                    "final_code": "ArrayList<String> history = new ArrayList<>();\nhistory.add(city);"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP7_T3",
+                "task_name": "Construct API URL",
+                "description": "Construct API URL in the Advanced Weather App project.",
+                "steps": [
+                  {
+                    "step_id": "JP7_T3_S1",
+                    "step_name": "Build Dynamic URL",
+                    "description": "Build the URL string with city and units.",
+                    "guidelines": [
+                      "Include API key and user-selected units."
+                    ],
+                    "why": [
+                      "Enables parameterized API requests."
+                    ],
+                    "starting_code": "// String url = ...",
+                    "final_code": "String apiKey = \"your_api_key\";\nString url = \"https://api.openweathermap.org/data/2.5/weather?q=\" + city + \"&appid=\" + apiKey + \"&units=\" + units;"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP7_T4",
+                "task_name": "Make API Call",
+                "description": "Make API Call in the Advanced Weather App project.",
+                "steps": [
+                  {
+                    "step_id": "JP7_T4_S1",
+                    "step_name": "Send GET Request",
+                    "description": "Use HttpURLConnection to make a GET request.",
+                    "guidelines": [
+                      "Connect using openConnection() and set request type."
+                    ],
+                    "why": [
+                      "Retrieves weather data from API."
+                    ],
+                    "starting_code": "// HttpURLConnection conn = ...",
+                    "final_code": "URL urlObj = new URL(url);\nHttpURLConnection conn = (HttpURLConnection) urlObj.openConnection();\nconn.setRequestMethod(\"GET\");\nconn.connect();"
+                  },
+                  {
+                    "step_id": "JP7_T4_S2",
+                    "step_name": "Read and Store Response",
+                    "description": "Use BufferedReader to read API output and store it in a string.",
+                    "guidelines": [
+                      "Read line by line and append to StringBuilder."
+                    ],
+                    "why": [
+                      "Capture full API response."
+                    ],
+                    "starting_code": "// BufferedReader reader = ...",
+                    "final_code": "BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));\nStringBuilder response = new StringBuilder();\nString line;\nwhile ((line = reader.readLine()) != null) {\n    response.append(line);\n}\nreader.close();"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP7_T5",
+                "task_name": "Parse JSON and Extract Data",
+                "description": "Parse JSON and Extract Data in the Advanced Weather App project.",
+                "steps": [
+                  {
+                    "step_id": "JP7_T5_S1",
+                    "step_name": "Parse Temperature and Humidity",
+                    "description": "Extract temperature and humidity from the JSON response.",
+                    "guidelines": [
+                      "Navigate through 'main' JSON object."
+                    ],
+                    "why": [
+                      "Displays core weather data to user."
+                    ],
+                    "starting_code": "// JSONObject obj = ...",
+                    "final_code": "JSONObject obj = new JSONObject(response.toString());\nJSONObject main = obj.getJSONObject(\"main\");\ndouble temp = main.getDouble(\"temp\");\nint humidity = main.getInt(\"humidity\");"
+                  },
+                  {
+                    "step_id": "JP7_T5_S2",
+                    "step_name": "Parse Weather Condition",
+                    "description": "Extract 'description' from weather array.",
+                    "guidelines": [
+                      "Access first object of 'weather' array."
+                    ],
+                    "why": [
+                      "Gives user readable weather status."
+                    ],
+                    "starting_code": "// String desc = ...",
+                    "final_code": "JSONObject weather = obj.getJSONArray(\"weather\").getJSONObject(0);\nString description = weather.getString(\"description\");"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP7_T6",
+                "task_name": "Display Weather Information",
+                "description": "Display Weather Information in the Advanced Weather App project.",
+                "steps": [
+                  {
+                    "step_id": "JP7_T6_S1",
+                    "step_name": "Print Formatted Output",
+                    "description": "Display weather data clearly with labels.",
+                    "guidelines": [
+                      "Include city, temp, humidity, and description."
+                    ],
+                    "why": [
+                      "Presents weather details to user."
+                    ],
+                    "starting_code": "// print data",
+                    "final_code": "System.out.println(\"City: \" + city);\nSystem.out.println(\"Temperature: \" + temp);\nSystem.out.println(\"Humidity: \" + humidity);\nSystem.out.println(\"Condition: \" + description);"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP7_T7",
+                "task_name": "Implement Search History",
+                "description": "Implement Search History in the Advanced Weather App project.",
+                "steps": [
+                  {
+                    "step_id": "JP7_T7_S1",
+                    "step_name": "Print All Previously Searched Cities",
+                    "description": "Display the contents of the search history list.",
+                    "guidelines": [
+                      "Loop through the ArrayList of cities."
+                    ],
+                    "why": [
+                      "Allows user to revisit previous searches."
+                    ],
+                    "starting_code": "// loop history list",
+                    "final_code": "for (String cityName : history) {\n    System.out.println(cityName);\n}"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP7_T8",
+                "task_name": "Add Robust Error Handling",
+                "description": "Add Robust Error Handling in the Advanced Weather App project.",
+                "steps": [
+                  {
+                    "step_id": "JP7_T8_S1",
+                    "step_name": "Check Response Code",
+                    "description": "If response is not 200, display an error message.",
+                    "guidelines": [
+                      "Use getResponseCode() method and if check."
+                    ],
+                    "why": [
+                      "Avoids crashing on bad requests."
+                    ],
+                    "starting_code": "// if (conn.getResponseCode() != 200)",
+                    "final_code": "if (conn.getResponseCode() != 200) {\n    System.out.println(\"Error: Unable to fetch weather data.\");\n    return;\n}"
+                  },
+                  {
+                    "step_id": "JP7_T8_S2",
+                    "step_name": "Catch JSON and IO Exceptions",
+                    "description": "Wrap JSON parsing and network logic in try-catch blocks.",
+                    "guidelines": [
+                      "Catch IOException and JSONException separately."
+                    ],
+                    "why": [
+                      "Handles runtime failures gracefully."
+                    ],
+                    "starting_code": "// try-catch block",
+                    "final_code": "try {\n    // fetch and parse logic\n} catch (IOException | JSONException e) {\n    System.out.println(\"Something went wrong: \" + e.getMessage());\n}"
+                  
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "project_id": "JP8",
+            "project_name": "Online Quiz System",
+            "description": "An advanced Java-based quiz app with categories, timed questions, randomized order, scoring, and replay options.",
+            "difficulty": "Advanced",
+            "tasks": [
+              {
+                "task_id": "JP8_T1",
+                "task_name": "Initialize Project and Main Class",
+                "description": "Initialize Project and Main Class in the Advanced Quiz System project.",
+                "steps": [
+                  {
+                    "step_id": "JP8_T1_S1",
+                    "step_name": "Create Main Entry Point",
+                    "description": "Create QuizSystem.java with a main method.",
+                    "guidelines": [
+                      "Define main class and greet the user."
+                    ],
+                    "why": [
+                      "Starts the application and handles flow control."
+                    ],
+                    "starting_code": "// main method and print statement",
+                    "final_code": "public class QuizSystem {\n    public static void main(String[] args) {\n        System.out.println(\"Welcome to the Advanced Quiz System!\");\n    }\n}"
+                  },
+                  {
+                    "step_id": "JP8_T1_S2",
+                    "step_name": "Import Required Libraries",
+                    "description": "Import java.util packages for collections, timer, and input.",
+                    "guidelines": [
+                      "Use Scanner, ArrayList, Timer, and Random."
+                    ],
+                    "why": [
+                      "Essential for core quiz functionality."
+                    ],
+                    "starting_code": "// import statements",
+                    "final_code": "import java.util.*;\nimport java.util.Timer;\nimport java.util.TimerTask;"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP8_T2",
+                "task_name": "Design Question Structure",
+                "description": "Design Question Structure in the Advanced Quiz System project.",
+                "steps": [
+                  {
+                    "step_id": "JP8_T2_S1",
+                    "step_name": "Create Question Class",
+                    "description": "Create a class with fields for question, options, answer, and category.",
+                    "guidelines": [
+                      "Add fields and create constructor and getter methods."
+                    ],
+                    "why": [
+                      "Organizes question data efficiently."
+                    ],
+                    "starting_code": "// class Question",
+                    "final_code": "public class Question {\n    private String text;\n    private String[] options;\n    private int correctIndex;\n    private String category;\n\n    public Question(String text, String[] options, int correctIndex, String category) {\n        this.text = text;\n        this.options = options;\n        this.correctIndex = correctIndex;\n        this.category = category;\n    }\n\n    public String getText() { return text; }\n    public String[] getOptions() { return options; }\n    public int getCorrectIndex() { return correctIndex; }\n    public String getCategory() { return category; }\n}"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP8_T3",
+                "task_name": "Load and Shuffle Questions",
+                "description": "Load and Shuffle Questions in the Advanced Quiz System project.",
+                "steps": [
+                  {
+                    "step_id": "JP8_T3_S1",
+                    "step_name": "Load Sample Questions",
+                    "description": "Add sample questions with categories into a list.",
+                    "guidelines": [
+                      "Create a List<Question> and add multiple entries."
+                    ],
+                    "why": [
+                      "Forms the question pool for quizzes."
+                    ],
+                    "starting_code": "// add sample questions",
+                    "final_code": "List<Question> questions = new ArrayList<>();\nquestions.add(new Question(\"Capital of France?\", new String[]{\"London\", \"Berlin\", \"Paris\", \"Madrid\"}, 2, \"Geography\"));"
+                  },
+                  {
+                    "step_id": "JP8_T3_S2",
+                    "step_name": "Shuffle Question Order",
+                    "description": "Use Collections.shuffle() to randomize questions.",
+                    "guidelines": [
+                      "Shuffle questions to change order each run."
+                    ],
+                    "why": [
+                      "Keeps quiz fresh and unpredictable."
+                    ],
+                    "starting_code": "// shuffle questions",
+                    "final_code": "Collections.shuffle(questions);"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP8_T4",
+                "task_name": "Implement Timed Questions",
+                "description": "Implement Timed Questions in the Advanced Quiz System project.",
+                "steps": [
+                  {
+                    "step_id": "JP8_T4_S1",
+                    "step_name": "Add Timer for Each Question",
+                    "description": "Limit question time using a timer.",
+                    "guidelines": [
+                      "Use java.util.Timer and TimerTask."
+                    ],
+                    "why": [
+                      "Adds challenge with time pressure."
+                    ],
+                    "starting_code": "// setup timer",
+                    "final_code": "// Use TimerTask to auto-skip or timeout the question."
+                  },
+                  {
+                    "step_id": "JP8_T4_S2",
+                    "step_name": "Cancel Timer on Answer",
+                    "description": "Stop the timer when user submits input.",
+                    "guidelines": [
+                      "Call cancel() on Timer when input received."
+                    ],
+                    "why": [
+                      "Prevents unnecessary wait."
+                    ],
+                    "starting_code": "// timer.cancel();",
+                    "final_code": "// cancel timer after user submits an answer"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP8_T5",
+                "task_name": "Collect and Check Answers",
+                "description": "Collect and Check Answers in the Advanced Quiz System project.",
+                "steps": [
+                  {
+                    "step_id": "JP8_T5_S1",
+                    "step_name": "Capture Answer with Validation",
+                    "description": "Ensure answer is between 1\u20134 and re-prompt if invalid.",
+                    "guidelines": [
+                      "Use loop to verify valid integer input."
+                    ],
+                    "why": [
+                      "Prevents program crash and invalid input."
+                    ],
+                    "starting_code": "// loop until valid input",
+                    "final_code": "int choice;\ndo {\n    System.out.print(\"Enter answer (1-4): \");\n    choice = sc.nextInt();\n} while (choice < 1 || choice > 4);"
+                  },
+                  {
+                    "step_id": "JP8_T5_S2",
+                    "step_name": "Update Score on Correct Answer",
+                    "description": "Compare answer index and increase score.",
+                    "guidelines": [
+                      "Use correctIndex from Question object."
+                    ],
+                    "why": [
+                      "Calculates result accurately."
+                    ],
+                    "starting_code": "// if correct, score++",
+                    "final_code": "if (choice - 1 == q.getCorrectIndex()) {\n    score++;\n    System.out.println(\"Correct!\");\n} else {\n    System.out.println(\"Wrong!\");\n}"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP8_T6",
+                "task_name": "Display Quiz Results",
+                "description": "Display Quiz Results in the Advanced Quiz System project.",
+                "steps": [
+                  {
+                    "step_id": "JP8_T6_S1",
+                    "step_name": "Show Score and Percent",
+                    "description": "Display final score, percentage, and total questions.",
+                    "guidelines": [
+                      "Print score and calculate percentage."
+                    ],
+                    "why": [
+                      "Provides feedback on performance."
+                    ],
+                    "starting_code": "// print score and percent",
+                    "final_code": "System.out.println(\"Final Score: \" + score + \"/\" + questions.size());\ndouble percent = (score * 100.0) / questions.size();\nSystem.out.printf(\"Percentage: %.2f%%\\n\", percent);"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP8_T7",
+                "task_name": "Offer Replay Option",
+                "description": "Offer Replay Option in the Advanced Quiz System project.",
+                "steps": [
+                  {
+                    "step_id": "JP8_T7_S1",
+                    "step_name": "Loop Based on Replay Choice",
+                    "description": "Prompt user to replay quiz or exit.",
+                    "guidelines": [
+                      "Ask for yes/no and restart if yes."
+                    ],
+                    "why": [
+                      "Enhances usability with replay."
+                    ],
+                    "starting_code": "// ask replay",
+                    "final_code": "System.out.print(\"Do you want to try again? (yes/no): \");\nString replay = sc.next();\nif (!replay.equalsIgnoreCase(\"yes\")) break;"
+                  
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "project_id": "JP9",
+            "project_name": "To-Do List App",
+            "description": "An advanced Java-based To-Do List App featuring reminders, notification system, priority and category tagging, simulated calendar views, and persistent storage.",
+            "difficulty": "Advanced",
+            "tasks": [
+              {
+                "task_id": "JP9_T1",
+                "task_name": "Initialize Application",
+                "description": "Initialize Application in the Advanced To-Do List App project.",
+                "steps": [
+                  {
+                    "step_id": "JP9_T1_S1",
+                    "step_name": "Initialize Application: Setup",
+                    "description": "Complete step 1 of initialize application.",
+                    "guidelines": [
+                      "Understand the purpose of this step in the task 'Initialize Application'.",
+                      "Write code that aligns with the design goals for this feature.",
+                      "Test your implementation for accuracy and efficiency."
+                    ],
+                    "why": [
+                      "This step is essential to implement advanced initialize application features."
+                    ],
+                    "starting_code": "// Starting code for Initialize Application - Step 1",
+                    "final_code": "// Final working solution for Initialize Application - Step 1"
+                  },
+                  {
+                    "step_id": "JP9_T1_S2",
+                    "step_name": "Initialize Application: Implement",
+                    "description": "Complete step 2 of initialize application.",
+                    "guidelines": [
+                      "Understand the purpose of this step in the task 'Initialize Application'.",
+                      "Write code that aligns with the design goals for this feature.",
+                      "Test your implementation for accuracy and efficiency."
+                    ],
+                    "why": [
+                      "This step is essential to implement advanced initialize application features."
+                    ],
+                    "starting_code": "// Starting code for Initialize Application - Step 2",
+                    "final_code": "// Final working solution for Initialize Application - Step 2"
+                  },
+                  {
+                    "step_id": "JP9_T1_S3",
+                    "step_name": "Initialize Application: Test",
+                    "description": "Complete step 3 of initialize application.",
+                    "guidelines": [
+                      "Understand the purpose of this step in the task 'Initialize Application'.",
+                      "Write code that aligns with the design goals for this feature.",
+                      "Test your implementation for accuracy and efficiency."
+                    ],
+                    "why": [
+                      "This step is essential to implement advanced initialize application features."
+                    ],
+                    "starting_code": "// Starting code for Initialize Application - Step 3",
+                    "final_code": "// Final working solution for Initialize Application - Step 3"
+                  },
+                  {
+                    "step_id": "JP9_T1_S4",
+                    "step_name": "Initialize Application: Refactor",
+                    "description": "Complete step 4 of initialize application.",
+                    "guidelines": [
+                      "Understand the purpose of this step in the task 'Initialize Application'.",
+                      "Write code that aligns with the design goals for this feature.",
+                      "Test your implementation for accuracy and efficiency."
+                    ],
+                    "why": [
+                      "This step is essential to implement advanced initialize application features."
+                    ],
+                    "starting_code": "// Starting code for Initialize Application - Step 4",
+                    "final_code": "// Final working solution for Initialize Application - Step 4"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP9_T2",
+                "task_name": "Design Task Model",
+                "description": "Design Task Model in the Advanced To-Do List App project.",
+                "steps": [
+                  {
+                    "step_id": "JP9_T2_S1",
+                    "step_name": "Design Task Model: Setup",
+                    "description": "Complete step 1 of design task model.",
+                    "guidelines": [
+                      "Understand the purpose of this step in the task 'Design Task Model'.",
+                      "Write code that aligns with the design goals for this feature.",
+                      "Test your implementation for accuracy and efficiency."
+                    ],
+                    "why": [
+                      "This step is essential to implement advanced design task model features."
+                    ],
+                    "starting_code": "// Starting code for Design Task Model - Step 1",
+                    "final_code": "// Final working solution for Design Task Model - Step 1"
+                  },
+                  {
+                    "step_id": "JP9_T2_S2",
+                    "step_name": "Design Task Model: Implement",
+                    "description": "Complete step 2 of design task model.",
+                    "guidelines": [
+                      "Understand the purpose of this step in the task 'Design Task Model'.",
+                      "Write code that aligns with the design goals for this feature.",
+                      "Test your implementation for accuracy and efficiency."
+                    ],
+                    "why": [
+                      "This step is essential to implement advanced design task model features."
+                    ],
+                    "starting_code": "// Starting code for Design Task Model - Step 2",
+                    "final_code": "// Final working solution for Design Task Model - Step 2"
+                  },
+                  {
+                    "step_id": "JP9_T2_S3",
+                    "step_name": "Design Task Model: Test",
+                    "description": "Complete step 3 of design task model.",
+                    "guidelines": [
+                      "Understand the purpose of this step in the task 'Design Task Model'.",
+                      "Write code that aligns with the design goals for this feature.",
+                      "Test your implementation for accuracy and efficiency."
+                    ],
+                    "why": [
+                      "This step is essential to implement advanced design task model features."
+                    ],
+                    "starting_code": "// Starting code for Design Task Model - Step 3",
+                    "final_code": "// Final working solution for Design Task Model - Step 3"
+                  },
+                  {
+                    "step_id": "JP9_T2_S4",
+                    "step_name": "Design Task Model: Refactor",
+                    "description": "Complete step 4 of design task model.",
+                    "guidelines": [
+                      "Understand the purpose of this step in the task 'Design Task Model'.",
+                      "Write code that aligns with the design goals for this feature.",
+                      "Test your implementation for accuracy and efficiency."
+                    ],
+                    "why": [
+                      "This step is essential to implement advanced design task model features."
+                    ],
+                    "starting_code": "// Starting code for Design Task Model - Step 4",
+                    "final_code": "// Final working solution for Design Task Model - Step 4"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP9_T3",
+                "task_name": "Implement Input and Task Creation",
+                "description": "Implement Input and Task Creation in the Advanced To-Do List App project.",
+                "steps": [
+                  {
+                    "step_id": "JP9_T3_S1",
+                    "step_name": "Implement Input and Task Creation: Setup",
+                    "description": "Complete step 1 of implement input and task creation.",
+                    "guidelines": [
+                      "Understand the purpose of this step in the task 'Implement Input and Task Creation'.",
+                      "Write code that aligns with the design goals for this feature.",
+                      "Test your implementation for accuracy and efficiency."
+                    ],
+                    "why": [
+                      "This step is essential to implement advanced implement input and task creation features."
+                    ],
+                    "starting_code": "// Starting code for Implement Input and Task Creation - Step 1",
+                    "final_code": "// Final working solution for Implement Input and Task Creation - Step 1"
+                  },
+                  {
+                    "step_id": "JP9_T3_S2",
+                    "step_name": "Implement Input and Task Creation: Implement",
+                    "description": "Complete step 2 of implement input and task creation.",
+                    "guidelines": [
+                      "Understand the purpose of this step in the task 'Implement Input and Task Creation'.",
+                      "Write code that aligns with the design goals for this feature.",
+                      "Test your implementation for accuracy and efficiency."
+                    ],
+                    "why": [
+                      "This step is essential to implement advanced implement input and task creation features."
+                    ],
+                    "starting_code": "// Starting code for Implement Input and Task Creation - Step 2",
+                    "final_code": "// Final working solution for Implement Input and Task Creation - Step 2"
+                  },
+                  {
+                    "step_id": "JP9_T3_S3",
+                    "step_name": "Implement Input and Task Creation: Test",
+                    "description": "Complete step 3 of implement input and task creation.",
+                    "guidelines": [
+                      "Understand the purpose of this step in the task 'Implement Input and Task Creation'.",
+                      "Write code that aligns with the design goals for this feature.",
+                      "Test your implementation for accuracy and efficiency."
+                    ],
+                    "why": [
+                      "This step is essential to implement advanced implement input and task creation features."
+                    ],
+                    "starting_code": "// Starting code for Implement Input and Task Creation - Step 3",
+                    "final_code": "// Final working solution for Implement Input and Task Creation - Step 3"
+                  },
+                  {
+                    "step_id": "JP9_T3_S4",
+                    "step_name": "Implement Input and Task Creation: Refactor",
+                    "description": "Complete step 4 of implement input and task creation.",
+                    "guidelines": [
+                      "Understand the purpose of this step in the task 'Implement Input and Task Creation'.",
+                      "Write code that aligns with the design goals for this feature.",
+                      "Test your implementation for accuracy and efficiency."
+                    ],
+                    "why": [
+                      "This step is essential to implement advanced implement input and task creation features."
+                    ],
+                    "starting_code": "// Starting code for Implement Input and Task Creation - Step 4",
+                    "final_code": "// Final working solution for Implement Input and Task Creation - Step 4"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP9_T4",
+                "task_name": "Add Task Persistence",
+                "description": "Add Task Persistence in the Advanced To-Do List App project.",
+                "steps": [
+                  {
+                    "step_id": "JP9_T4_S1",
+                    "step_name": "Add Task Persistence: Setup",
+                    "description": "Complete step 1 of add task persistence.",
+                    "guidelines": [
+                      "Understand the purpose of this step in the task 'Add Task Persistence'.",
+                      "Write code that aligns with the design goals for this feature.",
+                      "Test your implementation for accuracy and efficiency."
+                    ],
+                    "why": [
+                      "This step is essential to implement advanced add task persistence features."
+                    ],
+                    "starting_code": "// Starting code for Add Task Persistence - Step 1",
+                    "final_code": "// Final working solution for Add Task Persistence - Step 1"
+                  },
+                  {
+                    "step_id": "JP9_T4_S2",
+                    "step_name": "Add Task Persistence: Implement",
+                    "description": "Complete step 2 of add task persistence.",
+                    "guidelines": [
+                      "Understand the purpose of this step in the task 'Add Task Persistence'.",
+                      "Write code that aligns with the design goals for this feature.",
+                      "Test your implementation for accuracy and efficiency."
+                    ],
+                    "why": [
+                      "This step is essential to implement advanced add task persistence features."
+                    ],
+                    "starting_code": "// Starting code for Add Task Persistence - Step 2",
+                    "final_code": "// Final working solution for Add Task Persistence - Step 2"
+                  },
+                  {
+                    "step_id": "JP9_T4_S3",
+                    "step_name": "Add Task Persistence: Test",
+                    "description": "Complete step 3 of add task persistence.",
+                    "guidelines": [
+                      "Understand the purpose of this step in the task 'Add Task Persistence'.",
+                      "Write code that aligns with the design goals for this feature.",
+                      "Test your implementation for accuracy and efficiency."
+                    ],
+                    "why": [
+                      "This step is essential to implement advanced add task persistence features."
+                    ],
+                    "starting_code": "// Starting code for Add Task Persistence - Step 3",
+                    "final_code": "// Final working solution for Add Task Persistence - Step 3"
+                  },
+                  {
+                    "step_id": "JP9_T4_S4",
+                    "step_name": "Add Task Persistence: Refactor",
+                    "description": "Complete step 4 of add task persistence.",
+                    "guidelines": [
+                      "Understand the purpose of this step in the task 'Add Task Persistence'.",
+                      "Write code that aligns with the design goals for this feature.",
+                      "Test your implementation for accuracy and efficiency."
+                    ],
+                    "why": [
+                      "This step is essential to implement advanced add task persistence features."
+                    ],
+                    "starting_code": "// Starting code for Add Task Persistence - Step 4",
+                    "final_code": "// Final working solution for Add Task Persistence - Step 4"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP9_T5",
+                "task_name": "View and Sort Tasks",
+                "description": "View and Sort Tasks in the Advanced To-Do List App project.",
+                "steps": [
+                  {
+                    "step_id": "JP9_T5_S1",
+                    "step_name": "View and Sort Tasks: Setup",
+                    "description": "Complete step 1 of view and sort tasks.",
+                    "guidelines": [
+                      "Understand the purpose of this step in the task 'View and Sort Tasks'.",
+                      "Write code that aligns with the design goals for this feature.",
+                      "Test your implementation for accuracy and efficiency."
+                    ],
+                    "why": [
+                      "This step is essential to implement advanced view and sort tasks features."
+                    ],
+                    "starting_code": "// Starting code for View and Sort Tasks - Step 1",
+                    "final_code": "// Final working solution for View and Sort Tasks - Step 1"
+                  },
+                  {
+                    "step_id": "JP9_T5_S2",
+                    "step_name": "View and Sort Tasks: Implement",
+                    "description": "Complete step 2 of view and sort tasks.",
+                    "guidelines": [
+                      "Understand the purpose of this step in the task 'View and Sort Tasks'.",
+                      "Write code that aligns with the design goals for this feature.",
+                      "Test your implementation for accuracy and efficiency."
+                    ],
+                    "why": [
+                      "This step is essential to implement advanced view and sort tasks features."
+                    ],
+                    "starting_code": "// Starting code for View and Sort Tasks - Step 2",
+                    "final_code": "// Final working solution for View and Sort Tasks - Step 2"
+                  },
+                  {
+                    "step_id": "JP9_T5_S3",
+                    "step_name": "View and Sort Tasks: Test",
+                    "description": "Complete step 3 of view and sort tasks.",
+                    "guidelines": [
+                      "Understand the purpose of this step in the task 'View and Sort Tasks'.",
+                      "Write code that aligns with the design goals for this feature.",
+                      "Test your implementation for accuracy and efficiency."
+                    ],
+                    "why": [
+                      "This step is essential to implement advanced view and sort tasks features."
+                    ],
+                    "starting_code": "// Starting code for View and Sort Tasks - Step 3",
+                    "final_code": "// Final working solution for View and Sort Tasks - Step 3"
+                  },
+                  {
+                    "step_id": "JP9_T5_S4",
+                    "step_name": "View and Sort Tasks: Refactor",
+                    "description": "Complete step 4 of view and sort tasks.",
+                    "guidelines": [
+                      "Understand the purpose of this step in the task 'View and Sort Tasks'.",
+                      "Write code that aligns with the design goals for this feature.",
+                      "Test your implementation for accuracy and efficiency."
+                    ],
+                    "why": [
+                      "This step is essential to implement advanced view and sort tasks features."
+                    ],
+                    "starting_code": "// Starting code for View and Sort Tasks - Step 4",
+                    "final_code": "// Final working solution for View and Sort Tasks - Step 4"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP9_T6",
+                "task_name": "Add Reminders and Notifications",
+                "description": "Add Reminders and Notifications in the Advanced To-Do List App project.",
+                "steps": [
+                  {
+                    "step_id": "JP9_T6_S1",
+                    "step_name": "Add Reminders and Notifications: Setup",
+                    "description": "Complete step 1 of add reminders and notifications.",
+                    "guidelines": [
+                      "Understand the purpose of this step in the task 'Add Reminders and Notifications'.",
+                      "Write code that aligns with the design goals for this feature.",
+                      "Test your implementation for accuracy and efficiency."
+                    ],
+                    "why": [
+                      "This step is essential to implement advanced add reminders and notifications features."
+                    ],
+                    "starting_code": "// Starting code for Add Reminders and Notifications - Step 1",
+                    "final_code": "// Final working solution for Add Reminders and Notifications - Step 1"
+                  },
+                  {
+                    "step_id": "JP9_T6_S2",
+                    "step_name": "Add Reminders and Notifications: Implement",
+                    "description": "Complete step 2 of add reminders and notifications.",
+                    "guidelines": [
+                      "Understand the purpose of this step in the task 'Add Reminders and Notifications'.",
+                      "Write code that aligns with the design goals for this feature.",
+                      "Test your implementation for accuracy and efficiency."
+                    ],
+                    "why": [
+                      "This step is essential to implement advanced add reminders and notifications features."
+                    ],
+                    "starting_code": "// Starting code for Add Reminders and Notifications - Step 2",
+                    "final_code": "// Final working solution for Add Reminders and Notifications - Step 2"
+                  },
+                  {
+                    "step_id": "JP9_T6_S3",
+                    "step_name": "Add Reminders and Notifications: Test",
+                    "description": "Complete step 3 of add reminders and notifications.",
+                    "guidelines": [
+                      "Understand the purpose of this step in the task 'Add Reminders and Notifications'.",
+                      "Write code that aligns with the design goals for this feature.",
+                      "Test your implementation for accuracy and efficiency."
+                    ],
+                    "why": [
+                      "This step is essential to implement advanced add reminders and notifications features."
+                    ],
+                    "starting_code": "// Starting code for Add Reminders and Notifications - Step 3",
+                    "final_code": "// Final working solution for Add Reminders and Notifications - Step 3"
+                  },
+                  {
+                    "step_id": "JP9_T6_S4",
+                    "step_name": "Add Reminders and Notifications: Refactor",
+                    "description": "Complete step 4 of add reminders and notifications.",
+                    "guidelines": [
+                      "Understand the purpose of this step in the task 'Add Reminders and Notifications'.",
+                      "Write code that aligns with the design goals for this feature.",
+                      "Test your implementation for accuracy and efficiency."
+                    ],
+                    "why": [
+                      "This step is essential to implement advanced add reminders and notifications features."
+                    ],
+                    "starting_code": "// Starting code for Add Reminders and Notifications - Step 4",
+                    "final_code": "// Final working solution for Add Reminders and Notifications - Step 4"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP9_T7",
+                "task_name": "Calendar View Integration",
+                "description": "Calendar View Integration in the Advanced To-Do List App project.",
+                "steps": [
+                  {
+                    "step_id": "JP9_T7_S1",
+                    "step_name": "Calendar View Integration: Setup",
+                    "description": "Complete step 1 of calendar view integration.",
+                    "guidelines": [
+                      "Understand the purpose of this step in the task 'Calendar View Integration'.",
+                      "Write code that aligns with the design goals for this feature.",
+                      "Test your implementation for accuracy and efficiency."
+                    ],
+                    "why": [
+                      "This step is essential to implement advanced calendar view integration features."
+                    ],
+                    "starting_code": "// Starting code for Calendar View Integration - Step 1",
+                    "final_code": "// Final working solution for Calendar View Integration - Step 1"
+                  },
+                  {
+                    "step_id": "JP9_T7_S2",
+                    "step_name": "Calendar View Integration: Implement",
+                    "description": "Complete step 2 of calendar view integration.",
+                    "guidelines": [
+                      "Understand the purpose of this step in the task 'Calendar View Integration'.",
+                      "Write code that aligns with the design goals for this feature.",
+                      "Test your implementation for accuracy and efficiency."
+                    ],
+                    "why": [
+                      "This step is essential to implement advanced calendar view integration features."
+                    ],
+                    "starting_code": "// Starting code for Calendar View Integration - Step 2",
+                    "final_code": "// Final working solution for Calendar View Integration - Step 2"
+                  },
+                  {
+                    "step_id": "JP9_T7_S3",
+                    "step_name": "Calendar View Integration: Test",
+                    "description": "Complete step 3 of calendar view integration.",
+                    "guidelines": [
+                      "Understand the purpose of this step in the task 'Calendar View Integration'.",
+                      "Write code that aligns with the design goals for this feature.",
+                      "Test your implementation for accuracy and efficiency."
+                    ],
+                    "why": [
+                      "This step is essential to implement advanced calendar view integration features."
+                    ],
+                    "starting_code": "// Starting code for Calendar View Integration - Step 3",
+                    "final_code": "// Final working solution for Calendar View Integration - Step 3"
+                  },
+                  {
+                    "step_id": "JP9_T7_S4",
+                    "step_name": "Calendar View Integration: Refactor",
+                    "description": "Complete step 4 of calendar view integration.",
+                    "guidelines": [
+                      "Understand the purpose of this step in the task 'Calendar View Integration'.",
+                      "Write code that aligns with the design goals for this feature.",
+                      "Test your implementation for accuracy and efficiency."
+                    ],
+                    "why": [
+                      "This step is essential to implement advanced calendar view integration features."
+                    ],
+                    "starting_code": "// Starting code for Calendar View Integration - Step 4",
+                    "final_code": "// Final working solution for Calendar View Integration - Step 4"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP9_T8",
+                "task_name": "Update and Delete Tasks",
+                "description": "Update and Delete Tasks in the Advanced To-Do List App project.",
+                "steps": [
+                  {
+                    "step_id": "JP9_T8_S1",
+                    "step_name": "Update and Delete Tasks: Setup",
+                    "description": "Complete step 1 of update and delete tasks.",
+                    "guidelines": [
+                      "Understand the purpose of this step in the task 'Update and Delete Tasks'.",
+                      "Write code that aligns with the design goals for this feature.",
+                      "Test your implementation for accuracy and efficiency."
+                    ],
+                    "why": [
+                      "This step is essential to implement advanced update and delete tasks features."
+                    ],
+                    "starting_code": "// Starting code for Update and Delete Tasks - Step 1",
+                    "final_code": "// Final working solution for Update and Delete Tasks - Step 1"
+                  },
+                  {
+                    "step_id": "JP9_T8_S2",
+                    "step_name": "Update and Delete Tasks: Implement",
+                    "description": "Complete step 2 of update and delete tasks.",
+                    "guidelines": [
+                      "Understand the purpose of this step in the task 'Update and Delete Tasks'.",
+                      "Write code that aligns with the design goals for this feature.",
+                      "Test your implementation for accuracy and efficiency."
+                    ],
+                    "why": [
+                      "This step is essential to implement advanced update and delete tasks features."
+                    ],
+                    "starting_code": "// Starting code for Update and Delete Tasks - Step 2",
+                    "final_code": "// Final working solution for Update and Delete Tasks - Step 2"
+                  },
+                  {
+                    "step_id": "JP9_T8_S3",
+                    "step_name": "Update and Delete Tasks: Test",
+                    "description": "Complete step 3 of update and delete tasks.",
+                    "guidelines": [
+                      "Understand the purpose of this step in the task 'Update and Delete Tasks'.",
+                      "Write code that aligns with the design goals for this feature.",
+                      "Test your implementation for accuracy and efficiency."
+                    ],
+                    "why": [
+                      "This step is essential to implement advanced update and delete tasks features."
+                    ],
+                    "starting_code": "// Starting code for Update and Delete Tasks - Step 3",
+                    "final_code": "// Final working solution for Update and Delete Tasks - Step 3"
+                  },
+                  {
+                    "step_id": "JP9_T8_S4",
+                    "step_name": "Update and Delete Tasks: Refactor",
+                    "description": "Complete step 4 of update and delete tasks.",
+                    "guidelines": [
+                      "Understand the purpose of this step in the task 'Update and Delete Tasks'.",
+                      "Write code that aligns with the design goals for this feature.",
+                      "Test your implementation for accuracy and efficiency."
+                    ],
+                    "why": [
+                      "This step is essential to implement advanced update and delete tasks features."
+                    ],
+                    "starting_code": "// Starting code for Update and Delete Tasks - Step 4",
+                    "final_code": "// Final working solution for Update and Delete Tasks - Step 4"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP9_T9",
+                "task_name": "Search and Filter Tasks",
+                "description": "Search and Filter Tasks in the Advanced To-Do List App project.",
+                "steps": [
+                  {
+                    "step_id": "JP9_T9_S1",
+                    "step_name": "Search and Filter Tasks: Setup",
+                    "description": "Complete step 1 of search and filter tasks.",
+                    "guidelines": [
+                      "Understand the purpose of this step in the task 'Search and Filter Tasks'.",
+                      "Write code that aligns with the design goals for this feature.",
+                      "Test your implementation for accuracy and efficiency."
+                    ],
+                    "why": [
+                      "This step is essential to implement advanced search and filter tasks features."
+                    ],
+                    "starting_code": "// Starting code for Search and Filter Tasks - Step 1",
+                    "final_code": "// Final working solution for Search and Filter Tasks - Step 1"
+                  },
+                  {
+                    "step_id": "JP9_T9_S2",
+                    "step_name": "Search and Filter Tasks: Implement",
+                    "description": "Complete step 2 of search and filter tasks.",
+                    "guidelines": [
+                      "Understand the purpose of this step in the task 'Search and Filter Tasks'.",
+                      "Write code that aligns with the design goals for this feature.",
+                      "Test your implementation for accuracy and efficiency."
+                    ],
+                    "why": [
+                      "This step is essential to implement advanced search and filter tasks features."
+                    ],
+                    "starting_code": "// Starting code for Search and Filter Tasks - Step 2",
+                    "final_code": "// Final working solution for Search and Filter Tasks - Step 2"
+                  },
+                  {
+                    "step_id": "JP9_T9_S3",
+                    "step_name": "Search and Filter Tasks: Test",
+                    "description": "Complete step 3 of search and filter tasks.",
+                    "guidelines": [
+                      "Understand the purpose of this step in the task 'Search and Filter Tasks'.",
+                      "Write code that aligns with the design goals for this feature.",
+                      "Test your implementation for accuracy and efficiency."
+                    ],
+                    "why": [
+                      "This step is essential to implement advanced search and filter tasks features."
+                    ],
+                    "starting_code": "// Starting code for Search and Filter Tasks - Step 3",
+                    "final_code": "// Final working solution for Search and Filter Tasks - Step 3"
+                  },
+                  {
+                    "step_id": "JP9_T9_S4",
+                    "step_name": "Search and Filter Tasks: Refactor",
+                    "description": "Complete step 4 of search and filter tasks.",
+                    "guidelines": [
+                      "Understand the purpose of this step in the task 'Search and Filter Tasks'.",
+                      "Write code that aligns with the design goals for this feature.",
+                      "Test your implementation for accuracy and efficiency."
+                    ],
+                    "why": [
+                      "This step is essential to implement advanced search and filter tasks features."
+                    ],
+                    "starting_code": "// Starting code for Search and Filter Tasks - Step 4",
+                    "final_code": "// Final working solution for Search and Filter Tasks - Step 4"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP9_T10",
+                "task_name": "Create Advanced Console Menu",
+                "description": "Create Advanced Console Menu in the Advanced To-Do List App project.",
+                "steps": [
+                  {
+                    "step_id": "JP9_T10_S1",
+                    "step_name": "Create Advanced Console Menu: Setup",
+                    "description": "Complete step 1 of create advanced console menu.",
+                    "guidelines": [
+                      "Understand the purpose of this step in the task 'Create Advanced Console Menu'.",
+                      "Write code that aligns with the design goals for this feature.",
+                      "Test your implementation for accuracy and efficiency."
+                    ],
+                    "why": [
+                      "This step is essential to implement advanced create advanced console menu features."
+                    ],
+                    "starting_code": "// Starting code for Create Advanced Console Menu - Step 1",
+                    "final_code": "// Final working solution for Create Advanced Console Menu - Step 1"
+                  },
+                  {
+                    "step_id": "JP9_T10_S2",
+                    "step_name": "Create Advanced Console Menu: Implement",
+                    "description": "Complete step 2 of create advanced console menu.",
+                    "guidelines": [
+                      "Understand the purpose of this step in the task 'Create Advanced Console Menu'.",
+                      "Write code that aligns with the design goals for this feature.",
+                      "Test your implementation for accuracy and efficiency."
+                    ],
+                    "why": [
+                      "This step is essential to implement advanced create advanced console menu features."
+                    ],
+                    "starting_code": "// Starting code for Create Advanced Console Menu - Step 2",
+                    "final_code": "// Final working solution for Create Advanced Console Menu - Step 2"
+                  },
+                  {
+                    "step_id": "JP9_T10_S3",
+                    "step_name": "Create Advanced Console Menu: Test",
+                    "description": "Complete step 3 of create advanced console menu.",
+                    "guidelines": [
+                      "Understand the purpose of this step in the task 'Create Advanced Console Menu'.",
+                      "Write code that aligns with the design goals for this feature.",
+                      "Test your implementation for accuracy and efficiency."
+                    ],
+                    "why": [
+                      "This step is essential to implement advanced create advanced console menu features."
+                    ],
+                    "starting_code": "// Starting code for Create Advanced Console Menu - Step 3",
+                    "final_code": "// Final working solution for Create Advanced Console Menu - Step 3"
+                  },
+                  {
+                    "step_id": "JP9_T10_S4",
+                    "description": "Complete step 4 of create advanced console menu.",
+                    "guidelines": [
+                      "Understand the purpose of this step in the task 'Create Advanced Console Menu'.",
+                      "Write code that aligns with the design goals for this feature.",
+                      "Test your implementation for accuracy and efficiency."
+                    ],
+                    "why": [
+                      "This step is essential to implement advanced create advanced console menu features."
+                    ],
+                    "starting_code": "// Starting code for Create Advanced Console Menu - Step 4",
+                    "final_code": "// Final working solution for Create Advanced Console Menu - Step 4"
+                  
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "project_id": "JP10",
+            "project_name": "Chat Application",
+            "description": "Develop a full-featured Java-based Chat Application with multi-user support, threading, sockets, message broadcasting, chat history, encryption, and real-time communication.",
+            "difficulty": "Expert",
+            "tasks": [
+              {
+                "task_id": "JP10_T1",
+                "task_name": "Setup Project Structure",
+                "description": "Setup Project Structure in the Java Chat Application project.",
+                "steps": [
+                  {
+                    "step_id": "JP10_T1_S1",
+                    "step_name": "Initialize Maven or Gradle for dependency management",
+                    "description": "This step will guide you to initialize maven or gradle for dependency management.",
+                    "guidelines": [
+                      "Break the task into manageable units.",
+                      "Use advanced Java constructs like threads, sockets, encryption, etc.",
+                      "Test each unit independently before integration."
+                    ],
+                    "why": [
+                      "This step is essential for implementing initialize maven or gradle for dependency management effectively in a production-grade chat system."
+                    ],
+                    "starting_code": "// Starting logic for: Initialize Maven or Gradle for dependency management",
+                    "final_code": "// Final implementation for: Initialize Maven or Gradle for dependency management"
+                  },
+                  {
+                    "step_id": "JP10_T1_S2",
+                    "step_name": "Create separate packages for client, server, utils, and models",
+                    "description": "This step will guide you to create separate packages for client, server, utils, and models.",
+                    "guidelines": [
+                      "Break the task into manageable units.",
+                      "Use advanced Java constructs like threads, sockets, encryption, etc.",
+                      "Test each unit independently before integration."
+                    ],
+                    "why": [
+                      "This step is essential for implementing create separate packages for client, server, utils, and models effectively in a production-grade chat system."
+                    ],
+                    "starting_code": "// Starting logic for: Create separate packages for client, server, utils, and models",
+                    "final_code": "// Final implementation for: Create separate packages for client, server, utils, and models"
+                  },
+                  {
+                    "step_id": "JP10_T1_S3",
+                    "step_name": "Setup logging configuration",
+                    "description": "This step will guide you to setup logging configuration.",
+                    "guidelines": [
+                      "Break the task into manageable units.",
+                      "Use advanced Java constructs like threads, sockets, encryption, etc.",
+                      "Test each unit independently before integration."
+                    ],
+                    "why": [
+                      "This step is essential for implementing setup logging configuration effectively in a production-grade chat system."
+                    ],
+                    "starting_code": "// Starting logic for: Setup logging configuration",
+                    "final_code": "// Final implementation for: Setup logging configuration"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP10_T2",
+                "task_name": "Create Data Models",
+                "description": "Create Data Models in the Java Chat Application project.",
+                "steps": [
+                  {
+                    "step_id": "JP10_T2_S1",
+                    "step_name": "Define Message class with sender, timestamp, and content",
+                    "description": "This step will guide you to define message class with sender, timestamp, and content.",
+                    "guidelines": [
+                      "Break the task into manageable units.",
+                      "Use advanced Java constructs like threads, sockets, encryption, etc.",
+                      "Test each unit independently before integration."
+                    ],
+                    "why": [
+                      "This step is essential for implementing define message class with sender, timestamp, and content effectively in a production-grade chat system."
+                    ],
+                    "starting_code": "// Starting logic for: Define Message class with sender, timestamp, and content",
+                    "final_code": "// Final implementation for: Define Message class with sender, timestamp, and content"
+                  },
+                  {
+                    "step_id": "JP10_T2_S2",
+                    "step_name": "Create UserSession model with connection metadata",
+                    "description": "This step will guide you to create usersession model with connection metadata.",
+                    "guidelines": [
+                      "Break the task into manageable units.",
+                      "Use advanced Java constructs like threads, sockets, encryption, etc.",
+                      "Test each unit independently before integration."
+                    ],
+                    "why": [
+                      "This step is essential for implementing create usersession model with connection metadata effectively in a production-grade chat system."
+                    ],
+                    "starting_code": "// Starting logic for: Create UserSession model with connection metadata",
+                    "final_code": "// Final implementation for: Create UserSession model with connection metadata"
+                  },
+                  {
+                    "step_id": "JP10_T2_S3",
+                    "step_name": "Implement Serializable interface where needed",
+                    "description": "This step will guide you to implement serializable interface where needed.",
+                    "guidelines": [
+                      "Break the task into manageable units.",
+                      "Use advanced Java constructs like threads, sockets, encryption, etc.",
+                      "Test each unit independently before integration."
+                    ],
+                    "why": [
+                      "This step is essential for implementing implement serializable interface where needed effectively in a production-grade chat system."
+                    ],
+                    "starting_code": "// Starting logic for: Implement Serializable interface where needed",
+                    "final_code": "// Final implementation for: Implement Serializable interface where needed"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP10_T3",
+                "task_name": "Implement Server Core",
+                "description": "Implement Server Core in the Java Chat Application project.",
+                "steps": [
+                  {
+                    "step_id": "JP10_T3_S1",
+                    "step_name": "Setup server socket to listen for clients",
+                    "description": "This step will guide you to setup server socket to listen for clients.",
+                    "guidelines": [
+                      "Break the task into manageable units.",
+                      "Use advanced Java constructs like threads, sockets, encryption, etc.",
+                      "Test each unit independently before integration."
+                    ],
+                    "why": [
+                      "This step is essential for implementing setup server socket to listen for clients effectively in a production-grade chat system."
+                    ],
+                    "starting_code": "// Starting logic for: Setup server socket to listen for clients",
+                    "final_code": "// Final implementation for: Setup server socket to listen for clients"
+                  },
+                  {
+                    "step_id": "JP10_T3_S2",
+                    "step_name": "Accept client connections in a loop",
+                    "description": "This step will guide you to accept client connections in a loop.",
+                    "guidelines": [
+                      "Break the task into manageable units.",
+                      "Use advanced Java constructs like threads, sockets, encryption, etc.",
+                      "Test each unit independently before integration."
+                    ],
+                    "why": [
+                      "This step is essential for implementing accept client connections in a loop effectively in a production-grade chat system."
+                    ],
+                    "starting_code": "// Starting logic for: Accept client connections in a loop",
+                    "final_code": "// Final implementation for: Accept client connections in a loop"
+                  },
+                  {
+                    "step_id": "JP10_T3_S3",
+                    "step_name": "Handle each client in a separate thread",
+                    "description": "This step will guide you to handle each client in a separate thread.",
+                    "guidelines": [
+                      "Break the task into manageable units.",
+                      "Use advanced Java constructs like threads, sockets, encryption, etc.",
+                      "Test each unit independently before integration."
+                    ],
+                    "why": [
+                      "This step is essential for implementing handle each client in a separate thread effectively in a production-grade chat system."
+                    ],
+                    "starting_code": "// Starting logic for: Handle each client in a separate thread",
+                    "final_code": "// Final implementation for: Handle each client in a separate thread"
+                  },
+                  {
+                    "step_id": "JP10_T3_S4",
+                    "step_name": "Create a thread-safe list of active clients",
+                    "description": "This step will guide you to create a thread-safe list of active clients.",
+                    "guidelines": [
+                      "Break the task into manageable units.",
+                      "Use advanced Java constructs like threads, sockets, encryption, etc.",
+                      "Test each unit independently before integration."
+                    ],
+                    "why": [
+                      "This step is essential for implementing create a thread-safe list of active clients effectively in a production-grade chat system."
+                    ],
+                    "starting_code": "// Starting logic for: Create a thread-safe list of active clients",
+                    "final_code": "// Final implementation for: Create a thread-safe list of active clients"
+                  },
+                  {
+                    "step_id": "JP10_T3_S5",
+                    "step_name": "Log server activity",
+                    "description": "This step will guide you to log server activity.",
+                    "guidelines": [
+                      "Break the task into manageable units.",
+                      "Use advanced Java constructs like threads, sockets, encryption, etc.",
+                      "Test each unit independently before integration."
+                    ],
+                    "why": [
+                      "This step is essential for implementing log server activity effectively in a production-grade chat system."
+                    ],
+                    "starting_code": "// Starting logic for: Log server activity",
+                    "final_code": "// Final implementation for: Log server activity"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP10_T4",
+                "task_name": "Build Client Architecture",
+                "description": "Build Client Architecture in the Java Chat Application project.",
+                "steps": [
+                  {
+                    "step_id": "JP10_T4_S1",
+                    "step_name": "Connect to server using a socket",
+                    "description": "This step will guide you to connect to server using a socket.",
+                    "guidelines": [
+                      "Break the task into manageable units.",
+                      "Use advanced Java constructs like threads, sockets, encryption, etc.",
+                      "Test each unit independently before integration."
+                    ],
+                    "why": [
+                      "This step is essential for implementing connect to server using a socket effectively in a production-grade chat system."
+                    ],
+                    "starting_code": "// Starting logic for: Connect to server using a socket",
+                    "final_code": "// Final implementation for: Connect to server using a socket"
+                  },
+                  {
+                    "step_id": "JP10_T4_S2",
+                    "step_name": "Send username and handshake message",
+                    "description": "This step will guide you to send username and handshake message.",
+                    "guidelines": [
+                      "Break the task into manageable units.",
+                      "Use advanced Java constructs like threads, sockets, encryption, etc.",
+                      "Test each unit independently before integration."
+                    ],
+                    "why": [
+                      "This step is essential for implementing send username and handshake message effectively in a production-grade chat system."
+                    ],
+                    "starting_code": "// Starting logic for: Send username and handshake message",
+                    "final_code": "// Final implementation for: Send username and handshake message"
+                  },
+                  {
+                    "step_id": "JP10_T4_S3",
+                    "step_name": "Create thread to receive messages",
+                    "description": "This step will guide you to create thread to receive messages.",
+                    "guidelines": [
+                      "Break the task into manageable units.",
+                      "Use advanced Java constructs like threads, sockets, encryption, etc.",
+                      "Test each unit independently before integration."
+                    ],
+                    "why": [
+                      "This step is essential for implementing create thread to receive messages effectively in a production-grade chat system."
+                    ],
+                    "starting_code": "// Starting logic for: Create thread to receive messages",
+                    "final_code": "// Final implementation for: Create thread to receive messages"
+                  },
+                  {
+                    "step_id": "JP10_T4_S4",
+                    "step_name": "Handle disconnection cleanly",
+                    "description": "This step will guide you to handle disconnection cleanly.",
+                    "guidelines": [
+                      "Break the task into manageable units.",
+                      "Use advanced Java constructs like threads, sockets, encryption, etc.",
+                      "Test each unit independently before integration."
+                    ],
+                    "why": [
+                      "This step is essential for implementing handle disconnection cleanly effectively in a production-grade chat system."
+                    ],
+                    "starting_code": "// Starting logic for: Handle disconnection cleanly",
+                    "final_code": "// Final implementation for: Handle disconnection cleanly"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP10_T5",
+                "task_name": "Implement Messaging Protocol",
+                "description": "Implement Messaging Protocol in the Java Chat Application project.",
+                "steps": [
+                  {
+                    "step_id": "JP10_T5_S1",
+                    "step_name": "Create protocol to identify message types (e.g., join, message, leave)",
+                    "description": "This step will guide you to create protocol to identify message types (e.g., join, message, leave).",
+                    "guidelines": [
+                      "Break the task into manageable units.",
+                      "Use advanced Java constructs like threads, sockets, encryption, etc.",
+                      "Test each unit independently before integration."
+                    ],
+                    "why": [
+                      "This step is essential for implementing create protocol to identify message types (e.g., join, message, leave) effectively in a production-grade chat system."
+                    ],
+                    "starting_code": "// Starting logic for: Create protocol to identify message types (e.g., join, message, leave)",
+                    "final_code": "// Final implementation for: Create protocol to identify message types (e.g., join, message, leave)"
+                  },
+                  {
+                    "step_id": "JP10_T5_S2",
+                    "step_name": "Serialize and deserialize messages",
+                    "description": "This step will guide you to serialize and deserialize messages.",
+                    "guidelines": [
+                      "Break the task into manageable units.",
+                      "Use advanced Java constructs like threads, sockets, encryption, etc.",
+                      "Test each unit independently before integration."
+                    ],
+                    "why": [
+                      "This step is essential for implementing serialize and deserialize messages effectively in a production-grade chat system."
+                    ],
+                    "starting_code": "// Starting logic for: Serialize and deserialize messages",
+                    "final_code": "// Final implementation for: Serialize and deserialize messages"
+                  },
+                  {
+                    "step_id": "JP10_T5_S3",
+                    "step_name": "Broadcast messages to all clients",
+                    "description": "This step will guide you to broadcast messages to all clients.",
+                    "guidelines": [
+                      "Break the task into manageable units.",
+                      "Use advanced Java constructs like threads, sockets, encryption, etc.",
+                      "Test each unit independently before integration."
+                    ],
+                    "why": [
+                      "This step is essential for implementing broadcast messages to all clients effectively in a production-grade chat system."
+                    ],
+                    "starting_code": "// Starting logic for: Broadcast messages to all clients",
+                    "final_code": "// Final implementation for: Broadcast messages to all clients"
+                  },
+                  {
+                    "step_id": "JP10_T5_S4",
+                    "step_name": "Route messages to specific users (private messaging)",
+                    "description": "This step will guide you to route messages to specific users (private messaging).",
+                    "guidelines": [
+                      "Break the task into manageable units.",
+                      "Use advanced Java constructs like threads, sockets, encryption, etc.",
+                      "Test each unit independently before integration."
+                    ],
+                    "why": [
+                      "This step is essential for implementing route messages to specific users (private messaging) effectively in a production-grade chat system."
+                    ],
+                    "starting_code": "// Starting logic for: Route messages to specific users (private messaging)",
+                    "final_code": "// Final implementation for: Route messages to specific users (private messaging)"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP10_T6",
+                "task_name": "Design Console-based Chat UI",
+                "description": "Design Console-based Chat UI in the Java Chat Application project.",
+                "steps": [
+                  {
+                    "step_id": "JP10_T6_S1",
+                    "step_name": "Display incoming messages with timestamps",
+                    "description": "This step will guide you to display incoming messages with timestamps.",
+                    "guidelines": [
+                      "Break the task into manageable units.",
+                      "Use advanced Java constructs like threads, sockets, encryption, etc.",
+                      "Test each unit independently before integration."
+                    ],
+                    "why": [
+                      "This step is essential for implementing display incoming messages with timestamps effectively in a production-grade chat system."
+                    ],
+                    "starting_code": "// Starting logic for: Display incoming messages with timestamps",
+                    "final_code": "// Final implementation for: Display incoming messages with timestamps"
+                  },
+                  {
+                    "step_id": "JP10_T6_S2",
+                    "step_name": "Allow real-time message typing",
+                    "description": "This step will guide you to allow real-time message typing.",
+                    "guidelines": [
+                      "Break the task into manageable units.",
+                      "Use advanced Java constructs like threads, sockets, encryption, etc.",
+                      "Test each unit independently before integration."
+                    ],
+                    "why": [
+                      "This step is essential for implementing allow real-time message typing effectively in a production-grade chat system."
+                    ],
+                    "starting_code": "// Starting logic for: Allow real-time message typing",
+                    "final_code": "// Final implementation for: Allow real-time message typing"
+                  },
+                  {
+                    "step_id": "JP10_T6_S3",
+                    "step_name": "Use colors to differentiate system and user messages",
+                    "description": "This step will guide you to use colors to differentiate system and user messages.",
+                    "guidelines": [
+                      "Break the task into manageable units.",
+                      "Use advanced Java constructs like threads, sockets, encryption, etc.",
+                      "Test each unit independently before integration."
+                    ],
+                    "why": [
+                      "This step is essential for implementing use colors to differentiate system and user messages effectively in a production-grade chat system."
+                    ],
+                    "starting_code": "// Starting logic for: Use colors to differentiate system and user messages",
+                    "final_code": "// Final implementation for: Use colors to differentiate system and user messages"
+                  },
+                  {
+                    "step_id": "JP10_T6_S4",
+                    "step_name": "Add command support like /exit and /help",
+                    "description": "This step will guide you to add command support like /exit and /help.",
+                    "guidelines": [
+                      "Break the task into manageable units.",
+                      "Use advanced Java constructs like threads, sockets, encryption, etc.",
+                      "Test each unit independently before integration."
+                    ],
+                    "why": [
+                      "This step is essential for implementing add command support like /exit and /help effectively in a production-grade chat system."
+                    ],
+                    "starting_code": "// Starting logic for: Add command support like /exit and /help",
+                    "final_code": "// Final implementation for: Add command support like /exit and /help"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP10_T7",
+                "task_name": "Enable Multi-threaded Communication",
+                "description": "Enable Multi-threaded Communication in the Java Chat Application project.",
+                "steps": [
+                  {
+                    "step_id": "JP10_T7_S1",
+                    "step_name": "Use ExecutorService or ThreadPool for managing threads",
+                    "description": "This step will guide you to use executorservice or threadpool for managing threads.",
+                    "guidelines": [
+                      "Break the task into manageable units.",
+                      "Use advanced Java constructs like threads, sockets, encryption, etc.",
+                      "Test each unit independently before integration."
+                    ],
+                    "why": [
+                      "This step is essential for implementing use executorservice or threadpool for managing threads effectively in a production-grade chat system."
+                    ],
+                    "starting_code": "// Starting logic for: Use ExecutorService or ThreadPool for managing threads",
+                    "final_code": "// Final implementation for: Use ExecutorService or ThreadPool for managing threads"
+                  },
+                  {
+                    "step_id": "JP10_T7_S2",
+                    "step_name": "Synchronize shared resources",
+                    "description": "This step will guide you to synchronize shared resources.",
+                    "guidelines": [
+                      "Break the task into manageable units.",
+                      "Use advanced Java constructs like threads, sockets, encryption, etc.",
+                      "Test each unit independently before integration."
+                    ],
+                    "why": [
+                      "This step is essential for implementing synchronize shared resources effectively in a production-grade chat system."
+                    ],
+                    "starting_code": "// Starting logic for: Synchronize shared resources",
+                    "final_code": "// Final implementation for: Synchronize shared resources"
+                  },
+                  {
+                    "step_id": "JP10_T7_S3",
+                    "step_name": "Handle concurrent message broadcast",
+                    "description": "This step will guide you to handle concurrent message broadcast.",
+                    "guidelines": [
+                      "Break the task into manageable units.",
+                      "Use advanced Java constructs like threads, sockets, encryption, etc.",
+                      "Test each unit independently before integration."
+                    ],
+                    "why": [
+                      "This step is essential for implementing handle concurrent message broadcast effectively in a production-grade chat system."
+                    ],
+                    "starting_code": "// Starting logic for: Handle concurrent message broadcast",
+                    "final_code": "// Final implementation for: Handle concurrent message broadcast"
+                  },
+                  {
+                    "step_id": "JP10_T7_S4",
+                    "step_name": "Ensure thread safety in chat history logging",
+                    "description": "This step will guide you to ensure thread safety in chat history logging.",
+                    "guidelines": [
+                      "Break the task into manageable units.",
+                      "Use advanced Java constructs like threads, sockets, encryption, etc.",
+                      "Test each unit independently before integration."
+                    ],
+                    "why": [
+                      "This step is essential for implementing ensure thread safety in chat history logging effectively in a production-grade chat system."
+                    ],
+                    "starting_code": "// Starting logic for: Ensure thread safety in chat history logging",
+                    "final_code": "// Final implementation for: Ensure thread safety in chat history logging"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP10_T8",
+                "task_name": "Persist Chat History",
+                "description": "Persist Chat History in the Java Chat Application project.",
+                "steps": [
+                  {
+                    "step_id": "JP10_T8_S1",
+                    "step_name": "Store chat messages in local file or database",
+                    "description": "This step will guide you to store chat messages in local file or database.",
+                    "guidelines": [
+                      "Break the task into manageable units.",
+                      "Use advanced Java constructs like threads, sockets, encryption, etc.",
+                      "Test each unit independently before integration."
+                    ],
+                    "why": [
+                      "This step is essential for implementing store chat messages in local file or database effectively in a production-grade chat system."
+                    ],
+                    "starting_code": "// Starting logic for: Store chat messages in local file or database",
+                    "final_code": "// Final implementation for: Store chat messages in local file or database"
+                  },
+                  {
+                    "step_id": "JP10_T8_S2",
+                    "step_name": "Tag messages with user and time metadata",
+                    "description": "This step will guide you to tag messages with user and time metadata.",
+                    "guidelines": [
+                      "Break the task into manageable units.",
+                      "Use advanced Java constructs like threads, sockets, encryption, etc.",
+                      "Test each unit independently before integration."
+                    ],
+                    "why": [
+                      "This step is essential for implementing tag messages with user and time metadata effectively in a production-grade chat system."
+                    ],
+                    "starting_code": "// Starting logic for: Tag messages with user and time metadata",
+                    "final_code": "// Final implementation for: Tag messages with user and time metadata"
+                  },
+                  {
+                    "step_id": "JP10_T8_S3",
+                    "step_name": "Allow client to request previous session logs",
+                    "description": "This step will guide you to allow client to request previous session logs.",
+                    "guidelines": [
+                      "Break the task into manageable units.",
+                      "Use advanced Java constructs like threads, sockets, encryption, etc.",
+                      "Test each unit independently before integration."
+                    ],
+                    "why": [
+                      "This step is essential for implementing allow client to request previous session logs effectively in a production-grade chat system."
+                    ],
+                    "starting_code": "// Starting logic for: Allow client to request previous session logs",
+                    "final_code": "// Final implementation for: Allow client to request previous session logs"
+                  },
+                  {
+                    "step_id": "JP10_T8_S4",
+                    "step_name": "Encrypt logs at rest",
+                    "description": "This step will guide you to encrypt logs at rest.",
+                    "guidelines": [
+                      "Break the task into manageable units.",
+                      "Use advanced Java constructs like threads, sockets, encryption, etc.",
+                      "Test each unit independently before integration."
+                    ],
+                    "why": [
+                      "This step is essential for implementing encrypt logs at rest effectively in a production-grade chat system."
+                    ],
+                    "starting_code": "// Starting logic for: Encrypt logs at rest",
+                    "final_code": "// Final implementation for: Encrypt logs at rest"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP10_T9",
+                "task_name": "Add User Authentication",
+                "description": "Add User Authentication in the Java Chat Application project.",
+                "steps": [
+                  {
+                    "step_id": "JP10_T9_S1",
+                    "step_name": "Prompt user for login credentials on client startup",
+                    "description": "This step will guide you to prompt user for login credentials on client startup.",
+                    "guidelines": [
+                      "Break the task into manageable units.",
+                      "Use advanced Java constructs like threads, sockets, encryption, etc.",
+                      "Test each unit independently before integration."
+                    ],
+                    "why": [
+                      "This step is essential for implementing prompt user for login credentials on client startup effectively in a production-grade chat system."
+                    ],
+                    "starting_code": "// Starting logic for: Prompt user for login credentials on client startup",
+                    "final_code": "// Final implementation for: Prompt user for login credentials on client startup"
+                  },
+                  {
+                    "step_id": "JP10_T9_S2",
+                    "step_name": "Validate against a predefined user list or external file",
+                    "description": "This step will guide you to validate against a predefined user list or external file.",
+                    "guidelines": [
+                      "Break the task into manageable units.",
+                      "Use advanced Java constructs like threads, sockets, encryption, etc.",
+                      "Test each unit independently before integration."
+                    ],
+                    "why": [
+                      "This step is essential for implementing validate against a predefined user list or external file effectively in a production-grade chat system."
+                    ],
+                    "starting_code": "// Starting logic for: Validate against a predefined user list or external file",
+                    "final_code": "// Final implementation for: Validate against a predefined user list or external file"
+                  },
+                  {
+                    "step_id": "JP10_T9_S3",
+                    "step_name": "Encrypt passwords",
+                    "description": "This step will guide you to encrypt passwords.",
+                    "guidelines": [
+                      "Break the task into manageable units.",
+                      "Use advanced Java constructs like threads, sockets, encryption, etc.",
+                      "Test each unit independently before integration."
+                    ],
+                    "why": [
+                      "This step is essential for implementing encrypt passwords effectively in a production-grade chat system."
+                    ],
+                    "starting_code": "// Starting logic for: Encrypt passwords",
+                    "final_code": "// Final implementation for: Encrypt passwords"
+                  },
+                  {
+                    "step_id": "JP10_T9_S4",
+                    "step_name": "Restrict access on failed login",
+                    "description": "This step will guide you to restrict access on failed login.",
+                    "guidelines": [
+                      "Break the task into manageable units.",
+                      "Use advanced Java constructs like threads, sockets, encryption, etc.",
+                      "Test each unit independently before integration."
+                    ],
+                    "why": [
+                      "This step is essential for implementing restrict access on failed login effectively in a production-grade chat system."
+                    ],
+                    "starting_code": "// Starting logic for: Restrict access on failed login",
+                    "final_code": "// Final implementation for: Restrict access on failed login"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP10_T10",
+                "task_name": "Integrate Encryption",
+                "description": "Integrate Encryption in the Java Chat Application project.",
+                "steps": [
+                  {
+                    "step_id": "JP10_T10_S1",
+                    "step_name": "Encrypt messages during transmission",
+                    "description": "This step will guide you to encrypt messages during transmission.",
+                    "guidelines": [
+                      "Break the task into manageable units.",
+                      "Use advanced Java constructs like threads, sockets, encryption, etc.",
+                      "Test each unit independently before integration."
+                    ],
+                    "why": [
+                      "This step is essential for implementing encrypt messages during transmission effectively in a production-grade chat system."
+                    ],
+                    "starting_code": "// Starting logic for: Encrypt messages during transmission",
+                    "final_code": "// Final implementation for: Encrypt messages during transmission"
+                  },
+                  {
+                    "step_id": "JP10_T10_S2",
+                    "step_name": "Use RSA or AES for secure messaging",
+                    "description": "This step will guide you to use rsa or aes for secure messaging.",
+                    "guidelines": [
+                      "Break the task into manageable units.",
+                      "Use advanced Java constructs like threads, sockets, encryption, etc.",
+                      "Test each unit independently before integration."
+                    ],
+                    "why": [
+                      "This step is essential for implementing use rsa or aes for secure messaging effectively in a production-grade chat system."
+                    ],
+                    "starting_code": "// Starting logic for: Use RSA or AES for secure messaging",
+                    "final_code": "// Final implementation for: Use RSA or AES for secure messaging"
+                  },
+                  {
+                    "step_id": "JP10_T10_S3",
+                    "step_name": "Share public keys during handshake",
+                    "description": "This step will guide you to share public keys during handshake.",
+                    "guidelines": [
+                      "Break the task into manageable units.",
+                      "Use advanced Java constructs like threads, sockets, encryption, etc.",
+                      "Test each unit independently before integration."
+                    ],
+                    "why": [
+                      "This step is essential for implementing share public keys during handshake effectively in a production-grade chat system."
+                    ],
+                    "starting_code": "// Starting logic for: Share public keys during handshake",
+                    "final_code": "// Final implementation for: Share public keys during handshake"
+                  },
+                  {
+                    "step_id": "JP10_T10_S4",
+                    "step_name": "Decrypt messages on receipt",
+                    "description": "This step will guide you to decrypt messages on receipt.",
+                    "guidelines": [
+                      "Break the task into manageable units.",
+                      "Use advanced Java constructs like threads, sockets, encryption, etc.",
+                      "Test each unit independently before integration."
+                    ],
+                    "why": [
+                      "This step is essential for implementing decrypt messages on receipt effectively in a production-grade chat system."
+                    ],
+                    "starting_code": "// Starting logic for: Decrypt messages on receipt",
+                    "final_code": "// Final implementation for: Decrypt messages on receipt"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP10_T11",
+                "task_name": "Create Admin Controls",
+                "description": "Create Admin Controls in the Java Chat Application project.",
+                "steps": [
+                  {
+                    "step_id": "JP10_T11_S1",
+                    "step_name": "Implement /kick command to remove users",
+                    "description": "This step will guide you to implement /kick command to remove users.",
+                    "guidelines": [
+                      "Break the task into manageable units.",
+                      "Use advanced Java constructs like threads, sockets, encryption, etc.",
+                      "Test each unit independently before integration."
+                    ],
+                    "why": [
+                      "This step is essential for implementing implement /kick command to remove users effectively in a production-grade chat system."
+                    ],
+                    "starting_code": "// Starting logic for: Implement /kick command to remove users",
+                    "final_code": "// Final implementation for: Implement /kick command to remove users"
+                  },
+                  {
+                    "step_id": "JP10_T11_S2",
+                    "step_name": "Log admin actions separately",
+                    "description": "This step will guide you to log admin actions separately.",
+                    "guidelines": [
+                      "Break the task into manageable units.",
+                      "Use advanced Java constructs like threads, sockets, encryption, etc.",
+                      "Test each unit independently before integration."
+                    ],
+                    "why": [
+                      "This step is essential for implementing log admin actions separately effectively in a production-grade chat system."
+                    ],
+                    "starting_code": "// Starting logic for: Log admin actions separately",
+                    "final_code": "// Final implementation for: Log admin actions separately"
+                  },
+                  {
+                    "step_id": "JP10_T11_S3",
+                    "step_name": "Allow broadcasting announcements",
+                    "description": "This step will guide you to allow broadcasting announcements.",
+                    "guidelines": [
+                      "Break the task into manageable units.",
+                      "Use advanced Java constructs like threads, sockets, encryption, etc.",
+                      "Test each unit independently before integration."
+                    ],
+                    "why": [
+                      "This step is essential for implementing allow broadcasting announcements effectively in a production-grade chat system."
+                    ],
+                    "starting_code": "// Starting logic for: Allow broadcasting announcements",
+                    "final_code": "// Final implementation for: Allow broadcasting announcements"
+                  },
+                  {
+                    "step_id": "JP10_T11_S4",
+                    "step_name": "Restrict commands to admin accounts",
+                    "description": "This step will guide you to restrict commands to admin accounts.",
+                    "guidelines": [
+                      "Break the task into manageable units.",
+                      "Use advanced Java constructs like threads, sockets, encryption, etc.",
+                      "Test each unit independently before integration."
+                    ],
+                    "why": [
+                      "This step is essential for implementing restrict commands to admin accounts effectively in a production-grade chat system."
+                    ],
+                    "starting_code": "// Starting logic for: Restrict commands to admin accounts",
+                    "final_code": "// Final implementation for: Restrict commands to admin accounts"
+                  }
+                ]
+              },
+              {
+                "task_id": "JP10_T12",
+                "task_name": "Enhance User Experience",
+                "description": "Enhance User Experience in the Java Chat Application project.",
+                "steps": [
+                  {
+                    "step_id": "JP10_T12_S1",
+                    "step_name": "Add user presence indicators",
+                    "description": "This step will guide you to add user presence indicators.",
+                    "guidelines": [
+                      "Break the task into manageable units.",
+                      "Use advanced Java constructs like threads, sockets, encryption, etc.",
+                      "Test each unit independently before integration."
+                    ],
+                    "why": [
+                      "This step is essential for implementing add user presence indicators effectively in a production-grade chat system."
+                    ],
+                    "starting_code": "// Starting logic for: Add user presence indicators",
+                    "final_code": "// Final implementation for: Add user presence indicators"
+                  },
+                  {
+                    "step_id": "JP10_T12_S2",
+                    "step_name": "Show who is typing",
+                    "description": "This step will guide you to show who is typing.",
+                    "guidelines": [
+                      "Break the task into manageable units.",
+                      "Use advanced Java constructs like threads, sockets, encryption, etc.",
+                      "Test each unit independently before integration."
+                    ],
+                    "why": [
+                      "This step is essential for implementing show who is typing effectively in a production-grade chat system."
+                    ],
+                    "starting_code": "// Starting logic for: Show who is typing",
+                    "final_code": "// Final implementation for: Show who is typing"
+                  },
+                  {
+                    "step_id": "JP10_T12_S3",
+                    "step_name": "Add emoji support in chat",
+                    "description": "This step will guide you to add emoji support in chat.",
+                    "guidelines": [
+                      "Break the task into manageable units.",
+                      "Use advanced Java constructs like threads, sockets, encryption, etc.",
+                      "Test each unit independently before integration."
+                    ],
+                    "why": [
+                      "This step is essential for implementing add emoji support in chat effectively in a production-grade chat system."
+                    ],
+                    "starting_code": "// Starting logic for: Add emoji support in chat",
+                    "final_code": "// Final implementation for: Add emoji support in chat"
+                
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
