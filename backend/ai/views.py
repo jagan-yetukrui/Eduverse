@@ -31,18 +31,42 @@ def bot_endpoint(request):
         missing_fields = [field for field in required_fields if field not in data]
         
         if missing_fields:
+            logger.error(f"Missing required fields: {missing_fields}")
             return JsonResponse({
                 'status': 'error',
                 'message': f'Missing required fields: {", ".join(missing_fields)}'
             }, status=400)
         
+        # Validate user_profile structure
+        if not isinstance(data.get('user_profile'), dict):
+            logger.error("Invalid user_profile format")
+            return JsonResponse({
+                'status': 'error',
+                'message': 'user_profile must be an object'
+            }, status=400)
+            
         # Process the chat request
-        response_text = bot.process_chat(data)
+        try:
+            response_text = bot.process_chat(data)
+        except Exception as e:
+            logger.error(f"Error processing chat: {str(e)}")
+            return JsonResponse({
+                'status': 'error',
+                'message': 'Error processing your request. Please try again.'
+            }, status=500)
+        
+        # Generate suggestions based on the context
+        suggestions = [
+            "What's the next step in my learning journey?",
+            "Can you explain that in more detail?",
+            "Show me some examples"
+        ]
         
         # Return the response
         return JsonResponse({
             'status': 'success',
-            'response': response_text
+            'response': response_text,
+            'suggestions': suggestions
         })
         
     except json.JSONDecodeError:
