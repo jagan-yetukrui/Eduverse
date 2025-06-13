@@ -206,8 +206,8 @@ For technical questions:
                     prompt += f"Hints: {hints}\n"
                     prompt += f"Starting Code: {starting_code}\n"
                     prompt += f"Final Code: {final_code}\n"
-                else:
-                    prompt += "\nNo specific step found. Providing general task guidance.\n"
+            else:
+                prompt += "\nNo specific step found. Providing general task guidance.\n"
         else:
             # Use provided data
             prompt += f"\nProject: {data.get('project', 'N/A')}\n"

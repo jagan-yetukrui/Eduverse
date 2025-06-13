@@ -17,7 +17,7 @@ bot = EduVerseBot()
 def bot_endpoint(request):
     """
     API endpoint for the Edura chatbot.
-    Accepts POST requests with project-based learning context.
+    Accepts POST requests with user messages and context.
     """
     try:
         # Parse the request body
@@ -27,7 +27,7 @@ def bot_endpoint(request):
         logger.info(f"Received chat request: {data}")
         
         # Validate required fields
-        required_fields = ['project', 'task', 'step', 'guidelines', 'why', 'user_question', 'user_profile']
+        required_fields = ['message', 'user_id']
         missing_fields = [field for field in required_fields if field not in data]
         
         if missing_fields:
@@ -36,8 +36,17 @@ def bot_endpoint(request):
                 'message': f'Missing required fields: {", ".join(missing_fields)}'
             }, status=400)
         
+        # Prepare context for the bot
+        context = {
+            'user_question': data['message'],
+            'user_profile': data.get('user_id'),
+            'channel': data.get('channel', {}).get('name', 'web_chat'),
+            'locale': data.get('locale', 'en-US'),
+            'timestamp': data.get('timestamp')
+        }
+        
         # Process the chat request
-        response_text = bot.process_chat(data)
+        response_text = bot.process_chat(context)
         
         # Return the response
         return JsonResponse({
