@@ -19,7 +19,7 @@
                 "Verify Node.js is installed by running node -v.",
                 "Use npm init -y to quickly set up package.json.",
                 "Maintain semantic versioning in dependencies.",
-                "Avoid installing unused packages at this stage.",
+                "Avoid installing unused packages at this stage."
               ],
               "why": [
                 "'Install Node.js and initialize project with npm' is foundational for building a working and testable REST API."
@@ -42,7 +42,7 @@
 
                "Use lowercase and hyphenated folder names for consistency. ",
 
-                "Add placeholder files (e.g., index.js) to avoid Git ignoring empty dirs.",
+                "Add placeholder files (e.g., index.js) to avoid Git ignoring empty dirs."
               ],
               "why": [
                 "'Create folders: routes, controllers, data' is foundational for building a working and testable REST API."
@@ -65,7 +65,7 @@
 
                 "Confirm installation by checking node_modules and npm ls.",
 
-                "Use nodemon for auto-restarts during dev.",
+                "Use nodemon for auto-restarts during dev."
               ],
               "why": [
                 "'Install Express and nodemon' is foundational for building a working and testable REST API."
@@ -92,11 +92,10 @@
               "step_name": "Import express and create app instance",
               "description": "This step will guide you to import express and create app instance.",
               "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
+                "Use const express = require('express') to import.",
+                "Initialize the app using const app = express().",
+                "Keep this logic in a separate app.js for reusability.",
+                "Use module.exports = app if structuring cleanly."
               ],
               "why": [
                 "'Import express and create app instance' is foundational for building a working and testable REST API."
