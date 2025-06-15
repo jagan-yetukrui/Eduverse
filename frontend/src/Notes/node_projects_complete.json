@@ -92,7 +92,7 @@
               "step_name": "Import express and create app instance",
               "description": "This step will guide you to import express and create app instance.",
               "guidelines": [
-                "Use const express = require('express') to import.",
+                "Use const express = require express to import.",
                 "Initialize the app using const app = express().",
                 "Keep this logic in a separate app.js for reusability.",
                 "Use module.exports = app if structuring cleanly."
@@ -112,11 +112,13 @@
               "step_name": "Setup server to listen on port",
               "description": "This step will guide you to setup server to listen on port.",
               "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
+             "Use app.listen(3000, () => console.log(...)) pattern.",
+
+            "Use process.env.PORT and fallback for flexibility.",
+
+            "Avoid hardcoding port in multiple places.",
+
+            "Confirm the server responds with a simple route."
               ],
               "why": [
                 "'Setup server to listen on port' is foundational for building a working and testable REST API."
