@@ -166,11 +166,10 @@
               "step_name": "Create notes.json as a placeholder data file",
               "description": "This step will guide you to create notes.json as a placeholder data file.",
               "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
+                "Place the file in the data/ directory",
+                "Start with an empty array: []",
+                "Ensure correct file permissions.",
+                "Include comments (outside JSON) in README to explain file role."
               ],
               "why": [
                 "'Create notes.json as a placeholder data file' is foundational for building a working and testable REST API."
@@ -187,11 +186,10 @@
               "step_name": "Create helper functions to read/write to file",
               "description": "This step will guide you to create helper functions to read/write to file.",
               "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
+                "Use fs.readFileSync and fs.writeFileSync from Node’s core module.",
+                "Wrap file operations in reusable functions.",
+                "Handle JSON parsing/stringifying inside helpers.",
+                "Add error handling for file read/write."
               ],
               "why": [
                 "'Create helper functions to read/write to file' is foundational for building a working and testable REST API."
@@ -208,11 +206,10 @@
               "step_name": "Use fs module for synchronous file operations",
               "description": "This step will guide you to use fs module for synchronous file operations.",
               "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
+               "Prefer fs.readFileSync only for small files.",
+               "Use try/catch around file operations.",
+               "Confirm notes persist after a server restart.",
+               "Consider later converting to async ops for scalability."
               ],
               "why": [
                 "'Use fs module for synchronous file operations' is foundational for building a working and testable REST API."
@@ -239,11 +236,10 @@
               "step_name": "Create route to fetch all notes",
               "description": "This step will guide you to create route to fetch all notes.",
               "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
+                "Use GET /notes and return parsed JSON from notes file.",
+                "Add logic to read from notes.json.",
+                "Send 200 OK with data in response.",
+                "Avoid exposing file paths directly."
               ],
               "why": [
                 "'Create route to fetch all notes' is foundational for building a working and testable REST API."
@@ -260,11 +256,10 @@
               "step_name": "Add route to create a new note",
               "description": "This step will guide you to add route to create a new note.",
               "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
+                "Use POST /notes to receive a note object.",
+                "Validate that required fields exist (e.g., title, content).",
+                "Generate a unique ID (e.g., with Date.now()).",
+                "Append to file using your helper."
               ],
               "why": [
                 "'Add route to create a new note' is foundational for building a working and testable REST API."
@@ -281,11 +276,10 @@
               "step_name": "Validate request body before saving",
               "description": "This step will guide you to validate request body before saving.",
               "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
+               "Use middleware to validate incoming requests.",
+               "Reject missing fields with 400 Bad Request.",
+               "Return helpful error messages.",
+               "Structure validations in a separate utility for reuse."
               ],
               "why": [
                 "'Validate request body before saving' is foundational for building a working and testable REST API."
@@ -312,11 +306,10 @@
               "step_name": "Add route to update a note by ID",
               "description": "This step will guide you to add route to update a note by id.",
               "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
+                "Use PUT /notes/:id to update a specific note.",
+                "Find note by ID; if not found, return 404.",
+                "Merge updates with original note.",
+                "Write back updated array to notes.json."
               ],
               "why": [
                 "'Add route to update a note by ID' is foundational for building a working and testable REST API."
@@ -333,11 +326,10 @@
               "step_name": "Add route to delete a note by ID",
               "description": "This step will guide you to add route to delete a note by id.",
               "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
+                "Use DELETE /notes/:id.",
+                "Filter out the note by ID.",
+                "Respond with 204 No Content or confirmation message.",
+                "Validate that the note exists before deletion."
               ],
               "why": [
                 "'Add route to delete a note by ID' is foundational for building a working and testable REST API."
@@ -354,11 +346,10 @@
               "step_name": "Handle errors if note not found",
               "description": "This step will guide you to handle errors if note not found.",
               "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
+                "Use conditional checks before operating on notes.",
+                "Send 404 Not Found for invalid IDs.",
+                "Log failed attempts with timestamps.",
+                "Avoid leaking internal logic in error responses."
               ],
               "why": [
                 "'Handle errors if note not found' is foundational for building a working and testable REST API."
@@ -385,11 +376,13 @@
               "step_name": "Separate logic into controllers",
               "description": "This step will guide you to separate logic into controllers.",
               "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
+                "Move route logic into separate controller files.",
+
+                "Each controller should export functions.",
+
+                "Import functions in route files.",
+
+                "Keep controller functions pure and testable."
               ],
               "why": [
                 "'Separate logic into controllers' is foundational for building a working and testable REST API."
@@ -406,11 +399,13 @@
               "step_name": "Connect routes to controller methods",
               "description": "This step will guide you to connect routes to controller methods.",
               "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
+                "Use router.get(/, controllerFunction) syntax.",
+
+"Avoid redundant logic in routes.",
+
+"Ensure routes remain declarative.",
+
+"Maintain consistent naming between routes and methods."
               ],
               "why": [
                 "'Connect routes to controller methods' is foundational for building a working and testable REST API."
@@ -427,11 +422,13 @@
               "step_name": "Organize routes in routes/notes.js",
               "description": "This step will guide you to organize routes in routes/notes.js.",
               "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
+                "Group similar routes (GET, POST, etc.) together.",
+
+"Use express.Router() to modularize.",
+
+"Export and use in app.js.",
+
+"Maintain route prefixes (/api/notes)."
               ],
               "why": [
                 "'Organize routes in routes/notes.js' is foundational for building a working and testable REST API."
@@ -458,11 +455,13 @@
               "step_name": "Use Postman to send requests to endpoints",
               "description": "This step will guide you to use postman to send requests to endpoints.",
               "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
+                "Create a Postman collection.",
+
+"Save requests and share for reuse.",
+
+"Test both success and failure cases.",
+
+"Use different methods (GET, POST, etc.)."
               ],
               "why": [
                 "'Use Postman to send requests to endpoints' is foundational for building a working and testable REST API."
@@ -479,11 +478,10 @@
               "step_name": "Check that note creation and updates persist in notes.json",
               "description": "This step will guide you to check that note creation and updates persist in notes.json.",
               "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
+                "Verify file content manually or programmatically.",
+                "Look for accurate ID generation and timestamps.",
+                "Test after multiple changes.",
+                "Reload server if needed to verify persistence."
               ],
               "why": [
                 "'Check that note creation and updates persist in notes.json' is foundational for building a working and testable REST API."
@@ -500,11 +498,13 @@
               "step_name": "Verify error handling for invalid data",
               "description": "This step will guide you to verify error handling for invalid data.",
               "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
+                "Send empty payloads or malformed data.",
+
+"Confirm proper status codes are returned.",
+
+"Ensure no crash occurs in backend.",
+
+"Include clear messages in responses."
               ],
               "why": [
                 "'Verify error handling for invalid data' is foundational for building a working and testable REST API."
@@ -531,11 +531,13 @@
               "step_name": "Add middleware for 404 and generic error",
               "description": "This step will guide you to add middleware for 404 and generic error.",
               "guidelines": [
-                "Implement reusable middleware functions.",
-                "Use next() properly to pass control.",
-                "Validate input or handle errors with middleware.",
-                "Log activity or filter requests.",
-                "Test with different request types."
+               "Create centralized error handler.",
+
+"Use app.use() at the bottom of middleware stack.",
+
+"Customize error shape for client.",
+
+"Avoid exposing internal stack traces."
               ],
               "why": [
                 "'Add middleware for 404 and generic error' is foundational for building a working and testable REST API."
@@ -552,11 +554,13 @@
               "step_name": "Return proper HTTP status codes",
               "description": "This step will guide you to return proper http status codes.",
               "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
+                "Use 201 for successful POSTs.",
+
+"Use 400, 404, and 500 appropriately.",
+
+"Document status codes in README.",
+
+"Test with automated tools if possible."
               ],
               "why": [
                 "'Return proper HTTP status codes' is foundational for building a working and testable REST API."
@@ -573,11 +577,13 @@
               "step_name": "Prevent crashes on missing or bad data",
               "description": "This step will guide you to prevent crashes on missing or bad data.",
               "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
+                "Use guard clauses for all inputs.",
+
+"Return default fallbacks where needed.",
+
+"Use typeof and Array.isArray for type checks.",
+
+"Never trust client input blindly."
               ],
               "why": [
                 "'Prevent crashes on missing or bad data' is foundational for building a working and testable REST API."
@@ -600,964 +606,422 @@
       "xpGained": 0,
       "questProgress": 0
     },
+   {
+  "project_id": "N2",
+  "project_name": "Authentication System",
+  "description": "Implement user authentication with JWT and bcrypt.",
+  "difficulty": "Beginner",
+  "tasks": [
     {
-      "project_id": "N2",
-      "project_name": "Authentication System",
-      "description": "Implement user authentication with JWT and bcrypt.",
-      "difficulty": "Beginner",
-      "tasks": [
+      "task_id": "2_T1",
+      "task_name": "Test API",
+      "description": "Test API for project 2.",
+      "steps": [
         {
-          "task_id": "2_T1",
-          "task_name": "Test API",
-          "description": "Test API for project 2.",
-          "steps": [
-            {
-              "step_id": "N2_T1_S1",
-              "step_name": "Handle File Uploads",
-              "description": "Implement the logic for Handle File Uploads.",
-              "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
-              ],
-              "hints": [
-                "Use `express.Router()` for organizing routes.",
-                "Use `mongoose` to define and interact with the database schema.",
-                "Use `jsonwebtoken` to sign and verify tokens.",
-                "Use `multer` for handling file uploads in multipart/form-data format.",
-                "Use `dotenv` to manage your environment variables."
-              ],
-              "starting_code": "// Starting code for Handle File Uploads\nconst express = require('express');\nconst app = express();\n\n// TODO: Implement Handle File Uploads logic here",
-              "final_code": "// Final code for Handle File Uploads\nconst express = require('express');\nconst app = express();\n\napp.get('/step1', (req, res) => {\n    res.json({ message: 'Step 1 completed.' });\n});",
-              "isUnlocked": false,
-              "isCompleted": false,
-              "status": "pending",
-              "xpValue": 10
-            },
-            {
-              "step_id": "N2_T1_S2",
-              "step_name": "Define Route Handlers",
-              "description": "Implement the logic for Define Route Handlers.",
-              "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
-              ],
-              "hints": [
-                "Use `express.Router()` for organizing routes.",
-                "Use `mongoose` to define and interact with the database schema.",
-                "Use `jsonwebtoken` to sign and verify tokens.",
-                "Use `multer` for handling file uploads in multipart/form-data format.",
-                "Use `dotenv` to manage your environment variables."
-              ],
-              "starting_code": "// Starting code for Define Route Handlers\nconst express = require('express');\nconst app = express();\n\n// TODO: Implement Define Route Handlers logic here",
-              "final_code": "// Final code for Define Route Handlers\nconst express = require('express');\nconst app = express();\n\napp.get('/step2', (req, res) => {\n    res.json({ message: 'Step 2 completed.' });\n});",
-              "isUnlocked": false,
-              "isCompleted": false,
-              "status": "pending",
-              "xpValue": 10
-            },
-            {
-              "step_id": "N2_T1_S3",
-              "step_name": "Implement JWT Auth",
-              "description": "Implement the logic for Implement JWT Auth.",
-              "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
-              ],
-              "hints": [
-                "Use `express.Router()` for organizing routes.",
-                "Use `mongoose` to define and interact with the database schema.",
-                "Use `jsonwebtoken` to sign and verify tokens.",
-                "Use `multer` for handling file uploads in multipart/form-data format.",
-                "Use `dotenv` to manage your environment variables."
-              ],
-              "starting_code": "// Starting code for Implement JWT Auth\nconst express = require('express');\nconst app = express();\n\n// TODO: Implement Implement JWT Auth logic here",
-              "final_code": "// Final code for Implement JWT Auth\nconst express = require('express');\nconst app = express();\n\napp.get('/step3', (req, res) => {\n    res.json({ message: 'Step 3 completed.' });\n});",
-              "isUnlocked": false,
-              "isCompleted": false,
-              "status": "pending",
-              "xpValue": 10
-            },
-            {
-              "step_id": "N2_T1_S4",
-              "step_name": "Add Input Validation",
-              "description": "Implement the logic for Add Input Validation.",
-              "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
-              ],
-              "hints": [
-                "Use `express.Router()` for organizing routes.",
-                "Use `mongoose` to define and interact with the database schema.",
-                "Use `jsonwebtoken` to sign and verify tokens.",
-                "Use `multer` for handling file uploads in multipart/form-data format.",
-                "Use `dotenv` to manage your environment variables."
-              ],
-              "starting_code": "// Starting code for Add Input Validation\nconst express = require('express');\nconst app = express();\n\n// TODO: Implement Add Input Validation logic here",
-              "final_code": "// Final code for Add Input Validation\nconst express = require('express');\nconst app = express();\n\napp.get('/step4', (req, res) => {\n    res.json({ message: 'Step 4 completed.' });\n});",
-              "isUnlocked": false,
-              "isCompleted": false,
-              "status": "pending",
-              "xpValue": 10
-            },
-            {
-              "step_id": "N2_T1_S5",
-              "step_name": "Install Express",
-              "description": "Implement the logic for Install Express.",
-              "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
-              ],
-              "hints": [
-                "Use `express.Router()` for organizing routes.",
-                "Use `mongoose` to define and interact with the database schema.",
-                "Use `jsonwebtoken` to sign and verify tokens.",
-                "Use `multer` for handling file uploads in multipart/form-data format.",
-                "Use `dotenv` to manage your environment variables."
-              ],
-              "starting_code": "// Starting code for Install Express\nconst express = require('express');\nconst app = express();\n\n// TODO: Implement Install Express logic here",
-              "final_code": "// Final code for Install Express\nconst express = require('express');\nconst app = express();\n\napp.get('/step5', (req, res) => {\n    res.json({ message: 'Step 5 completed.' });\n});",
-              "isUnlocked": false,
-              "isCompleted": false,
-              "status": "pending",
-              "xpValue": 10
-            }
-          ],
-          "objectives": [],
-          "isUnlocked": false,
-          "isCompleted": false
+          "step_id": "N2_T1_S1",
+          "step_name": "Handle File Uploads",
+          "guidelines": [
+            "Use `multer` to parse multipart form data.",
+            "Store uploaded files in a dedicated 'uploads' directory.",
+            "Sanitize and validate file types and sizes.",
+            "Ensure temporary files are cleaned up after failures."
+          ]
         },
         {
-          "task_id": "2_T2",
-          "task_name": "Install Dependencies",
-          "description": "Install Dependencies for project 2.",
-          "steps": [
-            {
-              "step_id": "N2_T2_S1",
-              "step_name": "Define Route Handlers",
-              "description": "Implement the logic for Define Route Handlers.",
-              "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
-              ],
-              "hints": [
-                "Use `express.Router()` for organizing routes.",
-                "Use `mongoose` to define and interact with the database schema.",
-                "Use `jsonwebtoken` to sign and verify tokens.",
-                "Use `multer` for handling file uploads in multipart/form-data format.",
-                "Use `dotenv` to manage your environment variables."
-              ],
-              "starting_code": "// Starting code for Define Route Handlers\nconst express = require('express');\nconst app = express();\n\n// TODO: Implement Define Route Handlers logic here",
-              "final_code": "// Final code for Define Route Handlers\nconst express = require('express');\nconst app = express();\n\napp.get('/step1', (req, res) => {\n    res.json({ message: 'Step 1 completed.' });\n});",
-              "isUnlocked": false,
-              "isCompleted": false,
-              "status": "pending",
-              "xpValue": 10
-            },
-            {
-              "step_id": "N2_T2_S2",
-              "step_name": "Implement JWT Auth",
-              "description": "Implement the logic for Implement JWT Auth.",
-              "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
-              ],
-              "hints": [
-                "Use `express.Router()` for organizing routes.",
-                "Use `mongoose` to define and interact with the database schema.",
-                "Use `jsonwebtoken` to sign and verify tokens.",
-                "Use `multer` for handling file uploads in multipart/form-data format.",
-                "Use `dotenv` to manage your environment variables."
-              ],
-              "starting_code": "// Starting code for Implement JWT Auth\nconst express = require('express');\nconst app = express();\n\n// TODO: Implement Implement JWT Auth logic here",
-              "final_code": "// Final code for Implement JWT Auth\nconst express = require('express');\nconst app = express();\n\napp.get('/step2', (req, res) => {\n    res.json({ message: 'Step 2 completed.' });\n});",
-              "isUnlocked": false,
-              "isCompleted": false,
-              "status": "pending",
-              "xpValue": 10
-            },
-            {
-              "step_id": "N2_T2_S3",
-              "step_name": "Implement JWT Auth",
-              "description": "Implement the logic for Implement JWT Auth.",
-              "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
-              ],
-              "hints": [
-                "Use `express.Router()` for organizing routes.",
-                "Use `mongoose` to define and interact with the database schema.",
-                "Use `jsonwebtoken` to sign and verify tokens.",
-                "Use `multer` for handling file uploads in multipart/form-data format.",
-                "Use `dotenv` to manage your environment variables."
-              ],
-              "starting_code": "// Starting code for Implement JWT Auth\nconst express = require('express');\nconst app = express();\n\n// TODO: Implement Implement JWT Auth logic here",
-              "final_code": "// Final code for Implement JWT Auth\nconst express = require('express');\nconst app = express();\n\napp.get('/step3', (req, res) => {\n    res.json({ message: 'Step 3 completed.' });\n});",
-              "isUnlocked": false,
-              "isCompleted": false,
-              "status": "pending",
-              "xpValue": 10
-            },
-            {
-              "step_id": "N2_T2_S4",
-              "step_name": "Create Models",
-              "description": "Implement the logic for Create Models.",
-              "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
-              ],
-              "hints": [
-                "Use `express.Router()` for organizing routes.",
-                "Use `mongoose` to define and interact with the database schema.",
-                "Use `jsonwebtoken` to sign and verify tokens.",
-                "Use `multer` for handling file uploads in multipart/form-data format.",
-                "Use `dotenv` to manage your environment variables."
-              ],
-              "starting_code": "// Starting code for Create Models\nconst express = require('express');\nconst app = express();\n\n// TODO: Implement Create Models logic here",
-              "final_code": "// Final code for Create Models\nconst express = require('express');\nconst app = express();\n\napp.get('/step4', (req, res) => {\n    res.json({ message: 'Step 4 completed.' });\n});",
-              "isUnlocked": false,
-              "isCompleted": false,
-              "status": "pending",
-              "xpValue": 10
-            },
-            {
-              "step_id": "N2_T2_S5",
-              "step_name": "Handle File Uploads",
-              "description": "Implement the logic for Handle File Uploads.",
-              "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
-              ],
-              "hints": [
-                "Use `express.Router()` for organizing routes.",
-                "Use `mongoose` to define and interact with the database schema.",
-                "Use `jsonwebtoken` to sign and verify tokens.",
-                "Use `multer` for handling file uploads in multipart/form-data format.",
-                "Use `dotenv` to manage your environment variables."
-              ],
-              "starting_code": "// Starting code for Handle File Uploads\nconst express = require('express');\nconst app = express();\n\n// TODO: Implement Handle File Uploads logic here",
-              "final_code": "// Final code for Handle File Uploads\nconst express = require('express');\nconst app = express();\n\napp.get('/step5', (req, res) => {\n    res.json({ message: 'Step 5 completed.' });\n});",
-              "isUnlocked": false,
-              "isCompleted": false,
-              "status": "pending",
-              "xpValue": 10
-            }
-          ],
-          "objectives": [],
-          "isUnlocked": false,
-          "isCompleted": false
+          "step_id": "N2_T1_S2",
+          "step_name": "Define Route Handlers",
+          "guidelines": [
+            "Use `express.Router()` to modularize route logic.",
+            "Separate route definitions from business logic.",
+            "Map each route to a controller function.",
+            "Use RESTful conventions (e.g., POST /login)."
+          ]
         },
         {
-          "task_id": "2_T3",
-          "task_name": "Create Endpoints",
-          "description": "Create Endpoints for project 2.",
-          "steps": [
-            {
-              "step_id": "N2_T3_S1",
-              "step_name": "Define Route Handlers",
-              "description": "Implement the logic for Define Route Handlers.",
-              "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
-              ],
-              "hints": [
-                "Use `express.Router()` for organizing routes.",
-                "Use `mongoose` to define and interact with the database schema.",
-                "Use `jsonwebtoken` to sign and verify tokens.",
-                "Use `multer` for handling file uploads in multipart/form-data format.",
-                "Use `dotenv` to manage your environment variables."
-              ],
-              "starting_code": "// Starting code for Define Route Handlers\nconst express = require('express');\nconst app = express();\n\n// TODO: Implement Define Route Handlers logic here",
-              "final_code": "// Final code for Define Route Handlers\nconst express = require('express');\nconst app = express();\n\napp.get('/step1', (req, res) => {\n    res.json({ message: 'Step 1 completed.' });\n});",
-              "isUnlocked": false,
-              "isCompleted": false,
-              "status": "pending",
-              "xpValue": 10
-            },
-            {
-              "step_id": "N2_T3_S2",
-              "step_name": "Add Input Validation",
-              "description": "Implement the logic for Add Input Validation.",
-              "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
-              ],
-              "hints": [
-                "Use `express.Router()` for organizing routes.",
-                "Use `mongoose` to define and interact with the database schema.",
-                "Use `jsonwebtoken` to sign and verify tokens.",
-                "Use `multer` for handling file uploads in multipart/form-data format.",
-                "Use `dotenv` to manage your environment variables."
-              ],
-              "starting_code": "// Starting code for Add Input Validation\nconst express = require('express');\nconst app = express();\n\n// TODO: Implement Add Input Validation logic here",
-              "final_code": "// Final code for Add Input Validation\nconst express = require('express');\nconst app = express();\n\napp.get('/step2', (req, res) => {\n    res.json({ message: 'Step 2 completed.' });\n});",
-              "isUnlocked": false,
-              "isCompleted": false,
-              "status": "pending",
-              "xpValue": 10
-            },
-            {
-              "step_id": "N2_T3_S3",
-              "step_name": "Deploy to Render",
-              "description": "Implement the logic for Deploy to Render.",
-              "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
-              ],
-              "hints": [
-                "Use `express.Router()` for organizing routes.",
-                "Use `mongoose` to define and interact with the database schema.",
-                "Use `jsonwebtoken` to sign and verify tokens.",
-                "Use `multer` for handling file uploads in multipart/form-data format.",
-                "Use `dotenv` to manage your environment variables."
-              ],
-              "starting_code": "// Starting code for Deploy to Render\nconst express = require('express');\nconst app = express();\n\n// TODO: Implement Deploy to Render logic here",
-              "final_code": "// Final code for Deploy to Render\nconst express = require('express');\nconst app = express();\n\napp.get('/step3', (req, res) => {\n    res.json({ message: 'Step 3 completed.' });\n});",
-              "isUnlocked": false,
-              "isCompleted": false,
-              "status": "pending",
-              "xpValue": 10
-            },
-            {
-              "step_id": "N2_T3_S4",
-              "step_name": "Create Models",
-              "description": "Implement the logic for Create Models.",
-              "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
-              ],
-              "hints": [
-                "Use `express.Router()` for organizing routes.",
-                "Use `mongoose` to define and interact with the database schema.",
-                "Use `jsonwebtoken` to sign and verify tokens.",
-                "Use `multer` for handling file uploads in multipart/form-data format.",
-                "Use `dotenv` to manage your environment variables."
-              ],
-              "starting_code": "// Starting code for Create Models\nconst express = require('express');\nconst app = express();\n\n// TODO: Implement Create Models logic here",
-              "final_code": "// Final code for Create Models\nconst express = require('express');\nconst app = express();\n\napp.get('/step4', (req, res) => {\n    res.json({ message: 'Step 4 completed.' });\n});",
-              "isUnlocked": false,
-              "isCompleted": false,
-              "status": "pending",
-              "xpValue": 10
-            },
-            {
-              "step_id": "N2_T3_S5",
-              "step_name": "Write Unit Tests",
-              "description": "Implement the logic for Write Unit Tests.",
-              "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
-              ],
-              "hints": [
-                "Use `express.Router()` for organizing routes.",
-                "Use `mongoose` to define and interact with the database schema.",
-                "Use `jsonwebtoken` to sign and verify tokens.",
-                "Use `multer` for handling file uploads in multipart/form-data format.",
-                "Use `dotenv` to manage your environment variables."
-              ],
-              "starting_code": "// Starting code for Write Unit Tests\nconst express = require('express');\nconst app = express();\n\n// TODO: Implement Write Unit Tests logic here",
-              "final_code": "// Final code for Write Unit Tests\nconst express = require('express');\nconst app = express();\n\napp.get('/step5', (req, res) => {\n    res.json({ message: 'Step 5 completed.' });\n});",
-              "isUnlocked": false,
-              "isCompleted": false,
-              "status": "pending",
-              "xpValue": 10
-            }
-          ],
-          "objectives": [],
-          "isUnlocked": false,
-          "isCompleted": false
+          "step_id": "N2_T1_S3",
+          "step_name": "Implement JWT Auth",
+          "guidelines": [
+            "Use `jsonwebtoken` to sign tokens on login.",
+            "Store secrets in environment variables.",
+            "Set token expiration for enhanced security.",
+            "Verify token presence in Authorization header for protected routes."
+          ]
         },
         {
-          "task_id": "2_T4",
-          "task_name": "Implement Controllers",
-          "description": "Implement Controllers for project 2.",
-          "steps": [
-            {
-              "step_id": "N2_T4_S1",
-              "step_name": "Write Unit Tests",
-              "description": "Implement the logic for Write Unit Tests.",
-              "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
-              ],
-              "hints": [
-                "Use `express.Router()` for organizing routes.",
-                "Use `mongoose` to define and interact with the database schema.",
-                "Use `jsonwebtoken` to sign and verify tokens.",
-                "Use `multer` for handling file uploads in multipart/form-data format.",
-                "Use `dotenv` to manage your environment variables."
-              ],
-              "starting_code": "// Starting code for Write Unit Tests\nconst express = require('express');\nconst app = express();\n\n// TODO: Implement Write Unit Tests logic here",
-              "final_code": "// Final code for Write Unit Tests\nconst express = require('express');\nconst app = express();\n\napp.get('/step1', (req, res) => {\n    res.json({ message: 'Step 1 completed.' });\n});",
-              "isUnlocked": false,
-              "isCompleted": false,
-              "status": "pending",
-              "xpValue": 10
-            },
-            {
-              "step_id": "N2_T4_S2",
-              "step_name": "Define Route Handlers",
-              "description": "Implement the logic for Define Route Handlers.",
-              "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
-              ],
-              "hints": [
-                "Use `express.Router()` for organizing routes.",
-                "Use `mongoose` to define and interact with the database schema.",
-                "Use `jsonwebtoken` to sign and verify tokens.",
-                "Use `multer` for handling file uploads in multipart/form-data format.",
-                "Use `dotenv` to manage your environment variables."
-              ],
-              "starting_code": "// Starting code for Define Route Handlers\nconst express = require('express');\nconst app = express();\n\n// TODO: Implement Define Route Handlers logic here",
-              "final_code": "// Final code for Define Route Handlers\nconst express = require('express');\nconst app = express();\n\napp.get('/step2', (req, res) => {\n    res.json({ message: 'Step 2 completed.' });\n});",
-              "isUnlocked": false,
-              "isCompleted": false,
-              "status": "pending",
-              "xpValue": 10
-            },
-            {
-              "step_id": "N2_T4_S3",
-              "step_name": "Initialize npm Project",
-              "description": "Implement the logic for Initialize npm Project.",
-              "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
-              ],
-              "hints": [
-                "Use `express.Router()` for organizing routes.",
-                "Use `mongoose` to define and interact with the database schema.",
-                "Use `jsonwebtoken` to sign and verify tokens.",
-                "Use `multer` for handling file uploads in multipart/form-data format.",
-                "Use `dotenv` to manage your environment variables."
-              ],
-              "starting_code": "// Starting code for Initialize npm Project\nconst express = require('express');\nconst app = express();\n\n// TODO: Implement Initialize npm Project logic here",
-              "final_code": "// Final code for Initialize npm Project\nconst express = require('express');\nconst app = express();\n\napp.get('/step3', (req, res) => {\n    res.json({ message: 'Step 3 completed.' });\n});",
-              "isUnlocked": false,
-              "isCompleted": false,
-              "status": "pending",
-              "xpValue": 10
-            },
-            {
-              "step_id": "N2_T4_S4",
-              "step_name": "Define Route Handlers",
-              "description": "Implement the logic for Define Route Handlers.",
-              "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
-              ],
-              "hints": [
-                "Use `express.Router()` for organizing routes.",
-                "Use `mongoose` to define and interact with the database schema.",
-                "Use `jsonwebtoken` to sign and verify tokens.",
-                "Use `multer` for handling file uploads in multipart/form-data format.",
-                "Use `dotenv` to manage your environment variables."
-              ],
-              "starting_code": "// Starting code for Define Route Handlers\nconst express = require('express');\nconst app = express();\n\n// TODO: Implement Define Route Handlers logic here",
-              "final_code": "// Final code for Define Route Handlers\nconst express = require('express');\nconst app = express();\n\napp.get('/step4', (req, res) => {\n    res.json({ message: 'Step 4 completed.' });\n});",
-              "isUnlocked": false,
-              "isCompleted": false,
-              "status": "pending",
-              "xpValue": 10
-            },
-            {
-              "step_id": "N2_T4_S5",
-              "step_name": "Handle File Uploads",
-              "description": "Implement the logic for Handle File Uploads.",
-              "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
-              ],
-              "hints": [
-                "Use `express.Router()` for organizing routes.",
-                "Use `mongoose` to define and interact with the database schema.",
-                "Use `jsonwebtoken` to sign and verify tokens.",
-                "Use `multer` for handling file uploads in multipart/form-data format.",
-                "Use `dotenv` to manage your environment variables."
-              ],
-              "starting_code": "// Starting code for Handle File Uploads\nconst express = require('express');\nconst app = express();\n\n// TODO: Implement Handle File Uploads logic here",
-              "final_code": "// Final code for Handle File Uploads\nconst express = require('express');\nconst app = express();\n\napp.get('/step5', (req, res) => {\n    res.json({ message: 'Step 5 completed.' });\n});",
-              "isUnlocked": false,
-              "isCompleted": false,
-              "status": "pending",
-              "xpValue": 10
-            }
-          ],
-          "objectives": [],
-          "isUnlocked": false,
-          "isCompleted": false
+          "step_id": "N2_T1_S4",
+          "step_name": "Add Input Validation",
+          "guidelines": [
+            "Use middleware like `express-validator` for clean validation logic.",
+            "Define schema-based validation rules per endpoint.",
+            "Return 400 Bad Request with helpful error messages.",
+            "Avoid trusting client-side validation alone."
+          ]
         },
         {
-          "task_id": "2_T5",
-          "task_name": "Handle Authentication",
-          "description": "Handle Authentication for project 2.",
-          "steps": [
-            {
-              "step_id": "N2_T5_S1",
-              "step_name": "Install Express",
-              "description": "Implement the logic for Install Express.",
-              "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
-              ],
-              "hints": [
-                "Use `express.Router()` for organizing routes.",
-                "Use `mongoose` to define and interact with the database schema.",
-                "Use `jsonwebtoken` to sign and verify tokens.",
-                "Use `multer` for handling file uploads in multipart/form-data format.",
-                "Use `dotenv` to manage your environment variables."
-              ],
-              "starting_code": "// Starting code for Install Express\nconst express = require('express');\nconst app = express();\n\n// TODO: Implement Install Express logic here",
-              "final_code": "// Final code for Install Express\nconst express = require('express');\nconst app = express();\n\napp.get('/step1', (req, res) => {\n    res.json({ message: 'Step 1 completed.' });\n});",
-              "isUnlocked": false,
-              "isCompleted": false,
-              "status": "pending",
-              "xpValue": 10
-            },
-            {
-              "step_id": "N2_T5_S2",
-              "step_name": "Implement JWT Auth",
-              "description": "Implement the logic for Implement JWT Auth.",
-              "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
-              ],
-              "hints": [
-                "Use `express.Router()` for organizing routes.",
-                "Use `mongoose` to define and interact with the database schema.",
-                "Use `jsonwebtoken` to sign and verify tokens.",
-                "Use `multer` for handling file uploads in multipart/form-data format.",
-                "Use `dotenv` to manage your environment variables."
-              ],
-              "starting_code": "// Starting code for Implement JWT Auth\nconst express = require('express');\nconst app = express();\n\n// TODO: Implement Implement JWT Auth logic here",
-              "final_code": "// Final code for Implement JWT Auth\nconst express = require('express');\nconst app = express();\n\napp.get('/step2', (req, res) => {\n    res.json({ message: 'Step 2 completed.' });\n});",
-              "isUnlocked": false,
-              "isCompleted": false,
-              "status": "pending",
-              "xpValue": 10
-            },
-            {
-              "step_id": "N2_T5_S3",
-              "step_name": "Initialize npm Project",
-              "description": "Implement the logic for Initialize npm Project.",
-              "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
-              ],
-              "hints": [
-                "Use `express.Router()` for organizing routes.",
-                "Use `mongoose` to define and interact with the database schema.",
-                "Use `jsonwebtoken` to sign and verify tokens.",
-                "Use `multer` for handling file uploads in multipart/form-data format.",
-                "Use `dotenv` to manage your environment variables."
-              ],
-              "starting_code": "// Starting code for Initialize npm Project\nconst express = require('express');\nconst app = express();\n\n// TODO: Implement Initialize npm Project logic here",
-              "final_code": "// Final code for Initialize npm Project\nconst express = require('express');\nconst app = express();\n\napp.get('/step3', (req, res) => {\n    res.json({ message: 'Step 3 completed.' });\n});",
-              "isUnlocked": false,
-              "isCompleted": false,
-              "status": "pending",
-              "xpValue": 10
-            },
-            {
-              "step_id": "N2_T5_S4",
-              "step_name": "Install Express",
-              "description": "Implement the logic for Install Express.",
-              "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
-              ],
-              "hints": [
-                "Use `express.Router()` for organizing routes.",
-                "Use `mongoose` to define and interact with the database schema.",
-                "Use `jsonwebtoken` to sign and verify tokens.",
-                "Use `multer` for handling file uploads in multipart/form-data format.",
-                "Use `dotenv` to manage your environment variables."
-              ],
-              "starting_code": "// Starting code for Install Express\nconst express = require('express');\nconst app = express();\n\n// TODO: Implement Install Express logic here",
-              "final_code": "// Final code for Install Express\nconst express = require('express');\nconst app = express();\n\napp.get('/step4', (req, res) => {\n    res.json({ message: 'Step 4 completed.' });\n});",
-              "isUnlocked": false,
-              "isCompleted": false,
-              "status": "pending",
-              "xpValue": 10
-            },
-            {
-              "step_id": "N2_T5_S5",
-              "step_name": "Add Input Validation",
-              "description": "Implement the logic for Add Input Validation.",
-              "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
-              ],
-              "hints": [
-                "Use `express.Router()` for organizing routes.",
-                "Use `mongoose` to define and interact with the database schema.",
-                "Use `jsonwebtoken` to sign and verify tokens.",
-                "Use `multer` for handling file uploads in multipart/form-data format.",
-                "Use `dotenv` to manage your environment variables."
-              ],
-              "starting_code": "// Starting code for Add Input Validation\nconst express = require('express');\nconst app = express();\n\n// TODO: Implement Add Input Validation logic here",
-              "final_code": "// Final code for Add Input Validation\nconst express = require('express');\nconst app = express();\n\napp.get('/step5', (req, res) => {\n    res.json({ message: 'Step 5 completed.' });\n});",
-              "isUnlocked": false,
-              "isCompleted": false,
-              "status": "pending",
-              "xpValue": 10
-            }
-          ],
-          "objectives": [],
-          "isUnlocked": false,
-          "isCompleted": false
-        },
-        {
-          "task_id": "2_T6",
-          "task_name": "Handle Authentication",
-          "description": "Handle Authentication for project 2.",
-          "steps": [
-            {
-              "step_id": "N2_T6_S1",
-              "step_name": "Deploy to Render",
-              "description": "Implement the logic for Deploy to Render.",
-              "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
-              ],
-              "hints": [
-                "Use `express.Router()` for organizing routes.",
-                "Use `mongoose` to define and interact with the database schema.",
-                "Use `jsonwebtoken` to sign and verify tokens.",
-                "Use `multer` for handling file uploads in multipart/form-data format.",
-                "Use `dotenv` to manage your environment variables."
-              ],
-              "starting_code": "// Starting code for Deploy to Render\nconst express = require('express');\nconst app = express();\n\n// TODO: Implement Deploy to Render logic here",
-              "final_code": "// Final code for Deploy to Render\nconst express = require('express');\nconst app = express();\n\napp.get('/step1', (req, res) => {\n    res.json({ message: 'Step 1 completed.' });\n});",
-              "isUnlocked": false,
-              "isCompleted": false,
-              "status": "pending",
-              "xpValue": 10
-            },
-            {
-              "step_id": "N2_T6_S2",
-              "step_name": "Implement JWT Auth",
-              "description": "Implement the logic for Implement JWT Auth.",
-              "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
-              ],
-              "hints": [
-                "Use `express.Router()` for organizing routes.",
-                "Use `mongoose` to define and interact with the database schema.",
-                "Use `jsonwebtoken` to sign and verify tokens.",
-                "Use `multer` for handling file uploads in multipart/form-data format.",
-                "Use `dotenv` to manage your environment variables."
-              ],
-              "starting_code": "// Starting code for Implement JWT Auth\nconst express = require('express');\nconst app = express();\n\n// TODO: Implement Implement JWT Auth logic here",
-              "final_code": "// Final code for Implement JWT Auth\nconst express = require('express');\nconst app = express();\n\napp.get('/step2', (req, res) => {\n    res.json({ message: 'Step 2 completed.' });\n});",
-              "isUnlocked": false,
-              "isCompleted": false,
-              "status": "pending",
-              "xpValue": 10
-            },
-            {
-              "step_id": "N2_T6_S3",
-              "step_name": "Create Models",
-              "description": "Implement the logic for Create Models.",
-              "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
-              ],
-              "hints": [
-                "Use `express.Router()` for organizing routes.",
-                "Use `mongoose` to define and interact with the database schema.",
-                "Use `jsonwebtoken` to sign and verify tokens.",
-                "Use `multer` for handling file uploads in multipart/form-data format.",
-                "Use `dotenv` to manage your environment variables."
-              ],
-              "starting_code": "// Starting code for Create Models\nconst express = require('express');\nconst app = express();\n\n// TODO: Implement Create Models logic here",
-              "final_code": "// Final code for Create Models\nconst express = require('express');\nconst app = express();\n\napp.get('/step3', (req, res) => {\n    res.json({ message: 'Step 3 completed.' });\n});",
-              "isUnlocked": false,
-              "isCompleted": false,
-              "status": "pending",
-              "xpValue": 10
-            },
-            {
-              "step_id": "N2_T6_S4",
-              "step_name": "Set Up MongoDB Connection",
-              "description": "Implement the logic for Set Up MongoDB Connection.",
-              "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
-              ],
-              "hints": [
-                "Use `express.Router()` for organizing routes.",
-                "Use `mongoose` to define and interact with the database schema.",
-                "Use `jsonwebtoken` to sign and verify tokens.",
-                "Use `multer` for handling file uploads in multipart/form-data format.",
-                "Use `dotenv` to manage your environment variables."
-              ],
-              "starting_code": "// Starting code for Set Up MongoDB Connection\nconst express = require('express');\nconst app = express();\n\n// TODO: Implement Set Up MongoDB Connection logic here",
-              "final_code": "// Final code for Set Up MongoDB Connection\nconst express = require('express');\nconst app = express();\n\napp.get('/step4', (req, res) => {\n    res.json({ message: 'Step 4 completed.' });\n});",
-              "isUnlocked": false,
-              "isCompleted": false,
-              "status": "pending",
-              "xpValue": 10
-            },
-            {
-              "step_id": "N2_T6_S5",
-              "step_name": "Create Models",
-              "description": "Implement the logic for Create Models.",
-              "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
-              ],
-              "hints": [
-                "Use `express.Router()` for organizing routes.",
-                "Use `mongoose` to define and interact with the database schema.",
-                "Use `jsonwebtoken` to sign and verify tokens.",
-                "Use `multer` for handling file uploads in multipart/form-data format.",
-                "Use `dotenv` to manage your environment variables."
-              ],
-              "starting_code": "// Starting code for Create Models\nconst express = require('express');\nconst app = express();\n\n// TODO: Implement Create Models logic here",
-              "final_code": "// Final code for Create Models\nconst express = require('express');\nconst app = express();\n\napp.get('/step5', (req, res) => {\n    res.json({ message: 'Step 5 completed.' });\n});",
-              "isUnlocked": false,
-              "isCompleted": false,
-              "status": "pending",
-              "xpValue": 10
-            }
-          ],
-          "objectives": [],
-          "isUnlocked": false,
-          "isCompleted": false
-        },
-        {
-          "task_id": "2_T7",
-          "task_name": "Set Up Database",
-          "description": "Set Up Database for project 2.",
-          "steps": [
-            {
-              "step_id": "N2_T7_S1",
-              "step_name": "Add Input Validation",
-              "description": "Implement the logic for Add Input Validation.",
-              "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
-              ],
-              "hints": [
-                "Use `express.Router()` for organizing routes.",
-                "Use `mongoose` to define and interact with the database schema.",
-                "Use `jsonwebtoken` to sign and verify tokens.",
-                "Use `multer` for handling file uploads in multipart/form-data format.",
-                "Use `dotenv` to manage your environment variables."
-              ],
-              "starting_code": "// Starting code for Add Input Validation\nconst express = require('express');\nconst app = express();\n\n// TODO: Implement Add Input Validation logic here",
-              "final_code": "// Final code for Add Input Validation\nconst express = require('express');\nconst app = express();\n\napp.get('/step1', (req, res) => {\n    res.json({ message: 'Step 1 completed.' });\n});",
-              "isUnlocked": false,
-              "isCompleted": false,
-              "status": "pending",
-              "xpValue": 10
-            },
-            {
-              "step_id": "N2_T7_S2",
-              "step_name": "Initialize npm Project",
-              "description": "Implement the logic for Initialize npm Project.",
-              "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
-              ],
-              "hints": [
-                "Use `express.Router()` for organizing routes.",
-                "Use `mongoose` to define and interact with the database schema.",
-                "Use `jsonwebtoken` to sign and verify tokens.",
-                "Use `multer` for handling file uploads in multipart/form-data format.",
-                "Use `dotenv` to manage your environment variables."
-              ],
-              "starting_code": "// Starting code for Initialize npm Project\nconst express = require('express');\nconst app = express();\n\n// TODO: Implement Initialize npm Project logic here",
-              "final_code": "// Final code for Initialize npm Project\nconst express = require('express');\nconst app = express();\n\napp.get('/step2', (req, res) => {\n    res.json({ message: 'Step 2 completed.' });\n});",
-              "isUnlocked": false,
-              "isCompleted": false,
-              "status": "pending",
-              "xpValue": 10
-            },
-            {
-              "step_id": "N2_T7_S3",
-              "step_name": "Set Up MongoDB Connection",
-              "description": "Implement the logic for Set Up MongoDB Connection.",
-              "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
-              ],
-              "hints": [
-                "Use `express.Router()` for organizing routes.",
-                "Use `mongoose` to define and interact with the database schema.",
-                "Use `jsonwebtoken` to sign and verify tokens.",
-                "Use `multer` for handling file uploads in multipart/form-data format.",
-                "Use `dotenv` to manage your environment variables."
-              ],
-              "starting_code": "// Starting code for Set Up MongoDB Connection\nconst express = require('express');\nconst app = express();\n\n// TODO: Implement Set Up MongoDB Connection logic here",
-              "final_code": "// Final code for Set Up MongoDB Connection\nconst express = require('express');\nconst app = express();\n\napp.get('/step3', (req, res) => {\n    res.json({ message: 'Step 3 completed.' });\n});",
-              "isUnlocked": false,
-              "isCompleted": false,
-              "status": "pending",
-              "xpValue": 10
-            },
-            {
-              "step_id": "N2_T7_S4",
-              "step_name": "Install Express",
-              "description": "Implement the logic for Install Express.",
-              "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
-              ],
-              "hints": [
-                "Use `express.Router()` for organizing routes.",
-                "Use `mongoose` to define and interact with the database schema.",
-                "Use `jsonwebtoken` to sign and verify tokens.",
-                "Use `multer` for handling file uploads in multipart/form-data format.",
-                "Use `dotenv` to manage your environment variables."
-              ],
-              "starting_code": "// Starting code for Install Express\nconst express = require('express');\nconst app = express();\n\n// TODO: Implement Install Express logic here",
-              "final_code": "// Final code for Install Express\nconst express = require('express');\nconst app = express();\n\napp.get('/step4', (req, res) => {\n    res.json({ message: 'Step 4 completed.' });\n});",
-              "isUnlocked": false,
-              "isCompleted": false,
-              "status": "pending",
-              "xpValue": 10
-            },
-            {
-              "step_id": "N2_T7_S5",
-              "step_name": "Deploy to Render",
-              "description": "Implement the logic for Deploy to Render.",
-              "guidelines": [
-                "Follow modular code practices.",
-                "Test frequently using Postman or curl.",
-                "Use try/catch blocks for error safety.",
-                "Log key operations and errors.",
-                "Ensure consistent data formats."
-              ],
-              "hints": [
-                "Use `express.Router()` for organizing routes.",
-                "Use `mongoose` to define and interact with the database schema.",
-                "Use `jsonwebtoken` to sign and verify tokens.",
-                "Use `multer` for handling file uploads in multipart/form-data format.",
-                "Use `dotenv` to manage your environment variables."
-              ],
-              "starting_code": "// Starting code for Deploy to Render\nconst express = require('express');\nconst app = express();\n\n// TODO: Implement Deploy to Render logic here",
-              "final_code": "// Final code for Deploy to Render\nconst express = require('express');\nconst app = express();\n\napp.get('/step5', (req, res) => {\n    res.json({ message: 'Step 5 completed.' });\n});",
-              "isUnlocked": false,
-              "isCompleted": false,
-              "status": "pending",
-              "xpValue": 10
-            }
-          ],
-          "objectives": [],
-          "isUnlocked": false,
-          "isCompleted": false
+          "step_id": "N2_T1_S5",
+          "step_name": "Install Express",
+          "guidelines": [
+            "Use `npm install express` to set up the server framework.",
+            "Use `--save` to ensure production dependencies are saved.",
+            "Verify installation with `npm ls express`.",
+            "Document dependency versions in package.json."
+          ]
         }
-      ],
-      "isUnlocked": false,
-      "isCompleted": false,
-      "xpGained": 0,
-      "questProgress": 0
+      ]
+    },
+
+    {
+      "task_id": "2_T2",
+      "task_name": "Install Dependencies",
+      "steps": [
+        {
+          "step_id": "N2_T2_S1",
+          "step_name": "Define Route Handlers",
+          "guidelines": [
+            "Organize all routes in a `routes/` folder.",
+            "Ensure each route only defines the endpoint, not business logic.",
+            "Name route files logically (e.g., `authRoutes.js`).",
+            "Use async handlers with error catching."
+          ]
+        },
+        {
+          "step_id": "N2_T2_S2",
+          "step_name": "Implement JWT Auth",
+          "guidelines": [
+            "Protect sensitive endpoints using a middleware function.",
+            "Return 403 Forbidden if no valid token is present.",
+            "Use `req.user` to attach decoded token data.",
+            "Keep token generation logic isolated in a utility module."
+          ]
+        },
+        {
+          "step_id": "N2_T2_S3",
+          "step_name": "Implement JWT Auth",
+          "guidelines": [
+            "Reuse JWT logic across registration and login flows.",
+            "Avoid storing tokens in local storage in real-world apps.",
+            "Blacklist tokens on logout if applicable.",
+            "Rotate secret keys periodically in production."
+          ]
+        },
+        {
+          "step_id": "N2_T2_S4",
+          "step_name": "Create Models",
+          "guidelines": [
+            "Define clear user schema with validation rules.",
+            "Use `bcrypt` to hash passwords before saving.",
+            "Include timestamps for tracking user activity.",
+            "Set indexes on unique fields like email."
+          ]
+        },
+        {
+          "step_id": "N2_T2_S5",
+          "step_name": "Handle File Uploads",
+          "guidelines": [
+            "Validate MIME types and enforce size limits with multer config.",
+            "Store files with unique names to avoid overwriting.",
+            "Restrict file uploads to authenticated users.",
+            "Serve static files from a secure route or CDN."
+          ]
+        }
+      ]
     },
     {
+  "task_id": "2_T3",
+  "task_name": "Create Endpoints",
+  "steps": [
+    {
+      "step_id": "N2_T3_S1",
+      "step_name": "Define Route Handlers",
+      "guidelines": [
+        "Match each route to a single responsibility function.",
+        "Use descriptive route names (e.g., `/api/users/signup`).",
+        "Organize routes into groups: auth, user, file, etc.",
+        "Ensure each handler validates and sanitizes input."
+      ]
+    },
+    {
+      "step_id": "N2_T3_S2",
+      "step_name": "Add Input Validation",
+      "guidelines": [
+        "Reject requests missing required fields immediately.",
+        "Use middleware chains to keep controller logic clean.",
+        "Provide specific validation messages to help debugging.",
+        "Fail fast: don’t proceed to DB queries if input is invalid."
+      ]
+    },
+    {
+      "step_id": "N2_T3_S3",
+      "step_name": "Deploy to Render",
+      "guidelines": [
+        "Ensure the server runs with `PORT` from environment.",
+        "Include a production-ready `start` script.",
+        "Test all endpoints with production database settings.",
+        "Use environment variables for secrets and configs."
+      ]
+    },
+    {
+      "step_id": "N2_T3_S4",
+      "step_name": "Create Models",
+      "guidelines": [
+        "Split schemas into dedicated files under `/models`.",
+        "Use virtuals for computed fields (e.g., `fullName`).",
+        "Leverage Mongoose middleware for `pre-save` hooks.",
+        "Avoid storing raw passwords — hash them securely."
+      ]
+    },
+    {
+      "step_id": "N2_T3_S5",
+      "step_name": "Write Unit Tests",
+      "guidelines": [
+        "Test each route’s success and failure cases.",
+        "Mock dependencies to isolate controller logic.",
+        "Use Jest or Mocha for structured test suites.",
+        "Write tests for invalid, edge-case inputs too."
+      ]
+    }
+  ]
+},
+{
+  "task_id": "2_T4",
+  "task_name": "Implement Controllers",
+  "steps": [
+    {
+      "step_id": "N2_T4_S1",
+      "step_name": "Write Unit Tests",
+      "guidelines": [
+        "Use a separate file per controller to isolate test logic.",
+        "Stub authentication for private routes.",
+        "Assert status codes and response structure.",
+        "Track test coverage using `--coverage` flag."
+      ]
+    },
+    {
+      "step_id": "N2_T4_S2",
+      "step_name": "Define Route Handlers",
+      "guidelines": [
+        "Avoid duplicating logic across routes and controllers.",
+        "Structure handler logic as clean async functions.",
+        "Return consistent success/failure responses.",
+        "Separate validation and authentication into middleware."
+      ]
+    },
+    {
+      "step_id": "N2_T4_S3",
+      "step_name": "Initialize npm Project",
+      "guidelines": [
+        "Run `npm init -y` to generate package.json.",
+        "Add metadata like project name, description, and author.",
+        "Set up `main` and `scripts` entries correctly.",
+        "Track dependencies and devDependencies separately."
+      ]
+    },
+    {
+      "step_id": "N2_T4_S4",
+      "step_name": "Define Route Handlers",
+      "guidelines": [
+        "Use ES6 import/export if using modules.",
+        "Keep controller files focused on one resource (e.g., users).",
+        "Use try/catch in every handler to prevent crashes.",
+        "Log meaningful errors without leaking sensitive data."
+      ]
+    },
+    {
+      "step_id": "N2_T4_S5",
+      "step_name": "Handle File Uploads",
+      "guidelines": [
+        "Use multer's `diskStorage` for naming uploaded files.",
+        "Validate file type using custom fileFilter.",
+        "Prevent overwriting existing uploads.",
+        "Clean up orphaned files on user deletion."
+      ]
+    }
+  ]
+},
+{
+  "task_id": "2_T5",
+  "task_name": "Handle Authentication",
+  "steps": [
+    {
+      "step_id": "N2_T5_S1",
+      "step_name": "Install Express",
+      "guidelines": [
+        "Use the LTS version of Express.",
+        "Test `express.json()` middleware handles JSON payloads.",
+        "Keep server logic isolated from route logic.",
+        "Always log server start with `PORT` info."
+      ]
+    },
+    {
+      "step_id": "N2_T5_S2",
+      "step_name": "Implement JWT Auth",
+      "guidelines": [
+        "Always check token expiration during verification.",
+        "Use secure signing algorithms like HS256.",
+        "Store user ID and roles in the token payload.",
+        "Use middleware to inject user info into request object."
+      ]
+    },
+    {
+      "step_id": "N2_T5_S3",
+      "step_name": "Initialize npm Project",
+      "guidelines": [
+        "Include scripts for `start`, `dev`, and `test` modes.",
+        "Add `.gitignore` to exclude node_modules and .env.",
+        "Use `npm-check-updates` to manage dependency versions.",
+        "Add `type: module` if you plan to use ESModules."
+      ]
+    },
+    {
+      "step_id": "N2_T5_S4",
+      "step_name": "Install Express",
+      "guidelines": [
+        "Ensure Express is added to dependencies, not devDependencies.",
+        "Use version pinning for repeatable installs.",
+        "Verify with a simple GET endpoint at `/`.",
+        "Commit `package-lock.json` to ensure consistency."
+      ]
+    },
+    {
+      "step_id": "N2_T5_S5",
+      "step_name": "Add Input Validation",
+      "guidelines": [
+        "Use chained validation methods for clarity.",
+        "Validate both presence and format of inputs.",
+        "Return early on the first error to reduce noise.",
+        "Make validation logic reusable across routes."
+      ]
+    }
+  ]
+},
+{
+  "task_id": "2_T6",
+  "task_name": "Handle Authentication",
+  "steps": [
+    {
+      "step_id": "N2_T6_S1",
+      "step_name": "Deploy to Render",
+      "guidelines": [
+        "Add Render build/start commands in package.json.",
+        "Use `.env` with all required secrets (e.g., DB_URI, JWT_SECRET).",
+        "Test your deployed endpoint with tools like Postman.",
+        "Enable auto-deploy on Git push."
+      ]
+    },
+    {
+      "step_id": "N2_T6_S2",
+      "step_name": "Implement JWT Auth",
+      "guidelines": [
+        "Use separate functions for sign and verify.",
+        "Restrict token duration based on route sensitivity.",
+        "Avoid including passwords in token payloads.",
+        "Refresh tokens securely if needed."
+      ]
+    },
+    {
+      "step_id": "N2_T6_S3",
+      "step_name": "Create Models",
+      "guidelines": [
+        "Name models using PascalCase (e.g., `UserModel`).",
+        "Define validation in the Mongoose schema itself.",
+        "Disable versioning unless needed (`versionKey: false`).",
+        "Always hash the password before save."
+      ]
+    },
+    {
+      "step_id": "N2_T6_S4",
+      "step_name": "Set Up MongoDB Connection",
+      "guidelines": [
+        "Use `mongoose.connect()` with retry logic.",
+        "Store DB URI in `.env`, not hardcoded.",
+        "Log DB connection status on startup.",
+        "Use `useNewUrlParser` and `useUnifiedTopology` flags."
+      ]
+    },
+    {
+      "step_id": "N2_T6_S5",
+      "step_name": "Create Models",
+      "guidelines": [
+        "Split each model into its own file.",
+        "Use `toJSON` transformation to remove sensitive fields.",
+        "Add custom methods (e.g., `comparePassword`).",
+        "Test model constraints with invalid data."
+      ]
+    }
+  ]
+},
+{
+  "task_id": "2_T7",
+  "task_name": "Set Up Database",
+  "steps": [
+    {
+      "step_id": "N2_T7_S1",
+      "step_name": "Add Input Validation",
+      "guidelines": [
+        "Ensure inputs are trimmed and escaped.",
+        "Use regex checks for email and password strength.",
+        "Return the first error found, not all errors.",
+        "Log validation failures for review."
+      ]
+    },
+    {
+      "step_id": "N2_T7_S2",
+      "step_name": "Initialize npm Project",
+      "guidelines": [
+        "Keep a clean `package.json` with no unused packages.",
+        "Configure scripts for dev, test, and prod.",
+        "Pin Node version in `engines` if needed.",
+        "Document setup steps in README.md."
+      ]
+    },
+    {
+      "step_id": "N2_T7_S3",
+      "step_name": "Set Up MongoDB Connection",
+      "guidelines": [
+        "Use a separate `config.js` or `.env` for DB URIs.",
+        "Check for DB connection errors on startup.",
+        "Close DB connections on process exit.",
+        "Separate dev/test/prod configs if needed."
+      ]
+    },
+    {
+      "step_id": "N2_T7_S4",
+      "step_name": "Install Express",
+      "guidelines": [
+        "Install latest stable version of Express.",
+        "Verify app starts with basic hello-world endpoint.",
+        "Use `nodemon` during development.",
+        "Include Express in dependency list, not dev-only."
+      ]
+    },
+    {
+      "step_id": "N2_T7_S5",
+      "step_name": "Deploy to Render",
+      "guidelines": [
+        "Push code to a public/private Git repo.",
+        "Connect the repo to Render with proper environment settings.",
+        "Enable web service for HTTP routes.",
+        "Monitor Render logs after deploy for errors."
+      ]
+    }
+  ]
+}
+
+
+
+
+       
+
+
+
+  ],
+  "isUnlocked": false,
+  "isCompleted": false,
+  "xpGained": 0,
+  "questProgress": 0
+}
+
+    ,{
       "project_id": "N3",
       "project_name": "Todo App Backend",
       "description": "A backend for a to-do app with CRUD operations.",
