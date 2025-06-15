@@ -1,6 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { awsProjects, javaProjects, nodeProjects, pythonProjects, reactProjects, sqlProjects } from './ProjectsData';
+import awsProjects from './aws_projects_complete.json';
+import javaProjects from './java_projects_complete.json';
+import nodeProjects from './node_projects_complete.json';
+import pythonProjects from './python_projects_complete.json';
+import reactProjects from './react_projects_complete.json';
+import sqlProjects from './sql_projects_complete.json';
+
 import './Steps.css';
 
 // Custom hook for managing game progress
