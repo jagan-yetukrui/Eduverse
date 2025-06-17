@@ -1,0 +1,45 @@
+{
+  "conversation_id": "dad56371-58d9-4785-b2ec-4c7bbb045a88",
+  "user_id": "test-user-id",
+  "title": "Test Conversation",
+  "created_at": "2025-06-17T06:22:10.518378",
+  "updated_at": "2025-06-17T06:53:18.194491",
+  "project_context": {},
+  "messages": [
+    {
+      "role": "user",
+      "content": "Hello Edura, how are you?",
+      "timestamp": "2025-06-17T06:23:16.398940"
+    },
+    {
+      "role": "user",
+      "content": "Hello Edura, how are you?",
+      "timestamp": "2025-06-17T06:26:08.840220"
+    },
+    {
+      "role": "assistant",
+      "content": "Hello! I'm doing great and ready to help you with your coding projects. How can I assist you today?  Let me know what you're working on!",
+      "timestamp": "2025-06-17T06:26:11.483065"
+    },
+    {
+      "role": "user",
+      "content": "Hello Edura, how are you?",
+      "timestamp": "2025-06-17T06:52:45.403838"
+    },
+    {
+      "role": "assistant",
+      "content": "Hello! I'm doing great and ready to help you with your coding projects. How can I assist you today?  Let me know what you're working on!",
+      "timestamp": "2025-06-17T06:52:46.844283"
+    },
+    {
+      "role": "user",
+      "content": "Hello,Who are you?",
+      "timestamp": "2025-06-17T06:53:16.371685"
+    },
+    {
+      "role": "assistant",
+      "content": "I'm Edura, your AI mentor within the EduVerse.  I'm here to guide you through coding projects, offering assistance and instruction along the way. Think of me as your friendly coding companion!  Do you have a project in mind that we can work on?",
+      "timestamp": "2025-06-17T06:53:18.194470"
+    }
+  ]
+}

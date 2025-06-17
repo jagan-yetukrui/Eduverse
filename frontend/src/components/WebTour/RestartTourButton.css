@@ -1,0 +1,27 @@
+.restart-tour-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #6c63ff;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 30px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(108, 99, 255, 0.3);
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.restart-tour-button:hover {
+  background: #5a52d5;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(108, 99, 255, 0.4);
+}
+
+.restart-tour-button:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 12px rgba(108, 99, 255, 0.3);
+} 

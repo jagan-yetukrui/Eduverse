@@ -1,0 +1,14 @@
+.post-list {
+    margin-left: 80px;
+    padding: 1rem;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid black;
+    border-radius: 5px;
+    margin: 1rem;
+    padding: 1rem;
+
+}
