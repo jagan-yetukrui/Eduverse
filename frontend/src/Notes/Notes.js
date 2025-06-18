@@ -28,7 +28,6 @@ const createMessage = (id, role, content) => ({
 });
 
 const Notes = () => {
-  // Fixed: Added unique key props to all list items - v2
   // State management
   const [conversations, setConversations] = useState([]);
   const [currentConversationId, setCurrentConversationId] = useState(null);
@@ -37,6 +36,7 @@ const Notes = () => {
   const [isTyping, setIsTyping] = useState(false);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSidebarVisible, setIsSidebarVisible] = useState(true);
 
   const messageEndRef = useRef(null);
   const user_id = "test-user-id";
@@ -90,6 +90,7 @@ const Notes = () => {
     if (conversations.length > 0 && !currentConversationId) {
       const validConversation = conversations.find(c => c.conversation_id);
       if (validConversation) {
+        console.log("✅ Setting default conversation:", validConversation.conversation_id);
         setCurrentConversationId(validConversation.conversation_id);
       }
     }
@@ -220,112 +221,174 @@ const Notes = () => {
   };
 
   if (isLoading && !messages.length) {
-    return <div className="loading">Loading...</div>;
+    return (
+      <div className="chat-container">
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p>Loading your conversations...</p>
+        </div>
+      </div>
+    );
   }
 
   if (error) {
     return (
-      <div className="error">
-        <p>{error}</p>
-        <button onClick={() => window.location.reload()}>Retry</button>
+      <div className="chat-container">
+        <div className="error-container">
+          <div className="error-icon">⚠️</div>
+          <h3>Connection Error</h3>
+          <p>{error}</p>
+          <button onClick={() => window.location.reload()} className="retry-button">
+            Try Again
+          </button>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="notes-page" data-component="notes-main">
-      <div className="sidebar">
-        <button onClick={createNewConversation} disabled={isLoading}>
-          + New Chat
-        </button>
-        {(conversations || []).map((conv) => (
-          <div
-            key={conv.conversation_id || `conv-${Date.now()}-${Math.random()}`}
-            className={`conversation ${
-              conv.conversation_id === currentConversationId ? "active" : ""
-            }`}
-            onClick={() => setCurrentConversationId(conv.conversation_id)}
-            data-conversation-id={conv.conversation_id}
-          >
-            {conv.title || "Untitled Conversation"}
-          </div>
-        ))}
-        {conversations.length === 0 && !isLoading && (
-          <div className="no-conversations">
-            <p>No conversations yet</p>
-            <p>Click "New Chat" to start!</p>
-          </div>
-        )}
-      </div>
+    <div className="chat-container">
+      {/* Sidebar Toggle Button */}
+      <button 
+        className={`sidebar-toggle ${isSidebarVisible ? 'visible' : 'hidden'}`}
+        onClick={() => setIsSidebarVisible(!isSidebarVisible)}
+        aria-label="Toggle sidebar"
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          {isSidebarVisible ? (
+            <path d="M15 18l-6-6 6-6" />
+          ) : (
+            <path d="M9 18l6-6-6-6" />
+          )}
+        </svg>
+      </button>
 
-      <div className="chat-section" data-section="messages">
-        {/* Debug info - remove in production */}
-        {process.env.NODE_ENV === 'development' && (
-          <div className="debug-info" style={{padding: '10px', background: '#f0f0f0', fontSize: '12px'}}>
-            <strong>Debug:</strong> Current Conversation ID: {currentConversationId || 'None'} | 
-            Conversations: {conversations.length} | 
-            Messages: {messages.length} | 
-            Typing: {isTyping ? 'Yes' : 'No'}
-          </div>
-        )}
+      {/* Sidebar */}
+      <aside className={`sidebar ${isSidebarVisible ? 'visible' : 'collapsed'}`}>
+        <div className="sidebar-header">
+          <button 
+            className="new-chat-button"
+            onClick={createNewConversation} 
+            disabled={isLoading}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M12 5v14M5 12h14"/>
+            </svg>
+            New Chat
+          </button>
+        </div>
         
-        <div className="messages">
+        <div className="conversations-list">
+          {conversations.length === 0 && !isLoading ? (
+            <div className="no-conversations">
+              <div className="empty-icon">💬</div>
+              <p>No conversations yet</p>
+              <p>Start your first chat!</p>
+            </div>
+          ) : (
+            conversations.map((conv) => (
+              <div
+                key={conv.conversation_id || `conv-${Date.now()}-${Math.random()}`}
+                className={`conversation-item ${
+                  conv.conversation_id === currentConversationId ? "active" : ""
+                }`}
+                onClick={() => setCurrentConversationId(conv.conversation_id)}
+                data-conversation-id={conv.conversation_id}
+              >
+                <div className="conversation-title">
+                  {conv.title || "Untitled Conversation"}
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </aside>
+
+      {/* Main Chat Area */}
+      <main className={`chat-main ${!isSidebarVisible ? 'expanded' : ''}`}>
+        {/* Messages Container */}
+        <div className="messages-container">
           {messages.length === 0 ? (
-            <div className="empty-state">
-              <p>Start a new conversation with Edura</p>
+            <div className="welcome-screen">
+              <div className="welcome-icon">🤖</div>
+              <h1>Welcome to Edura</h1>
+              <p>Your AI learning companion</p>
               <p>Ask anything about programming, projects, or learning!</p>
             </div>
           ) : (
-            <React.Fragment>
-              {(processedMessages || []).map((message) => (
+            <div className="messages-list">
+              {processedMessages.map((message) => (
                 <div
                   key={message.id || `msg-${Date.now()}-${Math.random()}`}
-                  className={`message ${message.role || "user"}`}
+                  className={`message-wrapper ${message.role}`}
                   data-message-id={message.id}
                 >
-                  {(message.lines || []).map((line) => (
-                    <div
-                      key={line.id || `line-${Date.now()}-${Math.random()}`}
-                      className="message-line"
-                      data-line-id={line.id}
-                    >
-                      {line.content || ""}
+                  <div className="message-bubble">
+                    <div className="message-content">
+                      {message.lines.map((line) => (
+                        <div
+                          key={line.id || `line-${Date.now()}-${Math.random()}`}
+                          className="message-line"
+                          data-line-id={line.id}
+                        >
+                          {line.content || ""}
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  </div>
                 </div>
               ))}
-            </React.Fragment>
-          )}
-          {isTyping && (
-            <div className="typing">
-              <span>Edura is typing</span>
-              <span className="dots">...</span>
+              
+              {/* Typing Indicator */}
+              {isTyping && (
+                <div className="message-wrapper assistant">
+                  <div className="message-bubble typing-indicator">
+                    <div className="typing-dots">
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                    </div>
+                    <span className="typing-text">Edura is thinking...</span>
+                  </div>
+                </div>
+              )}
+              
+              <div ref={messageEndRef} className="scroll-anchor" />
             </div>
           )}
-          <div ref={messageEndRef} />
         </div>
 
-        <div className="input-section">
+        {/* Input Section */}
+        <div className="input-container">
           {!currentConversationId && conversations.length > 0 && (
-            <div className="input-disabled-message" style={{color: '#666', fontSize: '12px', marginBottom: '5px'}}>
+            <div className="input-disabled-message">
               Please select a conversation to start chatting
             </div>
           )}
-          <textarea
-            placeholder="Ask Edura anything..."
-            value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
-            onKeyDown={handleKeyPress}
-            disabled={isTyping || !currentConversationId}
-          />
-          <button
-            onClick={handleSendMessage}
-            disabled={!inputText.trim() || isTyping || !currentConversationId}
-          >
-            Send
-          </button>
+          
+          <div className="input-wrapper">
+            <textarea
+              className="message-input"
+              placeholder="Ask Edura anything..."
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              onKeyDown={handleKeyPress}
+              disabled={isTyping || !currentConversationId}
+              rows={1}
+            />
+            <button
+              className={`send-button ${inputText.trim() && !isTyping && currentConversationId ? 'active' : ''}`}
+              onClick={handleSendMessage}
+              disabled={!inputText.trim() || isTyping || !currentConversationId}
+              title="Send message"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+              </svg>
+            </button>
+          </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 };
