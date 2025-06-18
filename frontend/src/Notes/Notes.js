@@ -37,6 +37,9 @@ const Notes = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
+  const [editingConversationId, setEditingConversationId] = useState(null);
+  const [editingTitle, setEditingTitle] = useState("");
+  const [renameError, setRenameError] = useState(null);
 
   const messageEndRef = useRef(null);
   const user_id = "test-user-id";
@@ -167,6 +170,13 @@ const Notes = () => {
           }),
         }
       );
+      
+      if (response.status === 403) {
+        const errorData = await response.json();
+        alert(errorData.message || "Maximum 10 conversations allowed. Please delete some conversations to create a new one.");
+        return;
+      }
+      
       if (!response.ok) throw new Error("Failed to create conversation");
 
       const data = await response.json();
@@ -220,6 +230,129 @@ const Notes = () => {
     }
   };
 
+  const handleDeleteConversation = async (conversationId, event) => {
+    event.stopPropagation(); // Prevent conversation selection
+    
+    if (!window.confirm("Are you sure you want to delete this conversation? This action cannot be undone.")) {
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const response = await fetch(
+        "http://localhost:8000/api/ai/delete_conversation/",
+        {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ 
+            user_id: user_id, 
+            conversation_id: conversationId 
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to delete conversation");
+      }
+
+      // Remove from conversations list
+      setConversations(prev => prev.filter(conv => conv.conversation_id !== conversationId));
+      
+      // If the deleted conversation was the current one, switch to first remaining
+      if (currentConversationId === conversationId) {
+        const remainingConversations = conversations.filter(conv => conv.conversation_id !== conversationId);
+        if (remainingConversations.length > 0) {
+          setCurrentConversationId(remainingConversations[0].conversation_id);
+        } else {
+          setCurrentConversationId(null);
+          setMessages([]);
+        }
+      }
+    } catch (err) {
+      console.error("❌ Delete conversation error:", err);
+      setError("Failed to delete conversation. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleRenameConversation = async (conversationId, newTitle) => {
+    if (!newTitle.trim()) {
+      setRenameError("Title cannot be empty");
+      return;
+    }
+
+    // Find the current conversation to check if title actually changed
+    const currentConversation = conversations.find(conv => conv.conversation_id === conversationId);
+    if (currentConversation && currentConversation.title === newTitle.trim()) {
+      // Title hasn't changed, just exit edit mode
+      setEditingConversationId(null);
+      setEditingTitle("");
+      setRenameError(null);
+      return;
+    }
+
+    try {
+      setRenameError(null);
+      const response = await fetch(
+        "http://localhost:8000/api/ai/rename_conversation/",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            user_id: user_id,
+            conversation_id: conversationId,
+            new_title: newTitle.trim()
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to rename conversation");
+      }
+
+      // Update conversation title in state
+      setConversations(prev => 
+        prev.map(conv => 
+          conv.conversation_id === conversationId 
+            ? { ...conv, title: newTitle.trim() }
+            : conv
+        )
+      );
+
+      // Exit edit mode
+      setEditingConversationId(null);
+      setEditingTitle("");
+    } catch (err) {
+      console.error("❌ Rename conversation error:", err);
+      setRenameError(err.message || "Failed to rename conversation");
+    }
+  };
+
+  const startEditing = (conversationId, currentTitle) => {
+    setEditingConversationId(conversationId);
+    setEditingTitle(currentTitle || "");
+    setRenameError(null);
+  };
+
+  const cancelEditing = () => {
+    setEditingConversationId(null);
+    setEditingTitle("");
+    setRenameError(null);
+  };
+
+  const handleTitleKeyDown = (e, conversationId) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleRenameConversation(conversationId, editingTitle);
+    } else if (e.key === "Escape") {
+      e.preventDefault();
+      cancelEditing();
+    }
+  };
+
   if (isLoading && !messages.length) {
     return (
       <div className="chat-container">
@@ -267,15 +400,20 @@ const Notes = () => {
       <aside className={`sidebar ${isSidebarVisible ? 'visible' : 'collapsed'}`}>
         <div className="sidebar-header">
           <button 
-            className="new-chat-button"
+            className={`new-chat-button ${conversations.length >= 10 ? 'disabled' : ''}`}
             onClick={createNewConversation} 
-            disabled={isLoading}
+            disabled={isLoading || conversations.length >= 10}
+            title={conversations.length >= 10 ? "Maximum 10 conversations reached. Delete some to create new ones." : "Start a new conversation"}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M12 5v14M5 12h14"/>
             </svg>
             New Chat
           </button>
+          <div className={`conversation-count ${conversations.length >= 10 ? 'limit-reached' : ''}`}>
+            {conversations.length}/10 conversations
+            {conversations.length >= 10 && <span className="limit-warning"> (Limit reached)</span>}
+          </div>
         </div>
         
         <div className="conversations-list">
@@ -295,8 +433,57 @@ const Notes = () => {
                 onClick={() => setCurrentConversationId(conv.conversation_id)}
                 data-conversation-id={conv.conversation_id}
               >
-                <div className="conversation-title">
-                  {conv.title || "Untitled Conversation"}
+                {editingConversationId === conv.conversation_id ? (
+                  <div className="conversation-edit">
+                    <input
+                      type="text"
+                      className="title-edit-input"
+                      value={editingTitle}
+                      onChange={(e) => setEditingTitle(e.target.value)}
+                      onKeyDown={(e) => handleTitleKeyDown(e, conv.conversation_id)}
+                      onBlur={() => handleRenameConversation(conv.conversation_id, editingTitle)}
+                      autoFocus
+                      maxLength={50}
+                    />
+                    {renameError && <div className="rename-error">{renameError}</div>}
+                  </div>
+                ) : (
+                  <div 
+                    className="conversation-title"
+                    onDoubleClick={() => startEditing(conv.conversation_id, conv.title)}
+                    title="Double-click to rename"
+                  >
+                    {conv.title || "Untitled Conversation"}
+                  </div>
+                )}
+                
+                <div className="conversation-actions">
+                  <button
+                    className="edit-button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      startEditing(conv.conversation_id, conv.title);
+                    }}
+                    title="Rename conversation"
+                    disabled={isLoading}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                      <path d="m18.5 2.5 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                    </svg>
+                  </button>
+                  <button
+                    className="delete-button"
+                    onClick={(e) => handleDeleteConversation(conv.conversation_id, e)}
+                    title="Delete conversation"
+                    disabled={isLoading}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M3 6h18"/>
+                      <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+                      <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                    </svg>
+                  </button>
                 </div>
               </div>
             ))

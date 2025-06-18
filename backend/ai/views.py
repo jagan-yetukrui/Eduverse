@@ -73,6 +73,15 @@ def start_conversation(request):
                 'message': 'user_id is required'
             }, status=400)
 
+        # Check conversation limit (max 10 conversations)
+        existing_conversations = conversation_manager.list_conversations(data['user_id'])
+        if len(existing_conversations) >= 10:
+            logger.warning(f"User {data['user_id']} attempted to create conversation beyond limit")
+            return JsonResponse({
+                'status': 'error',
+                'message': 'Maximum 10 conversations allowed'
+            }, status=403)
+
         # Create conversation with provided data
         conversation = conversation_manager.create_conversation(
             user_id=data['user_id'],
@@ -146,12 +155,15 @@ def delete_conversation(request):
     API endpoint to delete a conversation.
     """
     try:
-        conversation_id = request.GET.get('conversation_id')
-        if not conversation_id:
-            logger.error("Missing conversation_id parameter")
+        data = json.loads(request.body)
+        user_id = data.get('user_id')
+        conversation_id = data.get('conversation_id')
+        
+        if not user_id or not conversation_id:
+            logger.error("Missing user_id or conversation_id in request")
             return JsonResponse({
                 'status': 'error',
-                'message': 'conversation_id is required'
+                'message': 'user_id and conversation_id are required'
             }, status=400)
 
         # Delete conversation
@@ -162,6 +174,12 @@ def delete_conversation(request):
             'message': 'Conversation deleted successfully'
         })
 
+    except json.JSONDecodeError:
+        logger.error("Invalid JSON in request body")
+        return JsonResponse({
+            'status': 'error',
+            'message': 'Invalid JSON in request body'
+        }, status=400)
     except Exception as e:
         logger.error(f"Error deleting conversation: {str(e)}")
         return JsonResponse({
