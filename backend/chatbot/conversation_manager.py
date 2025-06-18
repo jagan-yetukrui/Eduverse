@@ -183,7 +183,7 @@ class ConversationManager:
                     
                 if conversation["user_id"] == user_id:
                     summary = {
-                        "id": conversation["conversation_id"],
+                        "conversation_id": conversation["conversation_id"],
                         "title": conversation["title"],
                         "created_at": conversation["created_at"],
                         "updated_at": conversation["updated_at"]
@@ -196,4 +196,30 @@ class ConversationManager:
             
         except Exception as e:
             logger.error(f"Error listing conversations for user {user_id}: {str(e)}")
+            raise
+
+    def get_messages(self, conversation_id: str) -> List[Dict]:
+        """
+        Get all messages for a specific conversation.
+        
+        Args:
+            conversation_id: The ID of the conversation
+            
+        Returns:
+            List of message objects with id, role, and content
+        """
+        try:
+            conversation = self.load_conversation(conversation_id)
+            messages = conversation.get("messages", [])
+            
+            # Add unique IDs to messages if they don't have them
+            for i, message in enumerate(messages):
+                if "id" not in message:
+                    message["id"] = f"{conversation_id}-msg-{i}"
+            
+            logger.info(f"Retrieved {len(messages)} messages for conversation {conversation_id}")
+            return messages
+            
+        except Exception as e:
+            logger.error(f"Error getting messages for conversation {conversation_id}: {str(e)}")
             raise 

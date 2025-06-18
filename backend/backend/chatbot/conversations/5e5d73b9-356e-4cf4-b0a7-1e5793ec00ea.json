@@ -3,7 +3,18 @@
   "user_id": "test-user-id",
   "title": "New Conversation",
   "created_at": "2025-06-17T22:29:42.372928",
-  "updated_at": "2025-06-17T22:29:42.372928",
+  "updated_at": "2025-06-18T04:40:52.709571",
   "project_context": {},
-  "messages": []
+  "messages": [
+    {
+      "role": "user",
+      "content": "hey hwo are you ",
+      "timestamp": "2025-06-18T04:40:49.933301"
+    },
+    {
+      "role": "assistant",
+      "content": "Hey there! I'm Edura, your AI mentor in EduVerse, and I'm doing great! How can I help you today? Are you working on a specific coding project?  Let me know what you're up to so I can assist you.",
+      "timestamp": "2025-06-18T04:40:52.709548"
+    }
+  ]
 }

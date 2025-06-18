@@ -85,6 +85,16 @@ const Notes = () => {
     }
   }, [currentConversationId]);
 
+  // Force conversation selection when conversations are loaded
+  useEffect(() => {
+    if (conversations.length > 0 && !currentConversationId) {
+      const validConversation = conversations.find(c => c.conversation_id);
+      if (validConversation) {
+        setCurrentConversationId(validConversation.conversation_id);
+      }
+    }
+  }, [conversations, currentConversationId]);
+
   const loadConversations = async () => {
     try {
       setIsLoading(true);
@@ -94,12 +104,22 @@ const Notes = () => {
       if (!response.ok) throw new Error("Failed to load conversations");
 
       const data = await response.json();
+      console.log("📋 Conversations response:", data);
       setConversations(data.conversations);
 
-      if (!currentConversationId && data.conversations.length > 0) {
-        setCurrentConversationId(data.conversations[0].conversation_id);
+      // Enhanced conversation selection logic
+      if (
+        (!currentConversationId || !data.conversations.find(c => c.conversation_id === currentConversationId)) &&
+        data.conversations.length > 0
+      ) {
+        const defaultConv = data.conversations.find(c => c.conversation_id);
+        if (defaultConv) {
+          console.log("✅ Setting default conversation:", defaultConv.conversation_id);
+          setCurrentConversationId(defaultConv.conversation_id);
+        }
       }
     } catch (err) {
+      console.error("❌ Conversation load error:", err);
       setError("Failed to load conversations. Please try again.");
     } finally {
       setIsLoading(false);
@@ -109,17 +129,23 @@ const Notes = () => {
   const loadMessages = async (conversationId) => {
     try {
       setIsLoading(true);
+      console.log("📦 Loading messages for:", conversationId);
       const response = await fetch(
         `http://localhost:8000/api/ai/get_messages/?conversation_id=${conversationId}`
       );
+
+      console.log("📡 Response status:", response.status);
       if (!response.ok) throw new Error("Failed to load messages");
 
       const data = await response.json();
+      console.log("📨 Message response:", data);
+
       const messagesWithIds = (data.messages || []).map((msg) =>
         createMessage(msg.id || uuidv4(), msg.role, msg.content)
       );
       setMessages(messagesWithIds);
     } catch (err) {
+      console.error("❌ Message load error:", err);
       setError("Failed to load messages. Please try again.");
     } finally {
       setIsLoading(false);
@@ -224,9 +250,25 @@ const Notes = () => {
             {conv.title || "Untitled Conversation"}
           </div>
         ))}
+        {conversations.length === 0 && !isLoading && (
+          <div className="no-conversations">
+            <p>No conversations yet</p>
+            <p>Click "New Chat" to start!</p>
+          </div>
+        )}
       </div>
 
       <div className="chat-section" data-section="messages">
+        {/* Debug info - remove in production */}
+        {process.env.NODE_ENV === 'development' && (
+          <div className="debug-info" style={{padding: '10px', background: '#f0f0f0', fontSize: '12px'}}>
+            <strong>Debug:</strong> Current Conversation ID: {currentConversationId || 'None'} | 
+            Conversations: {conversations.length} | 
+            Messages: {messages.length} | 
+            Typing: {isTyping ? 'Yes' : 'No'}
+          </div>
+        )}
+        
         <div className="messages">
           {messages.length === 0 ? (
             <div className="empty-state">
@@ -264,6 +306,11 @@ const Notes = () => {
         </div>
 
         <div className="input-section">
+          {!currentConversationId && conversations.length > 0 && (
+            <div className="input-disabled-message" style={{color: '#666', fontSize: '12px', marginBottom: '5px'}}>
+              Please select a conversation to start chatting
+            </div>
+          )}
           <textarea
             placeholder="Ask Edura anything..."
             value={inputText}

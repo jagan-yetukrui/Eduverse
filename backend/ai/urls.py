@@ -10,5 +10,6 @@ urlpatterns = [
     path("start_conversation/", views.start_conversation, name="start_conversation"),
     path("rename_conversation/", views.rename_conversation, name="rename_conversation"),
     path("delete_conversation/", views.delete_conversation, name="delete_conversation"),
+    path("get_messages/", views.get_messages, name="get_messages"),
     path("send_message/", views.send_message, name="send_message"),
 ]

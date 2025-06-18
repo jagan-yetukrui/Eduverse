@@ -315,3 +315,35 @@ def send_message(request):
     except Exception as e:
         logging.exception("Error processing send_message request")
         return JsonResponse({"error": "Internal server error."}, status=500)
+
+@csrf_exempt
+@require_http_methods(["GET"])
+def get_messages(request):
+    """
+    API endpoint to get messages for a specific conversation.
+    """
+    try:
+        conversation_id = request.GET.get('conversation_id')
+        if not conversation_id:
+            logger.error("Missing conversation_id parameter")
+            return JsonResponse({
+                'status': 'error',
+                'message': 'conversation_id is required'
+            }, status=400)
+
+        # Get messages for the conversation
+        messages = conversation_manager.get_messages(conversation_id)
+        
+        logger.info(f"Retrieved {len(messages)} messages for conversation {conversation_id}")
+        
+        return JsonResponse({
+            'status': 'success',
+            'messages': messages
+        })
+
+    except Exception as e:
+        logger.error(f"Error getting messages: {str(e)}")
+        return JsonResponse({
+            'status': 'error',
+            'message': 'Error retrieving messages'
+        }, status=500)
