@@ -364,128 +364,97 @@ const ProfileView = () => {
         </div>
 
         {/* Main Content */}
-        <div className="profile-main-content">
-          <div className="profile-tabs">
-            <button 
-              className={`tab-button ${activeTab === 'posts' ? 'active' : ''}`}
-              onClick={() => setActiveTab('posts')}
-            >
-              Posts
-            </button>
-            <button 
-              className={`tab-button ${activeTab === 'followers' ? 'active' : ''}`}
-              onClick={() => setActiveTab('followers')}
-            >
-              Followers
-            </button>
-            <button 
-              className={`tab-button ${activeTab === 'following' ? 'active' : ''}`}
-              onClick={() => setActiveTab('following')}
-            >
-              Following
-            </button>
-          </div>
-
-          <div className="tab-content">
-            {activeTab === 'posts' && (
-              <div className="posts-section">
-          {/* Posts Section */}
-          <section className="section">
-            <div className="section-header">
-              <h2>Posts</h2>
-            </div>
-            {user.posts?.length > 0 ? (
-              <div className="posts-grid">
-                {user.posts.map((post, idx) => (
-                  <PostCard key={idx} post={post} />
-                ))}
+        <div className="profile-main-content glass-panel">
+          <div className="profile-sections">
+            {/* Posts Section */}
+            <section className="section glass-panel">
+              <div className="section-header">
+                <h2>Posts</h2>
               </div>
-            ) : (
-              <div className="empty-card">
-                <p>No posts yet.<br />
-                  <button 
-                    onClick={() => setShowNewPostModal(true)}
-                    className="cta-link"
-                  >
-                    Start Posting
-                  </button>
-                </p>
-              </div>
-            )}
-          </section>
+              {user.posts?.length > 0 ? (
+                <div className="posts-grid">
+                  {user.posts.map((post, idx) => (
+                    <PostCard key={idx} post={post} />
+                  ))}
+                </div>
+              ) : (
+                <div className="empty-card">
+                  <p>No posts yet.<br />
+                    <button 
+                      onClick={() => setShowNewPostModal(true)}
+                      className="cta-link"
+                    >
+                      Start Posting
+                    </button>
+                  </p>
+                </div>
+              )}
+            </section>
 
-          {/* Experience Section */}
-          <section className="section">
-            <div className="section-header">
-              <h2>Experience</h2>
-              <span className="section-meta">
-                {user.experience?.length > 0 ? `${user.experience.length} positions` : 'No experience yet'}
-              </span>
-            </div>
-            <div className="experience-timeline">
-              {user.experience?.length > 0 ? (
-                user.experience.map((exp, index) => (
-                  <ExperienceItem key={index} experience={exp} />
+            {/* Experience Section */}
+            <section className="section glass-panel">
+              <div className="section-header">
+                <h2>Experience</h2>
+                <span className="section-meta">
+                  {user.experience?.length > 0 ? `${user.experience.length} positions` : 'No experience yet'}
+                </span>
+              </div>
+              <div className="experience-timeline">
+                {user.experience?.length > 0 ? (
+                  user.experience.map((exp, index) => (
+                    <ExperienceItem key={index} experience={exp} />
+                  ))
+                ) : (
+                  <div className="empty-card">
+                    <p>No experience information provided</p>
+                  </div>
+                )}
+              </div>
+            </section>
+
+            {/* Projects Section */}
+            <section className="section glass-panel">
+              <div className="section-header">
+                <h2>Projects</h2>
+                <span className="section-meta">
+                  {user.projects?.length > 0 ? `${user.projects.length} projects` : 'No projects yet'}
+                </span>
+              </div>
+              <div className="projects-grid">
+                {user.projects?.length > 0 ? (
+                  user.projects.map((project) => (
+                    <ProjectCard key={project.id} project={project} />
+                  ))
+                ) : (
+                  <div className="empty-card">
+                    <p>No projects yet</p>
+                  </div>
+                )}
+              </div>
+            </section>
+
+            {/* Education Section */}
+            <section className="section glass-panel">
+              <div className="section-header">
+                <h2>Education</h2>
+                <span className="section-meta">
+                  {user.education?.length > 0 ? `${user.education.length} institutions` : 'No education yet'}
+                </span>
+              </div>
+              {user.education?.length > 0 ? (
+                user.education.map((edu, index) => (
+                  <div key={index} className="profile-section-card education-item">
+                    <h4>{edu.school}</h4>
+                    <p>{edu.degree}</p>
+                    <p>{edu.year}</p>
+                  </div>
                 ))
               ) : (
                 <div className="empty-card">
-                  <p>No experience information provided</p>
+                  <p>No education information provided</p>
                 </div>
               )}
-            </div>
-          </section>
-
-          {/* Projects Section */}
-          <section className="section">
-            <div className="section-header">
-              <h2>Projects</h2>
-              <span className="section-meta">
-                {user.projects?.length > 0 ? `${user.projects.length} projects` : 'No projects yet'}
-              </span>
-            </div>
-            <div className="projects-grid">
-              {user.projects?.length > 0 ? (
-                user.projects.map((project) => (
-                  <ProjectCard key={project.id} project={project} />
-                ))
-              ) : (
-                <div className="empty-card">
-                  <p>No projects yet</p>
-                </div>
-              )}
-            </div>
-          </section>
-
-          {/* Education Section */}
-          <section className="section">
-            <div className="section-header">
-              <h2>Education</h2>
-              <span className="section-meta">
-                {user.education?.length > 0 ? `${user.education.length} institutions` : 'No education yet'}
-              </span>
-            </div>
-            {user.education?.length > 0 ? (
-              user.education.map((edu, index) => (
-                <div key={index} className="profile-section-card education-item">
-                  <h4>{edu.school}</h4>
-                  <p>{edu.degree}</p>
-                  <p>{edu.year}</p>
-                </div>
-              ))
-            ) : (
-              <div className="empty-card">
-                <p>No education information provided</p>
-              </div>
-            )}
-          </section>
-              </div>
-            )}
-            {activeTab === 'followers' && (
-              <FollowersList type="followers" username={user.username} />
-            )}
-            {activeTab === 'following' && (
-              <FollowersList type="following" username={user.username} />
-            )}
+            </section>
           </div>
         </div>
       </div>

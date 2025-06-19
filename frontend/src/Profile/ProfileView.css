@@ -37,23 +37,26 @@
 }
 
 .profile-page {
-  width: 100%;
+  width: 100vw;
   min-height: 100vh;
   background: var(--bg-color);
   padding: 0;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   display: flex;
   padding-top: 64px; /* Match navbar height */
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .profile-view-container {
-  width: 100%;
+  width: 100vw;
   display: flex;
   margin: 0;
   background: var(--bg-color);
   position: relative;
   min-height: calc(100vh - 64px);
   justify-content: center;
+  overflow: visible;
 }
 
 /* Left Sidebar */
@@ -684,4 +687,118 @@
   .modal-content {
     background: #1a1a1a;
   }
+}
+
+/* Glass Panel Apple-style Modern Effect */
+.glass-panel {
+  background: var(--glass-bg);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--glass-shadow);
+  border: 1.5px solid var(--glass-border);
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  transition: var(--transition);
+  margin-bottom: 2.5rem;
+  padding: 2.5rem 3rem;
+}
+
+.profile-main-content.glass-panel {
+  width: 100%;
+  margin-left: 350px; /* width of sidebar */
+  min-height: calc(100vh - 64px);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  background: transparent;
+  box-shadow: none;
+  border: none;
+  padding: 0;
+  overflow-y: auto;
+  max-height: none;
+}
+
+.profile-sections {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  align-items: stretch;
+}
+
+.section.glass-panel {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto 2.5rem auto;
+  box-shadow: var(--glass-shadow);
+  border-radius: var(--radius-xl);
+  border: 1.5px solid var(--glass-border);
+  background: var(--glass-bg);
+  padding: 2.5rem 3rem;
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  transition: var(--transition);
+}
+
+@media (max-width: 1200px) {
+  .section.glass-panel {
+    max-width: 98vw;
+    padding: 2rem 1.2rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .profile-main-content.glass-panel {
+    margin-left: 0;
+    padding: 0;
+    overflow-y: auto;
+  }
+  .profile-sidebar {
+    position: static;
+    width: 100vw;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 1.5rem;
+    padding: 1.2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .section.glass-panel {
+    padding: 1.2rem 0.5rem;
+    border-radius: var(--radius-md);
+  }
+  .profile-main-content.glass-panel {
+    padding: 0;
+  }
+}
+
+/* Remove old section background and border for glass panels */
+.section {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+
+/* Make grids and cards more modern and soft */
+.posts-grid, .projects-grid, .skills-grid, .experience-timeline {
+  gap: 2rem;
+}
+
+.project-card, .experience-item, .profile-section-card, .education-item {
+  background: rgba(255,255,255,0.7);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+  border: 1px solid rgba(200,200,200,0.18);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: var(--transition);
+}
+
+.project-card:hover, .experience-item:hover, .profile-section-card:hover, .education-item:hover {
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+  transform: translateY(-2px) scale(1.02);
 }

@@ -2,7 +2,17 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
-import { FaRocket, FaEye, FaEyeSlash, FaTimesCircle } from "react-icons/fa";
+import { 
+  FaRocket, 
+  FaEye, 
+  FaEyeSlash, 
+  FaTimesCircle, 
+  FaGraduationCap, 
+  FaUsers, 
+  FaLightbulb,
+  FaChevronLeft,
+  FaChevronRight
+} from "react-icons/fa";
 import FirstLogo from "../../First_logo.png";
 import axios from "axios";
 import { getDeviceFingerprint, setTokens, isAuthenticated } from "../../utils/tokenManager";
@@ -77,7 +87,19 @@ const Login = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
+  const [currentFeature, setCurrentFeature] = useState(0);
+  const [isAutoPlay, setIsAutoPlay] = useState(true);
   const navigate = useNavigate();
+
+  // Auto-advance carousel
+  useEffect(() => {
+    if (!isAutoPlay) return;
+    
+    const interval = setInterval(() => {
+      setCurrentFeature((prev) => (prev + 1) % 3);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [isAutoPlay]);
 
   useEffect(() => {
     // Check if user is already logged in
@@ -158,143 +180,380 @@ const Login = () => {
     }
   };
 
+  const features = [
+    {
+      icon: FaGraduationCap,
+      title: "Learn from Experts",
+      description: "Access world-class learning resources and connect with industry professionals"
+    },
+    {
+      icon: FaUsers,
+      title: "Global Community",
+      description: "Join a diverse network of learners and creators from around the world"
+    },
+    {
+      icon: FaLightbulb,
+      title: "Innovate Together",
+      description: "Share ideas, collaborate on projects, and build the future of education"
+    }
+  ];
+
+  const nextFeature = () => {
+    setIsAutoPlay(false);
+    setCurrentFeature((prev) => (prev + 1) % 3);
+    setTimeout(() => setIsAutoPlay(true), 10000); // Resume auto-play after 10s
+  };
+
+  const prevFeature = () => {
+    setIsAutoPlay(false);
+    setCurrentFeature((prev) => (prev - 1 + 3) % 3);
+    setTimeout(() => setIsAutoPlay(true), 10000); // Resume auto-play after 10s
+  };
+
+  const goToFeature = (index) => {
+    setIsAutoPlay(false);
+    setCurrentFeature(index);
+    setTimeout(() => setIsAutoPlay(true), 10000); // Resume auto-play after 10s
+  };
+
+  const WelcomeCarousel = () => (
+    <div className="welcome-section">
+      <div className="welcome-content">
+        <div className="welcome-logo">
+          <img src={FirstLogo} alt="EduVerse" />
+        </div>
+        
+        <h1 className="welcome-title">
+          Welcome to <span className="gradient-text">EduVerse</span>
+        </h1>
+        
+        <p className="welcome-subtitle">
+          The future of collaborative learning and knowledge sharing
+        </p>
+        
+        <div className="carousel-container">
+          <div className="carousel-wrapper">
+            {features.map((feature, index) => (
+              <motion.div
+                key={index}
+                className="carousel-item"
+                initial={false}
+                animate={{
+                  opacity: index === currentFeature ? 1 : 0,
+                  x: index === currentFeature ? 0 : (index < currentFeature ? -50 : 50),
+                  scale: index === currentFeature ? 1 : 0.9,
+                }}
+                transition={{
+                  duration: 0.6,
+                  ease: [0.4, 0, 0.2, 1],
+                }}
+                style={{
+                  position: index === currentFeature ? 'relative' : 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                }}
+              >
+                <div className="feature-card">
+                  <motion.div
+                    className="feature-icon-wrapper"
+                    whileHover={{ scale: 1.1, rotate: 5 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    {React.createElement(feature.icon, { className: "feature-icon" })}
+                  </motion.div>
+                  <h3 className="feature-title">{feature.title}</h3>
+                  <p className="feature-description">{feature.description}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+          
+          <div className="carousel-controls">
+            <motion.button
+              className="carousel-arrow prev"
+              onClick={prevFeature}
+              whileHover={{ scale: 1.1, x: -2 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              <FaChevronLeft />
+            </motion.button>
+            
+            <div className="carousel-indicators">
+              {features.map((_, index) => (
+                <motion.button
+                  key={index}
+                  className={`carousel-dot ${index === currentFeature ? 'active' : ''}`}
+                  onClick={() => goToFeature(index)}
+                  whileHover={{ scale: 1.2 }}
+                  whileTap={{ scale: 0.9 }}
+                />
+              ))}
+            </div>
+            
+            <motion.button
+              className="carousel-arrow next"
+              onClick={nextFeature}
+              whileHover={{ scale: 1.1, x: 2 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              <FaChevronRight />
+            </motion.button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const SuccessAnimation = () => (
+    <motion.div
+      className="success-container"
+      initial={{ scale: 0, rotate: -180 }}
+      animate={{ scale: 1, rotate: 0 }}
+      exit={{ scale: 0, rotate: 180 }}
+      transition={{ duration: 0.6, type: "spring" }}
+    >
+      <motion.div
+        className="success-icon-wrapper"
+        animate={{ 
+          rotate: [0, 10, -10, 0],
+          scale: [1, 1.1, 1]
+        }}
+        transition={{ 
+          duration: 2,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+      >
+        <FaRocket className="rocket-icon" />
+      </motion.div>
+      <motion.p
+        className="success-text"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+      >
+        Launching into EduVerse...
+      </motion.p>
+    </motion.div>
+  );
+
   return (
     <div className="login-container">
-      <motion.div
-        className="holographic-panel"
-        initial={{ opacity: 0, y: -50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, ease: "easeOut" }}
-      >
-        <img
-          src={FirstLogo}
-          alt="EduVerse"
-          className="login-logo"
-          style={{ width: "60px", height: "auto" }}
-        />
-
-        <div className="login-div"></div>
-
-        <AnimatePresence>
-          {isSuccess ? (
-            <motion.div
-              className="success-container"
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0 }}
-            >
-              <FaRocket className="rocket-icon" />
-              <p className="success-text">Launching into EduVerse...</p>
-            </motion.div>
-          ) : (
-            <motion.form
-              onSubmit={handleSubmit}
-              className="login-form"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            >
-              <div className="input-group">
-                <motion.input
-                  type="text"
-                  name="username"
-                  placeholder="Username or Email"
-                  value={formData.username}
-                  onChange={handleChange}
-                  className={`neon-input ${errors.username ? "invalid" : ""}`}
-                />
-                {errors.username && (
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    className="validation-icon"
-                  >
-                    <FaTimesCircle className="invalid-icon" />
-                  </motion.div>
-                )}
-              </div>
-
-              <div className="input-group">
-                <motion.input
-                  type={showPassword ? "text" : "password"}
-                  name="password"
-                  placeholder="Password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  className={`neon-input ${errors.password ? "invalid" : ""}`}
-                />
-
-                <motion.div
-                  className="password-toggle-login"
-                  whileHover={{ scale: 1.03 }}
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? (
-                    <FaEye color="white" />
-                  ) : (
-                    <FaEyeSlash color="white" />
-                  )}
-                  {showPassword ? "Hide Password" : "Show Password"}
-                </motion.div>
-
-                <div className="strength-meter">
-                  {[...Array(4)].map((_, i) => (
-                    <motion.div
-                      key={i}
-                      className={`strength-segment ${
-                        i < passwordStrength ? "active" : ""
-                      }`}
-                      initial={{ width: 0 }}
-                      animate={{ width: "100%" }}
-                    />
-                  ))}
-                </div>
-              </div>
-
-              <motion.button
-                type="submit"
-                className="submit-button"
-                disabled={isLoading}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                {isLoading ? (
-                  <motion.div
-                    className="loading-spinner"
-                    animate={{ rotate: 360 }}
-                    transition={{
-                      duration: 1,
-                      repeat: Infinity,
-                      ease: "linear",
-                    }}
-                  />
-                ) : (
-                  "Enter EduVerse"
-                )}
-              </motion.button>
-            </motion.form>
-          )}
-        </AnimatePresence>
-
-        {errorMessage && (
+      {/* Animated Background Particles */}
+      <div className="background-particles">
+        {[...Array(15)].map((_, i) => (
           <motion.div
-            className="error-message"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 20 }}
-          >
-            {errorMessage}
-          </motion.div>
-        )}
+            key={i}
+            className="particle"
+            animate={{
+              y: [0, -60, 0],
+              opacity: [0, 0.2, 0],
+            }}
+            transition={{
+              duration: 12 + Math.random() * 6,
+              repeat: Infinity,
+              delay: Math.random() * 8,
+            }}
+            style={{
+              left: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 8}s`,
+            }}
+          />
+        ))}
+      </div>
 
-        <motion.button
-          onClick={() => navigate("/register")}
-          className="register-link"
-          whileHover={{ scale: 1.05, textShadow: "0 0 8px rgb(255,255,255)" }}
+      <div className="login-content">
+        {/* Welcome section for larger screens */}
+        <div className="welcome-container">
+          <WelcomeCarousel />
+        </div>
+
+        {/* Login form section */}
+        <motion.div
+          className="form-container"
+          initial={{ opacity: 0, x: 50, rotateY: 15 }}
+          animate={{ opacity: 1, x: 0, rotateY: 0 }}
+          transition={{ duration: 0.8, delay: 0.1 }}
         >
-          New to EduVerse? Join the future
-        </motion.button>
-      </motion.div>
+          <motion.div
+            className="holographic-panel"
+            initial={{ opacity: 0, y: -50, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ 
+              duration: 1.2, 
+              ease: [0.25, 0.46, 0.45, 0.94],
+              type: "spring",
+              stiffness: 100,
+              damping: 20
+            }}
+            whileHover={{ 
+              rotateY: 1,
+              rotateX: 0.5,
+              scale: 1.01,
+              boxShadow: "0 20px 60px rgba(102, 126, 234, 0.15), 0 8px 32px rgba(0, 0, 0, 0.1)"
+            }}
+          >
+            <motion.img
+              src={FirstLogo}
+              alt="EduVerse"
+              className="login-logo"
+              whileHover={{ 
+                scale: 1.05,
+                rotate: 5,
+                filter: "drop-shadow(0 8px 16px rgba(102, 126, 234, 0.3))"
+              }}
+              transition={{ duration: 0.3 }}
+            />
+
+            <div className="login-div"></div>
+
+            <AnimatePresence>
+              {isSuccess ? (
+                <SuccessAnimation />
+              ) : (
+                <motion.form
+                  onSubmit={handleSubmit}
+                  className="login-form"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                >
+                  <motion.div
+                    className="input-group"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.2 }}
+                  >
+                    <motion.input
+                      type="text"
+                      name="username"
+                      placeholder="Username or Email"
+                      value={formData.username}
+                      onChange={handleChange}
+                      className={`neon-input ${errors.username ? "invalid" : ""}`}
+                      whileFocus={{ 
+                        scale: 1.02,
+                        boxShadow: "0 0 0 3px rgba(102, 126, 234, 0.2), 0 8px 24px rgba(0, 0, 0, 0.1)"
+                      }}
+                    />
+                    {errors.username && (
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        className="validation-icon"
+                      >
+                        <FaTimesCircle className="invalid-icon" />
+                      </motion.div>
+                    )}
+                  </motion.div>
+
+                  <motion.div
+                    className="input-group"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.3 }}
+                  >
+                    <motion.input
+                      type={showPassword ? "text" : "password"}
+                      name="password"
+                      placeholder="Password"
+                      value={formData.password}
+                      onChange={handleChange}
+                      className={`neon-input ${errors.password ? "invalid" : ""}`}
+                      whileFocus={{ 
+                        scale: 1.02,
+                        boxShadow: "0 0 0 3px rgba(102, 126, 234, 0.2), 0 8px 24px rgba(0, 0, 0, 0.1)"
+                      }}
+                    />
+
+                    <motion.div
+                      className="password-toggle-login"
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? (
+                        <FaEye />
+                      ) : (
+                        <FaEyeSlash />
+                      )}
+                      {showPassword ? "Hide Password" : "Show Password"}
+                    </motion.div>
+
+                    <div className="strength-meter">
+                      {[...Array(4)].map((_, i) => (
+                        <motion.div
+                          key={i}
+                          className={`strength-segment ${
+                            i < passwordStrength ? "active" : ""
+                          }`}
+                          initial={{ width: 0 }}
+                          animate={{ width: "100%" }}
+                          transition={{ duration: 0.3, delay: i * 0.1 }}
+                        />
+                      ))}
+                    </div>
+                  </motion.div>
+
+                  <motion.button
+                    type="submit"
+                    className="submit-button"
+                    disabled={isLoading}
+                    whileHover={{ 
+                      scale: 1.05,
+                      boxShadow: "0 12px 32px rgba(102, 126, 234, 0.4)",
+                      y: -3
+                    }}
+                    whileTap={{ scale: 0.98 }}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 }}
+                  >
+                    {isLoading ? (
+                      <motion.div
+                        className="loading-spinner"
+                        animate={{ rotate: 360 }}
+                        transition={{
+                          duration: 1,
+                          repeat: Infinity,
+                          ease: "linear",
+                        }}
+                      />
+                    ) : (
+                      "Enter EduVerse"
+                    )}
+                  </motion.button>
+                </motion.form>
+              )}
+            </AnimatePresence>
+
+            {errorMessage && (
+              <motion.div
+                className="error-message"
+                initial={{ opacity: 0, x: -20, scale: 0.9 }}
+                animate={{ opacity: 1, x: 0, scale: 1 }}
+                exit={{ opacity: 0, x: 20, scale: 0.9 }}
+              >
+                {errorMessage}
+              </motion.div>
+            )}
+
+            <motion.button
+              onClick={() => navigate("/register")}
+              className="register-link"
+              whileHover={{ 
+                scale: 1.05,
+                y: -2,
+                boxShadow: "0 4px 12px rgba(102, 126, 234, 0.2)"
+              }}
+              whileTap={{ scale: 0.95 }}
+            >
+              New to EduVerse? Join the future
+            </motion.button>
+          </motion.div>
+        </motion.div>
+      </div>
     </div>
   );
 };
