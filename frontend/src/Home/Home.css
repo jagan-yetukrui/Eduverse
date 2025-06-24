@@ -331,91 +331,48 @@ body {
 }
 
 /* Hero Section */
-.hero-section {
-  text-align: center;
-  padding: 5rem 2rem;
-  background: linear-gradient(145deg, #edf1f5, #f9fcff);
-  border-radius: 20px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-  margin: 2rem auto;
-  max-width: 1000px;
-  animation: fadeInUp 1s ease-in-out;
-}
-
-.hero-section h1 {
-  font-size: 3rem;
-  font-weight: 800;
-  color: #222;
-  margin-bottom: 1rem;
-}
-
-.hero-section h1 span {
-  color: #4a90e2;
-  background: linear-gradient(to right, #4a90e2, #6c5ce7);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.hero-section p {
-  font-size: 1.25rem;
-  margin: 1.5rem 0 2rem;
-  color: #555;
-}
-
-.hero-buttons {
-  display: flex;
-  gap: 1.5rem;
-  justify-content: center;
-}
-
-.hero-buttons button {
-  background: #4a90e2;
-  color: white;
-  border: none;
-  padding: 0.85rem 2rem;
-  font-size: 1rem;
-  border-radius: 12px;
-  cursor: pointer;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
-  transition: all 0.3s ease;
-}
-
-.hero-buttons button:hover {
-  background: #357abd;
-  transform: translateY(-3px);
-}
+/* .hero-section styles are now handled by Statterpage.css */
 
 /* AI Status Section */
 .ai-status-section {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
-  margin: 2rem auto;
-  padding: 1rem;
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 15px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-  max-width: 400px;
+  gap: 1.5rem;
+  padding: 2rem;
+  background: #f8f9fa;
+  border-radius: 0;
+  margin: 4rem auto;
+  max-width: 500px;
+  border: 1px solid #e9ecef;
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.ai-status-section p {
+  font-size: 1.1rem;
+  color: #333333;
+  margin: 0;
+  font-weight: 400;
+  letter-spacing: 0.02em;
 }
 
 .edura-avatar {
   width: 50px;
   height: 50px;
-  background: linear-gradient(45deg, #4a90e2, #6c5ce7);
-  border-radius: 50%;
+  border-radius: 0;
+  background: #000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: relative;
   overflow: hidden;
 }
 
 .avatar-wave {
-  position: absolute;
-  bottom: 0;
-  left: 0;
   width: 100%;
-  height: 20%;
-  background: rgba(255, 255, 255, 0.3);
-  animation: wave 2s infinite linear;
+  height: 100%;
+  background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.3) 50%, transparent 70%);
+  animation: wave 2s ease-in-out infinite;
 }
 
 /* Stats Section */
@@ -670,8 +627,15 @@ body {
 /* Full Screen Landing Page */
 .full-screen-landing {
   min-height: 100vh;
+  width: 100%;
+  position: relative;
+}
+
+.landing-page {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 .landing-container {
@@ -683,13 +647,6 @@ body {
   display: flex;
   flex-direction: column;
   gap: 4rem;
-}
-
-.landing-page {
-  display: flex;
-  flex-direction: column;
-  gap: 4rem;
-  padding: 2rem 0;
 }
 
 .landing-page .hero-section {
@@ -734,35 +691,81 @@ body {
 }
 
 .landing-page .ai-status-section {
-  max-width: 500px;
-  margin: 0 auto;
-  padding: 2rem;
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 20px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  margin-top: 2rem;
+  margin-bottom: 4rem;
+  position: relative;
+  z-index: 10;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+
+.landing-page .ai-status-section p {
+  font-size: 1.1rem;
+  color: #333333;
+  margin: 0;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  font-family: 'Space Grotesk', sans-serif;
+  opacity: 0.7;
+}
+
+.landing-page .edura-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 0;
+  background: #000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.landing-page .avatar-wave {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.3) 50%, transparent 70%);
+  animation: wave 2s ease-in-out infinite;
 }
 
 .landing-page .feed-teaser-section {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 4rem 2rem;
+  margin-top: 2rem;
 }
 
 .landing-page .stats-section {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 3rem;
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 25px;
-  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.08);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+  padding: 0 2rem;
 }
 
 .landing-page .stat-item h3 {
-  font-size: 3rem;
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .landing-page .stat-item p {
-  font-size: 1.2rem;
+  font-size: 1rem;
+  opacity: 0.8;
+}
+
+/* Ensure proper spacing for fixed header */
+.home-container {
+  position: relative;
+  min-height: 100vh;
+}
+
+/* Footer only for authenticated users */
+.footer-container {
+  background: #f8f9fa;
+  padding: 2rem 0;
+  text-align: center;
+  border-top: 1px solid #e9ecef;
+  margin-top: auto;
 }
 
 /* Responsive adjustments for landing page */

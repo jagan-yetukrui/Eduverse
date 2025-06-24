@@ -2,7 +2,6 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import Tooltip from './Tooltip';
 import Highlighter from './Highlighter';
-import RestartTourButton from './RestartTourButton';
 
 const tourSteps = {
   home: [
@@ -221,7 +220,6 @@ const TourManager = () => {
           />
         </>
       )}
-      {isHomePage && <RestartTourButton onRestart={restartTour} />}
     </>
   );
 };

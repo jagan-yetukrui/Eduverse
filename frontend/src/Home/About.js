@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import "./About.css";
 import KnowYourFounder from "../components/KnowYourFounder";
 
@@ -22,8 +23,31 @@ const Section = ({ title, icon, children }) => (
 );
 
 const About = () => {
+  const navigate = useNavigate();
+
+  const handleBackClick = () => {
+    navigate('/');
+  };
+
   return (
     <div className="about-container">
+      {/* Back Button */}
+      <motion.button
+        className="back-button"
+        onClick={handleBackClick}
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5 }}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15 10L5 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M10 15L5 10L10 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+        Back to Home
+      </motion.button>
+
       <div className="content-max-width">
         <motion.h1
           initial={{ opacity: 0, scale: 0.95 }}

@@ -1,0 +1,194 @@
+.landing-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* LEFT: match main content grid (4vw), RIGHT: just enough for buttons (4vw) */
+  padding: 1.5rem 4vw 1.5rem 4vw;
+  background: transparent;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  box-sizing: border-box;
+}
+
+.logo-box {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 16px;
+  padding: 0.5rem 1rem 0.5rem 0.75rem;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.logo-box::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  border-radius: 16px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.logo-box:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 
+    0 12px 40px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.logo-box:hover::before {
+  opacity: 1;
+}
+
+.logo-img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  position: relative;
+  z-index: 1;
+}
+
+.eduverse-title {
+  font-family: 'Space Grotesk', 'General Sans', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: rgba(0, 0, 0, 0.8);
+  position: relative;
+  z-index: 1;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-right: 0.5vw; /* ensures buttons don't touch the right edge */
+}
+
+.header-btn {
+  font-family: 'Space Grotesk', 'General Sans', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  color: rgba(0, 0, 0, 0.8);
+  padding: 0.625rem 1.25rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 
+    0 4px 16px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.header-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
+  border-radius: 12px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.header-btn:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 
+    0 8px 24px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  border-color: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.9);
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.header-btn:hover::before {
+  opacity: 0;
+}
+
+.header-btn:active {
+  transform: translateY(0) scale(1);
+}
+
+.header-btn:focus {
+  outline: none;
+  box-shadow: 
+    0 8px 24px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 0 0 2px rgba(255, 255, 255, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .landing-header {
+    padding: 1.25rem 4vw 1.25rem 3vw;
+  }
+  .header-right {
+    margin-right: 2vw;
+  }
+}
+
+@media (max-width: 900px) {
+  .landing-header {
+    padding: 1.1rem 2vw 1.1rem 2vw;
+  }
+  .header-right {
+    margin-right: 0.5vw;
+  }
+}
+
+@media (max-width: 768px) {
+  .landing-header {
+    padding: 0.8rem 2vw 0.8rem 2vw;
+  }
+  .header-right {
+    gap: 0.5rem;
+    margin-right: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .landing-header {
+    padding: 0.4rem 1vw 0.4rem 1vw;
+  }
+  .header-right {
+    gap: 0.3rem;
+  }
+  .logo-box {
+    padding: 0.3rem 0.7rem 0.3rem 0.5rem;
+    border-radius: 10px;
+  }
+  .logo-img {
+    width: 24px;
+    height: 24px;
+  }
+}

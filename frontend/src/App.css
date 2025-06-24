@@ -15,18 +15,31 @@ h1, h2, h3, p {
 }
 
 body {
-  height: 100dvh;
-  width: auto;
+  height: 100vh;
+  width: 100%;
   margin: 0;
   padding: 0;
+  background: #ffffff;
+  overflow-x: hidden;
 }
 
 .App {
-  height: calc(100dvh - 4rem);
-  display: grid;
-  grid-template-rows: auto 1fr;
-  padding: 2rem;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
   font-family: "Montserrat", sans-serif;
+  background: #ffffff;
+  padding: 0;
+  margin: 0;
+}
+
+/* Landing page specific overrides */
+.App.landing-mode {
+  height: 100vh;
+  padding: 0;
+  margin: 0;
+  background: #ffffff;
 }
 
 .divider-vertical {

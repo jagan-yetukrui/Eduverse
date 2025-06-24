@@ -2,6 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Home.css";
 import ProfileCardHome from "./ProfileCardHome";
+import Statterpage from "../LandingPage/sections/Statterpage";
+import FeaturesSection from "../LandingPage/sections/FeaturesSection";
+import JourneySection from "../LandingPage/sections/JourneySection";
+import ProductDemoSection from "../LandingPage/sections/ProductDemoSection";
+import BuiltForSection from "../LandingPage/sections/BuiltForSection";
+import TestimonialsSection from "../LandingPage/sections/TestimonialsSection";
+import FinalCTASection from "../LandingPage/sections/FinalCTASection";
 
 import mockTrendingProjects from "../mockdata/trending_projects.json";
 import mockUpcomingEvents from "../mockdata/upcoming_events.json";
@@ -52,14 +59,13 @@ const Home = () => {
         <div className={isAuthenticated ? "content-section" : "full-screen-landing"}>
           {!isAuthenticated ? (
             <div className="landing-page">
-              <section className="hero-section">
-                <h1>Welcome to <span>EduVerse</span></h1>
-                <p>Your AI-powered space to learn, connect, and build your future.</p>
-                <div className="hero-buttons">
-                  <button onClick={handleExploreProjects}>Explore Projects</button>
-                  <button onClick={() => navigate('/newpost')}>Create Something</button>
-                </div>
-              </section>
+              <Statterpage />
+              <FeaturesSection />
+              <JourneySection />
+              <ProductDemoSection />
+              <BuiltForSection />
+              <TestimonialsSection />
+              <FinalCTASection />
 
               <section className="ai-status-section">
                 <div className="edura-avatar">
@@ -204,7 +210,8 @@ const Home = () => {
       )}
 
       {!isAuthenticated && renderContent()}
-
+      
+      {isAuthenticated && (
       <footer className="footer-container">
         <div className="footer-links">
           <Link to="/about">About</Link>
@@ -217,6 +224,7 @@ const Home = () => {
         </div>
         <p className="copyright">© 2024 EduVerse. All rights reserved.</p>
       </footer>
+      )}
     </div>
   );
 };
