@@ -72,23 +72,96 @@ class LicenseSerializer(serializers.ModelSerializer):
 
 # Serializer for Project model with proper validation
 class ProjectSerializer(serializers.ModelSerializer):
+    project_image_url = serializers.SerializerMethodField()
+    technologies = serializers.JSONField(required=False, allow_null=True)
+    project_url = serializers.URLField(source='url', required=False, allow_blank=True)
+    github_url = serializers.URLField(required=False, allow_blank=True)
+    project_type = serializers.CharField(required=False, allow_blank=True)
+    is_current = serializers.BooleanField(required=False, default=False)
+    end_date = serializers.DateField(required=False, allow_null=True)
+    
     class Meta:
         model = Project
         fields = [
             'id', 'title', 'description', 'start_date', 
-            'end_date', 'url', 'is_research'
+            'end_date', 'url', 'project_url', 'github_url', 'project_type',
+            'project_image', 'project_image_url', 'is_research', 'is_current',
+            'technologies'
         ]
         read_only_fields = ['id', 'collaborators']
+
+    def get_project_image_url(self, obj):
+        """Get project image URL if available"""
+        request = self.context.get('request')
+        if obj.project_image and hasattr(obj.project_image, 'url'):
+            return request.build_absolute_uri(obj.project_image.url) if request else obj.project_image.url
+        return None
+
+    def validate_project_image(self, value):
+        """Validate project image file size and type"""
+        if value:
+            # Check file size (5MB limit)
+            if value.size > 5 * 1024 * 1024:
+                raise serializers.ValidationError("Project image file size must be under 5MB")
+            
+            # Check file type
+            allowed_types = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif']
+            if value.content_type not in allowed_types:
+                raise serializers.ValidationError("Only JPEG, PNG, and GIF images are allowed")
+        
+        return value
 
     def validate(self, data):
         """Validate that end_date is not before start_date"""
         start_date = data.get('start_date')
         end_date = data.get('end_date')
+        is_current = data.get('is_current', False)
+        
+        # If project is current, don't require end_date
+        if is_current:
+            data['end_date'] = None
         
         if start_date and end_date and end_date < start_date:
             raise serializers.ValidationError("End date cannot be before start date")
         
         return data
+
+    def create(self, validated_data):
+        """Handle custom field mapping during creation"""
+        # Extract custom fields
+        technologies = validated_data.pop('technologies', None)
+        github_url = validated_data.pop('github_url', None)
+        project_type = validated_data.pop('project_type', None)
+        is_current = validated_data.pop('is_current', False)
+        
+        # Create the project
+        project = super().create(validated_data)
+        
+        # Store additional data in a custom field or handle as needed
+        # For now, we'll store technologies in a custom field if needed
+        if technologies:
+            # You might want to add a technologies field to the model
+            pass
+        
+        return project
+
+    def update(self, instance, validated_data):
+        """Handle custom field mapping during updates"""
+        # Extract custom fields
+        technologies = validated_data.pop('technologies', None)
+        github_url = validated_data.pop('github_url', None)
+        project_type = validated_data.pop('project_type', None)
+        is_current = validated_data.pop('is_current', False)
+        
+        # Update the project
+        project = super().update(instance, validated_data)
+        
+        # Handle additional fields as needed
+        if technologies:
+            # Store technologies if you add a field for it
+            pass
+        
+        return project
 
 
 # Main serializer for Profile model handling basic profile information and related counts

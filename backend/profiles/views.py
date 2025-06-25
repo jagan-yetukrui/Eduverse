@@ -28,6 +28,12 @@ class ProfileViewSet(viewsets.ModelViewSet):
     lookup_field = 'user__username'
     parsers = [MultiPartParser, FormParser, JSONParser]
 
+    def get_serializer_context(self):
+        """Add request to serializer context for absolute URL generation"""
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
+
     def get_queryset(self):
         queryset = Profile.objects.all()
         if self.action == 'list':
@@ -41,7 +47,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
         """
         try:
             profile = Profile.objects.get(user__username=username)
-            serializer = self.get_serializer(profile)
+            serializer = self.get_serializer(profile, context={'request': request})
             data = serializer.data
 
             # Add following status for authenticated users
@@ -105,7 +111,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
 
         if request.method == 'GET':
             # Return full profile with nested data
-            serializer = ProfileSerializer(profile)
+            serializer = ProfileSerializer(profile, context={'request': request})
             return Response(serializer.data)
         
         elif request.method == 'PATCH':
@@ -114,7 +120,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
             if serializer.is_valid():
                 serializer.save()
                 # Return updated profile with full data
-                full_serializer = ProfileSerializer(profile)
+                full_serializer = ProfileSerializer(profile, context={'request': request})
                 return Response(full_serializer.data)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -280,26 +286,27 @@ class ProfileViewSet(viewsets.ModelViewSet):
     def me_projects(self, request):
         """
         GET: Retrieve all project entries for current user
-        POST: Add new project entry
+        POST: Add new project entry (supports multipart form data for image uploads)
         """
         profile = request.user.profile
         
         if request.method == 'GET':
             project_list = profile.projects.all()
-            serializer = ProjectSerializer(project_list, many=True)
+            serializer = ProjectSerializer(project_list, many=True, context={'request': request})
             return Response(serializer.data)
         
         elif request.method == 'POST':
-            serializer = ProjectSerializer(data=request.data)
+            # Handle multipart form data for image uploads
+            serializer = ProjectSerializer(data=request.data, context={'request': request})
             if serializer.is_valid():
                 serializer.save(profile=profile)
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    @action(detail=False, methods=['put', 'delete'], permission_classes=[IsAuthenticated], url_path='me/projects/(?P<project_id>[^/.]+)', url_name='me-projects-detail')
+    @action(detail=False, methods=['put', 'patch', 'delete'], permission_classes=[IsAuthenticated], url_path='me/projects/(?P<project_id>[^/.]+)', url_name='me-projects-detail')
     def me_projects_detail(self, request, project_id=None):
         """
-        PUT: Update specific project entry
+        PUT/PATCH: Update specific project entry (supports multipart form data for image uploads)
         DELETE: Delete specific project entry
         """
         profile = request.user.profile
@@ -309,12 +316,26 @@ class ProfileViewSet(viewsets.ModelViewSet):
         except Project.DoesNotExist:
             return Response({"detail": "Project entry not found"}, status=status.HTTP_404_NOT_FOUND)
         
-        if request.method == 'PUT':
-            serializer = ProjectSerializer(project, data=request.data)
+        if request.method in ['PUT', 'PATCH']:
+            # Debug logging to identify validation issues
+            print("=== PROJECT UPDATE DEBUG ===")
+            print(f"Method: {request.method}")
+            print(f"Project ID: {project_id}")
+            print("Request Data:", request.data)
+            print("Request Files:", request.FILES)
+            print("Content Type:", request.content_type)
+            print("================================")
+            
+            # Handle multipart form data for image uploads
+            serializer = ProjectSerializer(project, data=request.data, partial=True, context={'request': request})
             if serializer.is_valid():
                 serializer.save()
+                print("✅ Project updated successfully")
                 return Response(serializer.data)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                print("❌ Validation failed:")
+                print("Serializer Errors:", serializer.errors)
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
         elif request.method == 'DELETE':
             project.delete()
@@ -498,11 +519,11 @@ class ProfileViewSet(viewsets.ModelViewSet):
     def faqs(self, request):
         """Get frequently asked questions"""
         faqs = [
-            {
+                {
                 "question": "How do I update my profile?",
                 "answer": "You can update your profile by going to the Edit Profile section and making changes to your information."
-            },
-            {
+                },
+                {
                 "question": "Can I edit my skills?",
                 "answer": "Skills are automatically generated by AI based on your activities and cannot be manually edited."
             },
@@ -525,7 +546,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
                 {'error': 'Subject, message, and email are required'},
                 status=status.HTTP_400_BAD_REQUEST
             )
-        
+            
         # Here you would typically send an email or create a support ticket
         # For now, we'll just return a success response
         return Response({

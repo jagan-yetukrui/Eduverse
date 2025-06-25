@@ -11,10 +11,11 @@ import {
   faCheckCircle,
   faExternalLinkAlt,
   faCode,
-  faCalendarAlt
+  faCalendarAlt,
+  faCamera
 } from '@fortawesome/free-solid-svg-icons';
 
-import { profileService, validationUtils } from '../services/profileService';
+import { profileService, validationUtils, fileUtils } from '../services/profileService';
 import './Projects.css';
 
 /**
@@ -44,6 +45,11 @@ const Projects = ({ onUpdate }) => {
     project_type: 'personal'
   });
 
+  // Image upload state
+  const [projectImage, setProjectImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
+
   // Validation state
   const [validationErrors, setValidationErrors] = useState({});
 
@@ -63,6 +69,15 @@ const Projects = ({ onUpdate }) => {
   useEffect(() => {
     fetchProjectsData();
   }, []);
+
+  // Cleanup image previews on unmount
+  useEffect(() => {
+    return () => {
+      if (imagePreview && imagePreview.startsWith('blob:')) {
+        fileUtils.cleanupPreview(imagePreview);
+      }
+    };
+  }, [imagePreview]);
 
   /**
    * Fetch projects from API
@@ -99,6 +114,9 @@ const Projects = ({ onUpdate }) => {
       project_type: 'personal'
     });
     setValidationErrors({});
+    setProjectImage(null);
+    setImagePreview(null);
+    setImageFile(null);
     setIsAdding(false);
     setEditingId(null);
   };
@@ -177,6 +195,55 @@ const Projects = ({ onUpdate }) => {
   };
 
   /**
+   * Handle image upload
+   */
+  const handleImageUpload = (file) => {
+    try {
+      const validationError = validationUtils.validateFile(file);
+      if (validationError) {
+        setError(validationError);
+        return;
+      }
+
+      if (imagePreview && imagePreview.startsWith('blob:')) {
+        fileUtils.cleanupPreview(imagePreview);
+      }
+
+      const preview = fileUtils.createImagePreview(file);
+      setImagePreview(preview);
+      setImageFile(file);
+      setProjectImage(file);
+      setError(null);
+      
+    } catch (err) {
+      console.error('Error handling image upload:', err);
+      setError('Failed to process image. Please try again.');
+    }
+  };
+
+  /**
+   * Handle file input change
+   */
+  const handleFileInputChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      handleImageUpload(file);
+    }
+  };
+
+  /**
+   * Remove project image
+   */
+  const removeProjectImage = () => {
+    if (imagePreview && imagePreview.startsWith('blob:')) {
+      fileUtils.cleanupPreview(imagePreview);
+    }
+    setImagePreview(null);
+    setImageFile(null);
+    setProjectImage(null);
+  };
+
+  /**
    * Handle adding new project
    */
   const handleAdd = async () => {
@@ -195,7 +262,7 @@ const Projects = ({ onUpdate }) => {
         technologies: formData.technologies.split(',').map(tech => tech.trim()).filter(tech => tech)
       };
       
-      const newProject = await profileService.addProject(projectData);
+      const newProject = await profileService.addProject(projectData, imageFile);
       
       setProjects(prev => [...prev, newProject]);
       resetForm();
@@ -234,7 +301,7 @@ const Projects = ({ onUpdate }) => {
         technologies: formData.technologies.split(',').map(tech => tech.trim()).filter(tech => tech)
       };
       
-      const updatedProject = await profileService.updateProject(editingId, projectData);
+      const updatedProject = await profileService.updateProject(editingId, projectData, imageFile);
       
       setProjects(prev => 
         prev.map(project => project.id === editingId ? updatedProject : project)
@@ -303,6 +370,18 @@ const Projects = ({ onUpdate }) => {
       is_current: !project.end_date,
       project_type: project.project_type || 'personal'
     });
+    
+    // Handle existing project image
+    if (project.project_image_url) {
+      setImagePreview(project.project_image_url);
+      setProjectImage(project.project_image_url);
+      setImageFile(null); // No new file selected
+    } else {
+      setImagePreview(null);
+      setProjectImage(null);
+      setImageFile(null);
+    }
+    
     setEditingId(project.id);
     setIsAdding(false);
   };
@@ -425,6 +504,15 @@ const Projects = ({ onUpdate }) => {
                 </div>
                 
                 <div className="project-content">
+                  {/* Project Image */}
+                  {project.project_image_url && (
+                    <img 
+                      src={project.project_image_url} 
+                      alt={`${project.title} screenshot`}
+                      className="project-image"
+                    />
+                  )}
+                  
                   <p className="project-description">{project.description}</p>
                   
                   {project.technologies && project.technologies.length > 0 && (
@@ -535,6 +623,43 @@ const Projects = ({ onUpdate }) => {
                     </option>
                   ))}
                 </select>
+              </div>
+            </div>
+
+            {/* Project Image Upload */}
+            <div className="form-group">
+              <label htmlFor="project_image">Project Image</label>
+              <div className="image-upload-container">
+                {imagePreview ? (
+                  <div className="image-preview-container">
+                    <img 
+                      src={imagePreview} 
+                      alt="Project preview" 
+                      className="project-image-preview"
+                    />
+                    <button 
+                      type="button"
+                      className="remove-image-btn"
+                      onClick={removeProjectImage}
+                    >
+                      <FontAwesomeIcon icon={faTimes} />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="image-upload-placeholder">
+                    <FontAwesomeIcon icon={faCamera} />
+                    <p>Click to upload project screenshot</p>
+                    <span>Supports: JPG, PNG, GIF (max 5MB)</span>
+                  </div>
+                )}
+                <input
+                  id="project_image"
+                  name="project_image"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileInputChange}
+                  className="image-input"
+                />
               </div>
             </div>
 

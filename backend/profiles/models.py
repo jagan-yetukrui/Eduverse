@@ -83,6 +83,7 @@ class Project(models.Model):
     start_date = models.DateField(null=True)
     end_date = models.DateField(null=True, blank=True)
     url = models.URLField(blank=True, null=True, default="")
+    project_image = models.ImageField(upload_to='project_images/', blank=True, null=True, help_text="Project screenshot or image")
     is_research = models.BooleanField(default=False)
     collaborators = models.ManyToManyField('Profile', related_name='collaborated_projects', blank=True)
 

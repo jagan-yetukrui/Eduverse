@@ -220,18 +220,92 @@ export const profileService = {
     }
   },
 
-  async addProject(projectData) {
+  async addProject(projectData, projectImage = null) {
     try {
-      const response = await api.post('/api/profiles/me/projects/', projectData);
+      const formData = new FormData();
+      
+      // Add basic project fields
+      Object.keys(projectData).forEach(key => {
+        if (key !== 'project_image' && key !== 'technologies' && key !== 'end_date') {
+          if (typeof projectData[key] === 'object') {
+            formData.append(key, JSON.stringify(projectData[key]));
+          } else {
+            formData.append(key, projectData[key] || '');
+          }
+        }
+      });
+
+      // Handle end_date properly - don't send "null" string
+      if (projectData.end_date && projectData.end_date !== "null" && projectData.end_date !== "") {
+        formData.append('end_date', projectData.end_date);
+      }
+      // If end_date is null, empty, or "null", don't append it (backend will use default)
+
+      // Add technologies as JSON string if it's an array
+      if (projectData.technologies) {
+        if (Array.isArray(projectData.technologies)) {
+          formData.append('technologies', JSON.stringify(projectData.technologies));
+        } else {
+          formData.append('technologies', projectData.technologies);
+        }
+      }
+
+      // Add project image if provided
+      if (projectImage) {
+        formData.append('project_image', projectImage);
+      }
+
+      const response = await api.post('/api/profiles/me/projects/', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
       return response.data;
     } catch (error) {
       throw new Error(error.response?.data?.detail || 'Failed to add project');
     }
   },
 
-  async updateProject(id, projectData) {
+  async updateProject(id, projectData, projectImage = null) {
     try {
-      const response = await api.put(`/api/profiles/me/projects/${id}/`, projectData);
+      const formData = new FormData();
+      
+      // Add basic project fields
+      Object.keys(projectData).forEach(key => {
+        if (key !== 'project_image' && key !== 'technologies' && key !== 'end_date') {
+          if (typeof projectData[key] === 'object') {
+            formData.append(key, JSON.stringify(projectData[key]));
+          } else {
+            formData.append(key, projectData[key] || '');
+          }
+        }
+      });
+
+      // Handle end_date properly - don't send "null" string
+      if (projectData.end_date && projectData.end_date !== "null" && projectData.end_date !== "") {
+        formData.append('end_date', projectData.end_date);
+      }
+      // If end_date is null, empty, or "null", don't append it (backend will use default)
+
+      // Add technologies as JSON string if it's an array
+      if (projectData.technologies) {
+        if (Array.isArray(projectData.technologies)) {
+          formData.append('technologies', JSON.stringify(projectData.technologies));
+        } else {
+          formData.append('technologies', projectData.technologies);
+        }
+      }
+
+      // Add project image if provided
+      if (projectImage) {
+        formData.append('project_image', projectImage);
+      }
+
+      const response = await api.patch(`/api/profiles/me/projects/${id}/`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
       return response.data;
     } catch (error) {
       throw new Error(error.response?.data?.detail || 'Failed to update project');

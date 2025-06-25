@@ -535,5 +535,122 @@
   .form-header h3 {
     font-size: 16px;
   }
-  }
+}
+
+/* Image Upload Styles */
+.image-upload-container {
+  position: relative;
+  border: 2px dashed #dee2e6;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  background: #f8f9fa;
+}
+
+.image-upload-container:hover {
+  border-color: #007bff;
+  background: #f0f8ff;
+}
+
+.image-upload-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: #6c757d;
+}
+
+.image-upload-placeholder svg {
+  font-size: 24px;
+  color: #adb5bd;
+}
+
+.image-upload-placeholder p {
+  margin: 0;
+  font-weight: 500;
+  color: #495057;
+}
+
+.image-upload-placeholder span {
+  font-size: 12px;
+  color: #6c757d;
+}
+
+.image-preview-container {
+  position: relative;
+  display: inline-block;
+}
+
+.project-image-preview {
+  max-width: 200px;
+  max-height: 150px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 2px solid #e9ecef;
+}
+
+.remove-image-btn {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background 0.2s ease;
+}
+
+.remove-image-btn:hover {
+  background: #c82333;
+}
+
+.image-input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Project Card Image Display */
+.project-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  border: 1px solid #e9ecef;
+}
+
+/* Loading States */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: #6c757d;
+}
+
+.loading-spinner {
+  font-size: 24px;
+  color: #007bff;
+  margin-bottom: 16px;
+}
+
+.loading-container p {
+  margin: 0;
+  font-size: 16px;
+}
   

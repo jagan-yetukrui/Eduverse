@@ -131,9 +131,9 @@ const EditProfile = () => {
     };
   }, [imagePreview]);
 
-  const fetchProfileData = async () => {
-    try {
-      setIsLoading(true);
+    const fetchProfileData = async () => {
+      try {
+        setIsLoading(true);
       setError(null);
       
       const data = await profileService.getProfile();
@@ -156,19 +156,19 @@ const EditProfile = () => {
       
       if (data.profile_image_url) {
         setImagePreview(data.profile_image_url);
-      }
+        }
       
       if (setProfile) {
         setProfile(data);
       }
       
-    } catch (err) {
-      console.error('Error fetching profile:', err);
+      } catch (err) {
+        console.error('Error fetching profile:', err);
       setError(err.message || 'Failed to load profile data');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
   const handleImageUpload = useCallback((file) => {
     try {
@@ -211,7 +211,7 @@ const EditProfile = () => {
   };
 
   const handleDrop = (e) => {
-    e.preventDefault();
+        e.preventDefault();
     e.currentTarget.classList.remove('drag-over');
     
     const files = e.dataTransfer.files;
@@ -238,7 +238,7 @@ const EditProfile = () => {
     
     if (profileData.website && !isValidUrl(profileData.website)) {
       errors.website = 'Please enter a valid URL';
-    }
+        }
     
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
@@ -258,7 +258,7 @@ const EditProfile = () => {
       if (!validateForm()) {
         setError('Please fix the validation errors before saving.');
         return;
-      }
+    }
 
       setIsSaving(true);
       setError(null);
@@ -405,7 +405,7 @@ const EditProfile = () => {
                 >
                   <FontAwesomeIcon icon={faTimes} />
                 </button>
-              </div>
+            </div>
             )}
             
             {success && (
@@ -418,7 +418,7 @@ const EditProfile = () => {
                 >
                   <FontAwesomeIcon icon={faTimes} />
                 </button>
-              </div>
+            </div>
             )}
           </div>
         )}
@@ -456,34 +456,34 @@ const EditProfile = () => {
                   onClick={() => fileInputRef.current?.click()}
                 >
                   {imagePreview ? (
-                    <div className="image-preview">
+                      <div className="image-preview">
                       <img src={imagePreview} alt="Profile preview" />
-                      <button 
-                        className="remove-image"
+                        <button
+                          className="remove-image"
                         onClick={(e) => {
                           e.stopPropagation();
                           removeProfileImage();
-                        }}
-                      >
-                        <FontAwesomeIcon icon={faTimes} />
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="upload-placeholder">
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faTimes} />
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="upload-placeholder">
                       <FontAwesomeIcon icon={faCamera} />
                       <p>Click to upload or drag and drop</p>
                       <span>Supports: JPG, PNG, GIF (max 5MB)</span>
-                    </div>
-                  )}
+                      </div>
+                    )}
                 </div>
                 
-                <input
+                    <input
                   ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
+                      type="file"
+                      accept="image/*"
                   onChange={handleFileInputChange}
-                  className="hidden-input"
-                />
+                      className="hidden-input"
+                    />
               </div>
 
               <div className="form-section">
@@ -535,7 +535,7 @@ const EditProfile = () => {
                     }))}
                     placeholder="City, Country"
                   />
-                </div>
+              </div>
 
                 <div className="form-group">
                   <label htmlFor="website">
@@ -544,7 +544,7 @@ const EditProfile = () => {
                       <span className="error-text">{validationErrors.website}</span>
                     )}
                   </label>
-                  <input
+                    <input
                     id="website"
                     type="url"
                     value={profileData.website}
@@ -557,29 +557,29 @@ const EditProfile = () => {
                   />
                 </div>
               </div>
-            </div>
-          )}
+        </div>
+      )}
 
           {activeSection === 'education' && (
             <Education onUpdate={(data) => handleSectionUpdate('education', data)} />
           )}
 
-          {activeSection === 'experience' && (
+        {activeSection === 'experience' && (
             <Experience onUpdate={(data) => handleSectionUpdate('experience', data)} />
-          )}
+        )}
 
           {activeSection === 'projects' && (
             <Projects onUpdate={(data) => handleSectionUpdate('projects', data)} />
-          )}
+        )}
 
           {activeSection === 'licenses' && (
             <Licenses onUpdate={(data) => handleSectionUpdate('licenses', data)} />
-          )}
-
+        )}
+        
           {activeSection === 'skills' && (
             <Skills onUpdate={(data) => handleSectionUpdate('skills', data)} />
           )}
-        </div>
+    </div>
       </div>
     </ErrorBoundary>
   );

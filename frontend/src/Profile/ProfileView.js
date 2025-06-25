@@ -33,7 +33,7 @@ const ProjectCard = ({ project }) => (
     transition={{ duration: 0.3 }}
   >
     <img 
-      src={project.image || placeholder} 
+      src={project.project_image || project.project_image_url || project.image || placeholder} 
       alt={project.title} 
       className="project-image"
     />

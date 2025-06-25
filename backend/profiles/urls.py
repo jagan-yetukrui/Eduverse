@@ -26,7 +26,7 @@ urlpatterns = [
     
     # Project management endpoints
     path('me/projects/', ProfileViewSet.as_view({'get': 'me_projects', 'post': 'me_projects'}), name='profile-me-projects'),
-    path('me/projects/<int:project_id>/', ProfileViewSet.as_view({'put': 'me_projects_detail', 'delete': 'me_projects_detail'}), name='profile-me-projects-detail'),
+    path('me/projects/<int:project_id>/', ProfileViewSet.as_view({'put': 'me_projects_detail', 'patch': 'me_projects_detail', 'delete': 'me_projects_detail'}), name='profile-me-projects-detail'),
     
     # User profile by username (public access)
     path('users/<str:username>/', ProfileViewSet.as_view({'get': 'get_user_by_username'}), name='user-profile'),
