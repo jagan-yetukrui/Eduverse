@@ -4,29 +4,44 @@ import axios from 'axios';
 const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(() => {
+    const cached = localStorage.getItem("user");
+    return cached ? JSON.parse(cached) : null;
+  });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const fetchUser = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('access_token');
       if (!token) {
+        setUser(null);
         setIsLoading(false);
         return;
       }
 
-      const response = await axios.get('/api/accounts/me/', {
+      const response = await axios.get('http://localhost:8000/api/profiles/me/', {
         headers: { Authorization: `Bearer ${token}` }
       });
 
-      setUser(response.data);
-      localStorage.setItem('user', JSON.stringify(response.data));
-    } catch (error) {
-      setError(error.response?.data?.detail || 'Failed to fetch user data');
+      if (response.data) {
+        setUser(response.data);
+        localStorage.setItem('user', JSON.stringify(response.data));
+      }
+    } catch (err) {
+      console.error("Failed to fetch user:", err);
+      setUser(null);
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('user');
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const logout = () => {
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("user");
+    setUser(null);
   };
 
   useEffect(() => {
@@ -34,62 +49,10 @@ export const UserProvider = ({ children }) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ 
-      user, 
-      setUser, 
-      isLoading, 
-      error,
-      fetchUser 
-    }}>
+    <UserContext.Provider value={{ user, setUser, isLoading, error, fetchUser, logout }}>
       {children}
     </UserContext.Provider>
   );
 };
 
 export const useUser = () => useContext(UserContext);
-
-const ProfileContext = createContext();
-
-export const ProfileProvider = ({ children }) => {
-  const [profile, setProfile] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  const fetchProfile = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        setIsLoading(false);
-        return;
-      }
-
-      const response = await axios.get('/api/profiles/me/', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-
-      setProfile(response.data);
-    } catch (error) {
-      setError(error.response?.data?.detail || 'Failed to fetch profile');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchProfile();
-  }, []);
-
-  return (
-    <ProfileContext.Provider value={{ 
-      profile, 
-      setProfile, 
-      isLoading, 
-      error,
-      fetchProfile 
-    }}>
-      {children}
-    </ProfileContext.Provider>
-  );
-};
-
-export const useProfile = () => useContext(ProfileContext); 

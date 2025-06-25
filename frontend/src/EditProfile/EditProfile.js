@@ -1,9 +1,11 @@
 // Import necessary React hooks and components
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Experience from './Experience';
 import Education from './Education';
 import Skills from './Skills';
+import Projects from './Projects';
+import Licenses from './Licenses';
 import './EditProfile.css';
 
 // Import FontAwesome icons
@@ -20,11 +22,22 @@ import {
   faCheckCircle,
   faCamera,
   faSave,
-  faSpinner
+  faSpinner,
+  faCertificate,
+  faProjectDiagram,
+  faPlus,
+  faEdit,
+  faTrash,
+  faEye,
+  faEyeSlash
 } from '@fortawesome/free-solid-svg-icons';
 
 // Import axios for API calls
 import axios from 'axios';
+
+// Import services and utilities
+import { profileService, validationUtils, fileUtils } from '../services/profileService';
+import { useProfile } from '../Profile/ProfileContext';
 
 // Error Boundary Component
 class ErrorBoundary extends React.Component {
@@ -45,9 +58,10 @@ class ErrorBoundary extends React.Component {
     if (this.state.hasError) {
       return (
         <div className="error-container">
-          <h2>Something went wrong.</h2>
-          <p>Please try refreshing the page.</p>
-          <button onClick={() => window.location.reload()}>
+          <FontAwesomeIcon icon={faExclamationCircle} className="error-icon" />
+          <h2>Something went wrong</h2>
+          <p>Please try refreshing the page or contact support if the problem persists.</p>
+          <button onClick={() => window.location.reload()} className="btn-primary">
             Refresh Page
           </button>
         </div>
@@ -67,13 +81,12 @@ class ErrorBoundary extends React.Component {
  */
 const EditProfile = () => {
   const navigate = useNavigate();
-  const [activeSection, setActiveSection] = useState(null);
-  const [status, setStatus] = useState('');
-  const [error, setError] = useState(null);
-  const [preview, setPreview] = useState(null);
-  const [skillInput, setSkillInput] = useState('');
+  const { profile, setProfile, isLoading: profileLoading, error: profileError } = useProfile();
+  const [activeSection, setActiveSection] = useState('basic');
   const [isLoading, setIsLoading] = useState(true);
-  const [originalData, setOriginalData] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
   
   const [profileData, setProfileData] = useState({
     display_name: '',
@@ -87,441 +100,486 @@ const EditProfile = () => {
     profile_image: null
   });
 
-  // Debug logging
+  const [originalData, setOriginalData] = useState(null);
+  
+  const [imagePreview, setImagePreview] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
+  
+  const [validationErrors, setValidationErrors] = useState({});
+  
+  const fileInputRef = useRef(null);
+  const dragDropRef = useRef(null);
+
+  const sections = [
+    { id: 'basic', label: 'Basic Info', icon: faUser },
+    { id: 'education', label: 'Education', icon: faGraduationCap },
+    { id: 'experience', label: 'Experience', icon: faBriefcase },
+    { id: 'projects', label: 'Projects', icon: faProjectDiagram },
+    { id: 'licenses', label: 'Licenses', icon: faCertificate },
+    { id: 'skills', label: 'Skills', icon: faLightbulb }
+  ];
+
   useEffect(() => {
-    console.log('EditProfile State:', {
-      profileData,
-      preview,
-      skillInput,
-      status,
-      error,
-      isLoading
-    });
-  }, [profileData, preview, skillInput, status, error, isLoading]);
-
-  // Effect hook to fetch profile data when component mounts
-  useEffect(() => {
-    const fetchProfileData = async () => {
-      try {
-        setIsLoading(true);
-        const token = localStorage.getItem('access_token');
-        if (!token) {
-          throw new Error('No authentication token found');
-        }
-        
-        const response = await axios.get('/api/profiles/me/', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        
-        if (!response.data) {
-          throw new Error('No data received from server');
-        }
-
-        setProfileData(response.data);
-        setOriginalData(response.data);
-        if (response.data.profile_image) {
-          setPreview(response.data.profile_image);
-        }
-      } catch (err) {
-        console.error('Error fetching profile:', err);
-        setError('Failed to load profile data. Please try again.');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchProfileData();
   }, []);
 
-  /**
-   * Closes the active section and returns to main view
-   */
-  const handleCloseModal = () => {
-    setActiveSection(null);
+  useEffect(() => {
+    return () => {
+      if (imagePreview && imagePreview.startsWith('blob:')) {
+        fileUtils.cleanupPreview(imagePreview);
+      }
+    };
+  }, [imagePreview]);
+
+  const fetchProfileData = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      
+      const data = await profileService.getProfile();
+      
+      setProfileData({
+        display_name: data.display_name || '',
+        bio: data.bio || '',
+        website: data.website || '',
+        location: data.location || '',
+        profile_image: data.profile_image
+      });
+      
+      setOriginalData({
+        display_name: data.display_name || '',
+        bio: data.bio || '',
+        website: data.website || '',
+        location: data.location || '',
+        profile_image: data.profile_image
+      });
+      
+      if (data.profile_image_url) {
+        setImagePreview(data.profile_image_url);
+      }
+      
+      if (setProfile) {
+        setProfile(data);
+      }
+      
+    } catch (err) {
+      console.error('Error fetching profile:', err);
+      setError(err.message || 'Failed to load profile data');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleImageUpload = useCallback((e) => {
+  const handleImageUpload = useCallback((file) => {
     try {
-      const file = e.target.files[0];
-      if (file) {
-        setProfileData(prev => ({ ...prev, profile_image: file }));
-        setPreview(URL.createObjectURL(file));
+      const validationError = validationUtils.validateFile(file);
+      if (validationError) {
+        setError(validationError);
+        return;
       }
+
+      if (imagePreview && imagePreview.startsWith('blob:')) {
+        fileUtils.cleanupPreview(imagePreview);
+      }
+
+      const preview = fileUtils.createImagePreview(file);
+      setImagePreview(preview);
+      setImageFile(file);
+      setError(null);
+      
     } catch (err) {
       console.error('Error handling image upload:', err);
       setError('Failed to process image. Please try again.');
     }
-  }, []);
+  }, [imagePreview]);
 
-  const handleSkillEnter = useCallback((e) => {
-    try {
-      if (e.key === 'Enter' || e.key === ',') {
-        e.preventDefault();
-        const newSkill = skillInput.trim().replace(/,$/, '');
-        if (newSkill && !profileData.skills.includes(newSkill)) {
-          setProfileData(prev => ({
-            ...prev,
-            skills: [...prev.skills, newSkill]
-          }));
-          setSkillInput('');
-        }
-      }
-    } catch (err) {
-      console.error('Error handling skill input:', err);
-      setError('Failed to add skill. Please try again.');
+  const handleFileInputChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      handleImageUpload(file);
     }
-  }, [skillInput, profileData.skills]);
+  };
 
-  const removeSkill = useCallback((skillToRemove) => {
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.currentTarget.classList.add('drag-over');
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    e.currentTarget.classList.remove('drag-over');
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.currentTarget.classList.remove('drag-over');
+    
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      handleImageUpload(files[0]);
+    }
+  };
+
+  const removeProfileImage = () => {
+    if (imagePreview && imagePreview.startsWith('blob:')) {
+      fileUtils.cleanupPreview(imagePreview);
+    }
+    setImagePreview(null);
+    setImageFile(null);
+    setProfileData(prev => ({ ...prev, profile_image: null }));
+  };
+
+  const validateForm = () => {
+    const errors = {};
+    
+    if (!profileData.display_name.trim()) {
+      errors.display_name = 'Display name is required';
+    }
+    
+    if (profileData.website && !isValidUrl(profileData.website)) {
+      errors.website = 'Please enter a valid URL';
+    }
+    
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const isValidUrl = (string) => {
     try {
+      new URL(string);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  };
+
+  const handleSave = async () => {
+    try {
+      if (!validateForm()) {
+        setError('Please fix the validation errors before saving.');
+        return;
+      }
+
+      setIsSaving(true);
+      setError(null);
+      setSuccess(null);
+
+      const dataToSave = {
+        display_name: profileData.display_name.trim(),
+        bio: profileData.bio.trim(),
+        website: profileData.website.trim(),
+        location: profileData.location.trim()
+      };
+
+      const updatedProfile = await profileService.updateProfile(dataToSave, imageFile);
+      
       setProfileData(prev => ({
         ...prev,
-        skills: prev.skills.filter(skill => skill !== skillToRemove)
+        ...dataToSave,
+        profile_image: updatedProfile.profile_image_url || prev.profile_image
       }));
-    } catch (err) {
-      console.error('Error removing skill:', err);
-      setError('Failed to remove skill. Please try again.');
-    }
-  }, []);
+      
+      setOriginalData(prev => ({
+        ...prev,
+        ...dataToSave,
+        profile_image: updatedProfile.profile_image_url || prev.profile_image
+      }));
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setStatus('Saving...');
-    try {
-      const token = localStorage.getItem('access_token');
-      if (!token) {
-        throw new Error('No authentication token found');
+      if (setProfile) {
+        setProfile(updatedProfile);
       }
 
-      const formData = new FormData();
+      setSuccess('Profile updated successfully!');
       
-      // Append all profile data to FormData
-      Object.keys(profileData).forEach(key => {
-        if (key === 'profile_image' && profileData[key]) {
-          formData.append(key, profileData[key]);
-        } else if (Array.isArray(profileData[key])) {
-          formData.append(key, JSON.stringify(profileData[key]));
-        } else {
-          formData.append(key, profileData[key]);
-        }
-      });
-
-      await axios.patch('/api/profiles/me/', formData, {
-        headers: { 
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-
-      setStatus('Profile saved successfully!');
-      setTimeout(() => {
-        navigate('/profile');
-      }, 2000);
+      setImageFile(null);
+      
+      setTimeout(() => setSuccess(null), 3000);
+      
     } catch (err) {
       console.error('Error saving profile:', err);
-      setError(err.response?.data?.message || 'Failed to save profile. Please try again.');
-      setStatus('');
+      setError(err.message || 'Failed to save profile changes');
+    } finally {
+      setIsSaving(false);
     }
   };
 
-  /**
-   * Handles updates from child components (Experience, Education, etc.)
-   * Makes API call to update specific section and updates local state
-   * @param {string} section - Section being updated (experience, education, etc.)
-   * @param {Object} data - Updated data for the section
-   */
-  const handleSectionUpdate = async (section, data) => {
-    try {
-      const token = localStorage.getItem('access_token');
-      const endpoint = `/api/profiles/me/${section}/`;
-      
-      // Make API call to update section
-      await axios.post(endpoint, data, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-
-      // Update local state based on whether section data is an array or object
-      setProfileData(prev => ({
-        ...prev,
-        [section]: Array.isArray(prev[section]) 
-          ? [...prev[section], data]
-          : data
-      }));
-
-      // Show success message temporarily
-      setStatus(`${section} updated successfully!`);
-      setTimeout(() => setStatus(null), 3000);
-    } catch (err) {
-      // Show error message temporarily
-      setError(`Failed to update ${section}. Please try again.`);
-      setTimeout(() => setError(null), 3000);
-    }
-  };
-
-  const handleRevert = useCallback(() => {
+  const handleRevert = () => {
     if (!originalData) return;
+    
+    if (imagePreview && imagePreview.startsWith('blob:')) {
+      fileUtils.cleanupPreview(imagePreview);
+    }
+    
     setProfileData(originalData);
-    setPreview(originalData.profile_image || null);
-    setSkillInput('');
-    setStatus('Changes reverted');
-    setTimeout(() => setStatus(''), 2000);
-  }, [originalData]);
+    setImagePreview(originalData.profile_image || null);
+    setImageFile(null);
+    setValidationErrors({});
+    setError(null);
+    setSuccess('Changes reverted successfully');
+    
+    setTimeout(() => setSuccess(null), 2000);
+  };
+
+  const hasUnsavedChanges = () => {
+    if (!originalData) return false;
+    
+    const currentData = {
+      ...profileData,
+      profile_image: imageFile ? 'new_image' : profileData.profile_image
+    };
+    
+    return JSON.stringify(currentData) !== JSON.stringify(originalData);
+  };
+
+  const handleSectionUpdate = useCallback((section, data) => {
+    setSuccess(`${section} updated successfully!`);
+    setTimeout(() => setSuccess(null), 3000);
+  }, []);
 
   if (isLoading) {
     return (
       <div className="loading-container">
-        <div className="loading-spinner"></div>
-        <p>Loading profile data...</p>
+        <FontAwesomeIcon icon={faSpinner} spin className="loading-spinner" />
+        <p>Loading your profile...</p>
       </div>
     );
   }
 
   return (
     <ErrorBoundary>
-    <div className={`edit-profile-container ${activeSection ? 'sidebar-active' : ''}`}>
-        {/* Header with Back and Revert buttons */}
-        <div className="edit-header">
+      <div className="edit-profile-container">
+        <div className="edit-profile-header">
           <div className="header-left">
-            <button className="back-btn" onClick={() => navigate(-1)}>
-              <FontAwesomeIcon icon={faArrowLeft} /> Back to Profile
-            </button>
-            <h1 className="edit-title">Edit Profile</h1>
-          </div>
-          <div className="header-right">
             <button 
-              className="revert-btn" 
-              onClick={handleRevert}
-              disabled={!originalData || JSON.stringify(profileData) === JSON.stringify(originalData)}
+              className="btn-back"
+              onClick={() => navigate(-1)}
+              disabled={isSaving}
             >
-              <FontAwesomeIcon icon={faUndo} /> Revert Changes
+              <FontAwesomeIcon icon={faArrowLeft} />
+              Back
+            </button>
+            <h1>Edit Profile</h1>
+          </div>
+          
+          <div className="header-right">
+            {hasUnsavedChanges() && (
+              <button 
+                className="btn-revert"
+                onClick={handleRevert}
+                disabled={isSaving}
+              >
+                <FontAwesomeIcon icon={faUndo} />
+                Revert
+              </button>
+            )}
+            
+            <button 
+              className="btn-save"
+              onClick={handleSave}
+              disabled={isSaving || !hasUnsavedChanges()}
+            >
+              {isSaving ? (
+                <>
+                  <FontAwesomeIcon icon={faSpinner} spin />
+                  Saving...
+                </>
+              ) : (
+                <>
+                  <FontAwesomeIcon icon={faSave} />
+                  Save Changes
+                </>
+              )}
             </button>
           </div>
         </div>
 
-        {/* Progress indicator */}
-        <div className="edit-progress">
-          <div className="progress-steps">
-            <div className={`step ${activeSection === null ? 'active' : ''}`}>
-              <span className="step-number">1</span>
-              <span className="step-label">Basic Info</span>
-            </div>
-            <div className={`step ${activeSection === 'experience' ? 'active' : ''}`}>
-              <span className="step-number">2</span>
-              <span className="step-label">Experience</span>
-            </div>
-            <div className={`step ${activeSection === 'education' ? 'active' : ''}`}>
-              <span className="step-number">3</span>
-              <span className="step-label">Education</span>
-            </div>
-            <div className={`step ${activeSection === 'skills' ? 'active' : ''}`}>
-              <span className="step-number">4</span>
-              <span className="step-label">Skills</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Navigation sidebar */}
-      <nav className={`edit-profile-nav ${activeSection ? 'sidebar' : ''}`}>
-        {activeSection && (
-          <div className="back-button" onClick={handleCloseModal}>
-            <FontAwesomeIcon icon={faArrowLeft} className="icon" />
-              <span>Back to Sections</span>
+        {(error || success) && (
+          <div className="status-messages">
+            {error && (
+              <div className="message error">
+                <FontAwesomeIcon icon={faExclamationCircle} />
+                {error}
+                <button 
+                  className="close-message"
+                  onClick={() => setError(null)}
+                >
+                  <FontAwesomeIcon icon={faTimes} />
+                </button>
+              </div>
+            )}
+            
+            {success && (
+              <div className="message success">
+                <FontAwesomeIcon icon={faCheckCircle} />
+                {success}
+                <button 
+                  className="close-message"
+                  onClick={() => setSuccess(null)}
+                >
+                  <FontAwesomeIcon icon={faTimes} />
+                </button>
+              </div>
+            )}
           </div>
         )}
-          <div className="nav-items">
-            <div 
-              className={`nav-item ${activeSection === null ? 'active' : ''}`} 
-              onClick={() => setActiveSection(null)}
-            >
-              <FontAwesomeIcon icon={faUser} className="icon" />
-              <span>Basic Info</span>
-            </div>
-            <div 
-              className={`nav-item ${activeSection === 'experience' ? 'active' : ''}`} 
-              onClick={() => setActiveSection('experience')}
-            >
-          <FontAwesomeIcon icon={faBriefcase} className="icon" />
-          <span>Experience</span>
-        </div>
-            <div 
-              className={`nav-item ${activeSection === 'education' ? 'active' : ''}`} 
-              onClick={() => setActiveSection('education')}
-            >
-          <FontAwesomeIcon icon={faGraduationCap} className="icon" />
-          <span>Education</span>
-        </div>
-            <div 
-              className={`nav-item ${activeSection === 'skills' ? 'active' : ''}`} 
-              onClick={() => setActiveSection('skills')}
-            >
-          <FontAwesomeIcon icon={faLightbulb} className="icon" />
-          <span>Skills</span>
-        </div>
-        </div>
-      </nav>
 
-        {/* Status messages */}
-        <div className="status-container">
-      {error && (
-        <div className="error-message">
-              <FontAwesomeIcon icon={faExclamationCircle} />
-          {error}
-        </div>
-      )}
-          {status && (
-        <div className="success-message">
-              <FontAwesomeIcon icon={faCheckCircle} />
-              {status}
-            </div>
-          )}
+        <div className="section-navigation">
+          {sections.map(section => (
+            <button
+              key={section.id}
+              className={`nav-tab ${activeSection === section.id ? 'active' : ''}`}
+              onClick={() => setActiveSection(section.id)}
+              disabled={isSaving}
+            >
+              <FontAwesomeIcon icon={section.icon} />
+              {section.label}
+            </button>
+          ))}
         </div>
 
-        {/* Main content area */}
         <div className="edit-profile-content">
-          {activeSection === null && (
-            <div className="basic-info-section">
-              <div className="section">
-                <h2>Profile Picture</h2>
-                <div className="form-group">
-                  <div className="image-upload-container">
-                    {preview ? (
-                      <div className="image-preview">
-                        <img src={preview} alt="Profile preview" className="preview-img" />
-                        <button
-                          type="button"
-                          className="remove-image"
-                          onClick={() => {
-                            setPreview(null);
-                            setProfileData(prev => ({ ...prev, profile_image: null }));
-                          }}
-                        >
-                          <FontAwesomeIcon icon={faTimes} />
-                        </button>
-                      </div>
-                    ) : (
-                      <div className="upload-placeholder">
-                        <FontAwesomeIcon icon={faCamera} size="2x" />
-                        <span>Click to upload profile picture</span>
-                      </div>
-                    )}
-                    <input
-                      id="profile_image"
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageUpload}
-                      className="hidden-input"
-                    />
-                  </div>
-                </div>
+          {activeSection === 'basic' && (
+            <div className="section-content basic-info">
+              <div className="section-header">
+                <h2>Basic Information</h2>
+                <p>Update your personal information and profile picture</p>
               </div>
 
-              <div className="section">
-                <h2>Basic Information</h2>
+              <div className="form-section">
+                <h3>Profile Picture</h3>
+                <div 
+                  className="image-upload-area"
+                  ref={dragDropRef}
+                  onDragOver={handleDragOver}
+                  onDragLeave={handleDragLeave}
+                  onDrop={handleDrop}
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  {imagePreview ? (
+                    <div className="image-preview">
+                      <img src={imagePreview} alt="Profile preview" />
+                      <button 
+                        className="remove-image"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          removeProfileImage();
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faTimes} />
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="upload-placeholder">
+                      <FontAwesomeIcon icon={faCamera} />
+                      <p>Click to upload or drag and drop</p>
+                      <span>Supports: JPG, PNG, GIF (max 5MB)</span>
+                    </div>
+                  )}
+                </div>
+                
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileInputChange}
+                  className="hidden-input"
+                />
+              </div>
+
+              <div className="form-section">
+                <h3>Personal Information</h3>
+                
                 <div className="form-group">
-                  <label htmlFor="display_name">Display Name</label>
+                  <label htmlFor="display_name">
+                    Display Name *
+                    {validationErrors.display_name && (
+                      <span className="error-text">{validationErrors.display_name}</span>
+                    )}
+                  </label>
                   <input
                     id="display_name"
                     type="text"
                     value={profileData.display_name}
-                    onChange={(e) => setProfileData(prev => ({ ...prev, display_name: e.target.value }))}
+                    onChange={(e) => setProfileData(prev => ({ 
+                      ...prev, 
+                      display_name: e.target.value 
+                    }))}
                     placeholder="Enter your display name"
+                    className={validationErrors.display_name ? 'error' : ''}
                   />
                 </div>
+
                 <div className="form-group">
                   <label htmlFor="bio">Bio</label>
                   <textarea
                     id="bio"
                     value={profileData.bio}
-                    onChange={(e) => setProfileData(prev => ({ ...prev, bio: e.target.value }))}
-                    placeholder="Tell us about yourself"
+                    onChange={(e) => setProfileData(prev => ({ 
+                      ...prev, 
+                      bio: e.target.value 
+                    }))}
+                    placeholder="Tell us about yourself..."
                     rows={4}
                   />
                 </div>
-              </div>
 
-              <div className="section">
-                <h2>Skills</h2>
                 <div className="form-group">
-                  <label htmlFor="skills">Add Skills</label>
-                  <div className="skills-input-container">
-                    <input
-                      id="skills"
-                      type="text"
-                      value={skillInput}
-                      onChange={(e) => setSkillInput(e.target.value)}
-                      onKeyDown={handleSkillEnter}
-                      placeholder="Type a skill and press Enter or comma"
-                    />
-                    <button 
-                      className="add-skill-btn"
-                      onClick={() => {
-                        if (skillInput.trim()) {
-                          handleSkillEnter({ key: 'Enter', preventDefault: () => {} });
-                        }
-                      }}
-                    >
-                      Add
-                    </button>
-                  </div>
-                  <div className="skills-preview">
-                    {profileData.skills.map(skill => (
-                      <span key={skill} className="tag">
-                        {skill}
-                        <button
-                          type="button"
-                          onClick={() => removeSkill(skill)}
-                          className="remove-skill"
-                        >
-                          ×
-                        </button>
-                      </span>
-                    ))}
-                  </div>
+                  <label htmlFor="location">Location</label>
+                  <input
+                    id="location"
+                    type="text"
+                    value={profileData.location}
+                    onChange={(e) => setProfileData(prev => ({ 
+                      ...prev, 
+                      location: e.target.value 
+                    }))}
+                    placeholder="City, Country"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="website">
+                    Website
+                    {validationErrors.website && (
+                      <span className="error-text">{validationErrors.website}</span>
+                    )}
+                  </label>
+                  <input
+                    id="website"
+                    type="url"
+                    value={profileData.website}
+                    onChange={(e) => setProfileData(prev => ({ 
+                      ...prev, 
+                      website: e.target.value 
+                    }))}
+                    placeholder="https://your-website.com"
+                    className={validationErrors.website ? 'error' : ''}
+                  />
                 </div>
               </div>
-        </div>
-      )}
+            </div>
+          )}
 
-          {/* Section components */}
-        {activeSection === 'experience' && (
-          <Experience 
-            experiences={profileData.experiences}
-            onUpdate={(data) => handleSectionUpdate('experience', data)}
-          />
-        )}
-        {activeSection === 'education' && (
-          <Education 
-            education={profileData.education_details}
-            onUpdate={(data) => handleSectionUpdate('education', data)}
-          />
-        )}
-        {activeSection === 'skills' && (
-          <Skills 
-            skills={profileData.skills}
-            onUpdate={(data) => handleSectionUpdate('skills', data)}
-          />
-        )}
-        
-          {/* Save button */}
-          <div className="save-container">
-        <button 
-              type="submit" 
-              className="save-btn" 
-              onClick={handleSubmit}
-              disabled={status === 'Saving...' || JSON.stringify(profileData) === JSON.stringify(originalData)}
-        >
-              {status === 'Saving...' ? (
-                <>
-                  <FontAwesomeIcon icon={faSpinner} spin /> Saving...
-                </>
-              ) : (
-                <>
-                  <FontAwesomeIcon icon={faSave} /> Save Changes
-                </>
-              )}
-        </button>
-      </div>
-    </div>
+          {activeSection === 'education' && (
+            <Education onUpdate={(data) => handleSectionUpdate('education', data)} />
+          )}
+
+          {activeSection === 'experience' && (
+            <Experience onUpdate={(data) => handleSectionUpdate('experience', data)} />
+          )}
+
+          {activeSection === 'projects' && (
+            <Projects onUpdate={(data) => handleSectionUpdate('projects', data)} />
+          )}
+
+          {activeSection === 'licenses' && (
+            <Licenses onUpdate={(data) => handleSectionUpdate('licenses', data)} />
+          )}
+
+          {activeSection === 'skills' && (
+            <Skills onUpdate={(data) => handleSectionUpdate('skills', data)} />
+          )}
+        </div>
       </div>
     </ErrorBoundary>
   );

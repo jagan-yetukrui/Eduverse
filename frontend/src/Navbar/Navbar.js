@@ -5,12 +5,16 @@ import "./Navbar.css";
 import FirstLogo from "../First_logo.png";
 import { AiOutlineUser } from "react-icons/ai";
 
-// Utility function to determine if a path is active
 const isActive = (path, currentPath) => path === currentPath;
 
 const NavbarButton = ({ path, label, icon, onClick, isActive }) => (
   <div className={`nav-item ${isActive ? "active" : ""}`}>
-    <button onClick={onClick} className="nav-button" aria-label={label} style={{ border: 'none', background: 'none' }}>
+    <button
+      onClick={onClick}
+      className="nav-button"
+      aria-label={label}
+      style={{ border: 'none', background: 'none' }}
+    >
       {icon && <span className="nav-icon">{icon}</span>}
       <p>{label}</p>
     </button>
@@ -20,8 +24,7 @@ const NavbarButton = ({ path, label, icon, onClick, isActive }) => (
 const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { user: currentUser } = useUser();
-  const [isExpanded, setIsExpanded] = useState(false);
+  const { user: currentUser, fetchUser, logout } = useUser();
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const isProjectPage = location.pathname.startsWith('/projects');
@@ -38,17 +41,21 @@ const Navbar = () => {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("access_token");
-    setIsAuthenticated(false);
-    navigate("/login");
-  };
+  const handleProfileNavigation = async () => {
+    const token = localStorage.getItem("access_token");
 
-  const handleProfileNavigation = () => {
+    if (!token) return navigate("/login");
+
     if (currentUser?.username) {
-      navigate('/profile');
+      return navigate("/profile");
+    }
+
+    await fetchUser();
+    const updated = JSON.parse(localStorage.getItem("user"));
+    if (updated?.username) {
+      navigate("/profile");
     } else {
-      navigate('/login');
+      navigate("/login");
     }
   };
 
@@ -62,13 +69,12 @@ const Navbar = () => {
     setIsAuthenticated(Boolean(token));
   }, [location]);
 
-  // Hide navbar on /jagan-yetukuri path
   if (location.pathname === '/jagan-yetukuri') {
     return null;
   }
 
   return (
-    <nav className={`navbar ${isMobile ? "mobile" : ""} ${isProjectPage ? "alt-navbar" : ""}`} aria-label="Main Navigation">
+    <nav className={`navbar ${isMobile ? "mobile" : ""} ${isProjectPage ? "alt-navbar" : ""}`}>
       <div className="nav-item-container">
         <div className="logo-container-nav" onClick={() => handleNavigation("/")}>
           <img src={FirstLogo} alt="EduVerse" className="nav-logo" />
@@ -81,14 +87,12 @@ const Navbar = () => {
           onClick={() => handleNavigation("/search")}
           isActive={isActive("/search", location.pathname)}
         />
-
         <NavbarButton
           path="/notes"
           label="EDURA"
           onClick={() => handleNavigation("/notes")}
           isActive={isActive("/notes", location.pathname)}
         />
-
         <NavbarButton
           path="/project-suggestions"
           label="BUILDZONE"
@@ -104,10 +108,13 @@ const Navbar = () => {
             label="PROFILE"
             icon={<AiOutlineUser />}
             onClick={handleProfileNavigation}
-            isActive={isActive("/profile", location.pathname) || location.pathname.startsWith('/profile/')}
+            isActive={
+              isActive("/profile", location.pathname) ||
+              location.pathname.startsWith('/profile/')
+            }
           />
           <button
-            onClick={handleLogout}
+            onClick={logout}
             className="nav-item nav-button"
             aria-label="Logout"
             style={{ border: 'none', background: 'none' }}
@@ -134,17 +141,6 @@ const Navbar = () => {
             REGISTER
           </button>
         </div>
-      )}
-
-      {isMobile && (
-        <button
-          className="mobile-toggle"
-          onClick={() => setIsExpanded(!isExpanded)}
-          aria-expanded={isExpanded}
-          aria-label="Toggle navigation"
-        >
-          <div className={`hamburger ${isExpanded ? "active" : ""}`}></div>
-        </button>
       )}
     </nav>
   );
