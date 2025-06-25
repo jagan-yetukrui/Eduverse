@@ -3,12 +3,101 @@ from django.contrib.auth import get_user_model
 from .models import Profile, Education, License, Experience, Project
 
 
+# Serializer for Education model with proper validation
+class EducationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Education
+        fields = [
+            'id', 'school_name', 'degree', 'field_of_study', 
+            'start_date', 'end_date', 'description'
+        ]
+        read_only_fields = ['id']
+
+    def validate(self, data):
+        """Validate that end_date is not before start_date"""
+        start_date = data.get('start_date')
+        end_date = data.get('end_date')
+        
+        if start_date and end_date and end_date < start_date:
+            raise serializers.ValidationError("End date cannot be before start date")
+        
+        return data
+
+
+# Serializer for Experience model with proper validation
+class ExperienceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Experience
+        fields = [
+            'id', 'title', 'company', 'location', 'start_date', 
+            'end_date', 'is_current', 'description'
+        ]
+        read_only_fields = ['id']
+
+    def validate(self, data):
+        """Validate that end_date is not before start_date and handle current position"""
+        start_date = data.get('start_date')
+        end_date = data.get('end_date')
+        is_current = data.get('is_current', False)
+        
+        if start_date and end_date and end_date < start_date:
+            raise serializers.ValidationError("End date cannot be before start date")
+        
+        if is_current and end_date:
+            raise serializers.ValidationError("Current position should not have an end date")
+        
+        return data
+
+
+# Serializer for License model with proper validation
+class LicenseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = License
+        fields = [
+            'id', 'name', 'issuing_organization', 'issue_date', 
+            'expiry_date', 'credential_id', 'credential_url'
+        ]
+        read_only_fields = ['id']
+
+    def validate(self, data):
+        """Validate that expiry_date is not before issue_date"""
+        issue_date = data.get('issue_date')
+        expiry_date = data.get('expiry_date')
+        
+        if issue_date and expiry_date and expiry_date < issue_date:
+            raise serializers.ValidationError("Expiry date cannot be before issue date")
+        
+        return data
+
+
+# Serializer for Project model with proper validation
+class ProjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Project
+        fields = [
+            'id', 'title', 'description', 'start_date', 
+            'end_date', 'url', 'is_research'
+        ]
+        read_only_fields = ['id', 'collaborators']
+
+    def validate(self, data):
+        """Validate that end_date is not before start_date"""
+        start_date = data.get('start_date')
+        end_date = data.get('end_date')
+        
+        if start_date and end_date and end_date < start_date:
+            raise serializers.ValidationError("End date cannot be before start date")
+        
+        return data
+
+
 # Main serializer for Profile model handling basic profile information and related counts
 class ProfileSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source='user.username', read_only=True)
     email = serializers.EmailField(source='user.email', read_only=True)
     display_name = serializers.CharField(max_length=100)
     avatar_url = serializers.SerializerMethodField()
+    profile_image_url = serializers.SerializerMethodField()
     followers_count = serializers.SerializerMethodField()
     following_count = serializers.SerializerMethodField()
     posts_count = serializers.SerializerMethodField()
@@ -27,24 +116,33 @@ class ProfileSerializer(serializers.ModelSerializer):
     website = serializers.URLField(required=False, allow_blank=True)
     location = serializers.CharField(max_length=100, required=False, allow_blank=True)
     bio = serializers.CharField(max_length=500, required=False, allow_blank=True)
+    # Nested serializers for related data
+    education_details = EducationSerializer(many=True, read_only=True)
+    experiences = ExperienceSerializer(many=True, read_only=True)
+    licenses = LicenseSerializer(many=True, read_only=True)
+    projects = ProjectSerializer(many=True, read_only=True)
 
     class Meta:
         model = Profile
         fields = [
             'id', 'username', 'display_name', 'email',
-            'bio', 'avatar', 'avatar_url', 'skills', 'account_status',
-            'is_verified', 'created_at', 'updated_at',
+            'bio', 'avatar', 'avatar_url', 'profile_image', 'profile_image_url', 
+            'skills', 'account_status', 'is_verified', 'created_at', 'updated_at',
             'followers_count', 'following_count', 'posts_count', 'posts',
             'blocked_users', 'notification_settings', 'privacy_settings',
             'highlights', 'website', 'location', 'education_details',
-            'experiences', 'licenses', 'close_friends', 'liked_posts'
+            'experiences', 'licenses', 'projects', 'close_friends', 'liked_posts'
         ]
-        read_only_fields = ['id', 'username', 'email', 'account_status', 'is_verified']
+        read_only_fields = ['id', 'username', 'email', 'account_status', 'is_verified', 'skills']
 
     def get_avatar_url(self, obj):
         if obj.avatar:
             return obj.avatar.url
         return '/default-avatar.png'
+
+    def get_profile_image_url(self, obj):
+        """Get profile image URL with fallback to avatar"""
+        return obj.get_profile_image_url() or '/default-avatar.png'
 
     def get_followers_count(self, obj):
         return obj.followers.count()
@@ -78,14 +176,19 @@ class ProfileSerializer(serializers.ModelSerializer):
         data['display_name'] = data.get('display_name') or data.get('username')
         data['bio'] = data.get('bio') or 'No bio yet'
         data['avatar_url'] = data.get('avatar_url') or '/default-avatar.png'
+        data['profile_image_url'] = data.get('profile_image_url') or '/default-avatar.png'
         data['followers_count'] = data.get('followers_count') or 0
         data['following_count'] = data.get('following_count') or 0
         data['posts_count'] = data.get('posts_count') or 0
         return data
 
     def update(self, instance, validated_data):
-        # Handle avatar update separately if needed
+        # Handle image updates separately
+        profile_image = validated_data.pop('profile_image', None)
         avatar = validated_data.pop('avatar', None)
+        
+        if profile_image:
+            instance.profile_image = profile_image
         if avatar:
             instance.avatar = avatar
 
@@ -95,6 +198,32 @@ class ProfileSerializer(serializers.ModelSerializer):
 
         instance.save()
         return instance
+
+
+# Serializer for profile updates (PATCH operations)
+class ProfileUpdateSerializer(serializers.ModelSerializer):
+    profile_image = serializers.ImageField(required=False, allow_null=True)
+    
+    class Meta:
+        model = Profile
+        fields = [
+            'display_name', 'bio', 'profile_image', 'website', 
+            'location', 'notification_settings', 'privacy_settings'
+        ]
+
+    def validate_profile_image(self, value):
+        """Validate profile image file size and type"""
+        if value:
+            # Check file size (5MB limit)
+            if value.size > 5 * 1024 * 1024:
+                raise serializers.ValidationError("Profile image file size must be under 5MB")
+            
+            # Check file type
+            allowed_types = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif']
+            if value.content_type not in allowed_types:
+                raise serializers.ValidationError("Only JPEG, PNG, and GIF images are allowed")
+        
+        return value
 
 
 # Dedicated serializer for privacy settings with strict choices validation
@@ -243,31 +372,3 @@ class EditProfileSerializer(serializers.ModelSerializer):
         if value and value.size > 5 * 1024 * 1024:  # 5MB limit
             raise serializers.ValidationError("Avatar file size must be under 5MB")
         return value
-
-
-class EducationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Education
-        fields = '__all__'
-        read_only_fields = ['profile']
-
-
-class LicenseSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = License
-        fields = '__all__'
-        read_only_fields = ['profile']
-
-
-class ExperienceSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Experience
-        fields = '__all__'
-        read_only_fields = ['profile']
-
-
-class ProjectSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Project
-        fields = '__all__'
-        read_only_fields = ['profile']

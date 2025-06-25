@@ -112,7 +112,8 @@ class Profile(models.Model):
     email = models.EmailField(unique=True)
     bio = models.TextField(blank=True)
     avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
-    skills = models.JSONField(default=dict, blank=True)
+    profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True, help_text="Main profile image for the user")
+    skills = models.JSONField(default=dict, blank=True, help_text="AI-generated skills - read-only for users")
     account_status = models.CharField(
         max_length=20,
         choices=ACCOUNT_STATUS_CHOICES,
@@ -158,4 +159,12 @@ class Profile(models.Model):
         try:
             return cls.objects.get(user__username=username)
         except cls.DoesNotExist:
+            return None
+
+    def get_profile_image_url(self):
+        """Get the profile image URL, fallback to avatar if not set"""
+        if self.profile_image:
+            return self.profile_image.url
+        elif self.avatar:
+            return self.avatar.url
             return None

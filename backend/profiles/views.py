@@ -3,15 +3,18 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.decorators import action
 from rest_framework import status, viewsets, permissions, filters
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from django.contrib.auth.hashers import make_password
 from .serializers import (
-    ProfileSerializer, SettingsSerializer, EditProfileSerializer,
+    ProfileSerializer, ProfileUpdateSerializer, SettingsSerializer,
     PrivacySettingsSerializer, NotificationSettingsSerializer,
-    SecuritySettingsSerializer, BlockedUserSerializer, CloseFriendSerializer
+    SecuritySettingsSerializer, BlockedUserSerializer, CloseFriendSerializer,
+    EducationSerializer, ExperienceSerializer, LicenseSerializer, ProjectSerializer
 )
-from .models import Profile, Education, License, Experience
+from .models import Profile, Education, License, Experience, Project
+
 
 class ProfileViewSet(viewsets.ModelViewSet):
     """
@@ -21,8 +24,9 @@ class ProfileViewSet(viewsets.ModelViewSet):
     serializer_class = ProfileSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
     filter_backends = [filters.SearchFilter]
-    search_fields = ['username', 'display_name']
+    search_fields = ['user__username', 'display_name']
     lookup_field = 'user__username'
+    parsers = [MultiPartParser, FormParser, JSONParser]
 
     def get_queryset(self):
         queryset = Profile.objects.all()
@@ -84,21 +88,35 @@ class ProfileViewSet(viewsets.ModelViewSet):
         }
         return Response(stats)
 
-    @action(detail=False, methods=['get', 'put', 'patch'], permission_classes=[IsAuthenticated], url_path='me', url_name='me')
+    @action(detail=False, methods=['get', 'patch'], permission_classes=[IsAuthenticated], url_path='me', url_name='me')
     def me(self, request, *args, **kwargs):
+        """
+        GET: Retrieve current user's full profile
+        PATCH: Update current user's profile (supports multipart form data for image uploads)
+        """
         user = request.user
         if not user.is_authenticated:
             return Response({"detail": "Authentication credentials were not provided."}, status=401)
 
-        # Assuming 'profile' is a related name on your User model
         try:
             profile = user.profile
         except AttributeError:
             return Response({"detail": "Profile not found."}, status=404)
 
-        # Serialize and return the profile
-        serializer = self.get_serializer(profile)
-        return Response(serializer.data)
+        if request.method == 'GET':
+            # Return full profile with nested data
+            serializer = ProfileSerializer(profile)
+            return Response(serializer.data)
+        
+        elif request.method == 'PATCH':
+            # Handle profile updates with multipart form data support
+            serializer = ProfileUpdateSerializer(profile, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                # Return updated profile with full data
+                full_serializer = ProfileSerializer(profile)
+                return Response(full_serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated], url_path='me/stats', url_name='me-stats')
     def me_stats(self, request):
@@ -108,9 +126,11 @@ class ProfileViewSet(viewsets.ModelViewSet):
             return Response({
                 'followers_count': profile.followers.count(),
                 'following_count': profile.following.count(),
-                'posts_count': profile.user.posts.count(),
+                'posts_count': profile.user.posts.count() if hasattr(profile.user, 'posts') else 0,
                 'education_count': profile.education_details.count(),
+                'experience_count': profile.experiences.count(),
                 'licenses_count': profile.licenses.count(),
+                'projects_count': profile.projects.count(),
                 'blocked_users_count': profile.blocked_users.count(),
                 'close_friends_count': profile.close_friends.count()
             })
@@ -120,11 +140,192 @@ class ProfileViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_404_NOT_FOUND
             )
 
+    # Education Management Endpoints
+    @action(detail=False, methods=['get', 'post'], permission_classes=[IsAuthenticated], url_path='me/education', url_name='me-education')
+    def me_education(self, request):
+        """
+        GET: Retrieve all education entries for current user
+        POST: Add new education entry
+        """
+        profile = request.user.profile
+        
+        if request.method == 'GET':
+            education_list = profile.education_details.all()
+            serializer = EducationSerializer(education_list, many=True)
+            return Response(serializer.data)
+        
+        elif request.method == 'POST':
+            serializer = EducationSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save(profile=profile)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=False, methods=['put', 'delete'], permission_classes=[IsAuthenticated], url_path='me/education/(?P<education_id>[^/.]+)', url_name='me-education-detail')
+    def me_education_detail(self, request, education_id=None):
+        """
+        PUT: Update specific education entry
+        DELETE: Delete specific education entry
+        """
+        profile = request.user.profile
+        
+        try:
+            education = profile.education_details.get(id=education_id)
+        except Education.DoesNotExist:
+            return Response({"detail": "Education entry not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+        if request.method == 'PUT':
+            serializer = EducationSerializer(education, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        elif request.method == 'DELETE':
+            education.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+    # Experience Management Endpoints
+    @action(detail=False, methods=['get', 'post'], permission_classes=[IsAuthenticated], url_path='me/experience', url_name='me-experience')
+    def me_experience(self, request):
+        """
+        GET: Retrieve all experience entries for current user
+        POST: Add new experience entry
+        """
+        profile = request.user.profile
+        
+        if request.method == 'GET':
+            experience_list = profile.experiences.all()
+            serializer = ExperienceSerializer(experience_list, many=True)
+            return Response(serializer.data)
+        
+        elif request.method == 'POST':
+            serializer = ExperienceSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save(profile=profile)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=False, methods=['put', 'delete'], permission_classes=[IsAuthenticated], url_path='me/experience/(?P<experience_id>[^/.]+)', url_name='me-experience-detail')
+    def me_experience_detail(self, request, experience_id=None):
+        """
+        PUT: Update specific experience entry
+        DELETE: Delete specific experience entry
+        """
+        profile = request.user.profile
+        
+        try:
+            experience = profile.experiences.get(id=experience_id)
+        except Experience.DoesNotExist:
+            return Response({"detail": "Experience entry not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+        if request.method == 'PUT':
+            serializer = ExperienceSerializer(experience, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        elif request.method == 'DELETE':
+            experience.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+    # License Management Endpoints
+    @action(detail=False, methods=['get', 'post'], permission_classes=[IsAuthenticated], url_path='me/licenses', url_name='me-licenses')
+    def me_licenses(self, request):
+        """
+        GET: Retrieve all license entries for current user
+        POST: Add new license entry
+        """
+        profile = request.user.profile
+        
+        if request.method == 'GET':
+            license_list = profile.licenses.all()
+            serializer = LicenseSerializer(license_list, many=True)
+            return Response(serializer.data)
+        
+        elif request.method == 'POST':
+            serializer = LicenseSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save(profile=profile)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=False, methods=['put', 'delete'], permission_classes=[IsAuthenticated], url_path='me/licenses/(?P<license_id>[^/.]+)', url_name='me-licenses-detail')
+    def me_licenses_detail(self, request, license_id=None):
+        """
+        PUT: Update specific license entry
+        DELETE: Delete specific license entry
+        """
+        profile = request.user.profile
+        
+        try:
+            license_obj = profile.licenses.get(id=license_id)
+        except License.DoesNotExist:
+            return Response({"detail": "License entry not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+        if request.method == 'PUT':
+            serializer = LicenseSerializer(license_obj, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        elif request.method == 'DELETE':
+            license_obj.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+    # Project Management Endpoints
+    @action(detail=False, methods=['get', 'post'], permission_classes=[IsAuthenticated], url_path='me/projects', url_name='me-projects')
+    def me_projects(self, request):
+        """
+        GET: Retrieve all project entries for current user
+        POST: Add new project entry
+        """
+        profile = request.user.profile
+        
+        if request.method == 'GET':
+            project_list = profile.projects.all()
+            serializer = ProjectSerializer(project_list, many=True)
+            return Response(serializer.data)
+        
+        elif request.method == 'POST':
+            serializer = ProjectSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save(profile=profile)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=False, methods=['put', 'delete'], permission_classes=[IsAuthenticated], url_path='me/projects/(?P<project_id>[^/.]+)', url_name='me-projects-detail')
+    def me_projects_detail(self, request, project_id=None):
+        """
+        PUT: Update specific project entry
+        DELETE: Delete specific project entry
+        """
+        profile = request.user.profile
+        
+        try:
+            project = profile.projects.get(id=project_id)
+        except Project.DoesNotExist:
+            return Response({"detail": "Project entry not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+        if request.method == 'PUT':
+            serializer = ProjectSerializer(project, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        elif request.method == 'DELETE':
+            project.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+    # Legacy endpoints for backward compatibility
     @action(detail=True, methods=['get'])
     def posts(self, request, pk=None):
         """Retrieve all posts for a specific profile"""
         profile = self.get_object()
-        posts = profile.user.posts.all()
+        posts = profile.user.posts.all() if hasattr(profile.user, 'posts') else []
         return Response({
             'posts': [
                 {
@@ -221,6 +422,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
             'highlights': profile.highlights
         })
 
+    # Settings management endpoints
     @action(detail=True, methods=['get'], permission_classes=[IsAuthenticated])
     def privacy_settings(self, request, pk=None):
         """Retrieve privacy settings for a profile"""
@@ -267,238 +469,66 @@ class ProfileViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    @action(detail=True, methods=['put'], permission_classes=[IsAuthenticated])
-    def update_password(self, request, pk=None):
-        """Change user password with old password verification"""
-        profile = self.get_object()
-        if request.user.profile != profile:
-            return Response({'error': 'Unauthorized'}, status=status.HTTP_403_FORBIDDEN)
-            
-        old_password = request.data.get('old_password')
-        new_password = request.data.get('new_password')
-        
-        if not profile.user.check_password(old_password):
-            return Response({'error': 'Invalid old password'}, status=status.HTTP_400_BAD_REQUEST)
-            
-        profile.user.password = make_password(new_password)
-        profile.user.save()
-        return Response({'status': 'Password updated successfully'})
-
+    # Additional utility endpoints
     @action(detail=True, methods=['get'], permission_classes=[IsAuthenticated])
-    def tfa_status(self, request, pk=None):
-        """Check two-factor authentication status"""
-        profile = self.get_object()
-        if request.user.profile != profile:
-            return Response({'error': 'Unauthorized'}, status=status.HTTP_403_FORBIDDEN)
-        serializer = SecuritySettingsSerializer(profile.security_settings)
-        return Response(serializer.data)
-
-    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
-    def enable_tfa(self, request, pk=None):
-        """Enable two-factor authentication"""
-        profile = self.get_object()
-        if request.user.profile != profile:
-            return Response({'error': 'Unauthorized'}, status=status.HTTP_403_FORBIDDEN)
-        
-        profile.security_settings['two_factor_auth'] = True
-        profile.save()
-        return Response({'status': 'Two-factor authentication enabled'})
-
-    @action(detail=True, methods=['delete'], permission_classes=[IsAuthenticated])
-    def disable_tfa(self, request, pk=None):
-        """Disable two-factor authentication"""
-        profile = self.get_object()
-        if request.user.profile != profile:
-            return Response({'error': 'Unauthorized'}, status=status.HTTP_403_FORBIDDEN)
-        
-        profile.security_settings['two_factor_auth'] = False
-        profile.save()
-        return Response({'status': 'Two-factor authentication disabled'})
-
-    @action(detail=True, methods=['get'], permission_classes=[IsAuthenticated])
-    def blocked_users(self, request, pk=None):
-        """Get list of blocked users"""
-        profile = self.get_object()
-        if request.user.profile != profile:
-            return Response({'error': 'Unauthorized'}, status=status.HTTP_403_FORBIDDEN)
-        serializer = BlockedUserSerializer(profile.blocked_users.all(), many=True)
-        return Response(serializer.data)
-
-    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
-    def block_user(self, request, pk=None):
-        """Block a user"""
-        profile = self.get_object()
-        if request.user.profile != profile:
-            return Response({'error': 'Unauthorized'}, status=status.HTTP_403_FORBIDDEN)
-            
-        serializer = BlockedUserSerializer(data=request.data)
-        if serializer.is_valid():
-            user_to_block = get_object_or_404(Profile, id=serializer.validated_data['user_id'])
-            profile.blocked_users.add(user_to_block)
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    @action(detail=True, methods=['delete'], permission_classes=[IsAuthenticated])
-    def unblock_user(self, request, pk=None):
-        """Unblock a previously blocked user"""
-        profile = self.get_object()
-        if request.user.profile != profile:
-            return Response({'error': 'Unauthorized'}, status=status.HTTP_403_FORBIDDEN)
-            
-        user_to_unblock = get_object_or_404(Profile, id=request.data.get('user_id'))
-        profile.blocked_users.remove(user_to_unblock)
-        return Response({'status': f'User {user_to_unblock.username} unblocked'})
-
-    @action(detail=True, methods=['get'], permission_classes=[IsAuthenticated])
-    def close_friends(self, request, pk=None):
-        """Get close friends list"""
-        profile = self.get_object()
-        if request.user.profile != profile:
-            return Response({'error': 'Unauthorized'}, status=status.HTTP_403_FORBIDDEN)
-        serializer = CloseFriendSerializer(profile.close_friends.all(), many=True)
-        return Response(serializer.data)
-
-    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
-    def add_close_friend(self, request, pk=None):
-        """Add user to close friends list"""
-        profile = self.get_object()
-        if request.user.profile != profile:
-            return Response({'error': 'Unauthorized'}, status=status.HTTP_403_FORBIDDEN)
-            
-        serializer = CloseFriendSerializer(data=request.data)
-        if serializer.is_valid():
-            friend = get_object_or_404(Profile, id=serializer.validated_data['user_id'])
-            profile.close_friends.add(friend)
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    @action(detail=True, methods=['delete'], permission_classes=[IsAuthenticated]) 
-    def remove_close_friend(self, request, pk=None):
-        """Remove user from close friends list"""
-        profile = self.get_object()
-        if request.user.profile != profile:
-            return Response({'error': 'Unauthorized'}, status=status.HTTP_403_FORBIDDEN)
-            
-        friend = get_object_or_404(Profile, id=request.data.get('user_id'))
-        profile.close_friends.remove(friend)
-        return Response({'status': f'User {friend.username} removed from close friends'})
-
-    @action(detail=True, methods=['get'], permission_classes=[IsAuthenticated])
-    def liked_posts(self, request, pk=None):
-        """Get liked posts"""
-        profile = self.get_object()
-        if request.user.profile != profile:
-            return Response({'error': 'Unauthorized'}, status=status.HTTP_403_FORBIDDEN)
-        return Response({'liked_posts': profile.liked_posts.values()})
-
-    @action(detail=True, methods=['get'], permission_classes=[IsAuthenticated])
-    def education_details(self, request, pk=None):
-        """Get education details"""
-        profile = self.get_object()
-        education = Education.objects.filter(profile=profile)
-        return Response({'education': education.values()})
-
-    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
-    def add_education(self, request, pk=None):
-        """Add education details"""
-        profile = self.get_object()
-        if request.user.profile != profile:
-            return Response({'error': 'Unauthorized'}, status=status.HTTP_403_FORBIDDEN)
-            
-        education = Education.objects.create(
-            profile=profile,
-            **request.data
-        )
-        return Response({'status': 'Education details added'})
-
-    @action(detail=True, methods=['get'], permission_classes=[IsAuthenticated])
-    def experiences(self, request, pk=None):
-        """Get work experiences"""
-        profile = self.get_object()
-        experiences = Experience.objects.filter(profile=profile)
-        return Response({'experiences': experiences.values()})
-
-    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
-    def add_experience(self, request, pk=None):
-        """Add work experience"""
-        profile = self.get_object()
-        if request.user.profile != profile:
-            return Response({'error': 'Unauthorized'}, status=status.HTTP_403_FORBIDDEN)
-            
-        experience = Experience.objects.create(
-            profile=profile,
-            **request.data
-        )
-        return Response({'status': 'Experience added'})
-
-    @action(detail=True, methods=['get'], permission_classes=[IsAuthenticated])
-    def licenses(self, request, pk=None):
-        """Get licenses and certifications"""
-        profile = self.get_object()
-        licenses = License.objects.filter(profile=profile)
-        return Response({'licenses': licenses.values()})
-
-    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
-    def add_license(self, request, pk=None):
-        """Add license or certification"""
-        profile = self.get_object()
-        if request.user.profile != profile:
-            return Response({'error': 'Unauthorized'}, status=status.HTTP_403_FORBIDDEN)
-            
-        license = License.objects.create(
-            profile=profile,
-            **request.data
-        )
-        return Response({'status': 'License added'})
-
-    @action(detail=False, methods=['get'])
-    def faqs(self, request):
-        """Retrieve frequently asked questions"""
-        return Response({
-            'faqs': [
-                {
-                    'question': 'How do I change my password?',
-                    'answer': 'Go to Settings > Account Security > Change Password'
-                },
-                {
-                    'question': 'How do I enable two-factor authentication?',
-                    'answer': 'Go to Settings > Account Security > Two-Factor Authentication'
-                }
-                # Add more FAQs as needed
-            ]
-        })
-
-    @action(detail=False, methods=['post'])
-    def submit_support_request(self, request):
-        """Submit a support request ticket"""
-        subject = request.data.get('subject')
-        message = request.data.get('message')
-        email = request.data.get('email')
-        
-        if not all([subject, message, email]):
-            return Response(
-                {'error': 'Please provide subject, message and email'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-            
-        # Here you would typically save the support request or send it to your support system
-        return Response({
-            'status': 'Support request submitted successfully',
-            'ticket_id': '12345'  # Generate actual ticket ID in production
-        })
-
-    @action(detail=True, methods=['get'])
     def followers(self, request, pk=None):
         """Get list of followers for a profile"""
         profile = self.get_object()
         followers = profile.followers.all()
-        serializer = ProfileSerializer(followers, many=True)
-        return Response(serializer.data)
+        return Response({
+            'followers': [
+                {'id': follower.id, 'username': follower.user.username, 'display_name': follower.display_name}
+                for follower in followers
+            ]
+        })
 
-    @action(detail=True, methods=['get'])
+    @action(detail=True, methods=['get'], permission_classes=[IsAuthenticated])
     def following(self, request, pk=None):
-        """Get list of users being followed by a profile"""
+        """Get list of users that this profile is following"""
         profile = self.get_object()
         following = profile.following.all()
-        serializer = ProfileSerializer(following, many=True)
-        return Response(serializer.data)
+        return Response({
+            'following': [
+                {'id': followed.id, 'username': followed.user.username, 'display_name': followed.display_name}
+                for followed in following
+            ]
+        })
+
+    @action(detail=False, methods=['get'])
+    def faqs(self, request):
+        """Get frequently asked questions"""
+        faqs = [
+            {
+                "question": "How do I update my profile?",
+                "answer": "You can update your profile by going to the Edit Profile section and making changes to your information."
+            },
+            {
+                "question": "Can I edit my skills?",
+                "answer": "Skills are automatically generated by AI based on your activities and cannot be manually edited."
+            },
+            {
+                "question": "How do I add education or experience?",
+                "answer": "You can add education and experience entries through the dedicated sections in your profile."
+            }
+        ]
+        return Response({"faqs": faqs})
+
+    @action(detail=False, methods=['post'])
+    def submit_support_request(self, request):
+        """Submit a support request"""
+        subject = request.data.get('subject')
+        message = request.data.get('message')
+        user_email = request.data.get('email')
+        
+        if not all([subject, message, user_email]):
+            return Response(
+                {'error': 'Subject, message, and email are required'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Here you would typically send an email or create a support ticket
+        # For now, we'll just return a success response
+        return Response({
+            'message': 'Support request submitted successfully',
+            'ticket_id': 'SUP-' + str(hash(subject + message + user_email))[-8:]
+        }, status=status.HTTP_201_CREATED)
