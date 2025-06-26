@@ -1,6 +1,8 @@
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import viewsets
+from rest_framework.response import Response
+from rest_framework import status
 from .models import *
 from .serializers import *
 
@@ -11,7 +13,25 @@ class PostViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]  # ✅ Requires authentication
 
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user)  # ✅ Auto-assign logged-in user
+        post = serializer.save(author=self.request.user)  # ✅ Auto-assign logged-in user
+        
+        # Handle multiple image uploads - safely check for images
+        images = []
+        if hasattr(self.request, 'FILES'):
+            images = self.request.FILES.getlist('images')
+        
+        if images:
+            # Validate number of images (max 5)
+            if len(images) > 5:
+                raise serializers.ValidationError("Maximum 5 images allowed per post")
+            
+            # Create PostImage instances for each uploaded image
+            for index, image in enumerate(images):
+                PostImage.objects.create(
+                    post=post,
+                    image=image,
+                    order=index
+                )
 
 
 class PostListView(generics.ListCreateAPIView):
@@ -24,7 +44,25 @@ class PostListView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+        post = serializer.save(author=self.request.user)
+        
+        # Handle multiple image uploads - safely check for images
+        images = []
+        if hasattr(self.request, 'FILES'):
+            images = self.request.FILES.getlist('images')
+        
+        if images:
+            # Validate number of images (max 5)
+            if len(images) > 5:
+                raise serializers.ValidationError("Maximum 5 images allowed per post")
+            
+            # Create PostImage instances for each uploaded image
+            for index, image in enumerate(images):
+                PostImage.objects.create(
+                    post=post,
+                    image=image,
+                    order=index
+                )
 
 
 class PostDetailView(generics.RetrieveUpdateDestroyAPIView):

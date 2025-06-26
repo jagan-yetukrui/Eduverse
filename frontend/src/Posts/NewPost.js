@@ -106,19 +106,27 @@ const NewPost = ({ onPostCreated }) => {
 
     setIsSubmitting(true);
     try {
-      const token = localStorage.getItem("token");
+      // Get token from localStorage (support both 'access_token' and 'token')
+      const token = localStorage.getItem("access_token") || localStorage.getItem("token");
       if (!token) throw new Error("Authentication required");
 
       const formData = new FormData();
       formData.append('content', caption.trim());
-      images.forEach((image, index) => {
-        formData.append(`image_${index}`, image.file);
+      
+      // Append all images with the same field name 'images'
+      images.forEach((image) => {
+        formData.append('images', image.file);
       });
+      
+      // Set post_type based on content
+      const postType = images.length > 0 ? 'image' : 'text';
+      formData.append('post_type', postType);
+      
       formData.append('tags', JSON.stringify(tags));
       formData.append('collaborators', JSON.stringify(collaborators));
       formData.append('location', location.trim());
 
-      const response = await fetch("https://edu-verse.in/api/posts/", {
+      const response = await fetch("http://localhost:8000/api/posts/", {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${token}`,
@@ -138,10 +146,12 @@ const NewPost = ({ onPostCreated }) => {
         }
       } else {
         const errorData = await response.json();
-        throw new Error(errorData.detail || "Failed to create post");
+        console.error('POST /api/posts/ error:', errorData);
+        throw new Error(errorData.detail || JSON.stringify(errorData) || "Failed to create post");
       }
     } catch (err) {
       setErrors([err.message]);
+      console.error('Post creation error:', err);
     } finally {
       setIsSubmitting(false);
     }
