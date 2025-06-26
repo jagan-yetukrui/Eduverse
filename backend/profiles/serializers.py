@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from .models import Profile, Education, License, Experience, Project
+from posts.models import Post
+from posts.serializers import PostSerializer
 
 
 # Serializer for Education model with proper validation
@@ -226,18 +228,14 @@ class ProfileSerializer(serializers.ModelSerializer):
         return obj.user.following.count()
 
     def get_posts_count(self, obj):
-        if hasattr(obj, 'posts') and obj.posts:
-            return 1
-        return 0
+        """Get the count of posts authored by this user"""
+        return Post.objects.filter(author=obj.user).count()
 
     def get_posts(self, obj):
-        if hasattr(obj, 'posts') and obj.posts:
-            return {
-                "id": obj.posts.id,
-                "title": obj.posts.title,
-                "thumbnail": obj.posts.thumbnail.url if obj.posts.thumbnail else None,
-            }
-        return None
+        """Get all posts authored by this user's profile"""
+        # Get all posts where the author is this profile's user
+        posts = Post.objects.filter(author=obj.user).order_by('-created_at')
+        return PostSerializer(posts, many=True, context=self.context).data
 
     def get_blocked_users(self, obj):
         return [

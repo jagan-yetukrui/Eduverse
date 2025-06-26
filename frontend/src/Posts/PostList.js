@@ -177,8 +177,8 @@ function PostList() {
               <FontAwesomeIcon icon={faBookmark} />
             </button>
           </div>
-        </div>
-      ))}
+          </div>
+        ))}
     </div>
   );
 }

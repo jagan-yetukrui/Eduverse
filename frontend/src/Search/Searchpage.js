@@ -32,6 +32,8 @@ const Search = () => {
       }
 
       setLoading(true);
+      setError(null); // Clear previous errors
+      
       try {
         const params = new URLSearchParams({
           query: searchQuery,
@@ -41,11 +43,26 @@ const Search = () => {
           ...(timeFilter !== 'all' && { time: timeFilter })
         });
 
-        const response = await apiClient.get(`https://edu-verse.in/api/search/?${params.toString()}`);
+        // Use apiClient with proper baseURL instead of hardcoded localhost
+        const response = await apiClient.get(`api/search/?${params.toString()}`);
         setSearchResults(response.data);
       } catch (err) {
+        // LOG EVERYTHING for debugging
         console.error('Search error:', err);
-        setError(err.message || 'Failed to perform search');
+        console.error('Error response:', err.response);
+        console.error('Error request:', err.request);
+        console.error('Error config:', err.config);
+        
+        if (err.response) {
+          // Server responded with error status
+          setError(`Server error: ${err.response.status} - ${err.response.data?.error || err.response.statusText}`);
+        } else if (err.request) {
+          // Request was made but no response received
+          setError('Network error: No response from server. Please check your connection.');
+        } else {
+          // Something else happened
+          setError(`Error: ${err.message || 'Failed to perform search'}`);
+        }
       } finally {
         setLoading(false);
       }

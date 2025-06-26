@@ -162,6 +162,29 @@
   align-items: center;
   cursor: pointer;
   transition: var(--transition);
+  padding: 0.5rem;
+  border-radius: var(--radius-sm);
+}
+
+.stat-item:hover {
+  background: var(--glass-bg);
+  transform: translateY(-2px);
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-color);
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-top: 0.25rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .profile-actions {
@@ -433,25 +456,23 @@
 }
 
 .section-header {
-  margin-bottom: 2rem;
-  position: relative;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid var(--border-color);
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  position: relative;
 }
 
 .section-header h2 {
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   font-weight: 600;
-  /* color: var(--text-color); */
+  color: var(--text-color);
   margin: 0;
   position: relative;
   display: inline-block;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  padding-bottom: 0.5rem;
 }
 
 .section-meta {
@@ -801,4 +822,122 @@
 .project-card:hover, .experience-item:hover, .profile-section-card:hover, .education-item:hover {
   box-shadow: 0 8px 32px rgba(0,0,0,0.12);
   transform: translateY(-2px) scale(1.02);
+}
+
+.new-post-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: var(--shadow-sm);
+  white-space: nowrap;
+}
+
+.new-post-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  background: linear-gradient(135deg, #0056b3 0%, #0099cc 100%);
+}
+
+.new-post-btn span {
+  font-weight: 600;
+}
+
+/* Instagram-style profile posts grid */
+.posts-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  background: #fff;
+}
+
+.posts-grid .post-card.insta {
+  margin: 0;
+  justify-self: stretch;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+}
+
+/* Responsive grid adjustments for Instagram profile style */
+@media (max-width: 768px) {
+  .posts-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+  }
+}
+
+@media (max-width: 480px) {
+  .posts-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+  }
+}
+
+/* Profile posts section styling */
+.profile-posts-section {
+  margin-top: 40px;
+  background: #fff;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
+  border: 1px solid #dbdbdb;
+}
+
+.profile-posts-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0;
+  padding: 20px;
+  border-bottom: 1px solid #dbdbdb;
+  background: #fff;
+}
+
+.profile-posts-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #262626;
+  margin: 0;
+}
+
+.new-post-btn {
+  background: #0095f6;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.new-post-btn:hover {
+  background: #0081d6;
+}
+
+.no-posts-message {
+  text-align: center;
+  padding: 60px 20px;
+  color: #8e8e8e;
+  font-size: 1rem;
+  background: #fafafa;
+}
+
+.no-posts-message .empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.6;
 }

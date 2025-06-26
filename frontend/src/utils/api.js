@@ -1,8 +1,20 @@
 import axios from 'axios';
 
-// Create axios instance with base URL
+// Determine the base URL based on environment
+const getBaseURL = () => {
+  // Check if we're in development mode
+  if (process.env.NODE_ENV === 'development') {
+    // Use localhost for development
+    return process.env.REACT_APP_API_URL || "http://localhost:8000/";
+  } else {
+    // Use production URL for production builds
+    return process.env.REACT_APP_API_URL || "https://edu-verse.in/";
+  }
+};
+
+// Create axios instance with dynamic base URL
 const apiClient = axios.create({
-  baseURL: "https://edu-verse.in/",
+  baseURL: getBaseURL(),
 });
 
 // Add request interceptor

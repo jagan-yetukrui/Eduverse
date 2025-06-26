@@ -11,6 +11,7 @@ import { useProfile } from './ProfileContext';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorMessage from '../components/ErrorMessage';
 import PostCard from '../Posts/PostCard';
+import PostModal from '../Posts/PostModal';
 import NewPost from '../Posts/NewPost';
 import placeholder from '../images/placeholder.png';
 import SkillItem from './SkillItem';
@@ -20,6 +21,7 @@ import ProjectCard from './ProjectCard';
 const ProfileView = () => {
   const { profile, isLoading, error, fetchProfile, updateProfile } = useProfile();
   const [showNewPostModal, setShowNewPostModal] = useState(false);
+  const [selectedPost, setSelectedPost] = useState(null);
   const [copied, setCopied] = useState(false);
   const [followLoading, setFollowLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('posts');
@@ -42,6 +44,13 @@ const ProfileView = () => {
     fetchProfile(); // Refresh after new post
   }, [fetchProfile]);
 
+  const handlePostClick = (post) => {
+    setSelectedPost(post);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedPost(null);
+  };
 
   const handleFollowToggle = async () => {
     if (followLoading) return;
@@ -112,8 +121,8 @@ const ProfileView = () => {
                   <span className="stat-label">Following</span>
                 </div>
                 <div className="stat-item">
-                  <span className="stat-value">{profile.projects?.length || 0}</span>
-                  <span className="stat-label">Projects</span>
+                  <span className="stat-value">{profile.posts_count || 0}</span>
+                  <span className="stat-label">Posts</span>
                 </div>
               </div>
 
@@ -151,11 +160,22 @@ const ProfileView = () => {
             <section className="section glass-panel">
               <div className="section-header">
                 <h2>Posts</h2>
+                <button 
+                  className="new-post-btn"
+                  onClick={() => setShowNewPostModal(true)}
+                >
+                  <span>+ New Post</span>
+                </button>
               </div>
               {profile.posts?.length > 0 ? (
                 <div className="posts-grid">
                   {profile.posts.map((post, idx) => (
-                    <PostCard key={idx} post={post} />
+                    <PostCard 
+                      key={post.id || idx} 
+                      post={post} 
+                      isGrid={true}
+                      onClick={() => handlePostClick(post)}
+                    />
                   ))}
                 </div>
               ) : (
@@ -241,6 +261,13 @@ const ProfileView = () => {
             <NewPost onPostCreated={handlePostCreated} />
           </div>
         </div>
+      )}
+
+      {selectedPost && (
+        <PostModal
+          post={selectedPost}
+          onClose={handleCloseModal}
+        />
       )}
     </motion.div>
   );

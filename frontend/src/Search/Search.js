@@ -57,7 +57,7 @@ const Search = () => {
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
-        const response = await fetch('https://edu-verse.in/api/user/current');
+        const response = await fetch('https://localhost:8000/api/user/current');
         const data = await response.json();
         setCurrentUser(data);
       } catch (error) {
@@ -79,12 +79,12 @@ const Search = () => {
         
         setLoading(true);
         try {
-          const response = await fetch(`https://edu-verse.in/api/users/search?query=${encodeURIComponent(query)}`);
+          const response = await fetch(`https://localhost:8000/api/users/search?query=${encodeURIComponent(query)}`);
           const users = await response.json();
           
           const usersWithMutuals = await Promise.all(
             users.map(async (user) => {
-              const mutualsResponse = await fetch(`https://edu-verse.in/api/users/${user.id}/mutuals`);
+              const mutualsResponse = await fetch(`https://localhost:8000/api/users/${user.id}/mutuals`);
               const mutualsData = await mutualsResponse.json();
               return {
                 ...user,
@@ -166,7 +166,7 @@ const Search = () => {
       triggerSearchAnimation();
 
       try {
-        const response = await fetch(`https://edu-verse.in/api/users/search?query=${encodeURIComponent(query)}&detailed=true&exclude_self=false`);
+        const response = await fetch(`https://localhost:8000/api/users/search?query=${encodeURIComponent(query)}&detailed=true&exclude_self=false`);
         const results = await response.json();
         
         setTimeout(() => {
@@ -187,7 +187,7 @@ const Search = () => {
     }
     
     try {
-      const response = await fetch(`https://edu-verse.in/api/profiles/${username}/`);
+      const response = await fetch(`https://localhost:8000/api/profiles/${username}/`);
       const userData = await response.json();
       setQuery(userData.name);
       setSearchResults([userData]);
