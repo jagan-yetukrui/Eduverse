@@ -83,6 +83,7 @@
 
 /* General container styling */
 .edit-profile-container {
+  margin-top: 50px !important;
   display: flex;
   flex-direction: column;
   align-items: center;

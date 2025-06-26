@@ -51,6 +51,59 @@ export const profileService = {
   },
 
   /**
+  * Fetch user's profile by name
+  */
+  async getUserProfileByUsername(username) {
+    try {
+      const response = await api.get(`/api/profiles/users/${username}/`);
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response?.data?.detail || 'Failed to fetch user profile');
+    }
+  },
+
+
+  /**
+   * Follow/Unfollow other users
+   */
+
+  async followOrUnfollowUser(username, action) {
+    try {
+      const response = await api.post('/api/othersprofile/follow/', {
+        target_username: username,
+        action: action
+      });
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response?.data?.message || 'Failed to update follow status');
+    }
+  },
+
+  /**
+   * Get list
+   */
+
+  async getFollowers(username) {
+    try {
+      const response = await api.get(`/api/othersprofile/${username}/followers/`);
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response?.data?.message || 'Failed to fetch followers list');
+    }
+  },
+
+  async getFollowing(username) {
+    try {
+      const response = await api.get(`/api/othersprofile/${username}/following/`);
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response?.data?.message || 'Failed to fetch following list');
+    }
+  },
+
+
+
+  /**
    * Update basic profile information
    * @param {Object} profileData - Profile data to update
    * @param {File} profileImage - Optional profile image file
@@ -58,7 +111,7 @@ export const profileService = {
   async updateProfile(profileData, profileImage = null) {
     try {
       const formData = new FormData();
-      
+
       // Add basic profile fields
       Object.keys(profileData).forEach(key => {
         if (key !== 'profile_image' && key !== 'skills') {
@@ -80,7 +133,7 @@ export const profileService = {
           'Content-Type': 'multipart/form-data',
         },
       });
-      
+
       return response.data;
     } catch (error) {
       throw new Error(error.response?.data?.detail || 'Failed to update profile');
@@ -223,7 +276,7 @@ export const profileService = {
   async addProject(projectData, projectImage = null) {
     try {
       const formData = new FormData();
-      
+
       // Add basic project fields
       Object.keys(projectData).forEach(key => {
         if (key !== 'project_image' && key !== 'technologies' && key !== 'end_date') {
@@ -269,7 +322,7 @@ export const profileService = {
   async updateProject(id, projectData, projectImage = null) {
     try {
       const formData = new FormData();
-      
+
       // Add basic project fields
       Object.keys(projectData).forEach(key => {
         if (key !== 'project_image' && key !== 'technologies' && key !== 'end_date') {
@@ -352,15 +405,15 @@ export const validationUtils = {
    */
   validateFile(file, maxSize = 5 * 1024 * 1024, allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif']) {
     if (!file) return null;
-    
+
     if (file.size > maxSize) {
       return 'File size must be under 5MB';
     }
-    
+
     if (!allowedTypes.includes(file.type)) {
       return 'Only JPEG, PNG, and GIF images are allowed';
     }
-    
+
     return null;
   },
 };

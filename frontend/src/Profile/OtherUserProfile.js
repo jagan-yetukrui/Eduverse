@@ -6,11 +6,7 @@ import { toast } from 'react-toastify';
 import { FaCheck, FaCopy } from 'react-icons/fa';
 import { useUser } from '../Accounts/UserContext';
 import './OtherUserProfile.css';
-import LoadingSpinner from '../components/LoadingSpinner';
-import ErrorMessage from '../components/ErrorMessage';
-import FollowersList from './FollowersList';
-import PostCard from '../Posts/PostCard';
-import placeholder from '../images/placeholder.png';
+import profileService from '../services/profileService';
 
 const OtherUserProfile = () => {
   const { username } = useParams();
@@ -23,6 +19,32 @@ const OtherUserProfile = () => {
   const [followLoading, setFollowLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const [activeTab, setActiveTab] = useState('posts');
+  const [followersList, setFollowersList] = useState([]);
+  const [followingList, setFollowingList] = useState([]);
+  const [tabLoading, setTabLoading] = useState(false);
+
+  useEffect(() => {
+    const loadFollowData = async () => {
+      if (!username) return;
+
+      setTabLoading(true);
+      try {
+        if (activeTab === 'followers') {
+          const data = await profileService.getFollowers(username);
+          setFollowersList(data);
+        } else if (activeTab === 'following') {
+          const data = await profileService.getFollowing(username);
+          setFollowingList(data);
+        }
+      } catch (err) {
+        console.error('Error loading follow data:', err.message);
+      } finally {
+        setTabLoading(false);
+      }
+    };
+
+    loadFollowData();
+  }, [activeTab, username]);
 
   // Redirect to self profile if viewing own profile
   useEffect(() => {
@@ -37,19 +59,10 @@ const OtherUserProfile = () => {
       try {
         setLoading(true);
         setError(null);
-        console.log('Loading profile for username:', username); // Debug log
-        
-        const response = await axios.get(`/api/profiles/users/${username}/`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('access_token')}`
-          }
-        });
-        
-        console.log('Profile data:', response.data); // Debug log
-        
-        // The backend now provides all necessary fields with fallbacks
-        setUser(response.data);
-        setIsFollowing(response.data.is_following);
+
+        const data = await profileService.getUserProfileByUsername(username);
+        setUser(data);
+        setIsFollowing(data.is_following);
       } catch (err) {
         console.error('Failed to load user:', err);
         if (err.response?.status === 404) {
@@ -74,26 +87,52 @@ const OtherUserProfile = () => {
     return null;
   }
 
+  // const handleFollow = async () => {
+  //   try {
+  //     if (isFollowing) {
+  //       await axios.post(`/api/users/${username}/unfollow`);
+  //       setUser(prev => ({
+  //         ...prev,
+  //         followers_count: prev.followers_count - 1
+  //       }));
+  //     } else {
+  //       await axios.post(`/api/users/${username}/follow`);
+  //       setUser(prev => ({
+  //         ...prev,
+  //         followers_count: prev.followers_count + 1
+  //       }));
+  //     }
+  //     setIsFollowing(!isFollowing);
+  //   } catch (err) {
+  //     setError(err.response?.data?.message || 'Failed to update follow status');
+  //   }
+  // };
+
   const handleFollow = async () => {
     try {
-      if (isFollowing) {
-        await axios.post(`/api/users/${username}/unfollow`);
-        setUser(prev => ({
-          ...prev,
-          followers_count: prev.followers_count - 1
-        }));
-      } else {
-        await axios.post(`/api/users/${username}/follow`);
-        setUser(prev => ({
-          ...prev,
-          followers_count: prev.followers_count + 1
-        }));
-      }
+      setFollowLoading(true);
+
+      const action = isFollowing ? "unfollow" : "follow";
+
+      await profileService.followOrUnfollowUser(username, action);
+
+      // Update follow status and follower count
       setIsFollowing(!isFollowing);
+      setUser(prev => ({
+        ...prev,
+        followers_count: prev.followers_count + (isFollowing ? -1 : 1)
+      }));
+
+      toast.success(`Successfully ${action}ed ${username}`);
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to update follow status');
+      const errorMessage = err.response?.data?.message || 'Failed to update follow status';
+      setError(errorMessage);
+      toast.error(errorMessage);
+    } finally {
+      setFollowLoading(false);
     }
   };
+
 
   const copyProfileLink = () => {
     const profileUrl = `${window.location.origin}/profile/${username}`;
@@ -121,13 +160,13 @@ const OtherUserProfile = () => {
           <h2>Oops! Something went wrong</h2>
           <p>{error}</p>
           <div className="error-actions">
-            <button 
+            <button
               className="primary-button"
               onClick={() => navigate('/profile')}
             >
               Return to Your Profile
             </button>
-            <button 
+            <button
               className="secondary-button"
               onClick={() => window.location.reload()}
             >
@@ -155,7 +194,7 @@ const OtherUserProfile = () => {
           />
           <div className="profile-info">
             <h1 className="profile-name">{user.display_name}</h1>
-            <div 
+            <div
               className={`profile-username ${copied ? 'copied' : ''}`}
               onClick={copyProfileLink}
             >
@@ -224,36 +263,21 @@ const OtherUserProfile = () => {
               )}
             </div>
           )}
-          {activeTab === 'followers' && (
-            <div className="followers-list">
-              {user.followers?.length > 0 ? (
-                user.followers.map(follower => (
-                  <div key={follower.id} className="user-card">
-                    {/* Follower content */}
-                  </div>
-                ))
-              ) : (
-                <div className="empty-card">
-                  <p>No followers yet</p>
+          <div className="user-list-scroll">
+            {(activeTab === 'followers' ? followersList : followingList).map(user => (
+              <div key={user.id} className="user-row">
+                <img src={user.avatar || '/default-avatar.png'} alt={user.username} className="user-avatar" />
+                <div className="user-info">
+                  <span className="username">@{user.username}</span>
+                  {user.display_name && <span className="displayname">{user.display_name}</span>}
                 </div>
-              )}
-            </div>
-          )}
-          {activeTab === 'following' && (
-            <div className="following-list">
-              {user.following?.length > 0 ? (
-                user.following.map(following => (
-                  <div key={following.id} className="user-card">
-                    {/* Following content */}
-                  </div>
-                ))
-              ) : (
-                <div className="empty-card">
-                  <p>Not following anyone yet</p>
-                </div>
-              )}
-            </div>
-          )}
+                
+              </div>
+            ))}
+          </div>
+
+
+          
         </div>
       </motion.div>
     </div>

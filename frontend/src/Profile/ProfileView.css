@@ -185,7 +185,7 @@
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   background: white;
   border: 1px solid var(--border-color);
-  color: var(--text-color);
+  /* color: var(--text-color); */
   cursor: pointer;
   position: relative;
   overflow: hidden;
@@ -445,7 +445,7 @@
 .section-header h2 {
   font-size: 1.4rem;
   font-weight: 600;
-  color: var(--text-color);
+  /* color: var(--text-color); */
   margin: 0;
   position: relative;
   display: inline-block;

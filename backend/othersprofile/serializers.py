@@ -34,7 +34,7 @@ class PublicProfileSerializer(serializers.ModelSerializer):
 
     def get_profile_image(self, obj):
         try:
-            return obj.profile.image.url if obj.profile.image else None
+            return obj.profile.avatar.url if obj.profile.avatar else None
         except Profile.DoesNotExist:
             return None
 

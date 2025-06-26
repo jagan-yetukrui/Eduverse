@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { 
+import {
   faLightbulb,
   faCode,
   faUsers,
@@ -37,10 +37,10 @@ const Skills = ({ onUpdate }) => {
     try {
       setIsLoading(true);
       setError(null);
-      
+
       const data = await profileService.getProfile();
       setSkills(data.skills || []);
-      
+
     } catch (err) {
       console.error('Error fetching skills:', err);
       setError(err.message || 'Failed to load skills data');
@@ -99,27 +99,29 @@ const Skills = ({ onUpdate }) => {
       'cloudflare', 'netlify', 'vercel', 'firebase'
     ];
 
-    skillsList.forEach(skill => {
-      const skillLower = skill.toLowerCase();
-      
-      if (languageKeywords.some(keyword => skillLower.includes(keyword))) {
-        groups.languages.push(skill);
-      } else if (frameworkKeywords.some(keyword => skillLower.includes(keyword))) {
-        groups.frameworks.push(skill);
-      } else if (databaseKeywords.some(keyword => skillLower.includes(keyword))) {
-        groups.databases.push(skill);
-      } else if (cloudKeywords.some(keyword => skillLower.includes(keyword))) {
-        groups.cloud.push(skill);
-      } else if (toolKeywords.some(keyword => skillLower.includes(keyword))) {
-        groups.tools.push(skill);
-      } else if (technicalKeywords.some(keyword => skillLower.includes(keyword))) {
-        groups.technical.push(skill);
-      } else if (softKeywords.some(keyword => skillLower.includes(keyword))) {
-        groups.soft.push(skill);
-      } else {
-        groups.other.push(skill);
-      }
-    });
+    if (Array.isArray(skillsList) && skillsList.length > 0) {
+      skillsList.forEach(skill => {
+        const skillLower = skill.toLowerCase();
+
+        if (languageKeywords.some(keyword => skillLower.includes(keyword))) {
+          groups.languages.push(skill);
+        } else if (frameworkKeywords.some(keyword => skillLower.includes(keyword))) {
+          groups.frameworks.push(skill);
+        } else if (databaseKeywords.some(keyword => skillLower.includes(keyword))) {
+          groups.databases.push(skill);
+        } else if (cloudKeywords.some(keyword => skillLower.includes(keyword))) {
+          groups.cloud.push(skill);
+        } else if (toolKeywords.some(keyword => skillLower.includes(keyword))) {
+          groups.tools.push(skill);
+        } else if (technicalKeywords.some(keyword => skillLower.includes(keyword))) {
+          groups.technical.push(skill);
+        } else if (softKeywords.some(keyword => skillLower.includes(keyword))) {
+          groups.soft.push(skill);
+        } else {
+          groups.other.push(skill);
+        }
+      });
+    }
 
     // Remove empty groups
     Object.keys(groups).forEach(key => {
@@ -203,19 +205,19 @@ const Skills = ({ onUpdate }) => {
   }
 
   const skillGroups = groupSkills(skills);
-  
+
   return (
     <div className="skills-section">
       {/* Header */}
       <div className="section-header">
-      <h2>Skills</h2>
+        <h2>Skills</h2>
         <p>Your AI-generated skills based on profile activity and experience</p>
-        
+
         {/* Info banner */}
         <div className="info-banner">
           <FontAwesomeIcon icon={faInfoCircle} />
           <span>
-            Skills are automatically generated and updated based on your profile activity, 
+            Skills are automatically generated and updated based on your profile activity,
             education, experience, and projects. They cannot be manually edited.
           </span>
         </div>
@@ -228,7 +230,7 @@ const Skills = ({ onUpdate }) => {
             <FontAwesomeIcon icon={faLightbulb} className="empty-icon" />
             <h3>No skills detected yet</h3>
             <p>
-              Your skills will be automatically generated as you add more information 
+              Your skills will be automatically generated as you add more information
               to your profile, including education, experience, and projects.
             </p>
             <div className="suggestions">
@@ -244,23 +246,23 @@ const Skills = ({ onUpdate }) => {
         ) : (
           <div className="skills-grid">
             {Object.entries(skillGroups).map(([category, categorySkills]) => (
-          <div key={category} className="skill-category">
+              <div key={category} className="skill-category">
                 <div className="category-header">
                   <FontAwesomeIcon icon={getCategoryIcon(category)} />
                   <h3>{getCategoryName(category)}</h3>
                   <span className="skill-count">{categorySkills.length}</span>
                 </div>
-                
+
                 <div className="skills-list">
-              {categorySkills.map((skill, index) => (
+                  {categorySkills.map((skill, index) => (
                     <div key={index} className="skill-tag">
                       {skill}
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
         )}
       </div>
 
@@ -277,11 +279,11 @@ const Skills = ({ onUpdate }) => {
               <span className="stat-label">Categories</span>
             </div>
           </div>
-          
+
           <div className="last-updated">
             <p>
               <small>
-                Skills are updated automatically based on your profile changes. 
+                Skills are updated automatically based on your profile changes.
                 Last updated: {new Date().toLocaleDateString()}
               </small>
             </p>

@@ -40,7 +40,7 @@
 .profile-name {
   font-size: 1.8rem;
   font-weight: 700;
-  color: var(--text-color);
+  /* color: var(--text-color); */
   margin: 0 0 0.5rem 0;
 }
 
@@ -140,7 +140,7 @@
 .stat-value {
   font-size: 1.4rem;
   font-weight: 700;
-  color: var(--text-color);
+  /* color: var(--text-color); */
 }
 
 .stat-label {
@@ -170,7 +170,7 @@
 }
 
 .tab-button:hover {
-  color: var(--text-color);
+  /* color: var(--text-color); */
   background: var(--border-color);
 }
 
@@ -261,6 +261,56 @@
   background: #e9ecef;
 }
 
+.user-list-scroll {
+  max-height: 400px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.user-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  background: var(--card-bg);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+}
+
+.user-row:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.user-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-info .username {
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.user-info .displayname {
+  font-size: 0.85rem;
+  text-align:left;
+  color: var(--text-secondary);
+}
+
+
+
 @media (max-width: 768px) {
   .other-profile-page {
     padding: 1rem;
@@ -301,4 +351,5 @@
   .posts-grid {
     grid-template-columns: 1fr;
   }
+
 } 

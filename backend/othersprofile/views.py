@@ -39,7 +39,9 @@ class FollowActionView(APIView):
 
         try:
             if action == 'follow':
-                Follow.objects.create(follower=request.user, following=target_user)
+                _, created = Follow.objects.get_or_create(follower=request.user, following=target_user)
+                if not created:
+                    return Response({'error': 'Already following'}, status=status.HTTP_400_BAD_REQUEST)
                 message = f'Successfully followed {target_username}'
             else:  # unfollow
                 Follow.objects.filter(follower=request.user, following=target_user).delete()
@@ -57,3 +59,19 @@ class FollowActionView(APIView):
                 {'error': str(e)},
                 status=status.HTTP_400_BAD_REQUEST
             )
+        
+class FollowersListView(APIView):
+    def get(self, request, username):
+        user = get_object_or_404(User, username=username)
+        followers = user.followers.all().select_related('follower')
+        users = [f.follower for f in followers]
+        serializer = PublicProfileSerializer(users, many=True, context={'request': request})
+        return Response(serializer.data)
+
+class FollowingListView(APIView):
+    def get(self, request, username):
+        user = get_object_or_404(User, username=username)
+        following = user.following.all().select_related('following')
+        users = [f.following for f in following]
+        serializer = PublicProfileSerializer(users, many=True, context={'request': request})
+        return Response(serializer.data)

@@ -14,6 +14,7 @@ from .serializers import (
     EducationSerializer, ExperienceSerializer, LicenseSerializer, ProjectSerializer
 )
 from .models import Profile, Education, License, Experience, Project
+from othersprofile.models import Follow
 
 
 class ProfileViewSet(viewsets.ModelViewSet):
@@ -38,7 +39,8 @@ class ProfileViewSet(viewsets.ModelViewSet):
         queryset = Profile.objects.all()
         if self.action == 'list':
             # For list view, only return public profiles
-            queryset = queryset.filter(privacy_settings__profile_visibility='public')
+            queryset = queryset.filter(
+                privacy_settings__profile_visibility='public')
         return queryset
 
     def get_user_by_username(self, request, username=None):
@@ -47,12 +49,16 @@ class ProfileViewSet(viewsets.ModelViewSet):
         """
         try:
             profile = Profile.objects.get(user__username=username)
-            serializer = self.get_serializer(profile, context={'request': request})
+            serializer = self.get_serializer(
+                profile, context={'request': request})
             data = serializer.data
 
             # Add following status for authenticated users
             if request.user.is_authenticated:
-                data['is_following'] = request.user.profile.following.filter(id=profile.id).exists()
+                data['is_following'] = Follow.objects.filter(
+                    follower=request.user,
+                    following=profile.user
+                ).exists()
             else:
                 data['is_following'] = False
 
@@ -79,12 +85,17 @@ class ProfileViewSet(viewsets.ModelViewSet):
         user = request.user
         if not hasattr(user, 'profile'):
             return Response({"error": "Profile not found"}, status=404)
-        
+
         profile = user.profile
-        posts_count = profile.posts.count() if hasattr(profile, 'posts') and profile.posts else 0
-        followers_count = profile.followers.count() if hasattr(profile, 'followers') and profile.followers else 0
-        following_count = profile.following.count() if hasattr(profile, 'following') and profile.following else 0
-        projects_count = profile.projects.count() if hasattr(profile, 'projects') and profile.projects else 0
+        posts_count = profile.posts.count() if hasattr(
+            profile, 'posts') and profile.posts else 0
+        # followers_count = profile.followers.count() if hasattr(profile, 'followers') and profile.followers else 0
+        # following_count = profile.following.count() if hasattr(profile, 'following') and profile.following else 0
+        followers_count = Follow.objects.filter(following=profile.user).count()
+        following_count = Follow.objects.filter(follower=profile.user).count()
+
+        projects_count = profile.projects.count() if hasattr(
+            profile, 'projects') and profile.projects else 0
 
         stats = {
             "posts_count": posts_count,
@@ -111,16 +122,19 @@ class ProfileViewSet(viewsets.ModelViewSet):
 
         if request.method == 'GET':
             # Return full profile with nested data
-            serializer = ProfileSerializer(profile, context={'request': request})
+            serializer = ProfileSerializer(
+                profile, context={'request': request})
             return Response(serializer.data)
-        
+
         elif request.method == 'PATCH':
             # Handle profile updates with multipart form data support
-            serializer = ProfileUpdateSerializer(profile, data=request.data, partial=True)
+            serializer = ProfileUpdateSerializer(
+                profile, data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
                 # Return updated profile with full data
-                full_serializer = ProfileSerializer(profile, context={'request': request})
+                full_serializer = ProfileSerializer(
+                    profile, context={'request': request})
                 return Response(full_serializer.data)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -130,8 +144,8 @@ class ProfileViewSet(viewsets.ModelViewSet):
         try:
             profile = request.user.profile
             return Response({
-                'followers_count': profile.followers.count(),
-                'following_count': profile.following.count(),
+                'followers_count': Follow.objects.filter(following=profile.user).count(),
+                'following_count': Follow.objects.filter(follower=profile.user).count(),
                 'posts_count': profile.user.posts.count() if hasattr(profile.user, 'posts') else 0,
                 'education_count': profile.education_details.count(),
                 'experience_count': profile.experiences.count(),
@@ -154,12 +168,12 @@ class ProfileViewSet(viewsets.ModelViewSet):
         POST: Add new education entry
         """
         profile = request.user.profile
-        
+
         if request.method == 'GET':
             education_list = profile.education_details.all()
             serializer = EducationSerializer(education_list, many=True)
             return Response(serializer.data)
-        
+
         elif request.method == 'POST':
             serializer = EducationSerializer(data=request.data)
             if serializer.is_valid():
@@ -174,19 +188,19 @@ class ProfileViewSet(viewsets.ModelViewSet):
         DELETE: Delete specific education entry
         """
         profile = request.user.profile
-        
+
         try:
             education = profile.education_details.get(id=education_id)
         except Education.DoesNotExist:
             return Response({"detail": "Education entry not found"}, status=status.HTTP_404_NOT_FOUND)
-        
+
         if request.method == 'PUT':
             serializer = EducationSerializer(education, data=request.data)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
+
         elif request.method == 'DELETE':
             education.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
@@ -199,12 +213,12 @@ class ProfileViewSet(viewsets.ModelViewSet):
         POST: Add new experience entry
         """
         profile = request.user.profile
-        
+
         if request.method == 'GET':
             experience_list = profile.experiences.all()
             serializer = ExperienceSerializer(experience_list, many=True)
             return Response(serializer.data)
-        
+
         elif request.method == 'POST':
             serializer = ExperienceSerializer(data=request.data)
             if serializer.is_valid():
@@ -219,19 +233,19 @@ class ProfileViewSet(viewsets.ModelViewSet):
         DELETE: Delete specific experience entry
         """
         profile = request.user.profile
-        
+
         try:
             experience = profile.experiences.get(id=experience_id)
         except Experience.DoesNotExist:
             return Response({"detail": "Experience entry not found"}, status=status.HTTP_404_NOT_FOUND)
-        
+
         if request.method == 'PUT':
             serializer = ExperienceSerializer(experience, data=request.data)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
+
         elif request.method == 'DELETE':
             experience.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
@@ -244,12 +258,12 @@ class ProfileViewSet(viewsets.ModelViewSet):
         POST: Add new license entry
         """
         profile = request.user.profile
-        
+
         if request.method == 'GET':
             license_list = profile.licenses.all()
             serializer = LicenseSerializer(license_list, many=True)
             return Response(serializer.data)
-        
+
         elif request.method == 'POST':
             serializer = LicenseSerializer(data=request.data)
             if serializer.is_valid():
@@ -264,19 +278,19 @@ class ProfileViewSet(viewsets.ModelViewSet):
         DELETE: Delete specific license entry
         """
         profile = request.user.profile
-        
+
         try:
             license_obj = profile.licenses.get(id=license_id)
         except License.DoesNotExist:
             return Response({"detail": "License entry not found"}, status=status.HTTP_404_NOT_FOUND)
-        
+
         if request.method == 'PUT':
             serializer = LicenseSerializer(license_obj, data=request.data)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
+
         elif request.method == 'DELETE':
             license_obj.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
@@ -289,15 +303,17 @@ class ProfileViewSet(viewsets.ModelViewSet):
         POST: Add new project entry (supports multipart form data for image uploads)
         """
         profile = request.user.profile
-        
+
         if request.method == 'GET':
             project_list = profile.projects.all()
-            serializer = ProjectSerializer(project_list, many=True, context={'request': request})
+            serializer = ProjectSerializer(
+                project_list, many=True, context={'request': request})
             return Response(serializer.data)
-        
+
         elif request.method == 'POST':
             # Handle multipart form data for image uploads
-            serializer = ProjectSerializer(data=request.data, context={'request': request})
+            serializer = ProjectSerializer(
+                data=request.data, context={'request': request})
             if serializer.is_valid():
                 serializer.save(profile=profile)
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -310,12 +326,12 @@ class ProfileViewSet(viewsets.ModelViewSet):
         DELETE: Delete specific project entry
         """
         profile = request.user.profile
-        
+
         try:
             project = profile.projects.get(id=project_id)
         except Project.DoesNotExist:
             return Response({"detail": "Project entry not found"}, status=status.HTTP_404_NOT_FOUND)
-        
+
         if request.method in ['PUT', 'PATCH']:
             # Debug logging to identify validation issues
             print("=== PROJECT UPDATE DEBUG ===")
@@ -325,9 +341,10 @@ class ProfileViewSet(viewsets.ModelViewSet):
             print("Request Files:", request.FILES)
             print("Content Type:", request.content_type)
             print("================================")
-            
+
             # Handle multipart form data for image uploads
-            serializer = ProjectSerializer(project, data=request.data, partial=True, context={'request': request})
+            serializer = ProjectSerializer(
+                project, data=request.data, partial=True, context={'request': request})
             if serializer.is_valid():
                 serializer.save()
                 print("✅ Project updated successfully")
@@ -336,7 +353,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
                 print("❌ Validation failed:")
                 print("Serializer Errors:", serializer.errors)
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
+
         elif request.method == 'DELETE':
             project.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
@@ -364,25 +381,25 @@ class ProfileViewSet(viewsets.ModelViewSet):
         """Follow another user's profile"""
         profile_to_follow = self.get_object()
         user_profile = request.user.profile
-        
+
         # Check if user is trying to follow themselves
         if profile_to_follow == user_profile:
             return Response(
-                {'error': 'You cannot follow yourself'}, 
+                {'error': 'You cannot follow yourself'},
                 status=status.HTTP_400_BAD_REQUEST
             )
-            
+
         # Check if already following
         if user_profile.following.filter(id=profile_to_follow.id).exists():
             return Response(
                 {'detail': 'Already following this user'},
                 status=status.HTTP_200_OK
             )
-            
+
         user_profile.following.add(profile_to_follow)
         return Response({
             'status': 'following',
-            'followers_count': profile_to_follow.followers.count()
+            'followers_count': Follow.objects.filter(following=user_profile.user).count()
         }, status=status.HTTP_201_CREATED)
 
     @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
@@ -390,22 +407,23 @@ class ProfileViewSet(viewsets.ModelViewSet):
         """Unfollow another user's profile"""
         profile_to_unfollow = self.get_object()
         user_profile = request.user.profile
-        
+
         # Check if user is trying to unfollow themselves
         if profile_to_unfollow == user_profile:
             return Response(
                 {'error': 'You cannot unfollow yourself'},
                 status=status.HTTP_400_BAD_REQUEST
             )
-            
+
         # Check if not following
         if not user_profile.following.filter(id=profile_to_unfollow.id).exists():
             return Response(
                 {'detail': 'Not following this user'},
                 status=status.HTTP_200_OK
             )
-            
-        user_profile.following.remove(profile_to_unfollow)
+
+        Follow.objects.filter(follower=request.user,
+                              following=profile_to_unfollow.user).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(detail=True, methods=['get'])
@@ -413,32 +431,33 @@ class ProfileViewSet(viewsets.ModelViewSet):
         """Get following status and counts for a profile"""
         profile = self.get_object()
         is_following = False
-        
+
         if request.user.is_authenticated:
             user_profile = request.user.profile
-            is_following = user_profile.following.filter(id=profile.id).exists()
-            
+            is_following = user_profile.following.filter(
+                id=profile.id).exists()
+
         return Response({
             'is_following': is_following,
-            'followers_count': profile.followers.count(),
-            'following_count': profile.following.count()
+            'followers_count': Follow.objects.filter(following=profile.user).count(),
+            'following_count': Follow.objects.filter(follower=profile.user).count()
         })
 
     @action(detail=True, methods=['put', 'patch'], permission_classes=[IsAuthenticated])
     def highlights(self, request, pk=None):
         """Update profile highlights"""
         profile = self.get_object()
-        
+
         if request.user.profile != profile:
             return Response(
                 {'error': 'You can only modify your own highlights'},
                 status=status.HTTP_403_FORBIDDEN
             )
-            
+
         highlights = request.data.get('highlights', {})
         profile.highlights = highlights
         profile.save()
-        
+
         return Response({
             'highlights': profile.highlights
         })
@@ -459,7 +478,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
         profile = self.get_object()
         if request.user.profile != profile:
             return Response({'error': 'Unauthorized'}, status=status.HTTP_403_FORBIDDEN)
-        
+
         serializer = PrivacySettingsSerializer(data=request.data)
         if serializer.is_valid():
             profile.privacy_settings = serializer.validated_data
@@ -473,7 +492,8 @@ class ProfileViewSet(viewsets.ModelViewSet):
         profile = self.get_object()
         if request.user.profile != profile:
             return Response({'error': 'Unauthorized'}, status=status.HTTP_403_FORBIDDEN)
-        serializer = NotificationSettingsSerializer(profile.notification_settings)
+        serializer = NotificationSettingsSerializer(
+            profile.notification_settings)
         return Response(serializer.data)
 
     @action(detail=True, methods=['put'], permission_classes=[IsAuthenticated])
@@ -482,7 +502,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
         profile = self.get_object()
         if request.user.profile != profile:
             return Response({'error': 'Unauthorized'}, status=status.HTTP_403_FORBIDDEN)
-        
+
         serializer = NotificationSettingsSerializer(data=request.data)
         if serializer.is_valid():
             profile.notification_settings = serializer.validated_data
@@ -495,13 +515,12 @@ class ProfileViewSet(viewsets.ModelViewSet):
     def followers(self, request, pk=None):
         """Get list of followers for a profile"""
         profile = self.get_object()
-        followers = profile.followers.all()
-        return Response({
-            'followers': [
-                {'id': follower.id, 'username': follower.user.username, 'display_name': follower.display_name}
-                for follower in followers
-            ]
-        })
+        follower_ids = Follow.objects.filter(
+            following=profile.user).values_list('follower_id', flat=True)
+        followers_profiles = Profile.objects.filter(user__id__in=follower_ids)
+
+        serializer = ProfileSerializer(followers_profiles, many=True)
+        return Response(serializer.data)
 
     @action(detail=True, methods=['get'], permission_classes=[IsAuthenticated])
     def following(self, request, pk=None):
@@ -510,7 +529,8 @@ class ProfileViewSet(viewsets.ModelViewSet):
         following = profile.following.all()
         return Response({
             'following': [
-                {'id': followed.id, 'username': followed.user.username, 'display_name': followed.display_name}
+                {'id': followed.id, 'username': followed.user.username,
+                    'display_name': followed.display_name}
                 for followed in following
             ]
         })
@@ -519,11 +539,11 @@ class ProfileViewSet(viewsets.ModelViewSet):
     def faqs(self, request):
         """Get frequently asked questions"""
         faqs = [
-                {
+            {
                 "question": "How do I update my profile?",
                 "answer": "You can update your profile by going to the Edit Profile section and making changes to your information."
-                },
-                {
+            },
+            {
                 "question": "Can I edit my skills?",
                 "answer": "Skills are automatically generated by AI based on your activities and cannot be manually edited."
             },
@@ -540,13 +560,13 @@ class ProfileViewSet(viewsets.ModelViewSet):
         subject = request.data.get('subject')
         message = request.data.get('message')
         user_email = request.data.get('email')
-        
+
         if not all([subject, message, user_email]):
             return Response(
                 {'error': 'Subject, message, and email are required'},
                 status=status.HTTP_400_BAD_REQUEST
             )
-            
+
         # Here you would typically send an email or create a support ticket
         # For now, we'll just return a success response
         return Response({

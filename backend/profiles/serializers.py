@@ -183,6 +183,8 @@ class ProfileSerializer(serializers.ModelSerializer):
         read_only=True
     )
     is_verified = serializers.BooleanField(read_only=True)
+    is_private = serializers.BooleanField(read_only=True)
+
     created_at = serializers.DateTimeField(read_only=True)
     updated_at = serializers.DateTimeField(read_only=True)
     highlights = serializers.JSONField(required=False)
@@ -200,13 +202,13 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'username', 'display_name', 'email',
             'bio', 'avatar', 'avatar_url', 'profile_image', 'profile_image_url', 
-            'skills', 'account_status', 'is_verified', 'created_at', 'updated_at',
+            'skills', 'account_status', 'is_verified','is_private', 'created_at', 'updated_at',
             'followers_count', 'following_count', 'posts_count', 'posts',
             'blocked_users', 'notification_settings', 'privacy_settings',
             'highlights', 'website', 'location', 'education_details',
             'experiences', 'licenses', 'projects', 'close_friends', 'liked_posts'
         ]
-        read_only_fields = ['id', 'username', 'email', 'account_status', 'is_verified', 'skills']
+        read_only_fields = ['id', 'username', 'email', 'account_status', 'is_verified', 'is_private', 'skills']
 
     def get_avatar_url(self, obj):
         if obj.avatar:
@@ -218,10 +220,10 @@ class ProfileSerializer(serializers.ModelSerializer):
         return obj.get_profile_image_url() or '/default-avatar.png'
 
     def get_followers_count(self, obj):
-        return obj.followers.count()
+        return obj.user.followers.count()
 
     def get_following_count(self, obj):
-        return obj.following.count()
+        return obj.user.following.count()
 
     def get_posts_count(self, obj):
         if hasattr(obj, 'posts') and obj.posts:

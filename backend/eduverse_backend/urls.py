@@ -21,6 +21,8 @@ urlpatterns = [
     path("api/ai/", include("ai.urls")),  # AI app URLs with proper prefix
     path("api/projects/", include("trending.urls")),
     path("api/events/", include("events.urls")),
+    path('api/othersprofile/', include('othersprofile.urls')),
+
 ]
 
 # Serve media files during development
