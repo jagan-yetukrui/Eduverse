@@ -1,7 +1,16 @@
+"""
+Edura - Elite AI Tutor and Code Mentor for EduVerse Platform
+
+This module implements Edura as a specialized AI tutor focused on hands-on software development learning.
+Edura provides structured guidance through project-based learning with clear goals and boundaries.
+"""
+
 import os
 import json
 import google.generativeai as genai
 import logging
+from typing import Dict, List, Optional, Any
+from datetime import datetime
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -249,3 +258,274 @@ For technical questions:
         except Exception as e:
             logger.error(f"Error processing chat: {str(e)}")
             return "I apologize, but I encountered an error. Could you please try again?"
+
+class EduraTutor:
+    """
+    Edura - Elite AI Tutor and Code Mentor
+    
+    Mission: Help users learn software development through hands-on project work
+    """
+    
+    def __init__(self):
+        self.user_context = {}
+        self.current_project = None
+        self.current_task = None
+        self.current_step = None
+        self.user_progress = {}
+        
+    def set_user_context(self, user_id: str, project_id: str = None, task_id: str = None, step_id: str = None):
+        """Set the current user's learning context."""
+        self.user_context = {
+            'user_id': user_id,
+            'project_id': project_id,
+            'task_id': task_id,
+            'step_id': step_id,
+            'timestamp': datetime.utcnow().isoformat()
+        }
+        
+    def analyze_code(self, code: str, step_title: str, user_message: str) -> Dict[str, Any]:
+        """
+        Analyze user's code and provide structured feedback.
+        
+        Args:
+            code: User's current code
+            step_title: Current step they're working on
+            user_message: User's question or request
+            
+        Returns:
+            Structured response with analysis, improvements, and explanations
+        """
+        
+        # Store context for this analysis
+        self.current_step = step_title
+        
+        # Analyze the code based on learning objectives
+        analysis = self._perform_code_analysis(code, step_title)
+        
+        # Generate improvements
+        improvements = self._generate_improvements(code, analysis)
+        
+        # Create structured response
+        response = self._create_structured_response(analysis, improvements, user_message)
+        
+        return response
+    
+    def _perform_code_analysis(self, code: str, step_title: str) -> Dict[str, Any]:
+        """Analyze code for learning opportunities and improvements."""
+        
+        analysis = {
+            'working_well': [],
+            'needs_improvement': [],
+            'learning_opportunities': [],
+            'code_quality': {
+                'readability': 0,
+                'performance': 0,
+                'logic': 0,
+                'naming': 0,
+                'modularity': 0,
+                'best_practices': 0
+            }
+        }
+        
+        # Analyze based on common learning areas
+        if 'function' in code.lower() or 'def ' in code:
+            analysis['learning_opportunities'].append('Function definition and organization')
+            
+        if 'fetch' in code.lower() or 'api' in code.lower():
+            analysis['learning_opportunities'].append('API integration and error handling')
+            
+        if 'state' in code.lower() or 'useState' in code:
+            analysis['learning_opportunities'].append('State management and React hooks')
+            
+        if 'auth' in code.lower() or 'token' in code.lower():
+            analysis['learning_opportunities'].append('Authentication and security')
+            
+        # Identify specific issues
+        if 'test-user-id' in code:
+            analysis['needs_improvement'].append('Hardcoded values should be replaced with dynamic data')
+            analysis['code_quality']['naming'] = 3
+            
+        if code.count('console.log') > 3:
+            analysis['needs_improvement'].append('Consider using proper logging instead of multiple console.log statements')
+            analysis['code_quality']['best_practices'] = 4
+            
+        if 'function' in code and '=>' not in code:
+            analysis['learning_opportunities'].append('Consider using arrow functions for consistency')
+            
+        return analysis
+    
+    def _generate_improvements(self, code: str, analysis: Dict[str, Any]) -> List[Dict[str, str]]:
+        """Generate specific code improvements with explanations."""
+        
+        improvements = []
+        
+        # Replace hardcoded values
+        if 'test-user-id' in code:
+            improved_code = code.replace('test-user-id', 'authenticatedUserId')
+            improvements.append({
+                'type': 'naming',
+                'original': 'test-user-id',
+                'improved': 'authenticatedUserId',
+                'explanation': 'Renamed hardcoded value to descriptive variable name for clarity and maintainability'
+            })
+        
+        # Improve function declarations
+        if 'function ' in code and '=>' not in code:
+            # This would be a more complex replacement in practice
+            improvements.append({
+                'type': 'syntax',
+                'original': 'function example()',
+                'improved': 'const example = () =>',
+                'explanation': 'Use arrow functions for consistency with modern JavaScript practices'
+            })
+        
+        # Add error handling
+        if 'fetch(' in code and 'catch' not in code:
+            improvements.append({
+                'type': 'error_handling',
+                'original': 'fetch(url)',
+                'improved': 'fetch(url).then(res => res.json()).catch(err => console.error(err))',
+                'explanation': 'Add error handling to prevent unhandled promise rejections'
+            })
+        
+        return improvements
+    
+    def _create_structured_response(self, analysis: Dict[str, Any], improvements: List[Dict[str, str]], user_message: str) -> Dict[str, Any]:
+        """Create the structured Edura response format."""
+        
+        # High-level analysis
+        working_well = analysis.get('working_well', ['Code structure is functional'])
+        needs_improvement = analysis.get('needs_improvement', ['Some areas could be enhanced'])
+        
+        analysis_summary = f"Your code works, but {', '.join(needs_improvement).lower()}"
+        
+        # Generate improved code examples
+        improved_code_examples = []
+        for improvement in improvements:
+            improved_code_examples.append({
+                'improvement': improvement['improved'],
+                'explanation': improvement['explanation']
+            })
+        
+        # Learning opportunities
+        learning_opportunities = analysis.get('learning_opportunities', [])
+        
+        response = {
+            'tutor_response': {
+                'analysis': analysis_summary,
+                'improvements': improved_code_examples,
+                'learning_opportunities': learning_opportunities,
+                'challenge_suggestion': self._generate_challenge_suggestion(analysis)
+            },
+            'context': {
+                'step_title': self.current_step,
+                'timestamp': datetime.utcnow().isoformat(),
+                'user_message': user_message
+            }
+        }
+        
+        return response
+    
+    def _generate_challenge_suggestion(self, analysis: Dict[str, Any]) -> Optional[str]:
+        """Generate optional challenge suggestions based on analysis."""
+        
+        if 'function' in str(analysis.get('learning_opportunities', [])):
+            return "If you want a challenge, try refactoring this into a reusable component/function."
+        
+        if 'api' in str(analysis.get('learning_opportunities', [])):
+            return "If you want a challenge, try implementing proper error handling and loading states."
+        
+        if 'state' in str(analysis.get('learning_opportunities', [])):
+            return "If you want a challenge, try implementing a custom hook for this functionality."
+        
+        return None
+    
+    def get_project_guidance(self, project_id: str, task_id: str = None, step_id: str = None) -> Dict[str, Any]:
+        """Provide guidance for specific project steps."""
+        
+        # This would integrate with the project data system
+        guidance = {
+            'current_step': step_id,
+            'learning_objectives': [],
+            'prerequisites': [],
+            'next_steps': [],
+            'resources': []
+        }
+        
+        return guidance
+    
+    def validate_user_progress(self, user_id: str, project_id: str) -> Dict[str, Any]:
+        """Validate user's progress and suggest next steps."""
+        
+        progress = {
+            'completed_steps': [],
+            'current_step': None,
+            'next_recommended_step': None,
+            'learning_gaps': [],
+            'achievements': []
+        }
+        
+        return progress
+
+# Global Edura instance
+edura_tutor = EduraTutor()
+
+def get_edura_response(user_id: str, code: str, step_title: str, user_message: str, 
+                      project_id: str = None, task_id: str = None) -> Dict[str, Any]:
+    """
+    Get Edura's structured response for user's code and learning context.
+    
+    Args:
+        user_id: Unique identifier for the user
+        code: User's current code
+        step_title: Current step they're working on
+        user_message: User's question or request
+        project_id: Current project ID (optional)
+        task_id: Current task ID (optional)
+        
+    Returns:
+        Structured Edura response with analysis and improvements
+    """
+    
+    # Set user context
+    edura_tutor.set_user_context(user_id, project_id, task_id)
+    
+    # Analyze and respond
+    response = edura_tutor.analyze_code(code, step_title, user_message)
+    
+    return response
+
+def format_edura_response(response: Dict[str, Any]) -> str:
+    """
+    Format Edura's response for display to the user.
+    
+    Args:
+        response: Raw Edura response dictionary
+        
+    Returns:
+        Formatted string response
+    """
+    
+    tutor_data = response.get('tutor_response', {})
+    
+    formatted_response = f"""
+🎓 **Edura's Analysis**
+
+**Analysis:**  
+{tutor_data.get('analysis', 'Your code works, but could be improved.')}
+
+**Improvements:**
+"""
+    
+    for improvement in tutor_data.get('improvements', []):
+        formatted_response += f"• {improvement.get('explanation', '')}\n"
+    
+    if tutor_data.get('learning_opportunities'):
+        formatted_response += f"\n**Learning Opportunities:**\n"
+        for opportunity in tutor_data.get('learning_opportunities', []):
+            formatted_response += f"• {opportunity}\n"
+    
+    if tutor_data.get('challenge_suggestion'):
+        formatted_response += f"\n**Challenge:** {tutor_data.get('challenge_suggestion')}\n"
+    
+    return formatted_response.strip()

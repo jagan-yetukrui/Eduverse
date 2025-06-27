@@ -1,0 +1,748 @@
+{
+  "conversation_id": "5f135f5b-a66f-4a1f-9556-75bb6c9e4699",
+  "user_id": "test-user-123",
+  "title": "Static Website Hosting - Add Monitoring - Create API Gateway",
+  "created_at": "2025-06-27T11:21:49.974582",
+  "updated_at": "2025-06-27T11:21:49.976878",
+  "project_context": {
+    "project": {
+      "project_id": "AWS1",
+      "project_name": "Static Website Hosting",
+      "description": "Host a static website on AWS S3 and configure it with CloudFront.",
+      "difficulty": "Beginner",
+      "tasks": [
+        {
+          "task_id": "1_T1",
+          "task_name": "Add Monitoring",
+          "description": "Add Monitoring for project 1.",
+          "steps": [
+            {
+              "step_id": "T1_S1",
+              "step_name": "Launch EC2 Instance",
+              "description": "Complete the setup for Launch EC2 Instance.",
+              "guidelines": [
+                "1. Open the AWS Management Console or CLI.",
+                "2. Navigate to the required service and understand its usage.",
+                "3. Follow documentation to set up the service correctly.",
+                "4. Test each service independently before integration.",
+                "5. Review permissions and security best practices."
+              ],
+              "hints": [
+                "Use IAM roles instead of hardcoding credentials.",
+                "Enable CloudTrail and CloudWatch for better visibility.",
+                "Prefer managed services like RDS or DynamoDB when possible.",
+                "Use the AWS free tier to avoid unnecessary billing.",
+                "Tag your resources for easier management and billing insights."
+              ],
+              "starting_code": "# Starting point for Launch EC2 Instance\n# Example: AWS CLI or Terraform snippet\n# aws s3 mb s3://your-bucket-name\n# or Terraform resource block",
+              "final_code": "# Final step for Launch EC2 Instance\necho \"Completed step 1 - Launch EC2 Instance\"",
+              "why": [],
+              "Output": []
+            },
+            {
+              "step_id": "T1_S2",
+              "step_name": "Create API Gateway",
+              "description": "Complete the setup for Create API Gateway.",
+              "guidelines": [
+                "1. Open the AWS Management Console or CLI.",
+                "2. Navigate to the required service and understand its usage.",
+                "3. Follow documentation to set up the service correctly.",
+                "4. Test each service independently before integration.",
+                "5. Review permissions and security best practices."
+              ],
+              "hints": [
+                "Use IAM roles instead of hardcoding credentials.",
+                "Enable CloudTrail and CloudWatch for better visibility.",
+                "Prefer managed services like RDS or DynamoDB when possible.",
+                "Use the AWS free tier to avoid unnecessary billing.",
+                "Tag your resources for easier management and billing insights."
+              ],
+              "starting_code": "# Starting point for Create API Gateway\n# Example: AWS CLI or Terraform snippet\n# aws s3 mb s3://your-bucket-name\n# or Terraform resource block",
+              "final_code": "# Final step for Create API Gateway\necho \"Completed step 2 - Create API Gateway\"",
+              "why": [],
+              "Output": []
+            },
+            {
+              "step_id": "T1_S3",
+              "step_name": "Monitor with CloudWatch",
+              "description": "Complete the setup for Monitor with CloudWatch.",
+              "guidelines": [
+                "1. Open the AWS Management Console or CLI.",
+                "2. Navigate to the required service and understand its usage.",
+                "3. Follow documentation to set up the service correctly.",
+                "4. Test each service independently before integration.",
+                "5. Review permissions and security best practices."
+              ],
+              "hints": [
+                "Use IAM roles instead of hardcoding credentials.",
+                "Enable CloudTrail and CloudWatch for better visibility.",
+                "Prefer managed services like RDS or DynamoDB when possible.",
+                "Use the AWS free tier to avoid unnecessary billing.",
+                "Tag your resources for easier management and billing insights."
+              ],
+              "starting_code": "# Starting point for Monitor with CloudWatch\n# Example: AWS CLI or Terraform snippet\n# aws s3 mb s3://your-bucket-name\n# or Terraform resource block",
+              "final_code": "# Final step for Monitor with CloudWatch\necho \"Completed step 3 - Monitor with CloudWatch\"",
+              "why": [],
+              "Output": []
+            },
+            {
+              "step_id": "T1_S4",
+              "step_name": "Configure VPC/Subnet",
+              "description": "Complete the setup for Configure VPC/Subnet.",
+              "guidelines": [
+                "1. Open the AWS Management Console or CLI.",
+                "2. Navigate to the required service and understand its usage.",
+                "3. Follow documentation to set up the service correctly.",
+                "4. Test each service independently before integration.",
+                "5. Review permissions and security best practices."
+              ],
+              "hints": [
+                "Use IAM roles instead of hardcoding credentials.",
+                "Enable CloudTrail and CloudWatch for better visibility.",
+                "Prefer managed services like RDS or DynamoDB when possible.",
+                "Use the AWS free tier to avoid unnecessary billing.",
+                "Tag your resources for easier management and billing insights."
+              ],
+              "starting_code": "# Starting point for Configure VPC/Subnet\n# Example: AWS CLI or Terraform snippet\n# aws s3 mb s3://your-bucket-name\n# or Terraform resource block",
+              "final_code": "# Final step for Configure VPC/Subnet\necho \"Completed step 4 - Configure VPC/Subnet\"",
+              "why": [],
+              "Output": []
+            },
+            {
+              "step_id": "T1_S5",
+              "step_name": "Create API Gateway",
+              "description": "Complete the setup for Create API Gateway.",
+              "guidelines": [
+                "1. Open the AWS Management Console or CLI.",
+                "2. Navigate to the required service and understand its usage.",
+                "3. Follow documentation to set up the service correctly.",
+                "4. Test each service independently before integration.",
+                "5. Review permissions and security best practices."
+              ],
+              "hints": [
+                "Use IAM roles instead of hardcoding credentials.",
+                "Enable CloudTrail and CloudWatch for better visibility.",
+                "Prefer managed services like RDS or DynamoDB when possible.",
+                "Use the AWS free tier to avoid unnecessary billing.",
+                "Tag your resources for easier management and billing insights."
+              ],
+              "starting_code": "# Starting point for Create API Gateway\n# Example: AWS CLI or Terraform snippet\n# aws s3 mb s3://your-bucket-name\n# or Terraform resource block",
+              "final_code": "# Final step for Create API Gateway\necho \"Completed step 5 - Create API Gateway\"",
+              "why": [],
+              "Output": []
+            },
+            {
+              "step_id": "T1_S6",
+              "step_name": "Deploy Lambda Function",
+              "description": "Complete the setup for Deploy Lambda Function.",
+              "guidelines": [
+                "1. Open the AWS Management Console or CLI.",
+                "2. Navigate to the required service and understand its usage.",
+                "3. Follow documentation to set up the service correctly.",
+                "4. Test each service independently before integration.",
+                "5. Review permissions and security best practices."
+              ],
+              "hints": [
+                "Use IAM roles instead of hardcoding credentials.",
+                "Enable CloudTrail and CloudWatch for better visibility.",
+                "Prefer managed services like RDS or DynamoDB when possible.",
+                "Use the AWS free tier to avoid unnecessary billing.",
+                "Tag your resources for easier management and billing insights."
+              ],
+              "starting_code": "# Starting point for Deploy Lambda Function\n# Example: AWS CLI or Terraform snippet\n# aws s3 mb s3://your-bucket-name\n# or Terraform resource block",
+              "final_code": "# Final step for Deploy Lambda Function\necho \"Completed step 6 - Deploy Lambda Function\"",
+              "why": [],
+              "Output": []
+            }
+          ]
+        },
+        {
+          "task_id": "1_T2",
+          "task_name": "Add Monitoring",
+          "description": "Add Monitoring for project 1.",
+          "steps": [
+            {
+              "step_id": "T2_S1",
+              "step_name": "Create S3 Bucket",
+              "description": "Complete the setup for Create S3 Bucket.",
+              "guidelines": [
+                "1. Open the AWS Management Console or CLI.",
+                "2. Navigate to the required service and understand its usage.",
+                "3. Follow documentation to set up the service correctly.",
+                "4. Test each service independently before integration.",
+                "5. Review permissions and security best practices."
+              ],
+              "hints": [
+                "Use IAM roles instead of hardcoding credentials.",
+                "Enable CloudTrail and CloudWatch for better visibility.",
+                "Prefer managed services like RDS or DynamoDB when possible.",
+                "Use the AWS free tier to avoid unnecessary billing.",
+                "Tag your resources for easier management and billing insights."
+              ],
+              "starting_code": "# Starting point for Create S3 Bucket\n# Example: AWS CLI or Terraform snippet\n# aws s3 mb s3://your-bucket-name\n# or Terraform resource block",
+              "final_code": "# Final step for Create S3 Bucket\necho \"Completed step 1 - Create S3 Bucket\"",
+              "why": [],
+              "Output": []
+            },
+            {
+              "step_id": "T2_S2",
+              "step_name": "Trigger from S3 Upload",
+              "description": "Complete the setup for Trigger from S3 Upload.",
+              "guidelines": [
+                "1. Open the AWS Management Console or CLI.",
+                "2. Navigate to the required service and understand its usage.",
+                "3. Follow documentation to set up the service correctly.",
+                "4. Test each service independently before integration.",
+                "5. Review permissions and security best practices."
+              ],
+              "hints": [
+                "Use IAM roles instead of hardcoding credentials.",
+                "Enable CloudTrail and CloudWatch for better visibility.",
+                "Prefer managed services like RDS or DynamoDB when possible.",
+                "Use the AWS free tier to avoid unnecessary billing.",
+                "Tag your resources for easier management and billing insights."
+              ],
+              "starting_code": "# Starting point for Trigger from S3 Upload\n# Example: AWS CLI or Terraform snippet\n# aws s3 mb s3://your-bucket-name\n# or Terraform resource block",
+              "final_code": "# Final step for Trigger from S3 Upload\necho \"Completed step 2 - Trigger from S3 Upload\"",
+              "why": [],
+              "Output": []
+            },
+            {
+              "step_id": "T2_S3",
+              "step_name": "Launch EC2 Instance",
+              "description": "Complete the setup for Launch EC2 Instance.",
+              "guidelines": [
+                "1. Open the AWS Management Console or CLI.",
+                "2. Navigate to the required service and understand its usage.",
+                "3. Follow documentation to set up the service correctly.",
+                "4. Test each service independently before integration.",
+                "5. Review permissions and security best practices."
+              ],
+              "hints": [
+                "Use IAM roles instead of hardcoding credentials.",
+                "Enable CloudTrail and CloudWatch for better visibility.",
+                "Prefer managed services like RDS or DynamoDB when possible.",
+                "Use the AWS free tier to avoid unnecessary billing.",
+                "Tag your resources for easier management and billing insights."
+              ],
+              "starting_code": "# Starting point for Launch EC2 Instance\n# Example: AWS CLI or Terraform snippet\n# aws s3 mb s3://your-bucket-name\n# or Terraform resource block",
+              "final_code": "# Final step for Launch EC2 Instance\necho \"Completed step 3 - Launch EC2 Instance\"",
+              "why": [],
+              "Output": []
+            },
+            {
+              "step_id": "T2_S4",
+              "step_name": "Create S3 Bucket",
+              "description": "Complete the setup for Create S3 Bucket.",
+              "guidelines": [
+                "1. Open the AWS Management Console or CLI.",
+                "2. Navigate to the required service and understand its usage.",
+                "3. Follow documentation to set up the service correctly.",
+                "4. Test each service independently before integration.",
+                "5. Review permissions and security best practices."
+              ],
+              "hints": [
+                "Use IAM roles instead of hardcoding credentials.",
+                "Enable CloudTrail and CloudWatch for better visibility.",
+                "Prefer managed services like RDS or DynamoDB when possible.",
+                "Use the AWS free tier to avoid unnecessary billing.",
+                "Tag your resources for easier management and billing insights."
+              ],
+              "starting_code": "# Starting point for Create S3 Bucket\n# Example: AWS CLI or Terraform snippet\n# aws s3 mb s3://your-bucket-name\n# or Terraform resource block",
+              "final_code": "# Final step for Create S3 Bucket\necho \"Completed step 4 - Create S3 Bucket\"",
+              "why": [],
+              "Output": []
+            },
+            {
+              "step_id": "T2_S5",
+              "step_name": "Deploy Lambda Function",
+              "description": "Complete the setup for Deploy Lambda Function.",
+              "guidelines": [
+                "1. Open the AWS Management Console or CLI.",
+                "2. Navigate to the required service and understand its usage.",
+                "3. Follow documentation to set up the service correctly.",
+                "4. Test each service independently before integration.",
+                "5. Review permissions and security best practices."
+              ],
+              "hints": [
+                "Use IAM roles instead of hardcoding credentials.",
+                "Enable CloudTrail and CloudWatch for better visibility.",
+                "Prefer managed services like RDS or DynamoDB when possible.",
+                "Use the AWS free tier to avoid unnecessary billing.",
+                "Tag your resources for easier management and billing insights."
+              ],
+              "starting_code": "# Starting point for Deploy Lambda Function\n# Example: AWS CLI or Terraform snippet\n# aws s3 mb s3://your-bucket-name\n# or Terraform resource block",
+              "final_code": "# Final step for Deploy Lambda Function\necho \"Completed step 5 - Deploy Lambda Function\"",
+              "why": [],
+              "Output": []
+            },
+            {
+              "step_id": "T2_S6",
+              "step_name": "Trigger from S3 Upload",
+              "description": "Complete the setup for Trigger from S3 Upload.",
+              "guidelines": [
+                "1. Open the AWS Management Console or CLI.",
+                "2. Navigate to the required service and understand its usage.",
+                "3. Follow documentation to set up the service correctly.",
+                "4. Test each service independently before integration.",
+                "5. Review permissions and security best practices."
+              ],
+              "hints": [
+                "Use IAM roles instead of hardcoding credentials.",
+                "Enable CloudTrail and CloudWatch for better visibility.",
+                "Prefer managed services like RDS or DynamoDB when possible.",
+                "Use the AWS free tier to avoid unnecessary billing.",
+                "Tag your resources for easier management and billing insights."
+              ],
+              "starting_code": "# Starting point for Trigger from S3 Upload\n# Example: AWS CLI or Terraform snippet\n# aws s3 mb s3://your-bucket-name\n# or Terraform resource block",
+              "final_code": "# Final step for Trigger from S3 Upload\necho \"Completed step 6 - Trigger from S3 Upload\"",
+              "why": [],
+              "Output": []
+            }
+          ]
+        },
+        {
+          "task_id": "1_T3",
+          "task_name": "Integrate with Other Services",
+          "description": "Integrate with Other Services for project 1.",
+          "steps": [
+            {
+              "step_id": "T3_S1",
+              "step_name": "Configure VPC/Subnet",
+              "description": "Complete the setup for Configure VPC/Subnet.",
+              "guidelines": [
+                "1. Open the AWS Management Console or CLI.",
+                "2. Navigate to the required service and understand its usage.",
+                "3. Follow documentation to set up the service correctly.",
+                "4. Test each service independently before integration.",
+                "5. Review permissions and security best practices."
+              ],
+              "hints": [
+                "Use IAM roles instead of hardcoding credentials.",
+                "Enable CloudTrail and CloudWatch for better visibility.",
+                "Prefer managed services like RDS or DynamoDB when possible.",
+                "Use the AWS free tier to avoid unnecessary billing.",
+                "Tag your resources for easier management and billing insights."
+              ],
+              "starting_code": "# Starting point for Configure VPC/Subnet\n# Example: AWS CLI or Terraform snippet\n# aws s3 mb s3://your-bucket-name\n# or Terraform resource block",
+              "final_code": "# Final step for Configure VPC/Subnet\necho \"Completed step 1 - Configure VPC/Subnet\"",
+              "why": [],
+              "Output": []
+            },
+            {
+              "step_id": "T3_S2",
+              "step_name": "Create S3 Bucket",
+              "description": "Complete the setup for Create S3 Bucket.",
+              "guidelines": [
+                "1. Open the AWS Management Console or CLI.",
+                "2. Navigate to the required service and understand its usage.",
+                "3. Follow documentation to set up the service correctly.",
+                "4. Test each service independently before integration.",
+                "5. Review permissions and security best practices."
+              ],
+              "hints": [
+                "Use IAM roles instead of hardcoding credentials.",
+                "Enable CloudTrail and CloudWatch for better visibility.",
+                "Prefer managed services like RDS or DynamoDB when possible.",
+                "Use the AWS free tier to avoid unnecessary billing.",
+                "Tag your resources for easier management and billing insights."
+              ],
+              "starting_code": "# Starting point for Create S3 Bucket\n# Example: AWS CLI or Terraform snippet\n# aws s3 mb s3://your-bucket-name\n# or Terraform resource block",
+              "final_code": "# Final step for Create S3 Bucket\necho \"Completed step 2 - Create S3 Bucket\"",
+              "why": [],
+              "Output": []
+            },
+            {
+              "step_id": "T3_S3",
+              "step_name": "Monitor with CloudWatch",
+              "description": "Complete the setup for Monitor with CloudWatch.",
+              "guidelines": [
+                "1. Open the AWS Management Console or CLI.",
+                "2. Navigate to the required service and understand its usage.",
+                "3. Follow documentation to set up the service correctly.",
+                "4. Test each service independently before integration.",
+                "5. Review permissions and security best practices."
+              ],
+              "hints": [
+                "Use IAM roles instead of hardcoding credentials.",
+                "Enable CloudTrail and CloudWatch for better visibility.",
+                "Prefer managed services like RDS or DynamoDB when possible.",
+                "Use the AWS free tier to avoid unnecessary billing.",
+                "Tag your resources for easier management and billing insights."
+              ],
+              "starting_code": "# Starting point for Monitor with CloudWatch\n# Example: AWS CLI or Terraform snippet\n# aws s3 mb s3://your-bucket-name\n# or Terraform resource block",
+              "final_code": "# Final step for Monitor with CloudWatch\necho \"Completed step 3 - Monitor with CloudWatch\"",
+              "why": [],
+              "Output": []
+            },
+            {
+              "step_id": "T3_S4",
+              "step_name": "Deploy Lambda Function",
+              "description": "Complete the setup for Deploy Lambda Function.",
+              "guidelines": [
+                "1. Open the AWS Management Console or CLI.",
+                "2. Navigate to the required service and understand its usage.",
+                "3. Follow documentation to set up the service correctly.",
+                "4. Test each service independently before integration.",
+                "5. Review permissions and security best practices."
+              ],
+              "hints": [
+                "Use IAM roles instead of hardcoding credentials.",
+                "Enable CloudTrail and CloudWatch for better visibility.",
+                "Prefer managed services like RDS or DynamoDB when possible.",
+                "Use the AWS free tier to avoid unnecessary billing.",
+                "Tag your resources for easier management and billing insights."
+              ],
+              "starting_code": "# Starting point for Deploy Lambda Function\n# Example: AWS CLI or Terraform snippet\n# aws s3 mb s3://your-bucket-name\n# or Terraform resource block",
+              "final_code": "# Final step for Deploy Lambda Function\necho \"Completed step 4 - Deploy Lambda Function\"",
+              "why": [],
+              "Output": []
+            },
+            {
+              "step_id": "T3_S5",
+              "step_name": "Trigger from S3 Upload",
+              "description": "Complete the setup for Trigger from S3 Upload.",
+              "guidelines": [
+                "1. Open the AWS Management Console or CLI.",
+                "2. Navigate to the required service and understand its usage.",
+                "3. Follow documentation to set up the service correctly.",
+                "4. Test each service independently before integration.",
+                "5. Review permissions and security best practices."
+              ],
+              "hints": [
+                "Use IAM roles instead of hardcoding credentials.",
+                "Enable CloudTrail and CloudWatch for better visibility.",
+                "Prefer managed services like RDS or DynamoDB when possible.",
+                "Use the AWS free tier to avoid unnecessary billing.",
+                "Tag your resources for easier management and billing insights."
+              ],
+              "starting_code": "# Starting point for Trigger from S3 Upload\n# Example: AWS CLI or Terraform snippet\n# aws s3 mb s3://your-bucket-name\n# or Terraform resource block",
+              "final_code": "# Final step for Trigger from S3 Upload\necho \"Completed step 5 - Trigger from S3 Upload\"",
+              "why": [],
+              "Output": []
+            },
+            {
+              "step_id": "T3_S6",
+              "step_name": "Connect to RDS",
+              "description": "Complete the setup for Connect to RDS.",
+              "guidelines": [
+                "1. Open the AWS Management Console or CLI.",
+                "2. Navigate to the required service and understand its usage.",
+                "3. Follow documentation to set up the service correctly.",
+                "4. Test each service independently before integration.",
+                "5. Review permissions and security best practices."
+              ],
+              "hints": [
+                "Use IAM roles instead of hardcoding credentials.",
+                "Enable CloudTrail and CloudWatch for better visibility.",
+                "Prefer managed services like RDS or DynamoDB when possible.",
+                "Use the AWS free tier to avoid unnecessary billing.",
+                "Tag your resources for easier management and billing insights."
+              ],
+              "starting_code": "# Starting point for Connect to RDS\n# Example: AWS CLI or Terraform snippet\n# aws s3 mb s3://your-bucket-name\n# or Terraform resource block",
+              "final_code": "# Final step for Connect to RDS\necho \"Completed step 6 - Connect to RDS\"",
+              "why": [],
+              "Output": []
+            }
+          ]
+        },
+        {
+          "task_id": "1_T4",
+          "task_name": "Add Monitoring",
+          "description": "Add Monitoring for project 1.",
+          "steps": [
+            {
+              "step_id": "T4_S1",
+              "step_name": "Deploy Lambda Function",
+              "description": "Complete the setup for Deploy Lambda Function.",
+              "guidelines": [
+                "1. Open the AWS Management Console or CLI.",
+                "2. Navigate to the required service and understand its usage.",
+                "3. Follow documentation to set up the service correctly.",
+                "4. Test each service independently before integration.",
+                "5. Review permissions and security best practices."
+              ],
+              "hints": [
+                "Use IAM roles instead of hardcoding credentials.",
+                "Enable CloudTrail and CloudWatch for better visibility.",
+                "Prefer managed services like RDS or DynamoDB when possible.",
+                "Use the AWS free tier to avoid unnecessary billing.",
+                "Tag your resources for easier management and billing insights."
+              ],
+              "starting_code": "# Starting point for Deploy Lambda Function\n# Example: AWS CLI or Terraform snippet\n# aws s3 mb s3://your-bucket-name\n# or Terraform resource block",
+              "final_code": "# Final step for Deploy Lambda Function\necho \"Completed step 1 - Deploy Lambda Function\"",
+              "why": [],
+              "Output": []
+            },
+            {
+              "step_id": "T4_S2",
+              "step_name": "Trigger from S3 Upload",
+              "description": "Complete the setup for Trigger from S3 Upload.",
+              "guidelines": [
+                "1. Open the AWS Management Console or CLI.",
+                "2. Navigate to the required service and understand its usage.",
+                "3. Follow documentation to set up the service correctly.",
+                "4. Test each service independently before integration.",
+                "5. Review permissions and security best practices."
+              ],
+              "hints": [
+                "Use IAM roles instead of hardcoding credentials.",
+                "Enable CloudTrail and CloudWatch for better visibility.",
+                "Prefer managed services like RDS or DynamoDB when possible.",
+                "Use the AWS free tier to avoid unnecessary billing.",
+                "Tag your resources for easier management and billing insights."
+              ],
+              "starting_code": "# Starting point for Trigger from S3 Upload\n# Example: AWS CLI or Terraform snippet\n# aws s3 mb s3://your-bucket-name\n# or Terraform resource block",
+              "final_code": "# Final step for Trigger from S3 Upload\necho \"Completed step 2 - Trigger from S3 Upload\"",
+              "why": [],
+              "Output": []
+            },
+            {
+              "step_id": "T4_S3",
+              "step_name": "Configure VPC/Subnet",
+              "description": "Complete the setup for Configure VPC/Subnet.",
+              "guidelines": [
+                "1. Open the AWS Management Console or CLI.",
+                "2. Navigate to the required service and understand its usage.",
+                "3. Follow documentation to set up the service correctly.",
+                "4. Test each service independently before integration.",
+                "5. Review permissions and security best practices."
+              ],
+              "hints": [
+                "Use IAM roles instead of hardcoding credentials.",
+                "Enable CloudTrail and CloudWatch for better visibility.",
+                "Prefer managed services like RDS or DynamoDB when possible.",
+                "Use the AWS free tier to avoid unnecessary billing.",
+                "Tag your resources for easier management and billing insights."
+              ],
+              "starting_code": "# Starting point for Configure VPC/Subnet\n# Example: AWS CLI or Terraform snippet\n# aws s3 mb s3://your-bucket-name\n# or Terraform resource block",
+              "final_code": "# Final step for Configure VPC/Subnet\necho \"Completed step 3 - Configure VPC/Subnet\"",
+              "why": [],
+              "Output": []
+            },
+            {
+              "step_id": "T4_S4",
+              "step_name": "Launch EC2 Instance",
+              "description": "Complete the setup for Launch EC2 Instance.",
+              "guidelines": [
+                "1. Open the AWS Management Console or CLI.",
+                "2. Navigate to the required service and understand its usage.",
+                "3. Follow documentation to set up the service correctly.",
+                "4. Test each service independently before integration.",
+                "5. Review permissions and security best practices."
+              ],
+              "hints": [
+                "Use IAM roles instead of hardcoding credentials.",
+                "Enable CloudTrail and CloudWatch for better visibility.",
+                "Prefer managed services like RDS or DynamoDB when possible.",
+                "Use the AWS free tier to avoid unnecessary billing.",
+                "Tag your resources for easier management and billing insights."
+              ],
+              "starting_code": "# Starting point for Launch EC2 Instance\n# Example: AWS CLI or Terraform snippet\n# aws s3 mb s3://your-bucket-name\n# or Terraform resource block",
+              "final_code": "# Final step for Launch EC2 Instance\necho \"Completed step 4 - Launch EC2 Instance\"",
+              "why": [],
+              "Output": []
+            },
+            {
+              "step_id": "T4_S5",
+              "step_name": "Connect to RDS",
+              "description": "Complete the setup for Connect to RDS.",
+              "guidelines": [
+                "1. Open the AWS Management Console or CLI.",
+                "2. Navigate to the required service and understand its usage.",
+                "3. Follow documentation to set up the service correctly.",
+                "4. Test each service independently before integration.",
+                "5. Review permissions and security best practices."
+              ],
+              "hints": [
+                "Use IAM roles instead of hardcoding credentials.",
+                "Enable CloudTrail and CloudWatch for better visibility.",
+                "Prefer managed services like RDS or DynamoDB when possible.",
+                "Use the AWS free tier to avoid unnecessary billing.",
+                "Tag your resources for easier management and billing insights."
+              ],
+              "starting_code": "# Starting point for Connect to RDS\n# Example: AWS CLI or Terraform snippet\n# aws s3 mb s3://your-bucket-name\n# or Terraform resource block",
+              "final_code": "# Final step for Connect to RDS\necho \"Completed step 5 - Connect to RDS\"",
+              "why": [],
+              "Output": []
+            },
+            {
+              "step_id": "T4_S6",
+              "step_name": "Trigger from S3 Upload",
+              "description": "Complete the setup for Trigger from S3 Upload.",
+              "guidelines": [
+                "1. Open the AWS Management Console or CLI.",
+                "2. Navigate to the required service and understand its usage.",
+                "3. Follow documentation to set up the service correctly.",
+                "4. Test each service independently before integration.",
+                "5. Review permissions and security best practices."
+              ],
+              "hints": [
+                "Use IAM roles instead of hardcoding credentials.",
+                "Enable CloudTrail and CloudWatch for better visibility.",
+                "Prefer managed services like RDS or DynamoDB when possible.",
+                "Use the AWS free tier to avoid unnecessary billing.",
+                "Tag your resources for easier management and billing insights."
+              ],
+              "starting_code": "# Starting point for Trigger from S3 Upload\n# Example: AWS CLI or Terraform snippet\n# aws s3 mb s3://your-bucket-name\n# or Terraform resource block",
+              "final_code": "# Final step for Trigger from S3 Upload\necho \"Completed step 6 - Trigger from S3 Upload\"",
+              "why": [],
+              "Output": []
+            }
+          ]
+        },
+        {
+          "task_id": "1_T5",
+          "task_name": "Test and Debug",
+          "description": "Test and Debug for project 1.",
+          "steps": [
+            {
+              "step_id": "T5_S1",
+              "step_name": "Deploy Lambda Function",
+              "description": "Complete the setup for Deploy Lambda Function.",
+              "guidelines": [
+                "1. Open the AWS Management Console or CLI.",
+                "2. Navigate to the required service and understand its usage.",
+                "3. Follow documentation to set up the service correctly.",
+                "4. Test each service independently before integration.",
+                "5. Review permissions and security best practices."
+              ],
+              "hints": [
+                "Use IAM roles instead of hardcoding credentials.",
+                "Enable CloudTrail and CloudWatch for better visibility.",
+                "Prefer managed services like RDS or DynamoDB when possible.",
+                "Use the AWS free tier to avoid unnecessary billing.",
+                "Tag your resources for easier management and billing insights."
+              ],
+              "starting_code": "# Starting point for Deploy Lambda Function\n# Example: AWS CLI or Terraform snippet\n# aws s3 mb s3://your-bucket-name\n# or Terraform resource block",
+              "final_code": "# Final step for Deploy Lambda Function\necho \"Completed step 1 - Deploy Lambda Function\"",
+              "why": [],
+              "Output": []
+            },
+            {
+              "step_id": "T5_S2",
+              "step_name": "Create API Gateway",
+              "description": "Complete the setup for Create API Gateway.",
+              "guidelines": [
+                "1. Open the AWS Management Console or CLI.",
+                "2. Navigate to the required service and understand its usage.",
+                "3. Follow documentation to set up the service correctly.",
+                "4. Test each service independently before integration.",
+                "5. Review permissions and security best practices."
+              ],
+              "hints": [
+                "Use IAM roles instead of hardcoding credentials.",
+                "Enable CloudTrail and CloudWatch for better visibility.",
+                "Prefer managed services like RDS or DynamoDB when possible.",
+                "Use the AWS free tier to avoid unnecessary billing.",
+                "Tag your resources for easier management and billing insights."
+              ],
+              "starting_code": "# Starting point for Create API Gateway\n# Example: AWS CLI or Terraform snippet\n# aws s3 mb s3://your-bucket-name\n# or Terraform resource block",
+              "final_code": "# Final step for Create API Gateway\necho \"Completed step 2 - Create API Gateway\"",
+              "why": [],
+              "Output": []
+            },
+            {
+              "step_id": "T5_S3",
+              "step_name": "Create S3 Bucket",
+              "description": "Complete the setup for Create S3 Bucket.",
+              "guidelines": [
+                "1. Open the AWS Management Console or CLI.",
+                "2. Navigate to the required service and understand its usage.",
+                "3. Follow documentation to set up the service correctly.",
+                "4. Test each service independently before integration.",
+                "5. Review permissions and security best practices."
+              ],
+              "hints": [
+                "Use IAM roles instead of hardcoding credentials.",
+                "Enable CloudTrail and CloudWatch for better visibility.",
+                "Prefer managed services like RDS or DynamoDB when possible.",
+                "Use the AWS free tier to avoid unnecessary billing.",
+                "Tag your resources for easier management and billing insights."
+              ],
+              "starting_code": "# Starting point for Create S3 Bucket\n# Example: AWS CLI or Terraform snippet\n# aws s3 mb s3://your-bucket-name\n# or Terraform resource block",
+              "final_code": "# Final step for Create S3 Bucket\necho \"Completed step 3 - Create S3 Bucket\"",
+              "why": [],
+              "Output": []
+            },
+            {
+              "step_id": "T5_S4",
+              "step_name": "Set IAM Permissions",
+              "description": "Complete the setup for Set IAM Permissions.",
+              "guidelines": [
+                "1. Open the AWS Management Console or CLI.",
+                "2. Navigate to the required service and understand its usage.",
+                "3. Follow documentation to set up the service correctly.",
+                "4. Test each service independently before integration.",
+                "5. Review permissions and security best practices."
+              ],
+              "hints": [
+                "Use IAM roles instead of hardcoding credentials.",
+                "Enable CloudTrail and CloudWatch for better visibility.",
+                "Prefer managed services like RDS or DynamoDB when possible.",
+                "Use the AWS free tier to avoid unnecessary billing.",
+                "Tag your resources for easier management and billing insights."
+              ],
+              "starting_code": "# Starting point for Set IAM Permissions\n# Example: AWS CLI or Terraform snippet\n# aws s3 mb s3://your-bucket-name\n# or Terraform resource block",
+              "final_code": "# Final step for Set IAM Permissions\necho \"Completed step 4 - Set IAM Permissions\"",
+              "why": [],
+              "Output": []
+            },
+            {
+              "step_id": "T5_S5",
+              "step_name": "Connect to RDS",
+              "description": "Complete the setup for Connect to RDS.",
+              "guidelines": [
+                "1. Open the AWS Management Console or CLI.",
+                "2. Navigate to the required service and understand its usage.",
+                "3. Follow documentation to set up the service correctly.",
+                "4. Test each service independently before integration.",
+                "5. Review permissions and security best practices."
+              ],
+              "hints": [
+                "Use IAM roles instead of hardcoding credentials.",
+                "Enable CloudTrail and CloudWatch for better visibility.",
+                "Prefer managed services like RDS or DynamoDB when possible.",
+                "Use the AWS free tier to avoid unnecessary billing.",
+                "Tag your resources for easier management and billing insights."
+              ],
+              "starting_code": "# Starting point for Connect to RDS\n# Example: AWS CLI or Terraform snippet\n# aws s3 mb s3://your-bucket-name\n# or Terraform resource block",
+              "final_code": "# Final step for Connect to RDS\necho \"Completed step 5 - Connect to RDS\"",
+              "why": [],
+              "Output": []
+            },
+            {
+              "step_id": "T5_S6",
+              "step_name": "Create API Gateway",
+              "description": "Complete the setup for Create API Gateway.",
+              "guidelines": [
+                "1. Open the AWS Management Console or CLI.",
+                "2. Navigate to the required service and understand its usage.",
+                "3. Follow documentation to set up the service correctly.",
+                "4. Test each service independently before integration.",
+                "5. Review permissions and security best practices."
+              ],
+              "hints": [
+                "Use IAM roles instead of hardcoding credentials.",
+                "Enable CloudTrail and CloudWatch for better visibility.",
+                "Prefer managed services like RDS or DynamoDB when possible.",
+                "Use the AWS free tier to avoid unnecessary billing.",
+                "Tag your resources for easier management and billing insights."
+              ],
+              "starting_code": "# Starting point for Create API Gateway\n# Example: AWS CLI or Terraform snippet\n# aws s3 mb s3://your-bucket-name\n# or Terraform resource block",
+              "final_code": "# Final step for Create API Gateway\necho \"Completed step 6 - Create API Gateway\"",
+              "why": [],
+              "Output": []
+            }
+          ]
+        }
+      ]
+    },
+    "task_index": 0,
+    "step_index": 1,
+    "project_name": "Static Website Hosting",
+    "current_task": "Add Monitoring",
+    "current_step": "Create API Gateway"
+  },
+  "messages": []
+}

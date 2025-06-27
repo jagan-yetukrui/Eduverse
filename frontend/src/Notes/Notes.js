@@ -6,6 +6,8 @@ import React, {
   useMemo,
 } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { useUser } from "../Accounts/UserContext";
+import { useNavigate } from "react-router-dom";
 import "./Notes.css";
 
 // Message processing utilities
@@ -28,6 +30,10 @@ const createMessage = (id, role, content) => ({
 });
 
 const Notes = () => {
+  // Get authenticated user
+  const { user, isLoading: userLoading } = useUser();
+  const navigate = useNavigate();
+  
   // State management
   const [conversations, setConversations] = useState([]);
   const [currentConversationId, setCurrentConversationId] = useState(null);
@@ -42,7 +48,16 @@ const Notes = () => {
   const [renameError, setRenameError] = useState(null);
 
   const messageEndRef = useRef(null);
-  const user_id = "test-user-id";
+
+  // Get user ID from authenticated user
+  const user_id = user?.id || user?.user_id;
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!userLoading && !user) {
+      navigate('/login');
+    }
+  }, [user, userLoading, navigate]);
 
   // Memoized message processing
   const processedMessages = useMemo(
@@ -78,9 +93,12 @@ const Notes = () => {
     checkHealth();
   }, []);
 
+  // Load conversations when user is available
   useEffect(() => {
+    if (user_id && !userLoading) {
     loadConversations();
-  }, []);
+    }
+  }, [user_id, userLoading]);
 
   useEffect(() => {
     if (currentConversationId) {
@@ -100,10 +118,22 @@ const Notes = () => {
   }, [conversations, currentConversationId]);
 
   const loadConversations = async () => {
+    if (!user_id) {
+      console.log("❌ No user ID available, skipping conversation load");
+      return;
+    }
+
     try {
       setIsLoading(true);
+      const token = localStorage.getItem('access_token');
       const response = await fetch(
-        `http://localhost:8000/api/ai/list_conversations/?user_id=${user_id}`
+        `http://localhost:8000/api/ai/list_conversations/`,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }
       );
       if (!response.ok) throw new Error("Failed to load conversations");
 
@@ -134,8 +164,15 @@ const Notes = () => {
     try {
       setIsLoading(true);
       console.log("📦 Loading messages for:", conversationId);
+      const token = localStorage.getItem('access_token');
       const response = await fetch(
-        `http://localhost:8000/api/ai/get_messages/?conversation_id=${conversationId}`
+        `http://localhost:8000/api/ai/get_messages/?conversation_id=${conversationId}`,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }
       );
 
       console.log("📡 Response status:", response.status);
@@ -157,15 +194,23 @@ const Notes = () => {
   };
 
   const createNewConversation = async () => {
+    if (!user_id) {
+      setError("Please log in to create conversations.");
+      return;
+    }
+
     try {
       setIsLoading(true);
+      const token = localStorage.getItem('access_token');
       const response = await fetch(
         "http://localhost:8000/api/ai/start_conversation/",
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { 
+            "Content-Type": "application/json",
+            'Authorization': `Bearer ${token}`
+          },
           body: JSON.stringify({
-            user_id: user_id,
             title: "New Conversation",
           }),
         }
@@ -199,13 +244,16 @@ const Notes = () => {
     setIsTyping(true);
 
     try {
+      const token = localStorage.getItem('access_token');
       const response = await fetch(
         "http://localhost:8000/api/ai/send_message/",
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { 
+            "Content-Type": "application/json",
+            'Authorization': `Bearer ${token}`
+          },
           body: JSON.stringify({
-            user_id: user_id,
             conversation_id: currentConversationId,
             user_input: inputText,
           }),
@@ -239,13 +287,16 @@ const Notes = () => {
 
     try {
       setIsLoading(true);
+      const token = localStorage.getItem('access_token');
       const response = await fetch(
         "http://localhost:8000/api/ai/delete_conversation/",
         {
           method: "DELETE",
-          headers: { "Content-Type": "application/json" },
+          headers: { 
+            "Content-Type": "application/json",
+            'Authorization': `Bearer ${token}`
+          },
           body: JSON.stringify({ 
-            user_id: user_id, 
             conversation_id: conversationId 
           }),
         }
@@ -295,13 +346,16 @@ const Notes = () => {
 
     try {
       setRenameError(null);
+      const token = localStorage.getItem('access_token');
       const response = await fetch(
         "http://localhost:8000/api/ai/rename_conversation/",
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { 
+            "Content-Type": "application/json",
+            'Authorization': `Bearer ${token}`
+          },
           body: JSON.stringify({
-            user_id: user_id,
             conversation_id: conversationId,
             new_title: newTitle.trim()
           }),

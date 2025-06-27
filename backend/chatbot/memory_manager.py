@@ -36,60 +36,72 @@ class MemoryManager:
         max_messages: int = 50
     ) -> List[Dict[str, str]]:
         """
-        Prepare conversation history for LLM prompt generation.
+        Prepare conversation memory for prompt building.
         
         Args:
-            conversation_id: UUID of the conversation to process
-            max_messages: Maximum number of messages to include (default: 50)
+            conversation_id: The conversation ID
+            max_messages: Maximum number of messages to include
             
         Returns:
-            List of message dictionaries in format:
-            [
-                {"role": "user", "content": "..."},
-                {"role": "edura", "content": "..."},
-                ...
-            ]
-            
-        Raises:
-            FileNotFoundError: If conversation file doesn't exist
-            ValueError: If conversation data is invalid
+            List of message dictionaries formatted for prompt
         """
         try:
-            # Load conversation data
             conversation = self.conversation_manager.load_conversation(conversation_id)
-            
-            # Extract and sort messages by timestamp
             messages = conversation.get("messages", [])
-            sorted_messages = sorted(
-                messages,
-                key=lambda x: datetime.fromisoformat(x["timestamp"])
-            )
             
-            # Trim messages if exceeding max_messages
-            if len(sorted_messages) > max_messages:
-                logger.info(
-                    f"Trimming conversation {conversation_id} from "
-                    f"{len(sorted_messages)} to {max_messages} messages"
-                )
-                sorted_messages = sorted_messages[-max_messages:]
+            # Get only the last N messages to prevent token overflow
+            if len(messages) > max_messages:
+                messages = messages[-max_messages:]
+                logger.info(f"Truncated conversation history to last {max_messages} messages")
             
-            # Format messages for LLM
-            formatted_messages = [
-                {
+            # Format messages for prompt
+            formatted_messages = []
+            for msg in messages:
+                formatted_messages.append({
                     "role": msg["role"],
                     "content": msg["content"]
-                }
-                for msg in sorted_messages
-            ]
+                })
             
-            logger.info(
-                f"Prepared {len(formatted_messages)} messages for conversation {conversation_id}"
-            )
+            logger.info(f"Prepared {len(formatted_messages)} messages for prompt")
             return formatted_messages
             
         except Exception as e:
             logger.error(f"Error preparing memory for conversation {conversation_id}: {str(e)}")
-            raise
+            return []
+
+    def get_last_n_turns(self, conversation_id: str, n: int = 2) -> List[Dict[str, str]]:
+        """
+        Get only the last N turns of conversation to keep prompts focused.
+        
+        Args:
+            conversation_id: The conversation ID
+            n: Number of turns to get (default: 2)
+            
+        Returns:
+            List of the last N message dictionaries
+        """
+        try:
+            conversation = self.conversation_manager.load_conversation(conversation_id)
+            messages = conversation.get("messages", [])
+            
+            # Get only the last N turns
+            if len(messages) > n:
+                messages = messages[-n:]
+                logger.info(f"Using only last {n} conversation turns to keep prompt focused")
+            
+            # Format messages for prompt
+            formatted_messages = []
+            for msg in messages:
+                formatted_messages.append({
+                    "role": msg["role"],
+                    "content": msg["content"]
+                })
+            
+            return formatted_messages
+            
+        except Exception as e:
+            logger.error(f"Error getting last {n} turns for conversation {conversation_id}: {str(e)}")
+            return []
 
     def get_project_context(self, conversation_id: str) -> Dict:
         """

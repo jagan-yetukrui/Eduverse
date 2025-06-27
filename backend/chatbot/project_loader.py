@@ -1,6 +1,7 @@
 import os
 import json
 import logging
+import re
 from typing import Dict, List, Optional, Union
 from dataclasses import dataclass
 from datetime import datetime
@@ -50,6 +51,158 @@ class ProjectLoader:
         # Load all projects
         self._load_all_projects()
         logger.info(f"Initialized ProjectLoader with {len(self.projects)} projects")
+
+    def extract_task_step_indices(self, message: str) -> tuple[Optional[int], Optional[int]]:
+        """
+        Extract task and step index from phrases like 'task 3 step 1' (1-based).
+        
+        Args:
+            message: User message to parse
+            
+        Returns:
+            Tuple of (task_index, step_index) as 0-based indices, or (None, None) if not found
+        """
+        # Pattern 1: "task X step Y" or "task X, step Y"
+        match = re.search(r"task\s*(\d+).*step\s*(\d+)", message, re.IGNORECASE)
+        if match:
+            task_num = int(match.group(1)) - 1  # Convert to 0-based
+            step_num = int(match.group(2)) - 1  # Convert to 0-based
+            logger.info(f"Extracted task {task_num + 1}, step {step_num + 1} from message")
+            return task_num, step_num
+        
+        # Pattern 2: "step Y of task X"
+        match = re.search(r"step\s*(\d+).*of.*task\s*(\d+)", message, re.IGNORECASE)
+        if match:
+            step_num = int(match.group(1)) - 1  # Convert to 0-based
+            task_num = int(match.group(2)) - 1  # Convert to 0-based
+            logger.info(f"Extracted task {task_num + 1}, step {step_num + 1} from inverted pattern")
+            return task_num, step_num
+        
+        logger.info("No task/step pattern found in message")
+        return None, None
+
+    def get_project_context(self, user_message: str, project_title: Optional[str] = None) -> Optional[Dict]:
+        """
+        Get project context based on user message.
+        
+        Args:
+            user_message: The user's message
+            project_title: Optional specific project title to search for
+            
+        Returns:
+            Dictionary with project context or None if not found
+        """
+        # Extract task and step indices
+        task_idx, step_idx = self.extract_task_step_indices(user_message)
+        
+        if task_idx is None or step_idx is None:
+            logger.info("No valid task/step detected in message")
+            return None
+        
+        # Find the project
+        target_project = None
+        
+        if project_title:
+            # Search for specific project
+            for project in self.projects:
+                if project["project_name"].lower() == project_title.lower():
+                    target_project = project
+                    break
+        else:
+            # Try to detect project from message keywords
+            target_project = self._find_project_by_keywords(user_message)
+        
+        if not target_project:
+            logger.info("No project found matching message")
+            return None
+        
+        # Validate indices and get task/step
+        try:
+            if task_idx >= len(target_project["tasks"]):
+                logger.warning(f"Task index {task_idx} out of range for project {target_project['project_name']}")
+                return None
+            
+            task = target_project["tasks"][task_idx]
+            
+            if step_idx >= len(task["steps"]):
+                logger.warning(f"Step index {step_idx} out of range for task {task['task_name']}")
+                return None
+            
+            step = task["steps"][step_idx]
+            
+            context = {
+                "project": target_project,
+                "task_index": task_idx,
+                "step_index": step_idx,
+                "task": task,
+                "step": step,
+                "project_name": target_project["project_name"],
+                "task_name": task["task_name"],
+                "step_name": step["step_name"]
+            }
+            
+            logger.info(f"Found context: {target_project['project_name']} - {task['task_name']} - {step['step_name']}")
+            return context
+            
+        except (IndexError, KeyError) as e:
+            logger.error(f"Error accessing project data: {str(e)}")
+            return None
+
+    def _find_project_by_keywords(self, user_message: str) -> Optional[Dict]:
+        """
+        Find project based on keywords in user message.
+        
+        Args:
+            user_message: The user's message
+            
+        Returns:
+            Project dictionary if found, None otherwise
+        """
+        user_message_lower = user_message.lower()
+        
+        # Define project keywords
+        project_keywords = {
+            "weather": ["weather", "dashboard", "forecast"],
+            "react": ["react", "component", "jsx"],
+            "python": ["python", "flask", "django"],
+            "node": ["node", "express", "javascript"],
+            "aws": ["aws", "cloud", "s3", "lambda"],
+            "java": ["java", "spring", "android"],
+            "sql": ["sql", "database", "mysql", "postgresql"]
+        }
+        
+        # Find matching project
+        for project in self.projects:
+            project_name = project["project_name"].lower()
+            project_desc = project["description"].lower()
+            
+            # Check if any keywords match
+            for keyword_group, keywords in project_keywords.items():
+                if any(keyword in project_name or keyword in project_desc for keyword in keywords):
+                    # Check if user message contains any of these keywords
+                    if any(keyword in user_message_lower for keyword in keywords):
+                        logger.info(f"Found project '{project['project_name']}' by keywords")
+                        return project
+        
+        # Fallback: return first project if no specific match
+        if self.projects:
+            logger.info(f"No specific project match, using first project: {self.projects[0]['project_name']}")
+            return self.projects[0]
+        
+        return None
+
+    def get_react_project_context(self, user_message: str, project_title: str = "Weather Dashboard") -> Optional[Dict]:
+        """
+        Legacy function for React projects - now uses the general get_project_context.
+        
+        Args:
+            user_message: The user's message
+            project_title: The project title to search for
+            
+        Returns:
+            Dictionary with project context or None if not found
+        """
+        return self.get_project_context(user_message, project_title)
 
     def _load_all_projects(self) -> None:
         """

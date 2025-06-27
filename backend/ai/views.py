@@ -1,6 +1,10 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.response import Response
+from rest_framework import status
 import json
 import logging
 import os
@@ -9,6 +13,7 @@ from chatbot.memory_manager import MemoryManager
 from chatbot.project_loader import ProjectLoader
 from chatbot.prompt_builder import PromptBuilder
 from chatbot.llm_engine import LLMEngine
+from .eduverse_bot import get_edura_response, format_edura_response
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -28,164 +33,164 @@ prompt_builder = PromptBuilder(memory_manager, project_loader)
 # Initialize LLM Engine
 llm_engine = LLMEngine()
 
-@csrf_exempt
-@require_http_methods(["GET"])
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def health_check(request):
+    """
+    Health check endpoint to verify backend availability.
+    Public endpoint - no authentication required.
+    """
+    return Response({
+        'status': 'healthy',
+        'message': 'AI backend is running'
+    })
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def list_conversations(request):
     """
-    API endpoint to list all conversations for a user.
+    API endpoint to list all conversations for the authenticated user.
     """
     try:
-        user_id = request.GET.get('user_id')
-        if not user_id:
-            logger.error("Missing user_id parameter")
-            return JsonResponse({
-                'status': 'error',
-                'message': 'user_id is required'
-            }, status=400)
+        user_id = str(request.user.id)
+        logger.info(f"Listing conversations for user: {user_id}")
 
         conversations = conversation_manager.list_conversations(user_id)
-        return JsonResponse({
+        return Response({
             'status': 'success',
             'conversations': conversations
         })
 
     except Exception as e:
         logger.error(f"Error listing conversations: {str(e)}")
-        return JsonResponse({
+        return Response({
             'status': 'error',
             'message': 'Error retrieving conversations'
-        }, status=500)
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-@csrf_exempt
-@require_http_methods(["POST"])
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def start_conversation(request):
     """
-    API endpoint to start a new conversation.
+    API endpoint to start a new conversation for the authenticated user.
     """
     try:
-        data = json.loads(request.body)
-        
-        # Validate required fields
-        if not data.get('user_id'):
-            logger.error("Missing user_id in request")
-            return JsonResponse({
-                'status': 'error',
-                'message': 'user_id is required'
-            }, status=400)
+        user_id = str(request.user.id)
+        logger.info(f"Creating conversation for user: {user_id}")
 
         # Check conversation limit (max 10 conversations)
-        existing_conversations = conversation_manager.list_conversations(data['user_id'])
+        existing_conversations = conversation_manager.list_conversations(user_id)
         if len(existing_conversations) >= 10:
-            logger.warning(f"User {data['user_id']} attempted to create conversation beyond limit")
-            return JsonResponse({
+            logger.warning(f"User {user_id} attempted to create conversation beyond limit")
+            return Response({
                 'status': 'error',
                 'message': 'Maximum 10 conversations allowed'
-            }, status=403)
+            }, status=status.HTTP_403_FORBIDDEN)
 
-        # Create conversation with provided data
+        # Create conversation with user data
         conversation = conversation_manager.create_conversation(
-            user_id=data['user_id'],
-            title=data.get('title', 'Default Conversation'),
-            project_context=data.get('project_context', {})
+            user_id=user_id,
+            title=request.data.get('title', 'Default Conversation'),
+            project_context=request.data.get('project_context', {})
         )
 
-        return JsonResponse({
+        return Response({
             'status': 'success',
             'conversation': conversation
         })
 
-    except json.JSONDecodeError:
-        logger.error("Invalid JSON in request body")
-        return JsonResponse({
-            'status': 'error',
-            'message': 'Invalid JSON in request body'
-        }, status=400)
     except Exception as e:
         logger.error(f"Error creating conversation: {str(e)}")
-        return JsonResponse({
+        return Response({
             'status': 'error',
             'message': 'Error creating conversation'
-        }, status=500)
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-@csrf_exempt
-@require_http_methods(["POST"])
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def rename_conversation(request):
     """
-    API endpoint to rename a conversation.
+    API endpoint to rename a conversation for the authenticated user.
     """
     try:
-        data = json.loads(request.body)
+        user_id = str(request.user.id)
+        conversation_id = request.data.get('conversation_id')
+        new_title = request.data.get('new_title')
         
-        # Validate required fields
-        if not data.get('conversation_id') or not data.get('new_title'):
+        if not conversation_id or not new_title:
             logger.error("Missing required fields for rename")
-            return JsonResponse({
+            return Response({
                 'status': 'error',
                 'message': 'conversation_id and new_title are required'
-            }, status=400)
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        # Verify the conversation belongs to the user
+        conversations = conversation_manager.list_conversations(user_id)
+        if not any(conv['conversation_id'] == conversation_id for conv in conversations):
+            logger.error(f"User {user_id} attempted to rename conversation {conversation_id} they don't own")
+            return Response({
+                'status': 'error',
+                'message': 'Conversation not found or access denied'
+            }, status=status.HTTP_404_NOT_FOUND)
 
         # Rename conversation
         conversation_manager.rename_conversation(
-            conversation_id=data['conversation_id'],
-            new_title=data['new_title']
+            conversation_id=conversation_id,
+            new_title=new_title
         )
 
-        return JsonResponse({
+        return Response({
             'status': 'success',
             'message': 'Conversation renamed successfully'
         })
 
-    except json.JSONDecodeError:
-        logger.error("Invalid JSON in request body")
-        return JsonResponse({
-            'status': 'error',
-            'message': 'Invalid JSON in request body'
-        }, status=400)
     except Exception as e:
         logger.error(f"Error renaming conversation: {str(e)}")
-        return JsonResponse({
+        return Response({
             'status': 'error',
             'message': 'Error renaming conversation'
-        }, status=500)
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-@csrf_exempt
-@require_http_methods(["DELETE"])
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
 def delete_conversation(request):
     """
-    API endpoint to delete a conversation.
+    API endpoint to delete a conversation for the authenticated user.
     """
     try:
-        data = json.loads(request.body)
-        user_id = data.get('user_id')
-        conversation_id = data.get('conversation_id')
+        user_id = str(request.user.id)
+        conversation_id = request.data.get('conversation_id')
         
-        if not user_id or not conversation_id:
-            logger.error("Missing user_id or conversation_id in request")
-            return JsonResponse({
+        if not conversation_id:
+            logger.error("Missing conversation_id in request")
+            return Response({
                 'status': 'error',
-                'message': 'user_id and conversation_id are required'
-            }, status=400)
+                'message': 'conversation_id is required'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Verify the conversation belongs to the user
+        conversations = conversation_manager.list_conversations(user_id)
+        if not any(conv['conversation_id'] == conversation_id for conv in conversations):
+            logger.error(f"User {user_id} attempted to delete conversation {conversation_id} they don't own")
+            return Response({
+                'status': 'error',
+                'message': 'Conversation not found or access denied'
+            }, status=status.HTTP_404_NOT_FOUND)
 
         # Delete conversation
         conversation_manager.delete_conversation(conversation_id)
 
-        return JsonResponse({
+        return Response({
             'status': 'success',
             'message': 'Conversation deleted successfully'
         })
 
-    except json.JSONDecodeError:
-        logger.error("Invalid JSON in request body")
-        return JsonResponse({
-            'status': 'error',
-            'message': 'Invalid JSON in request body'
-        }, status=400)
     except Exception as e:
         logger.error(f"Error deleting conversation: {str(e)}")
-        return JsonResponse({
+        return Response({
             'status': 'error',
             'message': 'Error deleting conversation'
-        }, status=500)
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @csrf_exempt
 @require_http_methods(["POST"])
@@ -297,19 +302,30 @@ def bot_endpoint(request):
             'message': 'An error occurred while processing your request'
         }, status=500)
 
-@csrf_exempt
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def send_message(request):
-    if request.method != "POST":
-        return JsonResponse({"error": "Invalid request method."}, status=405)
-
+    """
+    API endpoint to send a message in a conversation for the authenticated user.
+    """
     try:
-        data = json.loads(request.body)
-        conversation_id = data.get("conversation_id")
-        user_input = data.get("user_input")
-        user_id = data.get("user_id")
+        user_id = str(request.user.id)
+        conversation_id = request.data.get("conversation_id")
+        user_input = request.data.get("user_input")
 
-        if not conversation_id or not user_input or not user_id:
-            return JsonResponse({"error": "Missing required fields"}, status=400)
+        if not conversation_id or not user_input:
+            return Response({
+                "error": "Missing required fields: conversation_id and user_input"
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        # Verify the conversation belongs to the user
+        conversations = conversation_manager.list_conversations(user_id)
+        if not any(conv['conversation_id'] == conversation_id for conv in conversations):
+            logger.error(f"User {user_id} attempted to send message to conversation {conversation_id} they don't own")
+            return Response({
+                'status': 'error',
+                'message': 'Conversation not found or access denied'
+            }, status=status.HTTP_404_NOT_FOUND)
 
         # Save user message to conversation
         conversation_manager.save_message(conversation_id, "user", user_input)
@@ -328,40 +344,112 @@ def send_message(request):
         conversation_manager.save_message(conversation_id, "assistant", response_text)
 
         # Return response to frontend
-        return JsonResponse({"response": response_text})
+        return Response({"response": response_text})
     
     except Exception as e:
-        logging.exception("Error processing send_message request")
-        return JsonResponse({"error": "Internal server error."}, status=500)
+        logger.exception("Error processing send_message request")
+        return Response({
+            "error": "Internal server error."
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-@csrf_exempt
-@require_http_methods(["GET"])
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_messages(request):
     """
-    API endpoint to get messages for a specific conversation.
+    API endpoint to get messages for a specific conversation for the authenticated user.
     """
     try:
+        user_id = str(request.user.id)
         conversation_id = request.GET.get('conversation_id')
+        
         if not conversation_id:
             logger.error("Missing conversation_id parameter")
-            return JsonResponse({
+            return Response({
                 'status': 'error',
                 'message': 'conversation_id is required'
-            }, status=400)
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        # Verify the conversation belongs to the user
+        conversations = conversation_manager.list_conversations(user_id)
+        if not any(conv['conversation_id'] == conversation_id for conv in conversations):
+            logger.error(f"User {user_id} attempted to access messages for conversation {conversation_id} they don't own")
+            return Response({
+                'status': 'error',
+                'message': 'Conversation not found or access denied'
+            }, status=status.HTTP_404_NOT_FOUND)
 
         # Get messages for the conversation
         messages = conversation_manager.get_messages(conversation_id)
         
         logger.info(f"Retrieved {len(messages)} messages for conversation {conversation_id}")
         
-        return JsonResponse({
+        return Response({
             'status': 'success',
             'messages': messages
         })
 
     except Exception as e:
         logger.error(f"Error getting messages: {str(e)}")
-        return JsonResponse({
+        return Response({
             'status': 'error',
             'message': 'Error retrieving messages'
-        }, status=500)
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def edura_code_analysis(request):
+    """
+    Edura's structured code analysis and learning guidance endpoint.
+    Provides targeted feedback for software development learning.
+    """
+    try:
+        user_id = str(request.user.id)
+        
+        # Extract request data
+        code = request.data.get('code', '')
+        step_title = request.data.get('step_title', 'Current Step')
+        user_message = request.data.get('user_message', 'Can you help me improve this?')
+        project_id = request.data.get('project_id')
+        task_id = request.data.get('task_id')
+        
+        if not code:
+            return Response({
+                'status': 'error',
+                'message': 'Code is required for analysis'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Get Edura's structured response
+        edura_response = get_edura_response(
+            user_id=user_id,
+            code=code,
+            step_title=step_title,
+            user_message=user_message,
+            project_id=project_id,
+            task_id=task_id
+        )
+        
+        # Format the response for display
+        formatted_response = format_edura_response(edura_response)
+        
+        # Save to conversation if requested
+        conversation_id = request.data.get('conversation_id')
+        if conversation_id:
+            # Verify conversation ownership
+            conversations = conversation_manager.list_conversations(user_id)
+            if any(conv['conversation_id'] == conversation_id for conv in conversations):
+                conversation_manager.save_message(conversation_id, "user", user_message)
+                conversation_manager.save_message(conversation_id, "edura", formatted_response)
+        
+        return Response({
+            'status': 'success',
+            'response': formatted_response,
+            'analysis': edura_response.get('tutor_response', {}),
+            'context': edura_response.get('context', {})
+        })
+        
+    except Exception as e:
+        logger.error(f"Error in Edura code analysis: {str(e)}")
+        return Response({
+            'status': 'error',
+            'message': 'Error analyzing code. Please try again.'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
