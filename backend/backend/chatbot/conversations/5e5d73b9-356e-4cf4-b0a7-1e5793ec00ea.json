@@ -1,0 +1,20 @@
+{
+  "conversation_id": "5e5d73b9-356e-4cf4-b0a7-1e5793ec00ea",
+  "user_id": "test-user-id",
+  "title": "checking",
+  "created_at": "2025-06-17T22:29:42.372928",
+  "updated_at": "2025-06-18T13:31:38.977527",
+  "project_context": {},
+  "messages": [
+    {
+      "role": "user",
+      "content": "hey hwo are you ",
+      "timestamp": "2025-06-18T04:40:49.933301"
+    },
+    {
+      "role": "assistant",
+      "content": "Hey there! I'm Edura, your AI mentor in EduVerse, and I'm doing great! How can I help you today? Are you working on a specific coding project?  Let me know what you're up to so I can assist you.",
+      "timestamp": "2025-06-18T04:40:52.709548"
+    }
+  ]
+}
